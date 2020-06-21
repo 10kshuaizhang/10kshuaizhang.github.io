@@ -152,32 +152,90 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-我的第一篇博客文章" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-hexo极速搭建个人博客并部署到Github" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/20/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0/">我的第一篇博客文章</a>
+      <a class="article-title" href="/2020/06/20/hexo%E6%9E%81%E9%80%9F%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0Github/">hexo极速搭建个人博客并部署到Github</a>
     </h1>
   
 
         
-        <a href="/2020/06/20/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0/" class="archive-article-date">
-  	<time datetime="2020-06-20T22:20:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-20</time>
+        <a href="/2020/06/20/hexo%E6%9E%81%E9%80%9F%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0Github/" class="archive-article-date">
+  	<time datetime="2020-06-20T23:42:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-20</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h2><p>内容</p>
+        <h2 id="How-to-build-and-deploy-your-own-blog-from-0-in-30-min"><a href="#How-to-build-and-deploy-your-own-blog-from-0-in-30-min" class="headerlink" title="How to build and deploy your own blog from 0 in 30 min"></a>How to build and deploy your own blog from 0 in 30 min</h2><h3 id="文章大纲："><a href="#文章大纲：" class="headerlink" title="文章大纲："></a>文章大纲：</h3><ol>
+<li>什么是Hexo</li>
+<li>为什么要用Hexo</li>
+<li>具体步骤</li>
+<li>总结 </li>
+<li>更改主题</li>
+</ol>
 <hr>
-<p>##第二章</p>
-<p>内容</p>
-<p>–</p>
-<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a></p>
+<h3 id="1-什么是Hexo"><a href="#1-什么是Hexo" class="headerlink" title="1. 什么是Hexo"></a>1. 什么是Hexo</h3><p>A fast, simple &amp; powerful blog framework.<br>一个快速，简易，强大的博客框架。</p>
+<h3 id="2-为什么要用Hexo"><a href="#2-为什么要用Hexo" class="headerlink" title="2. 为什么要用Hexo"></a>2. 为什么要用Hexo</h3><ul>
+<li>搭建简单</li>
+<li>速度快</li>
+<li>社区成熟</li>
+<li>好看</li>
+</ul>
+<h3 id="3-具体步骤"><a href="#3-具体步骤" class="headerlink" title="3. 具体步骤"></a>3. 具体步骤</h3><ol>
+<li><p>本地环境搭建</p>
+<ol start="0">
+<li>For Mac User: 权限<br> Mac用户在根目录下进行操作的时候，需要开启root权限。具体命令:<code>sudo -s</code>, 然后输入密码。</li>
+<li>Node.js<ol>
+<li>去到Node.js官方下载点：<a href="https://nodejs.org/zh-cn/download/" target="_blank" rel="noopener">https://nodejs.org/zh-cn/download/</a></li>
+<li>下载长期支持版（LTS)安装包。</li>
+<li>根据提示逐步进行本地安装,可以使用<code>node -v</code>或者<code>npm -v</code>来查看版本号以确认安装成功。<br><img src="/blog/source/static/npm_v.png" alt="npm-v"><br>注：中国地区可以使用更快的源：<code>npm install -g cnpm --registry=https://registry.npm.taobao.org</code></li>
+</ol>
+</li>
+<li>Hexo安装<ol>
+<li><code>npm install hexo-cli -g</code></li>
+<li>可以使用<code>hexo -v</code>来查看版本号以验证安装hexo成功。<br><img src="/blog/source/static/hexo_v.png" alt="hexo-v"></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>牛刀小试</p>
+<ol>
+<li>建立一个博客目录<code>mkdir blog</code></li>
+<li>初始化一篇博客<code>hexo init</code></li>
+<li>启动博客<code>hexo s</code>, 即可在<a href="http://localhost:4000访问。平时写完文章，也可以用这个命令做本地预览。">http://localhost:4000访问。平时写完文章，也可以用这个命令做本地预览。</a></li>
+<li>新建一篇文章<code>hexo new &quot;My first article&quot;</code>即可创建一篇文章，同时你也可以在blog/source/_post找到你新建的文章”My first article.md”。</li>
+<li>修改文章。可以使用vim编辑器编辑文章。更多关于vim的内容可以参考<a href="https://coolshell.cn/articles/5426.html" target="_blank" rel="noopener">简明 VIM 练级攻略</a>学习。其中还支持Markdown语法，更多Markdown可自行Google学习。</li>
+<li>生成文章<code>hexo g</code>。</li>
+</ol>
+</li>
+<li><p>部署到Github上</p>
+<ol>
+<li>登录到自己的github</li>
+<li>新建一个repository, 此处命名一定要使用自己的username.github.io。例如我的username是10kshuaizhang, 则新建的这个应该是10kshuaizhang.github.io<br><img src="/blog/source/static/new_repo.png" alt="new_repo"></li>
+<li>在博客根目录下安装git部署插件<br><code>$ npm install hexo-deployer-git --save</code><br>WARNING可以忽略。</li>
+<li>修改博客根目录下配置文件， _config.yml<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Deployment</span><br><span class="line">## Docs: https:&#x2F;&#x2F;hexo.io&#x2F;docs&#x2F;deployment.html</span><br><span class="line">deploy:</span><br><span class="line"> 	type: git</span><br><span class="line"> 	repo: https:&#x2F;&#x2F;github.com&#x2F;xxxx&#x2F;xxxx.github.io # 你的仓库地址， xxxx是你的username</span><br><span class="line"> 	branch: master</span><br></pre></td></tr></table></figure></li>
+<li>命令部署<br><code>hexo d</code><br>第一次github需要认证，按照提示输入账号密码即可。</li>
+<li>浏览器访问xxxx.github.io即可到达你的博客。（xxxx为你的username即昵称）</li>
+</ol>
+</li>
+<li><p>更改主题<br>此处选用了Litten作者的主题，清晰简洁。Github地址为：<a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="noopener">https://github.com/litten/hexo-theme-yilia</a><br>实现步骤如下：</p>
+<ol>
+<li>安装<br><code>$ git clone https://github.com/litten/hexo-theme-yilia.git themes/yilia</code></li>
+<li>配置<br>修改hexo根目录下的_config.yml: theme:yilia</li>
+<li>更新<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd themes&#x2F;yilia</span><br><span class="line">git pull</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+</li>
+</ol>
+<p>更多配置详见作者Github。</p>
+<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h3><p>整体来说，搭建起来不是很难，关键在于以后去完善各个功能，并且坚持输出内容，将自己的知识梳理清晰，并且归纳到博客上。</p>
 
       
 
@@ -186,86 +244,22 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">hexo,</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/20/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/20/hello-world/">Hello World</a>
-    </h1>
-  
-
-        
-        <a href="/2020/06/20/hello-world/" class="archive-article-date">
-  	<time datetime="2020-06-20T22:17:43.712Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/20/hello-world/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/06/20/hexo%E6%9E%81%E9%80%9F%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0Github/">展开全文 >></a>
         </p>
       
 
@@ -386,6 +380,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">hexo,</a>
+              </li>
             
             <div class="clearfix"></div>
           </ul>
