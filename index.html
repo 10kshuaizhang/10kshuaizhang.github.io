@@ -175,13 +175,12 @@
         <h2 id="How-to-build-and-deploy-your-own-blog-from-0-in-30-min"><a href="#How-to-build-and-deploy-your-own-blog-from-0-in-30-min" class="headerlink" title="How to build and deploy your own blog from 0 in 30 min"></a>How to build and deploy your own blog from 0 in 30 min</h2><h3 id="文章大纲："><a href="#文章大纲：" class="headerlink" title="文章大纲："></a>文章大纲：</h3><ol>
 <li>什么是Hexo</li>
 <li>为什么要用Hexo</li>
-<li>具体步骤</li>
-<li>总结 </li>
-<li>更改主题</li>
+<li>具体步骤 </li>
+<li>总结</li>
 </ol>
 <hr>
-<h3 id="1-什么是Hexo"><a href="#1-什么是Hexo" class="headerlink" title="1. 什么是Hexo"></a>1. 什么是Hexo</h3><p>A fast, simple &amp; powerful blog framework.<br>一个快速，简易，强大的博客框架。</p>
-<h3 id="2-为什么要用Hexo"><a href="#2-为什么要用Hexo" class="headerlink" title="2. 为什么要用Hexo"></a>2. 为什么要用Hexo</h3><ul>
+<h3 id="1-什么是Hexo"><a href="#1-什么是Hexo" class="headerlink" title="1. 什么是Hexo"></a>1. 什么是Hexo</h3><pre><code>A fast, simple &amp; powerful blog framework.
+一个快速，简易，强大的博客框架。</code></pre><h3 id="2-为什么要用Hexo"><a href="#2-为什么要用Hexo" class="headerlink" title="2. 为什么要用Hexo"></a>2. 为什么要用Hexo</h3><ul>
 <li>搭建简单</li>
 <li>速度快</li>
 <li>社区成熟</li>
@@ -194,12 +193,12 @@
 <li>Node.js<ol>
 <li>去到Node.js官方下载点：<a href="https://nodejs.org/zh-cn/download/" target="_blank" rel="noopener">https://nodejs.org/zh-cn/download/</a></li>
 <li>下载长期支持版（LTS)安装包。</li>
-<li>根据提示逐步进行本地安装,可以使用<code>node -v</code>或者<code>npm -v</code>来查看版本号以确认安装成功。<br><img src="/blog/source/static/npm_v.png" alt="npm-v"><br>注：中国地区可以使用更快的源：<code>npm install -g cnpm --registry=https://registry.npm.taobao.org</code></li>
+<li>根据提示逐步进行本地安装,可以使用<code>node -v</code>或者<code>npm -v</code>来查看版本号以确认安装成功。<br><br><img src="/static/npm_v.png" width = "50%" height = "50%" alt="npm-v" align=center /><br>注：中国地区可以使用更快的源：<code>npm install -g cnpm --registry=https://registry.npm.taobao.org</code></li>
 </ol>
 </li>
 <li>Hexo安装<ol>
 <li><code>npm install hexo-cli -g</code></li>
-<li>可以使用<code>hexo -v</code>来查看版本号以验证安装hexo成功。<br><img src="/blog/source/static/hexo_v.png" alt="hexo-v"></li>
+<li>可以使用<code>hexo -v</code>来查看版本号以验证安装hexo成功。<br><br><img src="/static/hexo_v.png" width = "50%" height = "50%" alt="hexo-v" align=center /></li>
 </ol>
 </li>
 </ol>
@@ -217,7 +216,7 @@
 <li><p>部署到Github上</p>
 <ol>
 <li>登录到自己的github</li>
-<li>新建一个repository, 此处命名一定要使用自己的username.github.io。例如我的username是10kshuaizhang, 则新建的这个应该是10kshuaizhang.github.io<br><img src="/blog/source/static/new_repo.png" alt="new_repo"></li>
+<li>新建一个repository, 此处命名一定要使用自己的username.github.io。例如我的username是10kshuaizhang, 则新建的这个应该是10kshuaizhang.github.io<br><br><img src="/static/new_repo.png" width = "50%" height = "50%" alt="new_repo-v" align=center /></li>
 <li>在博客根目录下安装git部署插件<br><code>$ npm install hexo-deployer-git --save</code><br>WARNING可以忽略。</li>
 <li>修改博客根目录下配置文件， _config.yml<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Deployment</span><br><span class="line">## Docs: https:&#x2F;&#x2F;hexo.io&#x2F;docs&#x2F;deployment.html</span><br><span class="line">deploy:</span><br><span class="line"> 	type: git</span><br><span class="line"> 	repo: https:&#x2F;&#x2F;github.com&#x2F;xxxx&#x2F;xxxx.github.io # 你的仓库地址， xxxx是你的username</span><br><span class="line"> 	branch: master</span><br></pre></td></tr></table></figure></li>
 <li>命令部署<br><code>hexo d</code><br>第一次github需要认证，按照提示输入账号密码即可。</li>
@@ -226,17 +225,19 @@
 </li>
 <li><p>更改主题<br>此处选用了Litten作者的主题，清晰简洁。Github地址为：<a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="noopener">https://github.com/litten/hexo-theme-yilia</a><br>实现步骤如下：</p>
 <ol>
-<li>安装<br><code>$ git clone https://github.com/litten/hexo-theme-yilia.git themes/yilia</code></li>
-<li>配置<br>修改hexo根目录下的_config.yml: theme:yilia</li>
-<li>更新<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd themes&#x2F;yilia</span><br><span class="line">git pull</span><br></pre></td></tr></table></figure>
+<li><p>安装<br><code>$ git clone https://github.com/litten/hexo-theme-yilia.git themes/yilia</code></p>
+</li>
+<li><p>配置<br>修改hexo根目录下的_config.yml: theme:yilia</p>
+</li>
+<li><p>更新</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd themes&#x2F;yilia</span><br><span class="line">git pull</span><br></pre></td></tr></table></figure>
 
-</li>
-</ol>
-</li>
-</ol>
 <p>更多配置详见作者Github。</p>
-<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h3><p>整体来说，搭建起来不是很难，关键在于以后去完善各个功能，并且坚持输出内容，将自己的知识梳理清晰，并且归纳到博客上。</p>
-
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h3><pre><code>整体来说，搭建起来不是很难，关键在于以后去完善各个功能，并且坚持输出内容，将自己的知识梳理清晰，并且归纳到博客上。</code></pre>
       
 
       
