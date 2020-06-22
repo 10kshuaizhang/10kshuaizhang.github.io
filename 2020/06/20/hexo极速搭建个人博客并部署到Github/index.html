@@ -389,25 +389,35 @@
   
 
   
-  <div id="gitment-ctn"></div> 
-<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
-<script src="https://billts.site/js/gitment.js"></script>
+
+
+
+   
+       <section id="comments" class="comments">
+         <style>
+           .comments{margin:30px;padding:10px;background:#fff}
+           @media screen and (max-width:800px){.comments{margin:auto;padding:10px;background:#fff}}
+         </style>
+         <div id="vcomment" class="comment"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
-var gitment = new Gitment({
-  id: "http://yoursite.com/2020/06/20/hexo%E6%9E%81%E9%80%9F%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0Github/",
-  owner: '10kshuaizhang',
-  repo: '10kshuaizhang.github.io',
-  oauth: {
-    client_id: '3f6a89270d2a0e51772d',
-    client_secret: '29d9a5363a85a404f259266915be22c498cd3713',
-  },
-})
-gitment.render('gitment-ctn')
+  var notify = 'false' == true ? true : false;
+  var verify = 'false' == true ? true : false;
+  new Valine({
+    av: AV,
+    el: '#vcomment',
+    notify: notify,
+    app_id: "WsqeD0zCG3BCN0FWCJ1AToox-MdYXbMMI",
+    app_key: "MmbXeLMlHQnWMBU83kuB3eEy",
+    placeholder: "Just go go",
+    avatar: "mm",
+  });
 </script>
 
-  
-
-
+     </section>
+   
 
 
           </div>
