@@ -8,15 +8,15 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>数据结构与算法系列之桶排序 | 10K&#39;s</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="桶排序 bucket sort文章大纲 简介桶排序 Java实现算法 总结">
+  <meta name="description" content="文章大纲 简介桶排序 Java实现算法 总结">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据结构与算法系列之桶排序">
 <meta property="og:url" content="http://yoursite.com/2020/06/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%B3%BB%E5%88%97%E4%B9%8B%E6%A1%B6%E6%8E%92%E5%BA%8F/index.html">
 <meta property="og:site_name" content="10K&#39;s">
-<meta property="og:description" content="桶排序 bucket sort文章大纲 简介桶排序 Java实现算法 总结">
+<meta property="og:description" content="文章大纲 简介桶排序 Java实现算法 总结">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-06-22T04:59:14.000Z">
-<meta property="article:modified_time" content="2020-06-22T05:13:09.338Z">
+<meta property="article:modified_time" content="2020-06-27T06:12:00.127Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="数据结构与算法">
 <meta name="twitter:card" content="summary">
@@ -175,13 +175,13 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="桶排序-bucket-sort"><a href="#桶排序-bucket-sort" class="headerlink" title="桶排序 bucket sort"></a>桶排序 bucket sort</h2><h3 id="文章大纲"><a href="#文章大纲" class="headerlink" title="文章大纲"></a>文章大纲</h3><ol>
+        <h3 id="文章大纲"><a href="#文章大纲" class="headerlink" title="文章大纲"></a>文章大纲</h3><ol>
 <li>简介桶排序</li>
 <li>Java实现算法</li>
 <li>总结</li>
 </ol>
-<hr>
 <a id="more"></a>
+
 <h3 id="1-桶排序简介"><a href="#1-桶排序简介" class="headerlink" title="1. 桶排序简介"></a>1. 桶排序简介</h3><pre><code>桶排序简要概括就是建桶， 数据存入相应的桶内，桶内排序，取出到原数组。
 桶排序不是基于比较的排序算法。它是一个稳定的排序算法。</code></pre><h3 id="2-Java实现算法"><a href="#2-Java实现算法" class="headerlink" title="2. Java实现算法"></a>2. Java实现算法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> SORTING;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"><span class="keyword">import</span> java.util.Collections;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BucketSort</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">bucketSort</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (nums == <span class="keyword">null</span> || nums.length == <span class="number">0</span>) <span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">int</span> max = Integer.MIN_VALUE, min = Integer.MAX_VALUE;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> num : nums) &#123;</span><br><span class="line">            max = Math.max(max, num);</span><br><span class="line">            min = Math.min(min, num);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> gap = (max - min) / nums.length + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> bucketNum = (max - min) / gap + <span class="number">1</span>; <span class="comment">// 具体桶数量根据实际情况选择</span></span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; bucket = <span class="keyword">new</span> ArrayList&lt;&gt;(); <span class="comment">// 建立一个容器</span></span><br><span class="line">       	<span class="comment">// 建立一定数量的空桶</span></span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; bucketNum; i++) &#123;</span><br><span class="line">            bucket.add(<span class="keyword">new</span> ArrayList&lt;&gt;()); </span><br><span class="line">        &#125;</span><br><span class="line">	<span class="comment">// 将待排序数组的值放到相应的桶里</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> no = (nums[i] - min ) / nums.length;</span><br><span class="line">            bucket.get(no).add(nums[i]);</span><br><span class="line">        &#125;</span><br><span class="line">	<span class="comment">// 桶内排序</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; bucketNum; i++) &#123;</span><br><span class="line">            Collections.sort(bucket.get(i));</span><br><span class="line">        &#125;</span><br><span class="line">	<span class="comment">// 放回到原数组</span></span><br><span class="line">        <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (List&lt;Integer&gt; list : bucket) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> num : list) &#123;</span><br><span class="line">                nums[k++] = num;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">//测试算法是否成功</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] nums = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">2</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">4</span>&#125;;</span><br><span class="line">        bucketSort(nums);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i : nums) System.out.printf(i + <span class="string">" "</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <hr>
@@ -455,6 +455,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">other</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hexo</a>
               </li>
              
@@ -463,7 +467,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">other</a>
+                <a href="javascript:void(0)" class="js-tag color5">Design Pattern</a>
               </li>
             
             <div class="clearfix"></div>
