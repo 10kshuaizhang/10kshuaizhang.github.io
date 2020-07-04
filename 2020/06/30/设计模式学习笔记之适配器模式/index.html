@@ -17,7 +17,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2014/08/adapter_pattern_uml_diagram.jpg">
 <meta property="article:published_time" content="2020-06-30T15:49:05.000Z">
-<meta property="article:modified_time" content="2020-06-30T15:49:34.801Z">
+<meta property="article:modified_time" content="2020-06-30T15:53:14.623Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="Design Pattern">
 <meta name="twitter:card" content="summary">
@@ -184,7 +184,6 @@
 </ol>
 <a id="more"></a>
 
-<hr>
 <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>适配器模式（Adapter Pattern）是作为两个不兼容的接口之间的桥梁。</p>
 <p><strong>目的</strong>：将一个类的接口转换成客户希望的另外一个接口。适配器模式使得原本由于接口不兼容而不能一起工作的那些类可以一起工作。</p>
 <p><strong>如何解决：</strong>继承或依赖（推荐）。</p>
@@ -192,10 +191,10 @@
 <p><strong>应用实例：</strong> 1、美国电器 110V，中国 220V，就要有一个适配器将 110V 转化为 220V。</p>
 <p><strong>注意事项：</strong>适配器不是在详细设计时添加的，而是解决正在服役的项目的问题。</p>
 <hr>
-<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>我们有一个 <em>MediaPlayer</em> 接口和一个实现了 <em>MediaPlayer</em> 接口的实体类 <em>AudioPlayer<em>。默认情况下，</em>AudioPlayer</em> 可以播放 mp3 格式的音频文件。</p>
-<p>我们还有另一个接口 <em>AdvancedMediaPlayer</em> 和实现了 <em>AdvancedMediaPlayer</em> 接口的实体类。该类可以播放 vlc 和 mp4 格式的文件。</p>
-<p>我们想要让 <em>AudioPlayer</em> 播放其他格式的音频文件。为了实现这个功能，我们需要创建一个实现了 <em>MediaPlayer</em> 接口的适配器类 <em>MediaAdapter*，并使用 *AdvancedMediaPlayer</em> 对象来播放所需的格式。</p>
-<p><em>AudioPlayer</em> 使用适配器类 <em>MediaAdapter</em> 传递所需的音频类型，不需要知道能播放所需格式音频的实际类。<em>AdapterPatternDemo*，我们的演示类使用 *AudioPlayer</em> 类来播放各种格式。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>我们有一个MediaPlayer接口和一个实现了MediaPlayer接口的实体类AudioPlayer。默认情况下, AudioPlayer可以播放 mp3 格式的音频文件。</p>
+<p>我们还有另一个接口AdvancedMediaPlayer和实现了AdvancedMediaPlayer接口的实体类。该类可以播放 vlc 和 mp4 格式的文件。</p>
+<p>我们想要让AudioPlayer播放其他格式的音频文件。为了实现这个功能，我们需要创建一个实现了MediaPlayer接口的适配器类MediaAdapter，并使用AdvancedMediaPlayer对象来播放所需的格式。</p>
+<p>AudioPlayer使用适配器类MediaAdapter传递所需的音频类型，不需要知道能播放所需格式音频的实际类。AdapterPatternDemo，我们的演示类使用AudioPlayer类来播放各种格式。</p>
 <p><img src="https://www.runoob.com/wp-content/uploads/2014/08/adapter_pattern_uml_diagram.jpg" alt="适配器模式的 UML 图"></p>
 <p>为媒体播放器和更高级的媒体播放器创建接口</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MediaPlayer</span> </span>&#123;</span><br><span class="line">  	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">(String audioType, String fileName)</span></span>;         </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -207,10 +206,10 @@
 
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Mp4Player</span> <span class="title">implments</span> <span class="title">AdvancedMediaPlayer</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">playVlc</span><span class="params">(String fileName)</span> </span>&#123;&#125;</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">playMp4</span><span class="params">(String fileName)</span> </span>&#123;</span><br><span class="line">    	System.out.println(<span class="string">"Playing mp4 file. Name: "</span> + fileName); </span><br><span class="line">  &#125;	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>创建实现了 <em>MediaPlayer</em> 接口的适配器类。</p>
+<p>创建实现了MediaPlayer接口的适配器类。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MediaAdapter</span> <span class="keyword">implements</span> <span class="title">MediaPlayer</span> </span>&#123;</span><br><span class="line">  AdvancedMediaPlayer advancedMusicPlayer;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MediaAdapter</span><span class="params">(String audioType)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (audioType.equalsIgnoreCase(<span class="string">"vlc"</span>)) &#123;</span><br><span class="line">      	advancedMusicPlayer = <span class="keyword">new</span> VlcPlayer();</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (audioType.equalsIgnoreCase(<span class="string">"mp4"</span>)) &#123;</span><br><span class="line">      	advancedMusicPlayer = <span class="keyword">new</span> Mp4Player();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">(String audioType, String fileName)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(audioType.equalsIgnoreCase(<span class="string">"vlc"</span>))&#123;</span><br><span class="line">         advancedMusicPlayer.playVlc(fileName);</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(audioType.equalsIgnoreCase(<span class="string">"mp4"</span>))&#123;</span><br><span class="line">         advancedMusicPlayer.playMp4(fileName);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>创建实现了 <em>MediaPlayer</em> 接口的实体类。</p>
+<p>创建实现了MediaPlayer接口的实体类。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AudioPlayer</span> <span class="keyword">implements</span> <span class="title">MediaPlayer</span> </span>&#123;</span><br><span class="line">  MediaPlayer mediaAdapter;</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">(String audioType, String fileName)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (audioType.equalsIgnoreCase(<span class="string">"mp3"</span>)) &#123;</span><br><span class="line">      System.out.println(<span class="string">"Playing mp3 file. Name: "</span> + fileName); </span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (audioType.equalsIgnoreCase(<span class="string">"mp4"</span>) || audioType.equalsIgnoreCase(<span class="string">"vlc"</span>)) &#123;</span><br><span class="line">      mediaAdapter = <span class="keyword">new</span> MediaAdapter(audioType);</span><br><span class="line">      mediaAdapter.play(audioType, fileName);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      System.out.println(<span class="string">"Invalid media. "</span>+</span><br><span class="line">            audioType + <span class="string">" format not supported"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>使用 AudioPlayer 来播放不同类型的音频格式。</p>
@@ -328,6 +327,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/2020/07/04/%E5%8E%9F%E7%A0%81%E5%8F%8D%E7%A0%81%E5%92%8C%E8%A1%A5%E7%A0%81/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          原码反码和补码
+        
+      </div>
+    </a>
   
   
     <a href="/2020/06/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/" id="article-nav-older" class="article-nav-link-wrap">
@@ -486,10 +494,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">other</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hexo</a>
               </li>
              
@@ -499,6 +503,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Design Pattern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">other</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Other</a>
               </li>
             
             <div class="clearfix"></div>

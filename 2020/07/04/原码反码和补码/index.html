@@ -6,22 +6,28 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>设计模式之观察者模式 | 10K&#39;s</title>
+  <title>原码反码和补码 | 10K&#39;s</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="文章大纲 介绍 实现 结束">
+  <meta name="description" content="文章大纲 前言 补码诞生的背景 原码、反码、补码 加减法 总结 致谢">
 <meta property="og:type" content="article">
-<meta property="og:title" content="设计模式之观察者模式">
-<meta property="og:url" content="http://yoursite.com/2020/06/26/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:title" content="原码反码和补码">
+<meta property="og:url" content="http://yoursite.com/2020/07/04/%E5%8E%9F%E7%A0%81%E5%8F%8D%E7%A0%81%E5%92%8C%E8%A1%A5%E7%A0%81/index.html">
 <meta property="og:site_name" content="10K&#39;s">
-<meta property="og:description" content="文章大纲 介绍 实现 结束">
+<meta property="og:description" content="文章大纲 前言 补码诞生的背景 原码、反码、补码 加减法 总结 致谢">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2014/08/observer_pattern_uml_diagram.jpg">
-<meta property="article:published_time" content="2020-06-27T06:02:59.000Z">
-<meta property="article:modified_time" content="2020-06-28T05:02:18.447Z">
+<meta property="og:image" content="https://pic2.zhimg.com/v2-ad7b0d82da896baff7841a7877803ae4_r.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/50/v2-f73601e7f5df0ddab81a46744f933641_hd.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/50/v2-a8254e48c654b18350ef3594552c2b78_hd.jpg">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-0c9f02bbb67fedc3f87aa90cade39302_1440w.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-f192c94f4e4ad851211a8da48500ab39_1440w.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-baea17c0f9031c290bc700c6f80ac7d3_1440w.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-4c21e2a9d411bb4cb6521ea48f801725_1440w.jpg">
+<meta property="article:published_time" content="2020-07-04T17:24:24.000Z">
+<meta property="article:modified_time" content="2020-07-04T17:38:55.245Z">
 <meta property="article:author" content="10K">
-<meta property="article:tag" content="Design Pattern">
+<meta property="article:tag" content="Other">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.runoob.com/wp-content/uploads/2014/08/observer_pattern_uml_diagram.jpg">
+<meta name="twitter:image" content="https://pic2.zhimg.com/v2-ad7b0d82da896baff7841a7877803ae4_r.jpg">
   
     <link rel="alternative" href="/atom.xml" title="10K&#39;s" type="application/atom+xml">
   
@@ -157,62 +163,72 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-设计模式之观察者模式" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-原码反码和补码" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      设计模式之观察者模式
+      原码反码和补码
     </h1>
   
 
         
-        <a href="/2020/06/26/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-06-27T06:02:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-26</time>
+        <a href="/2020/07/04/%E5%8E%9F%E7%A0%81%E5%8F%8D%E7%A0%81%E5%92%8C%E8%A1%A5%E7%A0%81/" class="archive-article-date">
+  	<time datetime="2020-07-04T17:24:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-04</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="文章大纲"><a href="#文章大纲" class="headerlink" title="文章大纲"></a>文章大纲</h3><ol>
-<li>介绍</li>
-<li>实现</li>
-<li>结束</li>
+        <h3 id="文章大纲"><a href="#文章大纲" class="headerlink" title="文章大纲"></a>文章大纲</h3><ol start="0">
+<li>前言</li>
+<li>补码诞生的背景</li>
+<li>原码、反码、补码</li>
+<li>加减法</li>
+<li>总结</li>
+<li>致谢</li>
 </ol>
 <a id="more"></a>
 
-<h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p><strong>是什么</strong>： 当对象间存在一对多关系时， 则使用观察者模式。当一个对象的状态发生改变时，所有依赖与他的的对象都得到通知并且被自动更新。</p>
-<p><strong>实例</strong>：拍卖的时候，拍卖师观察最高标价，然后通知给其他竞价者。</p>
-<p><strong>优点</strong>：</p>
-<pre><code>1. 观察者和被观察者是抽象耦合的。
-
-2. 建立了触发机制。</code></pre><p><strong>缺点</strong>：</p>
-<pre><code>1. 如果一个被观察者有很多观察者的话， 通知到所有观察者很耗时。
-2. 观察者被观察者之间有循环依赖的话，观察目标会触发循环调用，导致系统崩溃。
-3. 观察者只是知道了有更新而并不知道如何更新的。</code></pre><hr>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p><img src="https://www.runoob.com/wp-content/uploads/2014/08/observer_pattern_uml_diagram.jpg" alt="观察者模式的 UML 图"></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Observer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> abstruct <span class="keyword">void</span> <span class="title">update</span><span class="params">(String msg)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第一个观察者：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">F_Obeserver</span> <span class="title">extendes</span> <span class="title">Observer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">        System.out.println(F_observer.class.getName + ": " + msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第二个观察者：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">S_Obeserver</span> <span class="title">extendes</span> <span class="title">Observer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">        System.out.println(S_observer.class.getName + ": " + msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第三个观察者：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">T_Obeserver</span> <span class="title">extendes</span> <span class="title">Observer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">        System.out.println(T_observer.class.getName + ": " + msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>被观察者：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Subject</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt;Observer&gt; observers = <span class="keyword">new</span> ArrayList&lt;&gt;(); <span class="comment">// list of observers</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMsg</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">        notifyAll(msg);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// subject</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addAttach</span><span class="params">(Observer observer)</span> </span>&#123;</span><br><span class="line">        obeservers.add(observer);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// notify all</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">notifyAll</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (Observer observer : observers) &#123;</span><br><span class="line">            obeserver.update(msg);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>使用:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        F_observer fObserver = <span class="keyword">new</span> F_Observer();</span><br><span class="line">        S_observer sObserver = <span class="keyword">new</span> S_Observer();</span><br><span class="line">        T_observer tObserver = <span class="keyword">new</span> T_Observer();</span><br><span class="line">        Subject subject = <span class="keyword">new</span> Subject();</span><br><span class="line">        subject.addAttach(fObserver);</span><br><span class="line">        subject.addAttach(sObserver);</span><br><span class="line">        subject.addAttach(tObserver);</span><br><span class="line">        subject.setMsg(<span class="string">"state change"</span>); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h4 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h4><p>以上就是观察者模式的简要介绍。</p>
+<h3 id="0-前言"><a href="#0-前言" class="headerlink" title="0. 前言"></a>0. 前言</h3><p>之前复习原码补码的时候不是太明白，所以去看了一些文章，这篇我觉得讲的很清楚，从产生到应用以及解决了什么问题都阐述的很好，转载至此，以便查阅和分享。感谢知乎 @祥先生</p>
+<h3 id="1-补码诞生的背景"><a href="#1-补码诞生的背景" class="headerlink" title="1. 补码诞生的背景"></a>1. 补码诞生的背景</h3><p>不论是在生活中还是虚拟网络中，人们总是习惯与10进制数字打交道，很容易理解10进制的加减乘除运算，但是我们知道计算机无法直接理解10进制，只能识别高低电平，一般人为设定0为低电平，1为高电平，所以又称计算机是二进制的。在计算机发展早期，人们要想使用计算机，只能使用计算机看懂的二进制与计算机打交道，如穿孔纸带，人们使用穿孔纸带将程序和数据转换为二进制码，带孔为1，无孔为0，计算机读取并处理完成后，同样在纸带上以二进制打孔输出计算结果，一般人很难操作这种早期计算机，只能是专业人士才能处理二进制的转换。随着科技的进步，普通人也能熟练的操作计算机，表面上似乎计算机已经理解了10进制，但是实际上，计算机最底层还是二进制的，这就需要10进制到二进制的自动转换以及使用二进制进行各种运算。</p>
+<p>10进制到二进制的转换需要考虑两方面，第一个是编码格式，二进制中只有0和1，不同于常用的10进制使用 + 或者 - 符号代表正负数，要想让二进制只使用1和0代表正负数，需要找到合适的编码格式；第二个是运算，以加减运算为例，计算机内部是比较复杂的，计算机实现加法运算是很容易的，若直接作减法则比较复杂，需要处理借位等等，内部逻辑组件会增多，所以计算机一般在减去一个数的时候会转成加上这个被减数的负数，将减法转换成了加法，即A - B = A + （-B）。所以需要找到一种满足这两个方面的编码，目前10进制转换成二进制主要有三种方式：原码、反码、补码，下面将从编码格式和运算两方面对比这三种编码格式。</p>
+<h3 id="2-原码、反码、补码"><a href="#2-原码、反码、补码" class="headerlink" title="2. 原码、反码、补码"></a>2. 原码、反码、补码</h3><h4 id="2-1-原码"><a href="#2-1-原码" class="headerlink" title="2.1 原码"></a>2.1 原码</h4><p>原码是最简单也是最直观的从10进制到二进制的编码格式，人为规定原码的最高位为符号位，正数为0，负数为1，其余所有位为10进制数的绝对值。如下面例子：</p>
+<p><img src="https://pic2.zhimg.com/v2-ad7b0d82da896baff7841a7877803ae4_r.jpg" alt="十进制和二进制原码转换"></p>
+<p>原码的优点是编码格式对人很友好，类似十进制中的正负号，原码用最高位0和1分别代码正负数，很直观的表示了正负数。但是原码也有一个很大的缺点，就是无法将减法转换成加法运算，如：</p>
+<p>4 - 2 （10进制）= 4 + （-2）= 0 100 + 1 010  （二进制原码） = 1110 （二进制原码）= -6 （10进制）</p>
+<p>上面例子计算4-2，将4-2转换成4+(-2)并用原码计算，得出的结果错误，原码虽然很直观转换了10进制数，但是计算输出的原码值并不正确，所以计算机不能直接使用原码存储和计算。</p>
+<h3 id="2-2-反码"><a href="#2-2-反码" class="headerlink" title="2.2 反码"></a>2.2 反码</h3><p>反码的出现，主要是为了解决原码无法执行减法运算的问题，人为规定反码最高位为符号位，正数为0，负数为1，反码正数与原码正数格式一致，反码负数为负数绝对值的原码按位分别取反，如下面例子：</p>
+<p><img src="https://pic2.zhimg.com/50/v2-f73601e7f5df0ddab81a46744f933641_hd.jpg" alt="十进制和二进制反码转换"></p>
+<p>反码的负数编码格式不像原码那样直观，但是却可以将减法转换成加法了，反码减法规则为：A - B = A + （-B），如果最高位发生了溢位，则需要在最低位加上1，如下面两个例子：</p>
+<p>1）4 - 2 （10进制）= 4 + （-2）= 0 100 + 1 101  （二进制反码） = 1 0001 （二进制反码，发生了溢位）=  0001 + 0001（最低位加1） = 0010 （二进制反码）= 2（10进制）</p>
+<p>2）2 - 2 （10进制）= 2 + （-2）= 0 010 + 1 101  （二进制反码） = 1111 （二进制反码）=  - 0 （10进制）</p>
+<p>运用反码减法规则，得到的上面两个例子的减法结果是正确的，所以计算机是可以使用反码存储和计算的，早期的计算机如CDC 6000、LINC、PDP-1等都是使用反码的，但是反码也有两个缺点：1）0有两种编码，+0 （0000）和 -0 （1111），在判断0时，需要分别判断0000和1111；2）反码减法的算法规则比较复杂，需要增加计算机内部逻辑组件额外判断溢位，会影响计算效率。</p>
+<h3 id="2-3-补码"><a href="#2-3-补码" class="headerlink" title="2.3 补码"></a>2.3 补码</h3><p>补码是现代计算机使用的编码格式，解决了上面反码的两个缺点。正数的补码与原码格式相同，负数的补码是将负数绝对值的原码分别按位取反，并加1，如下面例子</p>
+<p><img src="https://pic3.zhimg.com/50/v2-a8254e48c654b18350ef3594552c2b78_hd.jpg" alt="十进制和二进制补码转换">    </p>
+<p>补码的减法规则比较简单，按照最简单的转换公式A-B = A + （-B），当减去一个数时直接转换成加上被减数的负数即可，不用像反码那样额外处理溢位，如下面两个例子：</p>
+<p>1）4 - 2 （10进制）= 4 + （-2）= 0 100 + 1 110  （二进制补码） = 1 0010 （二进制补码，发生了溢位，直接丢弃溢位）=  0010（二进制补码） = 2（10进制）</p>
+<p>2）2 - 2 （10进制）= 2 + （-2）= 0 010 + 1 110  （二进制补码） = 1 0000（二进制补码，发生了溢位，直接丢弃溢位）=  0000 （二进制补码） = 0（10进制）</p>
+<p>使用了补码的加法，上面两个例子得出的结果都是正确的，相对于反码，补码加法更简单，直接丢弃溢位，不需要针对溢位单独处理，所以用补码做运算效率高。虽然补码运算过程很简单，但是转换和运算规则却很难理解，要弄明白其中的原理，就需要揭开补码背后的数学奥秘。</p>
+<h3 id="3-加减法"><a href="#3-加减法" class="headerlink" title="3. 加减法"></a>3. 加减法</h3><p> 加减运算有两种运算方式，一种是普通算术加减法，通常生活中使用的是10进制普通算术加减法；另一种是模N加减法，计算机补码执行加减运算，则是使用了模N加减法。</p>
+<h4 id="3-1-普通加减法"><a href="#3-1-普通加减法" class="headerlink" title="3.1 普通加减法"></a>3.1 普通加减法</h4><p>普通算术加减法是我们在生活中一直使用的，也是最简单和最容易理解的，通常人为使用 + 和 - 符号规定正负数，正数通常省略 + 符号， 如果10，20，-10，-20，正负数的加减运算则可以看成是一维运算，如下图：</p>
+<p><img src="https://pic4.zhimg.com/80/v2-0c9f02bbb67fedc3f87aa90cade39302_1440w.jpg" alt="img"></p>
+<p>上图是普通算术加减法示意图，当执行加法运算时，需要向右移动，比如0+3，在0位置向右移动3位，即为0+3的结果；同样的，当执行减法运算，向左移动。向左和向右是没有尽头的，可以一直移动到正的无穷大或者负的无穷大。普通算术加减法简单直观，很容易被人理解，但是对于计算机要实现这样的算术加减法，既要区分正负数，又要分别实现加减法，设计就会很复杂，效率会很低，所以这套算术加减法并不适用计算机。所以需要找到一种不需要区分正负数就可以实现加减法转换的规则，那么计算机运行效率就会最高。</p>
+<h4 id="3-2-模N加减法"><a href="#3-2-模N加减法" class="headerlink" title="3.2 模N加减法"></a>3.2 模N加减法</h4><p>模N加减法正是不需要区分正负数就可以实现加减法转换的运算方式，不同于普通算术加减法，它是二维运算，要理解模N加减法比较困难，可以先用生活最典型的时钟举例，如下图：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-f192c94f4e4ad851211a8da48500ab39_1440w.jpg" alt="img"></p>
+<p>上面是生活中常见的时钟，如果当前时间为凌晨1点，要知道5个小时之后的时间是多少，只需要顺时针旋转5格，指向了6点，即为1+5的结果；如果想知道5个小时之前的时间是多少，需要逆时针旋转5格，指向晚上8点，即为1-5的结果。时钟顺时针相当于时间向前走，逆时针相当于时间往后走，但是时钟不会指向无穷大的数，当转过24个小时（24小时制）又回到了原点。在时钟转动中，1-5的最终结果为晚上8点，逆时针旋转5个小时就可以得到正确结果，同时也可以顺时钟旋转19个小时（24-5，24小时制），两种方式旋转都最终指向了晚上8点。所以任意逆时针旋转得到的结果都能通过顺时钟旋转得到，当逆时针旋转N个小时，与顺时针旋转24-N小时相等，24又称为模，如果把顺时针看成是加法，逆时针看成是减法，那么时钟旋转可以看成模24的加减法运算，满足公式A-m=A+（24-m），即在时钟任一时刻A点，从A点逆时针旋转m个小时得到的结果，与从A点顺时针旋转24-m得到的结果一致。模N运算将减法转换成了加法。</p>
+<p>计算机使用的二进制位数是有限制的，比如4位，8位，16位，64位等等，当数值太大超过最大位数时，会发生溢出，重新归0，所以计算机的二进制能表示的数不是无穷大的，由于溢出归零的特点，更像时钟旋转，如下图：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-baea17c0f9031c290bc700c6f80ac7d3_1440w.jpg" alt="img"></p>
+<p>上图的四位二进制表示了从0000-1111，当超出1111时，四位已无法表示，会发生溢出，高于四位的位会被丢掉，比如1111加上2等于10001,10001包含五位二进制，最高位1会被丢掉，实际结果为0001，与时钟运算很相似，相当于在1111顺时针旋转了2个数。在时钟运算中，将顺时针看成加法，逆时针看成减法，那么时钟运算可以看成是模24的加减法，同理四位二进制也可以看成是模N的加减法，在4位二进制中，转一圈为2^4=16，所以4位二进制的加减法为模16的加减法，减法很容易的就被转换成了加法，即满足模N加减法公式：A-m=A+（16-m）。</p>
+<p>虽然根据模N加减法实现了加减法转换，但此时又有新的问题，4位二进制只有1和0，是没有区分正负数的，而人们在计算的时候是要区分正负数的，所以需要人为将部分二进制划分为负数，另一部分划分为正数，根据模N加减法公式A-m=A+（16-m），当A为零点时，根据模N加减法公式得到 0-m=0+16-m，即-m=16-m，即将零点A逆时针移动m得到负数m，同时这个负数m也可以从零点A顺时针移动16-m得到，零点A可以为上面四位二进制任意一位，比如定义0000或者0001为零点都是可以的，但是为了简单运算，人为规定0000为零点，0000逆时针方向的为负数，顺时针方向的为正数。如在0000逆时针旋转1个数或者顺时针旋转16-1得到1111，那么1111代表-1，相应的顺时针移动一个数为+1，即用0001表示+1；同理在0000逆时针旋转2个数或者顺时针旋转16-2得到1110，那么1110代表-2，相应的顺时针移动两个数为+2，即用0010表示+2；同理1101和0011分别为-3和+3，1100和0100分别为-4和+4，1011和0101分别为-5和+5，1010和0110分别为-6和+6，1001和0111分别为-7和+7，但是1000比较特殊，0000逆时针旋转8个数得到1000，所以1000为-8，相应的顺时针旋转8个数也得到了1000，1000既能表示-8又能表示+8，为了不产生冲突，人为规定1000为-8。如下图：</p>
+<p><img src="https://pic2.zhimg.com/80/v2-4c21e2a9d411bb4cb6521ea48f801725_1440w.jpg" alt="img"></p>
+<p>上图中的四位二进制根据模N加减法划分出了正负数，同理对任意n位二进制，模N等于=2^n，根据上面的模N加减法公式得到-m = N - m = 2^n - m = (2^n -1) - m + 1，最终得到了负数推导公式-m = (2^n -1) - m + 1，（2^n-1）-m即为负数的原码绝对值按位取反，之后再加上1可以快速得到负数编码，又称这种负数编码为补码。补码负数范围转换成10进制为 -1 ~ -2^（n-1），正数范围转换成10进制为 0 ~ 2^（n-1）-1，所以补码转换成10进制为 -2^（n-1） ~ 2^（n-1）-1。</p>
+<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h3><p>要想弄清楚补码，必须要弄清楚补码要解决的问题，计算机是二进制的，无法直接表示正负数，另外在计算机内部直接实现减法，也会影响计算机效率，所以人们希望要找到一种既能使用二进制表示10进制正负数的编码格式，同时这种编码格式又能满足将减法转换成加法进行运算，同时满足这两个条件有反码和补码，但由于反码中的0有两个编码格式，另外反码加法运算也比较复杂，慢慢地反码被淘汰了。补码刚好解决了反码的两个缺点，所以补码成了现代计算机的通用编码。</p>
+<p>补码加减法运算不同于常规的算术加减法，补码使用了模N加减法，要想完全理解补码，首先要理解模N加减法。</p>
+<h3 id="5-致谢"><a href="#5-致谢" class="headerlink" title="5. 致谢"></a>5. 致谢</h3><p>作者：祥先生<br>链接：<a href="https://www.zhihu.com/question/20159860/answer/713291288" target="_blank" rel="noopener">https://www.zhihu.com/question/20159860/answer/713291288</a><br>来源：知乎<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
 
       
 
@@ -247,7 +263,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Other</a>
         		</li>
       		
 		</ul>
@@ -303,7 +319,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/06/26/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/07/04/%E5%8E%9F%E7%A0%81%E5%8F%8D%E7%A0%81%E5%92%8C%E8%A1%A5%E7%A0%81/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -317,18 +333,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2020/06/27/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          设计模式之单例模式
-        
-      </div>
-    </a>
   
-  
-    <a href="/2020/06/26/Mac%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8FPath%E5%92%8C%E6%9F%A5%E7%9C%8BPath/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Mac设置环境变量Path和查看Path</div>
+    <a href="/2020/06/30/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">设计模式学习笔记之适配器模式</div>
       <i class="icon-circle-right"></i>
     </a>
   
