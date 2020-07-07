@@ -6,18 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>设计模式之观察者模式 | 10K&#39;s</title>
+  <title>设计模式学习笔记之观察者模式 | 10K&#39;s</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="文章大纲 介绍 实现 结束">
 <meta property="og:type" content="article">
-<meta property="og:title" content="设计模式之观察者模式">
+<meta property="og:title" content="设计模式学习笔记之观察者模式">
 <meta property="og:url" content="http://yoursite.com/2020/06/26/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/index.html">
 <meta property="og:site_name" content="10K&#39;s">
 <meta property="og:description" content="文章大纲 介绍 实现 结束">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2014/08/observer_pattern_uml_diagram.jpg">
 <meta property="article:published_time" content="2020-06-27T06:02:59.000Z">
-<meta property="article:modified_time" content="2020-06-28T05:02:18.447Z">
+<meta property="article:modified_time" content="2020-07-07T16:25:01.300Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="Design Pattern">
 <meta name="twitter:card" content="summary">
@@ -164,7 +164,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      设计模式之观察者模式
+      设计模式学习笔记之观察者模式
     </h1>
   
 
@@ -184,16 +184,11 @@
 </ol>
 <a id="more"></a>
 
-<h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p><strong>是什么</strong>： 当对象间存在一对多关系时， 则使用观察者模式。当一个对象的状态发生改变时，所有依赖与他的的对象都得到通知并且被自动更新。</p>
+<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p><strong>是什么</strong>：当对象间存在一对多关系时， 则使用观察者模式。当一个对象的状态发生改变时，所有依赖与他的的对象都得到通知并且被自动更新。</p>
 <p><strong>实例</strong>：拍卖的时候，拍卖师观察最高标价，然后通知给其他竞价者。</p>
-<p><strong>优点</strong>：</p>
-<pre><code>1. 观察者和被观察者是抽象耦合的。
-
-2. 建立了触发机制。</code></pre><p><strong>缺点</strong>：</p>
-<pre><code>1. 如果一个被观察者有很多观察者的话， 通知到所有观察者很耗时。
-2. 观察者被观察者之间有循环依赖的话，观察目标会触发循环调用，导致系统崩溃。
-3. 观察者只是知道了有更新而并不知道如何更新的。</code></pre><hr>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p><img src="https://www.runoob.com/wp-content/uploads/2014/08/observer_pattern_uml_diagram.jpg" alt="观察者模式的 UML 图"></p>
+<p><strong>优点</strong>：1. 观察者和被观察者是抽象耦合的。2. 建立了触发机制。</p>
+<p><strong>缺点</strong>：1. 如果一个被观察者有很多观察者的话， 通知到所有观察者很耗时。2. 观察者被观察者之间有循环依赖的话，观察目标会触发循环调用，导致系统崩溃。3. 观察者只是知道了有更新而并不知道如何更新的。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p><img src="https://www.runoob.com/wp-content/uploads/2014/08/observer_pattern_uml_diagram.jpg" alt="观察者模式的 UML 图"></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Observer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> abstruct <span class="keyword">void</span> <span class="title">update</span><span class="params">(String msg)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>第一个观察者：</p>
@@ -210,9 +205,7 @@
 
 <p>使用:</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        F_observer fObserver = <span class="keyword">new</span> F_Observer();</span><br><span class="line">        S_observer sObserver = <span class="keyword">new</span> S_Observer();</span><br><span class="line">        T_observer tObserver = <span class="keyword">new</span> T_Observer();</span><br><span class="line">        Subject subject = <span class="keyword">new</span> Subject();</span><br><span class="line">        subject.addAttach(fObserver);</span><br><span class="line">        subject.addAttach(sObserver);</span><br><span class="line">        subject.addAttach(tObserver);</span><br><span class="line">        subject.setMsg(<span class="string">"state change"</span>); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h4 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h4><p>以上就是观察者模式的简要介绍。</p>
+<h3 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h3><p>以上就是观察者模式的简要介绍。</p>
 
       
 
