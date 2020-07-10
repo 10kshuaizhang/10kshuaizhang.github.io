@@ -17,7 +17,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2014/08/proxy_pattern_uml_diagram.jpg">
 <meta property="article:published_time" content="2020-07-07T16:50:58.000Z">
-<meta property="article:modified_time" content="2020-07-07T16:55:30.466Z">
+<meta property="article:modified_time" content="2020-07-10T15:48:27.324Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="Design Pattern">
 <meta name="twitter:card" content="summary">
@@ -184,11 +184,7 @@
 </ol>
 <a id="more"></a>
 
-<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p><strong>意图</strong>：为其他对象提供一种代理以控制这个对象。</p>
-<p><strong>主要解决：</strong>在直接访问对象时带来的问题，比如说：要访问的对象在远程的机器上。在面向对象系统中，有些对象由于某些原因（比如对象创建开销很大，或者某些操作需要安全控制，或者需要进程外的访问），直接访问会给使用者或者系统结构带来很多麻烦，我们可以在访问此对象时加上一个对此对象的访问层。</p>
-<p><strong>如何解决</strong>：增加中间层。</p>
-<p><strong>关键代码</strong>：实现与被代理类组合。</p>
-<p><strong>注意事项：</strong> 1、和适配器模式的区别：适配器模式主要改变所考虑对象的接口，而代理模式不能改变所代理类的接口。 2、和装饰器模式的区别：装饰器模式为了增强功能，而代理模式是为了加以控制。</p>
+<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p><strong>意图</strong>：为其他对象提供一种代理以控制这个对象。<br><strong>主要解决：</strong>在直接访问对象时带来的问题，比如说：要访问的对象在远程的机器上。在面向对象系统中，有些对象由于某些原因（比如对象创建开销很大，或者某些操作需要安全控制，或者需要进程外的访问），直接访问会给使用者或者系统结构带来很多麻烦，我们可以在访问此对象时加上一个对此对象的访问层。<br><strong>如何解决</strong>：增加中间层。<br><strong>关键代码</strong>：实现与被代理类组合。<br><strong>注意事项：</strong> 1、和适配器模式的区别：适配器模式主要改变所考虑对象的接口，而代理模式不能改变所代理类的接口。 2、和装饰器模式的区别：装饰器模式为了增强功能，而代理模式是为了加以控制。</p>
 <h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>我们将创建一个 <em>Image</em> 接口和实现了 <em>Image</em> 接口的实体类。<em>ProxyImage</em> 是一个代理类，减少 <em>RealImage</em> 对象加载的内存占用。</p>
 <p>ProxyPatternDemo，我们的演示类使用ProxyImage来获取要加载的Image对象，并按照需求进行显示。</p>
 <p><img src="https://www.runoob.com/wp-content/uploads/2014/08/proxy_pattern_uml_diagram.jpg" alt="代理模式的 UML 图"></p>
@@ -201,10 +197,13 @@
 <p>代理类</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProxyImage</span> <span class="keyword">implements</span> <span class="title">Image</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> RealImage realImage;</span><br><span class="line">  <span class="keyword">private</span> String fileName;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">ProxyImage</span><span class="params">(String fileName)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.fileName = fileName;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (realImage == <span class="keyword">null</span>) &#123;</span><br><span class="line">      realImage = <span class="keyword">new</span> RealImage(fileName);</span><br><span class="line">    &#125;</span><br><span class="line">    realImage.display();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><strong>Step3</strong> 当悲情切实，使用ProxyImage来获取RealImage类的对象。</p>
+<p><strong>Step3</strong> 当被请求时，使用ProxyImage来获取RealImage类的对象。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProxyPatternDemo</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Image image = <span class="keyword">new</span> ProxyImage(<span class="string">"test_img.jpg"</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 图像将从磁盘加载</span></span><br><span class="line">    image.display(); </span><br><span class="line">    System.out.println(<span class="string">""</span>);</span><br><span class="line">      <span class="comment">// 图像不需要从磁盘加载</span></span><br><span class="line">    image.display(); </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h3><p>以上就是代理模式的简介。更准确说是静态代理。更多动态代理会在后续介绍。</p>
+<h3 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h3><p>以上就是代理模式的简介。更准确说是静态代理。更多动态代理会在后续介绍。<br>在《Head First Design Pattern》中作者使用的是大老板远程操作糖果机的例子。</p>
+<blockquote>
+<p>本文是基于《Head First Design Pattern》和菜鸟教程的<a href="https://www.runoob.com/design-pattern/proxy-pattern.html" target="_blank" rel="noopener">代理模式</a>的学习笔记。</p>
+</blockquote>
 
       
 
