@@ -152,6 +152,102 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-设计模式学习笔记之工厂模式-二" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-%E4%BA%8C/">设计模式学习笔记之工厂模式(二)</a>
+    </h1>
+  
+
+        
+        <a href="/2020/07/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-%E4%BA%8C/" class="archive-article-date">
+  	<time datetime="2020-07-12T18:17:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="看到一篇讲解的较为清晰简练的关于工厂模式的文章，转载来记录，以便查阅和分享。"><a href="#看到一篇讲解的较为清晰简练的关于工厂模式的文章，转载来记录，以便查阅和分享。" class="headerlink" title="看到一篇讲解的较为清晰简练的关于工厂模式的文章，转载来记录，以便查阅和分享。"></a>看到一篇讲解的较为清晰简练的关于工厂模式的文章，转载来记录，以便查阅和分享。</h2><p>下面例子中鼠标，键盘，耳麦为产品，惠普，戴尔为工厂。</p>
+<h3 id="简单工厂模式"><a href="#简单工厂模式" class="headerlink" title="简单工厂模式"></a>简单工厂模式</h3><p>简单工厂模式不是 23 种里的一种，简而言之，就是有一个专门生产某个产品的类。<br>比如下图中的鼠标工厂，专业生产鼠标，给参数 0，生产戴尔鼠标，给参数 1，生产惠普鼠标。</p>
+<p><img src="https://www.runoob.com/wp-content/uploads/2018/07/1530601914-2143-DP-SimpleFactory.png" alt="img"></p>
+<h3 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式</h3><p>工厂模式也就是鼠标工厂是个父类，有生产鼠标这个接口。<br>戴尔鼠标工厂，惠普鼠标工厂继承它，可以分别生产戴尔鼠标，惠普鼠标。<br>生产哪种鼠标不再由参数决定，而是创建鼠标工厂时，由戴尔鼠标工厂创建。<br>后续直接调用<strong>鼠标工厂.生产鼠标()</strong>即可</p>
+<p><img src="https://www.runoob.com/wp-content/uploads/2018/07/1530601917-1999-DP-Factory.png" alt="img"></p>
+<h3 id="抽象工厂模式"><a href="#抽象工厂模式" class="headerlink" title="抽象工厂模式"></a>抽象工厂模式</h3><p>抽象工厂模式也就是不仅生产鼠标，同时生产键盘。<br>也就是 PC 厂商是个父类，有生产鼠标，生产键盘两个接口。<br>戴尔工厂，惠普工厂继承它，可以分别生产戴尔鼠标+戴尔键盘，和惠普鼠标+惠普键盘。<br>创建工厂时，由戴尔工厂创建。<br>后续<strong>工厂.生产鼠标()</strong>则生产戴尔鼠标，<strong>工厂.生产键盘()</strong>则生产戴尔键盘。</p>
+<p><img src="https://www.runoob.com/wp-content/uploads/2018/07/1530601916-7298-DP-AbstractFactory.png" alt="img"></p>
+<blockquote>
+<p>在抽象工厂模式中，假设我们需要增加一个工厂<br>假设我们增加华硕工厂，则我们需要增加华硕工厂，和戴尔工厂一样，继承 PC 厂商。<br>之后创建华硕鼠标，继承鼠标类。创建华硕键盘，继承键盘类即可。</p>
+</blockquote>
+<p><img src="https://www.runoob.com/wp-content/uploads/2018/07/1530601980-8080-P-AbstractFactory-AddFactory.png" alt="img"></p>
+<blockquote>
+<p>在抽象工厂模式中，假设我们需要增加一个产品<br>假设我们增加耳麦这个产品，则首先我们需要增加耳麦这个父类，再加上戴尔耳麦，惠普耳麦这两个子类。<br>之后在PC厂商这个父类中，增加生产耳麦的接口。最后在戴尔工厂，惠普工厂这两个类中，分别实现生产戴尔耳麦，惠普耳麦的功能。以上。</p>
+</blockquote>
+<p><img src="https://www.runoob.com/wp-content/uploads/2018/07/1530601917-7462-P-AbstractFactory-AddProduct.png" alt="img"></p>
+<hr>
+<p>以上文章用实例阐述了几种工厂模式，清晰易于理解。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/07/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-%E4%BA%8C/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+  
     <article id="post-设计模式学习笔记之工厂模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -911,88 +1007,6 @@
 
 
   
-    <article id="post-设计模式学习笔记之装饰器模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之装饰器模式</a>
-    </h1>
-  
-
-        
-        <a href="/2020/06/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-06-30T02:48:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-29</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="文章大纲"><a href="#文章大纲" class="headerlink" title="文章大纲"></a>文章大纲</h3><ol>
-<li>简介</li>
-<li>实现</li>
-<li>结束</li>
-</ol>
-        
-          <a class="article-more-a" href="/2020/06/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
@@ -1091,10 +1105,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Design Pattern</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Other</a>
               </li>
              
@@ -1103,11 +1113,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color3">数据结构与算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">数据结构与算法</a>
+                <a href="javascript:void(0)" class="js-tag color5">Design Pattern</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
             
             <div class="clearfix"></div>
