@@ -8,12 +8,12 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>设计模式学习笔记之工厂模式(二) | 10K&#39;s</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="看到一篇讲解的较为清晰简练的关于工厂模式的文章，转载来记录，以便查阅和分享。下面例子中鼠标，键盘，耳麦为产品，惠普，戴尔为工厂。 简单工厂模式简单工厂模式不是 23 种里的一种，简而言之，就是有一个专门生产某个产品的类。比如下图中的鼠标工厂，专业生产鼠标，给参数 0，生产戴尔鼠标，给参数 1，生产惠普鼠标。  工厂模式工厂模式也就是鼠标工厂是个父类，有生产鼠标这个接口。戴尔鼠标工厂，惠普鼠标工厂继">
+  <meta name="description" content="看到一篇讲解的较为清晰简练的关于工厂模式的文章，转载来记录，以便查阅和分享。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="设计模式学习笔记之工厂模式(二)">
 <meta property="og:url" content="http://yoursite.com/2020/07/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-%E4%BA%8C/index.html">
 <meta property="og:site_name" content="10K&#39;s">
-<meta property="og:description" content="看到一篇讲解的较为清晰简练的关于工厂模式的文章，转载来记录，以便查阅和分享。下面例子中鼠标，键盘，耳麦为产品，惠普，戴尔为工厂。 简单工厂模式简单工厂模式不是 23 种里的一种，简而言之，就是有一个专门生产某个产品的类。比如下图中的鼠标工厂，专业生产鼠标，给参数 0，生产戴尔鼠标，给参数 1，生产惠普鼠标。  工厂模式工厂模式也就是鼠标工厂是个父类，有生产鼠标这个接口。戴尔鼠标工厂，惠普鼠标工厂继">
+<meta property="og:description" content="看到一篇讲解的较为清晰简练的关于工厂模式的文章，转载来记录，以便查阅和分享。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2018/07/1530601914-2143-DP-SimpleFactory.png">
 <meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2018/07/1530601917-1999-DP-Factory.png">
@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2018/07/1530601980-8080-P-AbstractFactory-AddFactory.png">
 <meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2018/07/1530601917-7462-P-AbstractFactory-AddProduct.png">
 <meta property="article:published_time" content="2020-07-12T18:17:36.000Z">
-<meta property="article:modified_time" content="2020-07-12T18:20:37.416Z">
+<meta property="article:modified_time" content="2020-07-12T18:22:18.046Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="Design Pattern">
 <meta property="article:tag" content="Java">
@@ -182,7 +182,11 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="看到一篇讲解的较为清晰简练的关于工厂模式的文章，转载来记录，以便查阅和分享。"><a href="#看到一篇讲解的较为清晰简练的关于工厂模式的文章，转载来记录，以便查阅和分享。" class="headerlink" title="看到一篇讲解的较为清晰简练的关于工厂模式的文章，转载来记录，以便查阅和分享。"></a>看到一篇讲解的较为清晰简练的关于工厂模式的文章，转载来记录，以便查阅和分享。</h2><p>下面例子中鼠标，键盘，耳麦为产品，惠普，戴尔为工厂。</p>
+        <p>看到一篇讲解的较为清晰简练的关于工厂模式的文章，转载来记录，以便查阅和分享。</p>
+<a id="more"></a>
+
+<hr>
+<p>下面例子中鼠标，键盘，耳麦为产品，惠普，戴尔为工厂。</p>
 <h3 id="简单工厂模式"><a href="#简单工厂模式" class="headerlink" title="简单工厂模式"></a>简单工厂模式</h3><p>简单工厂模式不是 23 种里的一种，简而言之，就是有一个专门生产某个产品的类。<br>比如下图中的鼠标工厂，专业生产鼠标，给参数 0，生产戴尔鼠标，给参数 1，生产惠普鼠标。</p>
 <p><img src="https://www.runoob.com/wp-content/uploads/2018/07/1530601914-2143-DP-SimpleFactory.png" alt="img"></p>
 <h3 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式</h3><p>工厂模式也就是鼠标工厂是个父类，有生产鼠标这个接口。<br>戴尔鼠标工厂，惠普鼠标工厂继承它，可以分别生产戴尔鼠标，惠普鼠标。<br>生产哪种鼠标不再由参数决定，而是创建鼠标工厂时，由戴尔鼠标工厂创建。<br>后续直接调用<strong>鼠标工厂.生产鼠标()</strong>即可</p>
