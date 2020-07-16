@@ -17,7 +17,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2014/08/decorator_pattern_uml_diagram.jpg">
 <meta property="article:published_time" content="2020-06-30T02:48:19.000Z">
-<meta property="article:modified_time" content="2020-06-30T02:48:59.535Z">
+<meta property="article:modified_time" content="2020-07-16T23:17:16.079Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="Design Pattern">
 <meta name="twitter:card" content="summary">
@@ -177,7 +177,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">497字</span>
+        <span class="post-count">502字</span>
       </span>
     </span>
 
@@ -207,31 +207,29 @@
 
 <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p><strong>目的</strong>：动态地给一个对象增加一些额外的职责。就增加功能来说，装饰器模式相比生成子类更为灵活。</p>
 <p><strong>主要解决</strong>： 一般的我们为了拓展一个类经常使用继承的方式实现，由于继承为类引入静态特征，并且随着扩展功能的增多，子类变得膨胀。</p>
-<p><strong>如何解决</strong>：将具体功能职责划分，同时继承装饰着模式。</p>
+<p><strong>如何解决</strong>：将具体功能职责划分，同时继承装饰者模式。</p>
 <p><strong>关键代码</strong>：1、Component 类充当抽象角色，不应该具体实现。 2、修饰类引用和继承 Component 类，具体扩展类重写父类方法。</p>
-<hr>
 <h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>我们将创建一个 <em>Shape</em> 接口和实现了 <em>Shape</em> 接口的实体类。然后我们创建一个实现了 <em>Shape</em> 接口的抽象装饰类 <em>ShapeDecorator*，并把 *Shape</em> 对象作为它的实例变量。</p>
 <p><em>RedShapeDecorator</em> 是实现了 <em>ShapeDecorator</em> 的实体类。</p>
 <p><em>DecoratorPatternDemo*，我们的演示类使用 *RedShapeDecorator</em> 来装饰 <em>Shape</em> 对象。</p>
 <p><img src="https://www.runoob.com/wp-content/uploads/2014/08/decorator_pattern_uml_diagram.jpg" alt="装饰器模式的 UML 图"></p>
-<p>创建一个接口</p>
+<p><strong>Step1</strong> 创建一个接口</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Shape</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>创建实现接口的实体类</p>
+<p><strong>Step2</strong> 创建实现接口的实体类</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Rectangle</span> <span class="keyword">implements</span> <span class="title">Shape</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Syetem.out.println(<span class="string">"Shape : Rectangle"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Circle</span> <span class="keyword">implements</span> <span class="title">Shape</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Syetem.out.println(<span class="string">"Shape : Circle"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>创建实现了Shape接口的抽象装饰类</p>
+<p><strong>Step3</strong> 创建实现了Shape接口的抽象装饰类</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> abstruct <span class="class"><span class="keyword">class</span> <span class="title">ShapeDecorator</span> <span class="keyword">implements</span> <span class="title">Shape</span> </span>&#123;</span><br><span class="line">  <span class="keyword">protected</span> Shape decoratedShape;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">ShapeDecorator</span><span class="params">(Shape decoratedShape)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.decoratedShape = decoratedShape;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    decoratedShape.draw();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>创建扩展了 <em>ShapeDecorator</em> 类的实体装饰类</p>
+<p><strong>Step4</strong> 创建扩展了 <em>ShapeDecorator</em> 类的实体装饰类</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedShapeDecorator</span> <span class="keyword">extends</span> <span class="title">ShapeDecorator</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">RedShapeDecorator</span><span class="params">(Shape decoratedShape)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(decoratedShap);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    decoratedShape.draw();</span><br><span class="line">    setRedBorder(decoratedShape);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setRedBorder</span><span class="params">(Shape decoratedShape)</span> </span>&#123;</span><br><span class="line">    System.out.println(<span class="string">"Border Color : Red"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>使用 <em>RedShapeDecorator</em> 来装饰 <em>Shape</em> 对象。</p>
+<p><strong>Step5</strong> 使用 <em>RedShapeDecorator</em> 来装饰 <em>Shape</em> 对象。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DecoratorPatternDemo</span> </span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">      Shape circle = <span class="keyword">new</span> Circle();</span><br><span class="line">      ShapeDecorator redCircle = <span class="keyword">new</span> RedShapeDecorator(<span class="keyword">new</span> Circle());</span><br><span class="line">      ShapeDecorator redRectangle = <span class="keyword">new</span> RedShapeDecorator(<span class="keyword">new</span> Rectangle());</span><br><span class="line">      <span class="comment">//Shape redCircle = new RedShapeDecorator(new Circle());</span></span><br><span class="line">      <span class="comment">//Shape redRectangle = new RedShapeDecorator(new Rectangle());</span></span><br><span class="line">      System.out.println(<span class="string">"Circle with normal border"</span>);</span><br><span class="line">      circle.draw();</span><br><span class="line"> </span><br><span class="line">      System.out.println(<span class="string">"\nCircle of red border"</span>);</span><br><span class="line">      redCircle.draw();</span><br><span class="line"> </span><br><span class="line">      System.out.println(<span class="string">"\nRectangle of red border"</span>);</span><br><span class="line">      redRectangle.draw();</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<hr>
 <h3 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h3><p>装饰器模式大概就是这样。</p>
 
       
