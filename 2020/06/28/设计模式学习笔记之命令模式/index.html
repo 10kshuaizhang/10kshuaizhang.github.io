@@ -17,7 +17,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2014/08/command_pattern_uml_diagram.jpg">
 <meta property="article:published_time" content="2020-06-28T19:07:21.000Z">
-<meta property="article:modified_time" content="2020-07-17T15:56:14.868Z">
+<meta property="article:modified_time" content="2020-07-17T16:03:58.578Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="Design Pattern">
 <meta property="article:tag" content="Java">
@@ -178,7 +178,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">709字</span>
+        <span class="post-count">886字</span>
       </span>
     </span>
 
@@ -230,10 +230,10 @@
 <p><strong>Step4</strong> 创建命令调用类（Invoker）</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Broker</span> </span>&#123;</span><br><span class="line">   <span class="keyword">private</span> List&lt;Order&gt; orderList = <span class="keyword">new</span> ArrayList&lt;Order&gt;(); </span><br><span class="line"> </span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">takeOrder</span><span class="params">(Order order)</span></span>&#123;</span><br><span class="line">      orderList.add(order);      </span><br><span class="line">   &#125;</span><br><span class="line"> </span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">placeOrders</span><span class="params">()</span></span>&#123;</span><br><span class="line">      <span class="keyword">for</span> (Order order : orderList) &#123;</span><br><span class="line">         order.execute();</span><br><span class="line">      &#125;</span><br><span class="line">      orderList.clear();</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><strong>Step5</strong> 使用 Broker 类来接受并执行命令。（客户端client）</p>
+<p><strong>Step5</strong> 使用Broker类来接受并执行命令。（客户端client）</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CommandPatternDemo</span> </span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">      Stock abcStock = <span class="keyword">new</span> Stock();</span><br><span class="line"> </span><br><span class="line">      BuyStock buyStockOrder = <span class="keyword">new</span> BuyStock(abcStock);</span><br><span class="line">      SellStock sellStockOrder = <span class="keyword">new</span> SellStock(abcStock);</span><br><span class="line"> </span><br><span class="line">      Broker broker = <span class="keyword">new</span> Broker();</span><br><span class="line">      broker.takeOrder(buyStockOrder);</span><br><span class="line">      broker.takeOrder(sellStockOrder);</span><br><span class="line"> </span><br><span class="line">      broker.placeOrders();</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h3><p>命令模式的大致介绍就是这样。</p>
+<h3 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h3><p>我认为命令模式只是添加了一层解耦的结构，而并没有对原来的对象添加什么。真正执行命令的还是原来的对象，而命令对象则提供了一个地方让其执行。如上面的例子，一开始最简单的能想到一个股票的买卖就是创建一个股票对象（Stock)。然后含有买卖操作方法，而现在运用了命令模式，需要创建一个命令对象，即上面的Order，以及它的具体是现实类BuyStock和SellStock。创建了命令，你得找人调用吧，所以还需要创建一个Invoker调用者去选择命令调用。命令模式的大致介绍就是这样。</p>
 <blockquote>
 <p>本文是基于《Head First Design Pattern》和菜鸟教程的<a href="https://www.runoob.com/design-pattern/command-pattern.html" target="_blank" rel="noopener">命令模式</a>的学习笔记。</p>
 </blockquote>
