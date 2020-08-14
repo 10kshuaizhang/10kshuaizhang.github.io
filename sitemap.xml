@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2020/08/14/Memcached%E7%AE%80%E4%BB%8B/</loc>
+    
+    <lastmod>2020-08-14T15:31:16.462Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2020/08/13/Consistent-Hashing/</loc>
     
     <lastmod>2020-08-14T13:15:31.993Z</lastmod>
