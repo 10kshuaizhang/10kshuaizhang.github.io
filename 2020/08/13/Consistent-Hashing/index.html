@@ -25,7 +25,7 @@
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1597373154/hash_ring_10_aowisi.png">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1597373262/consistent-hashing_h7mj4q.png">
 <meta property="article:published_time" content="2020-08-14T02:55:02.000Z">
-<meta property="article:modified_time" content="2020-08-14T02:58:35.477Z">
+<meta property="article:modified_time" content="2020-08-14T13:15:31.993Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
@@ -211,9 +211,11 @@
 <li>基本概念</li>
 <li>优点</li>
 <li>虚拟节点</li>
-<li>结束<a id="more"></a>
-<h3 id="场景描述"><a href="#场景描述" class="headerlink" title="场景描述"></a>场景描述</h3>我们有三个缓存服务器，我们有三万张图片需要缓存，我们希望他们可以均匀的缓存，即每台服务器缓存约一万张，以便它们可以分摊缓存的压力。<br>如果我们直接存，则每次都需要遍历去寻找某一张图片，太慢，也违背了缓存的初衷（提高速度， 提升用户体验，减少后端服务器压力）。<br>改进一点我们可以对缓存的键进行哈希，例如图片名称是不重复的，则我们可以利用公式<br><code>hash(图片名称) % N</code>, 计算出应该放在哪个服务器。<br>这个看起来解决了之前的问题，目前来说还可以，但是随着业务增长，3台服务器已经不能满足我们的缓存需求，我们需要增加一台服务器，由上面的哈希公式所知，所有缓存的位置都需要改变，当服务器数量发生改变时，所有缓存在一定时间内是失效的，当应用无法从缓存中获取数据时，则会向后端服务器请求数据；同理，如果某个缓存服务器出现了故障，无法进行缓存，那么我们则需要将故障机器移除，但是如果移除了一台缓存服务器，那么缓存服务器数量从3台变为2台，如果想要访问一张图片，这张图片的缓存位置必定会发生改变，以前缓存的图片也会失去缓存的作用与意义，由于大量缓存在同一时间失效，造成了缓存的雪崩，此时前端缓存已经无法起到承担部分压力的作用，后端服务器将会承受巨大的压力，整个系统很有可能被压垮。<br>因上述场景，普通的取模哈希算法已经不能满足需求，故出现了一致性哈希算法。</li>
+<li>结束</li>
 </ol>
+<a id="more"></a>
+
+<h3 id="场景描述"><a href="#场景描述" class="headerlink" title="场景描述"></a>场景描述</h3><p>我们有三个缓存服务器，我们有三万张图片需要缓存，我们希望他们可以均匀的缓存，即每台服务器缓存约一万张，以便它们可以分摊缓存的压力。<br>如果我们直接存，则每次都需要遍历去寻找某一张图片，太慢，也违背了缓存的初衷（提高速度， 提升用户体验，减少后端服务器压力）。<br>改进一点我们可以对缓存的键进行哈希，例如图片名称是不重复的，则我们可以利用公式<br><code>hash(图片名称) % N</code>, 计算出应该放在哪个服务器。<br>这个看起来解决了之前的问题，目前来说还可以，但是随着业务增长，3台服务器已经不能满足我们的缓存需求，我们需要增加一台服务器，由上面的哈希公式所知，所有缓存的位置都需要改变，当服务器数量发生改变时，所有缓存在一定时间内是失效的，当应用无法从缓存中获取数据时，则会向后端服务器请求数据；同理，如果某个缓存服务器出现了故障，无法进行缓存，那么我们则需要将故障机器移除，但是如果移除了一台缓存服务器，那么缓存服务器数量从3台变为2台，如果想要访问一张图片，这张图片的缓存位置必定会发生改变，以前缓存的图片也会失去缓存的作用与意义，由于大量缓存在同一时间失效，造成了缓存的雪崩，此时前端缓存已经无法起到承担部分压力的作用，后端服务器将会承受巨大的压力，整个系统很有可能被压垮。<br>因上述场景，普通的取模哈希算法已经不能满足需求，故出现了一致性哈希算法。</p>
 <h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>一致性哈希算法是对2^32取模。<br>我们将三台服务器IP地址对2^32取模，<code>hash(服务器地址)% 2^32</code>,  得到的数字肯定在0到2^32之间，将三台服务器都如此计算并得出一个逻辑图如下所示：<br><img src="https://res.cloudinary.com/shuaiz/image/upload/v1597371883/hash_ring_vvlmld.png" style="zoom:50%;" /><br>理想情况下，三台服务器映射到hash环上如上图。<br>假设，我们需要使用缓存服务器缓存图片，而且我们仍然使用图片的名称作为找到图片的key，那么我们使用如下公式可以将图片映射到上图中的hash环上。<br><code>hash（图片名称） %  2^32</code>映射后的示意图如下，下图中的橘黄色圆形表示图片:<br><img src="https://res.cloudinary.com/shuaiz/image/upload/v1597372025/hash_ring_2_zckxd9.png" alt="hash_ring_2" style="zoom:50%;" /><br>然后按照<strong>顺时针方向</strong>，图片第一个遇见A服务器，则会被缓存到A服务器上。<br><img src="https://res.cloudinary.com/shuaiz/image/upload/v1597372257/HASH_RING_3_mh0s7k.png" style="zoom:50%;" /><br>在服务器不变的情况下，一张图片必定会被缓存到固定的服务器上，那么，当下次想要访问这张图片时，只要再次使用相同的算法进行计算，即可算出这个图片被缓存在哪个服务器上，直接去对应的服务器查找对应的图片即可。<br>如下我们增加几张图片缓存：<br><img src="https://res.cloudinary.com/shuaiz/image/upload/v1597372257/HASH_RING_4_g0mshf.png" alt="hash_ring_2" style="zoom:50%;" /><br>1号、2号图片将会被缓存到服务器A上，3号图片将会被缓存到服务器B上，4号图片将会被缓存到服务器C上。</p>
 <h3 id="一致性哈希算法的优点"><a href="#一致性哈希算法的优点" class="headerlink" title="一致性哈希算法的优点"></a>一致性哈希算法的优点</h3><p>a. 如果简单的对服务器数量进行取模，那么当服务器数量发生变化时，会产生缓存的雪崩，从而很有可能导致系统崩溃，那么使用一致性哈希算法，能够避免这个问题。<br><img src="https://res.cloudinary.com/shuaiz/image/upload/v1597372631/HASH_RING_6_ankgud.png" alt="hash_ring_2" style="zoom:50%;" /><br>如果我们的B服务器Down了， 那么3号图片会按照顺时针的顺序去找到C服务器，但是其他的1、2、4号图片所在的服务器仍然不变，如果按照之前算法，四张图片的缓存服务器都要重新计算有可能发生改变。<br>b. 解决了“热点”问题。什么是热点呢，假如说我们有一个网红有很多的follower，他的post被存在某一台服务器上，那么相应那台服务器就会有更多访问从而导致某个服务器要把比其他服务器多出更多的交通。一致性哈希怎么解决这个问题呢？先hold住，往下看完虚拟节点再回来思考这个问题。</p>
 <h3 id="虚拟节点"><a href="#虚拟节点" class="headerlink" title="虚拟节点"></a>虚拟节点</h3><p>实际中，服务器映射可能是<br><img src="https://res.cloudinary.com/shuaiz/image/upload/v1597372960/hash_ring_7_vvk4cr.png" alt="hash_ring_2" style="zoom:50%;" /><br>那么被缓存的对象有可能大部分集中在某台服务器上：<br><img src="https://res.cloudinary.com/shuaiz/image/upload/v1597373050/hash_ring_8_lhud7u.png" alt="hash_ring_2" style="zoom:50%;" /><br>上图中，1号、2号、3号、4号、6号图片均被缓存在了服务器A上，只有5号图片被缓存在了服务器B上，服务器C上甚至没有缓存任何图片，如果出现上图中的情况，A、B、C三台服务器并没有被合理的平均的充分利用，缓存分布的极度不均匀，而且，如果此时服务器A出现故障，那么失效缓存的数量也将达到最大值，在极端情况下，仍然有可能引起系统的崩溃，上图中的情况则被称之为hash环的偏斜。这时我们就需要使用到虚拟节点</p>
