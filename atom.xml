@@ -42,9 +42,9 @@
     <link href="http://yoursite.com/2020/08/14/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/"/>
     <id>http://yoursite.com/2020/08/14/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/</id>
     <published>2020-08-15T03:52:08.000Z</published>
-    <updated>2020-08-15T03:52:40.706Z</updated>
+    <updated>2020-08-15T14:24:26.711Z</updated>
     
-    <content type="html"><![CDATA[<p>Part 1 Intro - Foundation of Data System</p><p>本书前四章第一部分会介绍数据系统底层的概念。</p><a id="more"></a><p><a href="">第一章</a>介绍一些基本术语，reliability可靠性，scalability可扩展性，maintainability可维护性，以及如何满足这些要求。</p><p><a href="">第二章</a>会针对几种不同的数据模型和查询语言进行比较，了解不同的模型如何运用在不同场景。</p><p><a href="">第三章</a>深入存储引擎内部，研究数据库如何利用硬盘空间存储数据，不同的存储引擎针对不同的负载进行优化。</p><p><a href="">第四章</a>比较不同的编码方式，阐述了不同的编码方式在不同的需求下的表现。</p>]]></content>
+    <content type="html"><![CDATA[<p>Part 1 Intro - Foundation of Data System</p><p>本书前四章第一部分会介绍数据系统底层的概念。</p><a id="more"></a><p><a href="https://10kshuaizhang.github.io/2020/08/14/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02" target="_blank" rel="noopener">第一章</a>介绍一些基本术语，reliability可靠性，scalability可扩展性，maintainability可维护性，以及如何满足这些要求。</p><p><a href="">第二章</a>会针对几种不同的数据模型和查询语言进行比较，了解不同的模型如何运用在不同场景。</p><p><a href="">第三章</a>深入存储引擎内部，研究数据库如何利用硬盘空间存储数据，不同的存储引擎针对不同的负载进行优化。</p><p><a href="">第四章</a>比较不同的编码方式，阐述了不同的编码方式在不同的需求下的表现。</p>]]></content>
     
     <summary type="html">
     
