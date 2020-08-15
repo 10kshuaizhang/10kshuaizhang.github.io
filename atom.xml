@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-08-14T16:12:49.632Z</updated>
+  <updated>2020-08-15T05:04:01.910Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,49 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Designing-Data-Intensive-Application学习笔记2</title>
+    <link href="http://yoursite.com/2020/08/14/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02/"/>
+    <id>http://yoursite.com/2020/08/14/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02/</id>
+    <published>2020-08-15T05:03:12.000Z</published>
+    <updated>2020-08-15T05:04:01.910Z</updated>
+    
+    <content type="html"><![CDATA[<p>Chapter1 Reliable, Scalable and Maintainable Applications</p><a id="more"></a><h3 id="Reliabilibity"><a href="#Reliabilibity" class="headerlink" title="Reliabilibity"></a>Reliabilibity</h3><ul><li><p>Continuing to work correctly, even when things go wrong.</p><ul><li>Aka fault-tolerant or resilient </li></ul></li><li><p>Fault vs Failure: fault means on component failed, design system that able tolerance the fault to prevent failure.</p></li><li><p>Hardware Faults: <u>Redundancy</u> is the key</p></li><li><p>Software Errors: could be more troublesome </p><ul><li>Developers need to make assumptions and interactions <u>carefully</u>.</li></ul></li><li><p>Human Errors: <u>Design</u> to minimize chances of errors, <u>decouple</u>, <u>Test</u></p><p>thoroughly; <u>Quick recover</u> ability; <u>monitoring</u>(performance/error rate), aka Telemetry; good management practice/training.</p></li></ul><h3 id="Scalability"><a href="#Scalability" class="headerlink" title="Scalability"></a>Scalability</h3><ul><li>A system’s ability to <u>cope with increased load</u>.</li><li><strong>Describing Load</strong>: defied bu <u>“load parameters”</u>, it depend on architecture of your system, e.g.<ul><li>the <strong>requests per second</strong> to a web server,</li><li>the <strong>ratio of reads to writes</strong> in a database,</li><li>the *<em>number of simultaneously active users *</em> in a chatroom,</li><li>the <strong>hit rate</strong> on a <strong>cache</strong>, etc.</li></ul></li><li>Twitter hybrid approach: fan-out vs. fetched<img src="https://res.cloudinary.com/shuaiz/image/upload/v1597465063/Design%20Data%20Intensive%20Application/part1-c1-1_lbawdt.png" alt="img1" style="zoom:50%;" /><ul><li>the average rate of published tweets os almost two orders of magnitude lower than the rate of home timeline readers -&gt; fan-out approach <ul><li>On avarage, a tweet is delivered to about 75 followers, so 4.6k tweets per second become 345k writes per second to the home timeline caches.</li><li>moved to Hybrid approach to handle Justing-Biber effects.</li></ul></li></ul></li></ul><ul><li><strong>Describing Performance</strong>: when you increase a load parameter keep the same system resources, what will happen? How much do you need to increase resource to keep up the performance?<ul><li>E.g. “”<strong>response time</strong>“” – the time between a client send a request and receiving a response.</li><li><strong>Latency vs. response time</strong>: Latency is the duration that a request is waiting to be handled – during which is latent, awaiting service.</li><li>Better use “<strong><u>percentiles</u></strong>“ to measure response time, e.g. median(p50)<img src="https://res.cloudinary.com/shuaiz/image/upload/v1597465633/Design Data Intensive Application/p1-c1-2_yanuw0.png" alt="img1" style="zoom:50%;" /><ul><li>High percentiles of response times, also know as <u>tail latencies</u>, are important because they <u>directly affects users’ experience of the service</u>.</li><li>Amazon describe response time requirements for internal services in terms of the 99.9th percentile (affects 1 in 1,000 requests).<ul><li>On the other hand, optimizing the 99.99th percentile (the slowest 1 in 10, 0000 requests) was deemed too expensive and to not yiled enough benefit for Amazon’s purpose.</li></ul></li><li>Amazon has also observed that a 100 ms increase in response time reduces sales by 1%, and others report that 1-second slowdown reduces a customer satisfaction metric by 16%.</li><li><strong>It is importannce to <u>measure response times</u></strong> on the client side.</li></ul></li></ul></li><li><strong>Approachs for Coping with Load</strong>:<ul><li>Good architectures ussually involve a pragmatic mixture of approachs: <strong>Scaling up</strong>(Vertical) &amp; <strong>Scaling out</strong>(horizental)<ul><li>Scaling out: <strong>Stateless</strong> service is fairly straightforward compared to Stateful service.</li></ul></li><li>It is conceivable that <u>distributed data system will become the default in the future</u>.</li><li>The architecture of system that operate at large scale is usually <u>highly specific to the application </u>.</li><li>An scalable architecture usually built from generalp-purpose building blocks arranged in familiar patterns.</li></ul></li></ul><h3 id="Maintainability"><a href="#Maintainability" class="headerlink" title="Maintainability"></a>Maintainability</h3><ul><li>*<em>Operability *</em>: make it easy for operations team to <u>keep the system runnig smoothly </u>.</li><li><strong>Simplicity</strong>: Make it <u>easy for new engineers to understand the system</u>.<ul><li>By removing as much complexity as possible from the system. (Note: this is not the same as simplicity of the user interface.)</li><li>Making a system simpler DOES NOT necessarily mean reducing its functionality;</li><li>*<em>Complexity *</em>: as accidental is it is not inherent in the problem that the software solves (as seen by the users) but arises only from the implementation.<ul><li>One or the best tools we have for removing accidental complexity is <strong><u>abstraction</u></strong>. (However, finding good abstraction is very hard.)</li></ul></li></ul></li><li><strong>Evolvability</strong>:  Make it <u>easy for engineers to make changes</u> to the system in the future, <u>adapting</u> it for unanticipated use cases as requirements change. Also known as <strong>extensibility, modifiability</strong>, or <strong>plasticity</strong>.<ul><li><u><strong>Agile</strong> working patterns</u> provide a framework for adapting to change.</li><li><u>simple and easy-to-understand </u> system are usually easier to midify that complex ones (linked to the previous point - <strong>Maintainability</strong>)</li></ul></li></ul><h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><ul><li><strong>functional requirements</strong>: (what it should do, such as aloowing data to be stored, retrieved, seached and processed in various ways)</li><li><strong>nonfunctional requirements:</strong> (general properties like security, reliability, compliance, scalability, compatibility and maintainability)</li><li><strong>Reliability</strong>: means makes system working correctly even when faults occur.</li><li><strong>Scalability</strong>: means having strategies for keeping performance good, even when load increases.</li><li><strong>Maintainability</strong>: has many facets, but in essence it’s about making life better for the engineering and operations team who need to work with teh system.</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Chapter1 Reliable, Scalable and Maintainable Applications&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="System Design" scheme="http://yoursite.com/tags/System-Design/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Designing-Data-Intensive-Application学习笔记1</title>
+    <link href="http://yoursite.com/2020/08/14/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/"/>
+    <id>http://yoursite.com/2020/08/14/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/</id>
+    <published>2020-08-15T03:52:08.000Z</published>
+    <updated>2020-08-15T03:52:40.706Z</updated>
+    
+    <content type="html"><![CDATA[<p>Part 1 Intro - Foundation of Data System</p><p>本书前四章第一部分会介绍数据系统底层的概念。</p><a id="more"></a><p><a href="">第一章</a>介绍一些基本术语，reliability可靠性，scalability可扩展性，maintainability可维护性，以及如何满足这些要求。</p><p><a href="">第二章</a>会针对几种不同的数据模型和查询语言进行比较，了解不同的模型如何运用在不同场景。</p><p><a href="">第三章</a>深入存储引擎内部，研究数据库如何利用硬盘空间存储数据，不同的存储引擎针对不同的负载进行优化。</p><p><a href="">第四章</a>比较不同的编码方式，阐述了不同的编码方式在不同的需求下的表现。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Part 1 Intro - Foundation of Data System&lt;/p&gt;
+&lt;p&gt;本书前四章第一部分会介绍数据系统底层的概念。&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="System Design" scheme="http://yoursite.com/tags/System-Design/"/>
+    
+  </entry>
   
   <entry>
     <title>Memcached简介</title>
@@ -483,55 +526,6 @@
     
     
       <category term="Design Pattern" scheme="http://yoursite.com/tags/Design-Pattern/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Mac设置环境变量Path和查看Path</title>
-    <link href="http://yoursite.com/2020/06/26/Mac%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8FPath%E5%92%8C%E6%9F%A5%E7%9C%8BPath/"/>
-    <id>http://yoursite.com/2020/06/26/Mac%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8FPath%E5%92%8C%E6%9F%A5%E7%9C%8BPath/</id>
-    <published>2020-06-26T16:05:32.000Z</published>
-    <updated>2020-07-09T13:10:06.589Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="文章大纲"><a href="#文章大纲" class="headerlink" title="文章大纲"></a>文章大纲</h3><ol><li>理论篇</li><li>操作篇</li></ol><a id="more"></a><h4 id="理论篇"><a href="#理论篇" class="headerlink" title="理论篇"></a>理论篇</h4><p>Mac系统的环境变量，加载顺序为：<br>/etc/profile<br>/etc/paths<br>~/.bash_profile<br>~/.bash_login<br>~/.profile<br>~/.bashrc</p><p>/etc/profile和/etc/paths是系统级别的，系统启动就会加载，后面几个是当前用户级的环境变量。后面3个按照从前往后的顺序读取，如果/.bash_profile文件存在，则后面的几个文件就会被忽略不读了，如果/.bash_profile文件不存在，才会以此类推读取后面的文件。~/.bashrc没有上述规则，它是bash shell打开的时候载入的。</p><p>PATH的语法为如下</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 中间用冒号隔开</span><br><span class="line">export PATH&#x3D;$PATH:&lt;PATH 1&gt;:&lt;PATH 2&gt;:&lt;PATH 3&gt;:------:&lt;PATH N&gt;</span><br></pre></td></tr></table></figure><p>上述文件的科普</p><ul><li><p>/etc/paths (全局建议修改这个文件)<br>编辑 paths，将环境变量添加到 paths文件中 ，一行一个路径<br>Hint：输入环境变量时，不用一个一个地输入，只要拖动文件夹到 Terminal 里就可以了。</p></li><li><p>/etc/profile （建议不修改这个文件 ）<br>全局（公有）配置，不管是哪个用户，登录时都会读取该文件。</p></li><li><p>/etc/bashrc （一般在这个文件中添加系统级环境变量）<br>全局（公有）配置，bash shell执行时，不管是何种方式，都会读取此文件</p></li><li><p>.profile 文件为系统的每个用户设置环境信息,当用户第一次登录时,该文件被执行.并从/etc/profile.d目录的配置文件中搜集shell的设置。<br> <strong>使用注意</strong> ：如果你有对/etc/profile有修改的话必须得重启你的修改才会生效，此修改对每个用户都生效。</p></li><li><p>./bashrc 每一个运行bash shell的用户执行此文件.当bash shell被打开时,该文件被读取。<br> <strong>使用注意</strong> : 对所有的使用bash的用户修改某个配置并在以后打开的bash都生效的话可以修改这个文件，修改这个文件不用重启，重新打开一个bash即可生效。</p></li><li><p>./bash_profile 该文件包含专用于你的bash shell的bash信息,当登录时以及每次打开新的shell时,该文件被读取。（每个用户都有一个.bashrc文件，在用户目录下）<br> <strong>使用注意</strong> :  需要需要重启才会生效，/etc/profile对所有用户生效，~/.bash_profile只对当前用户生效。</p></li></ul><p>source ./.bash_profile 或者 ./.profile 环境信息生效</p><h4 id="操作篇"><a href="#操作篇" class="headerlink" title="操作篇"></a>操作篇</h4><h3 id="全局设置"><a href="#全局设置" class="headerlink" title="全局设置"></a>全局设置</h3><ol><li>创建一个文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo touch &#x2F;etc&#x2F;paths.d&#x2F;mysql</span><br></pre></td></tr></table></figure></li><li>用 vim 打开这个文件（如果是以 open -t 的方式打开，则不允许编辑）：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim &#x2F;etc&#x2F;paths.d&#x2F;mysql</span><br></pre></td></tr></table></figure></li><li>编辑该文件，键入路径并保存（关闭该 Terminal 窗口并重新打开一个，就能使用 mysql 命令了）<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;local&#x2F;mysql&#x2F;bin</span><br></pre></td></tr></table></figure></li><li>$source相应的文件，生效配置环境</li></ol><h3 id="单个用户设置"><a href="#单个用户设置" class="headerlink" title="单个用户设置"></a>单个用户设置</h3><ol><li>cd ~</li><li>vim ~/.bash_profile （任意一个文件中添加用户级环境变量）<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH&#x3D;&#x2F;opt&#x2F;local&#x2F;bin:&#x2F;opt&#x2F;local&#x2F;sbin:$PATH</span><br></pre></td></tr></table></figure>把上述代码添加到~/.bash_profile上。</li></ol><h3 id="查看PATH"><a href="#查看PATH" class="headerlink" title="查看PATH"></a>查看PATH</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo $PATH</span><br></pre></td></tr></table></figure><hr><p>转载自<a href="https://www.jianshu.com/p/acb1f062a925" target="_blank" rel="noopener">MAC 设置环境变量PATH 和 查看PATH</a></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h3 id=&quot;文章大纲&quot;&gt;&lt;a href=&quot;#文章大纲&quot; class=&quot;headerlink&quot; title=&quot;文章大纲&quot;&gt;&lt;/a&gt;文章大纲&lt;/h3&gt;&lt;ol&gt;
-&lt;li&gt;理论篇&lt;/li&gt;
-&lt;li&gt;操作篇&lt;/li&gt;
-&lt;/ol&gt;
-    
-    </summary>
-    
-    
-    
-      <category term="Other" scheme="http://yoursite.com/tags/Other/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>数据结构与算法系列之桶排序</title>
-    <link href="http://yoursite.com/2020/06/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%B3%BB%E5%88%97%E4%B9%8B%E6%A1%B6%E6%8E%92%E5%BA%8F/"/>
-    <id>http://yoursite.com/2020/06/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%B3%BB%E5%88%97%E4%B9%8B%E6%A1%B6%E6%8E%92%E5%BA%8F/</id>
-    <published>2020-06-22T04:59:14.000Z</published>
-    <updated>2020-06-27T06:12:00.127Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="文章大纲"><a href="#文章大纲" class="headerlink" title="文章大纲"></a>文章大纲</h3><ol><li>简介桶排序</li><li>Java实现算法</li><li>总结</li></ol><a id="more"></a><h3 id="1-桶排序简介"><a href="#1-桶排序简介" class="headerlink" title="1. 桶排序简介"></a>1. 桶排序简介</h3><pre><code>桶排序简要概括就是建桶， 数据存入相应的桶内，桶内排序，取出到原数组。桶排序不是基于比较的排序算法。它是一个稳定的排序算法。</code></pre><h3 id="2-Java实现算法"><a href="#2-Java实现算法" class="headerlink" title="2. Java实现算法"></a>2. Java实现算法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> SORTING;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"><span class="keyword">import</span> java.util.Collections;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BucketSort</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">bucketSort</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (nums == <span class="keyword">null</span> || nums.length == <span class="number">0</span>) <span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">int</span> max = Integer.MIN_VALUE, min = Integer.MAX_VALUE;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> num : nums) &#123;</span><br><span class="line">            max = Math.max(max, num);</span><br><span class="line">            min = Math.min(min, num);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> gap = (max - min) / nums.length + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> bucketNum = (max - min) / gap + <span class="number">1</span>; <span class="comment">// 具体桶数量根据实际情况选择</span></span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; bucket = <span class="keyword">new</span> ArrayList&lt;&gt;(); <span class="comment">// 建立一个容器</span></span><br><span class="line">       <span class="comment">// 建立一定数量的空桶</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; bucketNum; i++) &#123;</span><br><span class="line">            bucket.add(<span class="keyword">new</span> ArrayList&lt;&gt;()); </span><br><span class="line">        &#125;</span><br><span class="line"><span class="comment">// 将待排序数组的值放到相应的桶里</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> no = (nums[i] - min ) / nums.length;</span><br><span class="line">            bucket.get(no).add(nums[i]);</span><br><span class="line">        &#125;</span><br><span class="line"><span class="comment">// 桶内排序</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; bucketNum; i++) &#123;</span><br><span class="line">            Collections.sort(bucket.get(i));</span><br><span class="line">        &#125;</span><br><span class="line"><span class="comment">// 放回到原数组</span></span><br><span class="line">        <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (List&lt;Integer&gt; list : bucket) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> num : list) &#123;</span><br><span class="line">                nums[k++] = num;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//测试算法是否成功</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] nums = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">2</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">4</span>&#125;;</span><br><span class="line">        bucketSort(nums);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i : nums) System.out.printf(i + <span class="string">" "</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><hr><h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3.总结"></a>3.总结</h3><pre><code>桶排序大致就是如上所述。</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h3 id=&quot;文章大纲&quot;&gt;&lt;a href=&quot;#文章大纲&quot; class=&quot;headerlink&quot; title=&quot;文章大纲&quot;&gt;&lt;/a&gt;文章大纲&lt;/h3&gt;&lt;ol&gt;
-&lt;li&gt;简介桶排序&lt;/li&gt;
-&lt;li&gt;Java实现算法&lt;/li&gt;
-&lt;li&gt;总结&lt;/li&gt;
-&lt;/ol&gt;
-    
-    </summary>
-    
-    
-    
-      <category term="数据结构与算法" scheme="http://yoursite.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
     
   </entry>
   
