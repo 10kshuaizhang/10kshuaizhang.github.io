@@ -6,24 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>hexo极速搭建个人博客并部署到Github | 10K&#39;s</title>
+  <title>A Brief Introduction of Cassandra | 10K&#39;s</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="文章大纲： 什么是Hexo 为什么要用Hexo 具体步骤  总结">
+  <meta name="description" content="Apache Cassandra 是一个开源的、分布式、去中心化、弹性可扩展、高可用性、容错、一致性可调、面向行的数据库，它基于 Amazon Dynamo 的分布式设计和 Google Bigtable 的数据模型。它最初由 Facebook 创建，用于储存收件箱等简单格式数据，于2008年开源。此后，由于 Cassandra 良好的可扩展性，被 Digg、Twitter 等知名 Web 2.0">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hexo极速搭建个人博客并部署到Github">
-<meta property="og:url" content="http://yoursite.com/2020/06/20/hexo%E6%9E%81%E9%80%9F%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0Github/index.html">
+<meta property="og:title" content="A Brief Introduction of Cassandra">
+<meta property="og:url" content="http://yoursite.com/2020/08/16/A-Brief-Introduction-of-Cassandra/index.html">
 <meta property="og:site_name" content="10K&#39;s">
-<meta property="og:description" content="文章大纲： 什么是Hexo 为什么要用Hexo 具体步骤  总结">
+<meta property="og:description" content="Apache Cassandra 是一个开源的、分布式、去中心化、弹性可扩展、高可用性、容错、一致性可调、面向行的数据库，它基于 Amazon Dynamo 的分布式设计和 Google Bigtable 的数据模型。它最初由 Facebook 创建，用于储存收件箱等简单格式数据，于2008年开源。此后，由于 Cassandra 良好的可扩展性，被 Digg、Twitter 等知名 Web 2.0">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://yoursite.com/static/npm_v.png">
-<meta property="og:image" content="http://yoursite.com/static/hexo_v.png">
-<meta property="og:image" content="http://yoursite.com/static/new_repo.png">
-<meta property="article:published_time" content="2020-06-20T23:42:03.000Z">
-<meta property="article:modified_time" content="2020-06-27T06:10:42.260Z">
+<meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1597620965/Cassandra_qsjmh1.png">
+<meta property="article:published_time" content="2020-08-16T23:38:09.000Z">
+<meta property="article:modified_time" content="2020-08-16T23:45:53.633Z">
 <meta property="article:author" content="10K">
-<meta property="article:tag" content="hexo">
+<meta property="article:tag" content="System Design">
+<meta property="article:tag" content="Database">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/static/npm_v.png">
+<meta name="twitter:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1597620965/Cassandra_qsjmh1.png">
   
     <link rel="alternative" href="/atom.xml" title="10K&#39;s" type="application/atom+xml">
   
@@ -149,14 +148,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-hexo极速搭建个人博客并部署到Github" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-A-Brief-Introduction-of-Cassandra" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      hexo极速搭建个人博客并部署到Github
+      A Brief Introduction of Cassandra
     </h1>
   
 
@@ -168,8 +167,8 @@
     </span>
 
 
-<a href="/2020/06/20/hexo%E6%9E%81%E9%80%9F%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0Github/" class="archive-article-date">
-  	<time datetime="2020-06-20T23:42:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-20</time>
+<a href="/2020/08/16/A-Brief-Introduction-of-Cassandra/" class="archive-article-date">
+  	<time datetime="2020-08-16T23:38:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-16</time>
 </a>
         <!-- 需要添加的位置 -->
         <!-- 开始添加字数统计-->
@@ -179,7 +178,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">691字</span>
+        <span class="post-count">4.3k字</span>
       </span>
     </span>
 
@@ -188,7 +187,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-hourglass-half"></i>
         <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">2分</span>
+        <span class="post-count">15分</span>
       </span>
     </span>
 </div>
@@ -200,73 +199,59 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="文章大纲："><a href="#文章大纲：" class="headerlink" title="文章大纲："></a>文章大纲：</h3><ol>
-<li>什么是Hexo</li>
-<li>为什么要用Hexo</li>
-<li>具体步骤 </li>
-<li>总结</li>
-</ol>
-<hr>
+        <p>Apache Cassandra 是一个开源的、分布式、去中心化、弹性可扩展、高可用性、容错、一致性可调、面向行的数据库，它基于 Amazon Dynamo 的分布式设计和 Google Bigtable 的数据模型。它最初由 Facebook 创建，用于储存收件箱等简单格式数据，于2008年开源。此后，由于 Cassandra 良好的可扩展性，被 Digg、Twitter 等知名 Web 2.0 网站所采纳，成为了一种流行的分布式结构化数据存储方案。截止目前，Apache Cassandra 最新版本为 3.7。</p>
+<p>Apache Cassandra 官方网站为 <a href="https://link.jianshu.com?t=http://cassandra.apache.org/" target="_blank" rel="noopener">http://cassandra.apache.org/</a>。</p>
 <a id="more"></a>
-<h3 id="1-什么是Hexo"><a href="#1-什么是Hexo" class="headerlink" title="1. 什么是Hexo"></a>1. 什么是Hexo</h3><pre><code>A fast, simple &amp; powerful blog framework.
-一个快速，简易，强大的博客框架。</code></pre><h3 id="2-为什么要用Hexo"><a href="#2-为什么要用Hexo" class="headerlink" title="2. 为什么要用Hexo"></a>2. 为什么要用Hexo</h3><ul>
-<li>搭建简单</li>
-<li>速度快</li>
-<li>社区成熟</li>
-<li>好看</li>
-</ul>
-<h3 id="3-具体步骤"><a href="#3-具体步骤" class="headerlink" title="3. 具体步骤"></a>3. 具体步骤</h3><ol>
-<li><p>本地环境搭建</p>
-<ol start="0">
-<li>For Mac User: 权限<br> Mac用户在根目录下进行操作的时候，需要开启root权限。具体命令:<code>sudo -s</code>, 然后输入密码。</li>
-<li>Node.js<ol>
-<li>去到Node.js官方下载点：<a href="https://nodejs.org/zh-cn/download/" target="_blank" rel="noopener">https://nodejs.org/zh-cn/download/</a></li>
-<li>下载长期支持版（LTS)安装包。</li>
-<li>根据提示逐步进行本地安装,可以使用<code>node -v</code>或者<code>npm -v</code>来查看版本号以确认安装成功。<br><br><img src="/static/npm_v.png" width = "50%" height = "50%" alt="npm-v" align=center /><br>注：中国地区可以使用更快的源：<code>npm install -g cnpm --registry=https://registry.npm.taobao.org</code></li>
-</ol>
-</li>
-<li>Hexo安装<ol>
-<li><code>npm install hexo-cli -g</code></li>
-<li>可以使用<code>hexo -v</code>来查看版本号以验证安装hexo成功。<br><br><img src="/static/hexo_v.png" width = "50%" height = "50%" alt="hexo-v" align=center /></li>
-</ol>
-</li>
-</ol>
-</li>
-<li><p>牛刀小试</p>
-<ol>
-<li>建立一个博客目录<code>mkdir blog</code></li>
-<li>初始化一篇博客<code>hexo init</code></li>
-<li>启动博客<code>hexo s</code>, 即可在<a href="http://localhost:4000访问。平时写完文章，也可以用这个命令做本地预览。">http://localhost:4000访问。平时写完文章，也可以用这个命令做本地预览。</a></li>
-<li>新建一篇文章<code>hexo new &quot;My first article&quot;</code>即可创建一篇文章，同时你也可以在blog/source/_post找到你新建的文章”My first article.md”。</li>
-<li>修改文章。可以使用vim编辑器编辑文章。更多关于vim的内容可以参考<a href="https://coolshell.cn/articles/5426.html" target="_blank" rel="noopener">简明 VIM 练级攻略</a>学习。其中还支持Markdown语法，更多Markdown可自行Google学习。</li>
-<li>生成文章<code>hexo g</code>。</li>
-</ol>
-</li>
-<li><p>部署到Github上</p>
-<ol>
-<li>登录到自己的github</li>
-<li>新建一个repository, 此处命名一定要使用自己的username.github.io。例如我的username是10kshuaizhang, 则新建的这个应该是10kshuaizhang.github.io<br><br><img src="/static/new_repo.png" width = "50%" height = "50%" alt="new_repo-v" align=center /></li>
-<li>在博客根目录下安装git部署插件<br><code>$ npm install hexo-deployer-git --save</code><br>WARNING可以忽略。</li>
-<li>修改博客根目录下配置文件， _config.yml<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Deployment</span><br><span class="line">## Docs: https:&#x2F;&#x2F;hexo.io&#x2F;docs&#x2F;deployment.html</span><br><span class="line">deploy:</span><br><span class="line"> 	type: git</span><br><span class="line"> 	repo: https:&#x2F;&#x2F;github.com&#x2F;xxxx&#x2F;xxxx.github.io # 你的仓库地址， xxxx是你的username</span><br><span class="line"> 	branch: master</span><br></pre></td></tr></table></figure></li>
-<li>命令部署<br><code>hexo d</code><br>第一次github需要认证，按照提示输入账号密码即可。</li>
-<li>浏览器访问xxxx.github.io即可到达你的博客。（xxxx为你的username即昵称）</li>
-</ol>
-</li>
-<li><p>更改主题<br>此处选用了Litten作者的主题，清晰简洁。Github地址为：<a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="noopener">https://github.com/litten/hexo-theme-yilia</a><br>实现步骤如下：</p>
-<ol>
-<li><p>安装<br><code>$ git clone https://github.com/litten/hexo-theme-yilia.git themes/yilia</code></p>
-</li>
-<li><p>配置<br>修改hexo根目录下的_config.yml: theme:yilia</p>
-</li>
-<li><p>更新</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd themes&#x2F;yilia</span><br><span class="line">git pull</span><br></pre></td></tr></table></figure>
 
-<p>更多配置详见作者Github。</p>
-</li>
-</ol>
-</li>
-</ol>
-<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h3><pre><code>整体来说，搭建起来不是很难，关键在于以后去完善各个功能，并且坚持输出内容，将自己的知识梳理清晰，并且归纳到博客上。</code></pre>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><img src="https://res.cloudinary.com/shuaiz/image/upload/v1597620965/Cassandra_qsjmh1.png" alt="Cassandra" style="zoom:33%;" />
+
+<p>Cassandra 是 Facebook 于2008年7月在 Google Code 上开源的项目，最早是由 Amazon 前雇员和一位 Microsoft 的工程师写成的。这个系统受到 Amazon Dynamo 的巨大影响（有关 Amazon Dynamo 的介绍，可以查阅论文《Dynamo: Amazon’s Highly Available Key-value Store》，网址为<a href="https://link.jianshu.com?t=http://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf" target="_blank" rel="noopener">http://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf</a>）。Cassandra 实现了 Dynamo 风格的副本复制模型和没有单点失效的架构，增加了更加强大的 column family 数据模型。</p>
+<p>之后，在2009年1月，Cassandra 被接纳为 Apache 基金会的孵化器项目，并于2010年3月毕业后成为了顶级项目。此时，很多知名公司包括  Facebook、Rackspace、Digg、Twitter 等都成为了 Cassandra 的用户。</p>
+<p>有关 Cassandra 论文，最早可见由 Facebook 的 Lakshman 和 Malik 发表的《A Decentralized Structured Storage System》（在线阅读地址为 <a href="https://link.jianshu.com?t=http://www.cs.cornell.edu/projects/ladis2009/papers/lakshman-ladis2009.pdf" target="_blank" rel="noopener">http://www.cs.cornell.edu/projects/ladis2009/papers/lakshman-ladis2009.pdf</a>）。在 Cassandra 2.0 发布以后，Jonathan Ellis 对该论文相应的做了修改，发表于 <a href="https://link.jianshu.com?t=http://docs.datastax.com/en/articles/cassandra/cassandrathenandnow.html" target="_blank" rel="noopener">http://docs.datastax.com/en/articles/cassandra/cassandrathenandnow.html</a>。</p>
+<p>伴随着业界对于 Cassandra 商业化、产品化的需求，在2010年4月 Apache Cassandra 项目主席 Jonathan Ellis 以及其同事 Matt Pfeil 成立了一家服务公司，称为 <a href="https://link.jianshu.com?t=http://www.datastax.com/" target="_blank" rel="noopener">DataStax</a>（原先的名字为 Riptano）。DataStax 雇佣了多名 Cassandra 贡献者，成为了领导和支持 Cassandra 项目的主力。</p>
+<p>2015年11月，Cassandra 发布了 3.0 版本，其底层的存储引擎已被重写，支持全局索引，支持 Java 8，并将基于 Thrift 命令行界面给移除了。</p>
+<p>Apache Cassandra 具有如下特性：</p>
+<h4 id="1-分布式与去中心化"><a href="#1-分布式与去中心化" class="headerlink" title="1. 分布式与去中心化"></a>1. 分布式与去中心化</h4><p>Cassandra 是分布式的，这意味着它可以运行在多台机器上，并呈现给用户一个一致的整体。</p>
+<p>对于很多存储系统（如 MySQL、Bigtable、HBase 等），一旦你开始扩展它，就需要把某些节点设为主节点，其他则作为从节点。但 Cassandra 是去中心的，也就是说每个节点都是一样的，没有节点会承担特殊的管理任务。与主从模式（master-slave）相反，Cassandra 的协议是 P2P 的，并使用 gossip 来维护存活或死亡节点的列表。</p>
+<p>去中心化这一事实意味着 Cassandra 不会存在单点失效。Cassandra 集群中的所有节点的功能都完全一样， 所以不存在一个特殊的主机作为主节点来承担协调任务。有时这被叫做“server symmetry（服务器对称）”。</p>
+<p>综上所述，因为 Cassandra 是分布式、去中心化的，它不会有单点失效的问题，所以支持高可用性。</p>
+<h4 id="2-弹性可扩展"><a href="#2-弹性可扩展" class="headerlink" title="2. 弹性可扩展"></a>2. 弹性可扩展</h4><p>可扩展性是指系统架构可以让系统提供更多的服务而不降低使用性能的特性。最简单的达到可扩展性的手段，就是给现有的机器增加硬件的容量、内存进行垂直扩展。而水平扩展则需要增加更多机器，每台机器提供全部或部分数据，这样所有主机都不必负担全部业务请求。但软件自己需要有内部机制来保证集群中节点间的数据同步。</p>
+<p>弹性可扩展是指水平扩展的特性，意即你的集群可以不间断的情况下，方便扩展或缩减服务的规模。这样，你就不需要重新启动进程，不必修改应用的查询，也无需自己手工重新均衡数据分布。在 Cassandra 里，你只要加入新的计算机，Cassandra 就会自动地发现它并让它开始工作。</p>
+<h4 id="3-高可用与容错"><a href="#3-高可用与容错" class="headerlink" title="3. 高可用与容错"></a>3. 高可用与容错</h4><p>系统的可用性是由满足请求的能力来量度的。但计算机可能会有各种各样的故障，从硬件器件故障到网络中断都有可能。所以它们一般都有硬件冗余，并在发生故障事件的情况下会自动响应并进行热切换。从软件的层次来说，设置多个数据中心，就是“软件冗余”，它能保障在灾难发生时，故障中断的功能在剩余系统上能够进行恢复。</p>
+<p>Cassandra 就是高可用的。你可以在不中断系统的情况下替换故障节点，还可以把数据分布到多个数据中心里，从而提供更好的本地访问性能，并且在某一数据中心发生火灾、洪水等不可抗灾难的时候防止系统彻底瘫痪。</p>
+<h4 id="4-Tuneable-Consistency（可调一致性）"><a href="#4-Tuneable-Consistency（可调一致性）" class="headerlink" title="4. Tuneable Consistency（可调一致性）"></a>4. Tuneable Consistency（可调一致性）</h4><p>一致性的基本含义是读操作一定会返回最新写入的结果。扩展数据存储系统就意味着我们不得不在数据一致性、节点可用性和分区容错性之间做某些折衷（即 CAP 理论）。Cassandra 常被称作是“最终一致性”的，简单地说，Cassandra 牺牲了一点一致性来换取了完全的可用性。但是 Cassandra 实际更应该表述为“可调一致性”，它允许你来方便地选定需要的一致性水平与可用性水平，在二者间找到平衡点。</p>
+<p>因为客户端可以控制在更新到达多少个副本之前，必须阻塞系统。这是通过设置 replication factor（副本因子）来调节与之相对的一致性级别。<br> 通过 replication factor，你可以决定准备牺牲多少性能来换取一致性。 replication factor 是你要求更新在集群中传播到的节点数（注意，更新包括所有增加、删除和更新操作）。</p>
+<p>客户端每次操作还必须设置一个 consistency level（一致性级别）参数，这个参数决定了多少个副本写入成功才可以认定写操作是成功的，或者读取过程中读到多少个副本正确就可以认定是读成功的。这里，Cassandra 把决定一致性程度的权利留给了客户自己。</p>
+<p>所以，如果需要的话，你可以设定 consistency level 和 replication factor 相等，从而达到一个较高的一致性水平，不过这样就必须付出同步阻塞操作的代价，只有所有节点都被更新完成才能成功返回一次更新。而实际上，Cassandra 一般都不会这么来用，原因显而易见（这样就丧失了可用性目标，影响性能，而且这不是你选择 Cassandra 的初衷）。而如果一个客户端设置 consistency level 低于  replication factor 的话，即使有节点宕机了，仍然可以写成功。</p>
+<h4 id="5-Row-Oriented（面向行）"><a href="#5-Row-Oriented（面向行）" class="headerlink" title="5. Row-Oriented（面向行）"></a>5. Row-Oriented（面向行）</h4><p>Cassandra 不是真正意义上的“Column-Oriented（面向列）”的数据库而是“Row-Oriented（面向行）”， 它的数据结构不是关系型的，而是一个多维稀疏哈希表。“稀疏”意味着任何一行都可能会有一列或者几列，但每行都不一定（像关系模型那样）和其他行有一样的列。每行都有一个唯一的键值，用于进行数据访问。所以，更确切地说，应该把 Cassandra 看做是一个有索引的、Row-Oriented 的存储系统。</p>
+<p>Cassandra 的数据存储结构基本可以看做是一个多维哈希表。这意味着你不必事先精确地决定你的具体数据结构或是你的记录应该包含哪些具体字段。这特别适合处于草创阶段，还在不断增加或修改服务特性的应用。而且也特别适合应用在敏捷开发项目中，不必进行长达数月的预先分析。对于使用 Cassandra 的应用，如果业务发生变化了，只需要在运行中增加或删除某些字段就行了，不会造成服务中断。</p>
+<p>当然， 这不是说你不需要考虑数据。相反，Cassandra 需要你换个角度看数据。在 RDBMS 里， 你得首先设计一个完整的数据模型， 然后考虑查询方式， 而在 Cassandra 里，你可以首先思考如何查询数据，然后提供这些数据就可以了。</p>
+<h4 id="6-Flexible-Schema（灵活的模式）"><a href="#6-Flexible-Schema（灵活的模式）" class="headerlink" title="6. Flexible Schema（灵活的模式）"></a>6. Flexible Schema（灵活的模式）</h4><p>早期版本的 Cassandra 是忠实于 Bigtable 的设计，而采用的是“schema-free（无模式）”的数据模型，新的 column 可以被动态定义。schema-free 模式的数据库在处理大数据时有非常强的扩展和高性能的优势。但这种模式的主要缺点是在确定数据的含义和数据的格式时存在难点，而这限制了执行复杂查询的能力。</p>
+<p>Cassandra Query Language（CQL）正是为了解决上面提到的问题。CQL 它提供了一种通过类似于 Structured Query Language（SQL）的语法来定义的模式。起初，CQL 是基于  Apache Thrift 项目的 schema-free 接口来提供额外的 Cassandra 接口的。在这个过渡阶段，模式是可选的，可以通过 CQL 来定义，也可以通过 Thrift API 来实现在添加新的 column 时动态扩展。</p>
+<p>自 Cassandra 3.0 以来，将不推荐采用通过基于 Thrift API 来实现动态创建 column 的方式。Cassandra 的底层存储已重新实现，并与 CQL 更紧密地结合起来。Cassandra 并不限制动态扩展模式，但它的工作方式已经显著的不同了。CQL 的集合，如 list、set，特别是 map 提供在无结构化的格式里面添加内容的能力，从而能扩展现有的模式。CQL 还提供了改变列的类型的能力，以支持 JSON 格式的文本的存储。</p>
+<p>因此， Cassandra 是支持“灵活的模式”。</p>
+<h4 id="7-高性能"><a href="#7-高性能" class="headerlink" title="7. 高性能"></a>7. 高性能</h4><p>Cassandra 在设计之初就特别考虑了要充分利用多处理器和多核计算机的性能，并考虑在分布于多个数据中心的大量这类服务器上运行。它可以一致而且无缝地扩展到数百台机器。Cassandra 已经显示出了高负载下的良好表现，在一个非常普通的工作站上，Cassandra 也可以提供非常高的写吞吐量。而如果你增加更多的服务器，你还可以继续保持 Cassandra 所有的特性而无需牺牲性能。</p>
+<h3 id="Cassandra-应用场景"><a href="#Cassandra-应用场景" class="headerlink" title="Cassandra 应用场景"></a>Cassandra 应用场景</h3><p>尽管 Cassandra 设计精巧、功能出色，但也并非能胜任所有工作。所以，这里我们来介绍一下 Cassandra 最擅长的领域。</p>
+<h4 id="1-大规模部署"><a href="#1-大规模部署" class="headerlink" title="1. 大规模部署"></a>1. 大规模部署</h4><p>Cassandra 的很多精巧设计都专注于高可用、可调一致性、P2P 协议、无缝扩展等，这些都是 Cassandra 的卖点。这些特性在单节点工作时都是没有意义的，更无法展现它的全部能力。所以，你需要做一些评估，考虑你期望的流量、吞吐需求以及 SLA 等。如果你认为有几种关系型数据库可以很好地应付你的流量，提供不错的性能，那可能选关系型数据库更好。简单地说，这是因为 RDBMS 更易于在单机上运行，对你来说也更熟悉。</p>
+<p>但是，如果你认为需要至少几个节点才能支撑你的业务，那 Cassandra 就是个不错的选择。如果你的应用可能需要数十个节点，那 Cassandra 可能就是个很棒的选择了。</p>
+<h4 id="2-写密集、统计和分析型工作"><a href="#2-写密集、统计和分析型工作" class="headerlink" title="2. 写密集、统计和分析型工作"></a>2. 写密集、统计和分析型工作</h4><p>Cassandra 是为优异的写吞吐量而特别优化的。许多早期使用 Cassandra 的产品都用于存储用户状态更新、社交网络、建议/评价以及应用统计等。这些应用大都是写多于读的，并且更新可能随时发生并伴有突发的峰值。事实上，支撑应用负载需要很高的多客户线程并发写性能，这正是 Cassandra 的主要特性。</p>
+<p>Cassandra 已经被用于开发了多种不同的应用，包括窗口化的时间序列数据库，用于文档搜索的反向索引，以及分布式任务优先级队列。</p>
+<h4 id="3-地区分布"><a href="#3-地区分布" class="headerlink" title="3. 地区分布"></a>3. 地区分布</h4><p>Cassandra 直接支持多地分布，可以很容易配置成将数据分布到多个数据中心的存储方式。如果你有一个全球部署的应用，那么让数据贴近用户会获得不错的性能收益，Cassandra 正适合这种应用场合。</p>
+<h4 id="4-变化的应用"><a href="#4-变化的应用" class="headerlink" title="4. 变化的应用"></a>4. 变化的应用</h4><p>如果你正在“初创阶段”，业务会不断改进，Cassandra 这种灵活的模式的数据模型可能更适合你。这让你的数据库能更快地跟上业务改进的步伐。</p>
+<h3 id="Cassandra-架构、数据模型"><a href="#Cassandra-架构、数据模型" class="headerlink" title="Cassandra 架构、数据模型"></a>Cassandra 架构、数据模型</h3><p>Cassandra 是设计来处理跨多个节点的大数据工作负载，且不会产生单点故障问题。它的架构是基于对系统和硬件故障也时有发生的理解，即计算机的故障不可避免。Cassandra 通过在集群中的所有节点之间分布均匀的节点，采用 P2P 的方式来定位分布式系统涉及的故障问题。每个节点经常交流有关其自身的状态信息，其他节点利用 P2 gossip 通信协议与集群进行交互。Commit 日志在每个节点上会依次写入活动信息，以确保数据的持久性，然后数据被索引并写入内存结构 memtable 中。memtable 类似于一个回写高速缓存。每次这个内存结构满时，数据就被写入磁盘中的 SSTable 数据文件中。所有的写操作都会自动分区，并在整个集群中进行复制。Cassandra 定期合并使用一种称为 compaction 过程来合并 SSTable，合并过程中会丢弃标记为 tombstone 的数据。为了确保所有的数据在整个集群保持一致，不同的修复机制将被使用。</p>
+<p>Cassandra 是一个分区 row 存储数据库，其中 row 被组织成一个必需有主键的 table。 Cassandra 的架构允许任何已授权的用户可以使用 CQL 语言来连接到任何数据中心的任何节点。为了方便使用，CQL 使用了类似的 SQL 的语法来操作表数据。开发人员可以通过 <a href="https://link.jianshu.com?t=http://docs.datastax.com/en/cql/3.3/cql/cql_reference/cqlshCommandsTOC.html" target="_blank" rel="noopener">cqlsh</a>、<a href="https://link.jianshu.com?t=http://docs.datastax.com/en/developer/devcenter/doc" target="_blank" rel="noopener">DevCenter</a> 或者应用语言的<a href="https://link.jianshu.com?t=http://docs.datastax.com/en/developer/driver-matrix/doc/common/driverMatrix.html#driver-cmpt-matrix" target="_blank" rel="noopener">驱动程序</a>来访问 CQL。通常情况下，集群都每个应用程序都会有一个 keyspace （密钥空间），由许多不同的 table 组成。</p>
+<p>客户端读取或写入请求可以被发送到集群中的任何节点。当客户端通过一个请求连接到一个节点时，则该节点充当协调器用于该客户端特定的操作。协调器充当客户端应用程序和拥有被请求数据的节点之间的代理。协调器来决定在哪些节点能收到请求，这往往是基于集群的配置要求。</p>
+<p>Cassandra 包含如下核心构件：</p>
+<ul>
+<li><strong>Node（节点）</strong>：存储数据的地方。它是 Cassandra 的基础设施组件。</li>
+<li><strong>Data center（数据中心）</strong>：相关节点的集合。数据中心可以是物理数据中心或虚拟数据中心。不同的工作负载应使用单独的数据中心，无论是物理的还是虚拟。复制是由数据中心的设置。使用单独的数据中心可以防止由其他工作负荷受到影响卡桑德拉交易，并保持彼此接近为较低的延迟请求。根据不同的复制因子，可将数据写入到多个数据中心。数据中心必须永远跨越物理位置。</li>
+<li><strong>Cluster（集群）</strong>：一个集群包含一个或多个数据中心。它可以跨越物理位置。</li>
+<li><strong>Commit log（Commit 日志）</strong>：<br>   所有数据首先被写入 Commit 日志以确保数据的持久性。当其所有的数据已冲刷到 SSTable 时，它可以存档、删除或回收。</li>
+<li><strong>SSTable</strong>：<br>   SSTable（sorted string table，经排序的字符串表）是 Cassandra 定期写 memtable 的不变的数据文件。SSTable 仅追加并在磁盘上依次存储并保持 Cassandra table。</li>
+<li><strong>CQL Table</strong>：<br>   通过  table row 获取到的有序的 column 集合。table 由 column 和一个主键组成。</li>
+</ul>
+<h3 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h3><p>本文转载自简书作者@梁睿坤的文章<a href="https://www.jianshu.com/p/f1485d5151ba" target="_blank" rel="noopener">认识Cassandra</a>的前半部分。</p>
+
       
 
       
@@ -301,7 +286,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Database</a>
         		</li>
       		
 		</ul>
@@ -357,7 +346,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/06/20/hexo%E6%9E%81%E9%80%9F%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0Github/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/08/16/A-Brief-Introduction-of-Cassandra/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -371,15 +360,11 @@
   
 <nav id="article-nav">
   
-    <a href="/2020/06/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%B3%BB%E5%88%97%E4%B9%8B%E6%A1%B6%E6%8E%92%E5%BA%8F/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          数据结构与算法系列之桶排序
-        
-      </div>
-    </a>
   
+    <a href="/2020/08/16/Introduction-to-Bloom-Filter/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Introduction to Bloom Filter</div>
+      <i class="icon-circle-right"></i>
+    </a>
   
 </nav>
 
