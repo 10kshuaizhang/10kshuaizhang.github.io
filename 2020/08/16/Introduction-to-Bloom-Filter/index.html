@@ -6,20 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Designing-Data-Intensive-Application学习笔记5 | 10K&#39;s</title>
+  <title>Introduction to Bloom Filter | 10K&#39;s</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Chapter4 Encoding adn Evolution">
+  <meta name="description" content="基本概念如果想判断一个元素是不是在一个集合里，一般想到的是将集合中所有元素保存起来，然后通过比较确定。链表、树、散列表（又叫哈希表，Hash table）等等数据结构都是这种思路。但是随着集合中元素的增加，我们需要的存储空间越来越大。同时检索速度也越来越慢，上述三种结构的检索时间复杂度分别为。 布隆过滤器的原理是，当一个元素被加入集合时，通过K个散列函数将这个元素映射成一个位数组中的K个点，把它们">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Designing-Data-Intensive-Application学习笔记5">
-<meta property="og:url" content="http://yoursite.com/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B05/index.html">
+<meta property="og:title" content="Introduction to Bloom Filter">
+<meta property="og:url" content="http://yoursite.com/2020/08/16/Introduction-to-Bloom-Filter/index.html">
 <meta property="og:site_name" content="10K&#39;s">
-<meta property="og:description" content="Chapter4 Encoding adn Evolution">
+<meta property="og:description" content="基本概念如果想判断一个元素是不是在一个集合里，一般想到的是将集合中所有元素保存起来，然后通过比较确定。链表、树、散列表（又叫哈希表，Hash table）等等数据结构都是这种思路。但是随着集合中元素的增加，我们需要的存储空间越来越大。同时检索速度也越来越慢，上述三种结构的检索时间复杂度分别为。 布隆过滤器的原理是，当一个元素被加入集合时，通过K个散列函数将这个元素映射成一个位数组中的K个点，把它们">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-08-16T22:53:01.000Z">
-<meta property="article:modified_time" content="2020-08-16T22:54:01.351Z">
+<meta property="og:image" content="https://wikimedia.org/api/rest_v1/media/math/render/svg/db50673c67c6e72b7342ca1383def18cdead21b6">
+<meta property="og:image" content="https://wikimedia.org/api/rest_v1/media/math/render/svg/f5ec39041121b14e8c2b1a986c9b04547b223e3c">
+<meta property="article:published_time" content="2020-08-16T23:22:31.000Z">
+<meta property="article:modified_time" content="2020-08-16T23:23:22.335Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wikimedia.org/api/rest_v1/media/math/render/svg/db50673c67c6e72b7342ca1383def18cdead21b6">
   
     <link rel="alternative" href="/atom.xml" title="10K&#39;s" type="application/atom+xml">
   
@@ -145,14 +148,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Designing-Data-Intensive-Application学习笔记5" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-Introduction-to-Bloom-Filter" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Designing-Data-Intensive-Application学习笔记5
+      Introduction to Bloom Filter
     </h1>
   
 
@@ -164,8 +167,8 @@
     </span>
 
 
-<a href="/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B05/" class="archive-article-date">
-  	<time datetime="2020-08-16T22:53:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-16</time>
+<a href="/2020/08/16/Introduction-to-Bloom-Filter/" class="archive-article-date">
+  	<time datetime="2020-08-16T23:22:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-16</time>
 </a>
         <!-- 需要添加的位置 -->
         <!-- 开始添加字数统计-->
@@ -175,7 +178,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">1.7k字</span>
+        <span class="post-count">852字</span>
       </span>
     </span>
 
@@ -184,7 +187,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-hourglass-half"></i>
         <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">10分</span>
+        <span class="post-count">3分</span>
       </span>
     </span>
 </div>
@@ -196,198 +199,18 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>Chapter4 Encoding adn Evolution</strong></p>
+        <h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>如果想判断一个元素是不是在一个集合里，一般想到的是将集合中所有元素保存起来，然后通过比较确定。<a href="https://zh.wikipedia.org/wiki/链表" target="_blank" rel="noopener">链表</a>、<a href="https://zh.wikipedia.org/wiki/树_(数据结构)" target="_blank" rel="noopener">树</a>、<a href="https://zh.wikipedia.org/wiki/散列表" target="_blank" rel="noopener">散列表</a>（又叫哈希表，Hash table）等等数据结构都是这种思路。但是随着集合中元素的增加，我们需要的存储空间越来越大。同时检索速度也越来越慢，上述三种结构的检索时间复杂度分别为<img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/db50673c67c6e72b7342ca1383def18cdead21b6" alt="{\displaystyle O(n),O(\log n),O(1)}">。</p>
+<p>布隆过滤器的原理是，当一个元素被加入集合时，通过K个<a href="https://zh.wikipedia.org/wiki/散列函数" target="_blank" rel="noopener">散列函数</a>将这个元素映射成一个位<a href="https://zh.wikipedia.org/wiki/数组" target="_blank" rel="noopener">数组</a>中的K个点，把它们置为1。检索时，我们只要看看这些点是不是都是1就（<u><strong>大约</strong></u>）知道集合中有没有它了：如果这些点有任何一个0，则被检元素一定不在；如果都是1，则被检元素很可能在。这就是布隆过滤器的基本思想。</p>
 <a id="more"></a>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><p>相比于其它的数据结构，布隆过滤器在空间和时间方面都有巨大的优势。布隆过滤器存储空间和插入/查询时间都是常数<img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/f5ec39041121b14e8c2b1a986c9b04547b223e3c" alt="O(k)">。另外，散列函数相互之间没有关系，方便由硬件并行实现。布隆过滤器不需要存储元素本身，在某些对保密要求非常严格的场合有优势。</p>
+<p>布隆过滤器可以表示全集，其它任何数据结构都不能；</p>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><p>但是布隆过滤器的缺点和优点一样明显。误算率是其中之一。随着存入的元素数量增加，误算率随之增加。但是如果元素数量太少，则使用散列表足矣。</p>
+<p>另外，一般情况下不能从布隆过滤器中删除元素。我们很容易想到把位数组变成整数数组，每插入一个元素相应的计数器加1, 这样删除元素时将计数器减掉就可以了。然而要保证安全地删除元素并非如此简单。首先我们必须保证删除的元素的确在布隆过滤器里面。这一点单凭这个过滤器是无法保证的。另外计数器回绕也会造成问题。</p>
+<p>在降低误算率方面，有不少工作，使得出现了很多布隆过滤器的变种。</p>
+<h3 id="Java代码实现"><a href="#Java代码实现" class="headerlink" title="Java代码实现"></a>Java代码实现</h3><p>1 m位的BitSet， 初始化为0； 2 k个不同的hash function；3 计算当前String的k个hash function的值； 4 对于BitSet置为1； 5 可能有误差；</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> Others;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.BitSet;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BloomFilter</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_SIZE = <span class="number">1</span> &lt;&lt; <span class="number">25</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> BitSet bits = <span class="keyword">new</span> BitSet(DEFAULT_SIZE);</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span>[] seeds = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">5</span>, <span class="number">7</span>, <span class="number">11</span>, <span class="number">13</span>, <span class="number">37</span>, <span class="number">61</span>&#125;;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> HashFunction [] functions = <span class="keyword">new</span> HashFunction[seeds.length];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">HashFunction</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> capacity;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> seed;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">HashFunction</span><span class="params">(<span class="keyword">int</span> capacity, <span class="keyword">int</span> seed)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.capacity = capacity;</span><br><span class="line">            <span class="keyword">this</span>.seed = seed;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(String value)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; value.length(); i++) &#123;</span><br><span class="line">                res = seed * res + value.charAt(i);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> (capacity - <span class="number">1</span>) &amp; res;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">BloomFilter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; seeds.length; i++) &#123;</span><br><span class="line">                functions[i] = <span class="keyword">new</span> HashFunction(DEFAULT_SIZE, seeds[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(String value)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">for</span> (HashFunction function : functions) &#123;</span><br><span class="line">                bits.set(function.hash(value), <span class="keyword">true</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(String value)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (value == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            <span class="keyword">boolean</span> res = <span class="keyword">true</span>;</span><br><span class="line">            <span class="keyword">for</span> (HashFunction function : functions) &#123;</span><br><span class="line">                res = res &amp; bits.get(function.hash(value));</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> res;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<ul>
-<li>Applications inevitably change over time.</li>
-<li><u>schema-on-read</u>(“<strong>schemaless</strong>“) databases don’t enforces schema, so the databases can contain a mixture of older and newer data formats written at different times.</li>
-<li>When data changes usually you will need code change, but in large application, code changes often connot happen instantaneously.<ul>
-<li>With <u>server-side</u> applications you may want to perform a <strong>rolling upgrade</strong> (also known as a <strong>staged rollout</strong>) </li>
-<li>WIth <u>client-side</u> applications you’re at the mercy of th user, who may noy install the update for some time.</li>
-</ul>
-</li>
-<li>We need to maintain compatibility in both directions<ul>
-<li><strong>Backward compatbility</strong>: Newer code can read data that was rwritten by older code. (relative easy,, since you already knew the existing old data schema)</li>
-<li><strong>Forward compatbility</strong>: Older code can read data taht was written by newer code. (raletive harderm it requires older code to ignore addtions made by a newer version of the code)</li>
-</ul>
-</li>
-</ul>
-<h3 id="Formats-for-Encoding-Data"><a href="#Formats-for-Encoding-Data" class="headerlink" title="Formats for Encoding Data"></a>Formats for Encoding Data</h3><ul>
-<li>The <u>transaction from the in-memory representation to a byte sequence</u> is called <strong>encoding</strong> (also known as <strong>serialization</strong> or <strong>marshalling</strong>), and the reverse is called <strong>decoding</strong> (<strong>pparsing, deserialization, unmarshalling</strong>).</li>
-<li><strong>Language-Specific Formats</strong>: (bad idea, usually don’t recommended)<ul>
-<li>Java has <strong>java.is.Serialization</strong>, Ruby has <strong>Marshal</strong>, Python has <strong>pickle</strong> and so on. Many third-party libraries also exist, such as <strong>Kryo</strong> for Java.</li>
-<li>Problems<ul>
-<li>The encoding is often tied to a particular programming language. and reading the datat in another language is very difficult.</li>
-<li>In order to restore data in same object types, the decoding process needs to be able to instantiate arbitrary classes. (Potentially security risk)</li>
-<li><strong>Versioning</strong> data is often an afterthought in these libraries.</li>
-<li><strong>Efficiency</strong> (CPU time taken to encode or decode, and the size of the encoded structure) is also often an afterthought.</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><strong>JSON, XML, and Binary Variants</strong><ul>
-<li>Problems<ul>
-<li>There is alot of ambiguity arund encoding of numbers. This is a problem when dealing with large numbers (e.g. 2^35);</li>
-<li>JSON and XML have good support for Unicode character string(i.e., human-readable text), but they don’t support binary strings;</li>
-<li>There is optional schema support for both XML and JSON (but complicated to learn and use);</li>
-<li>CSV does not have any schema, so it is up to the application to define the meaning of each row and column.</li>
-</ul>
-</li>
-<li>Despite these flaws, <u>JSON, XML and CSV</u> are good enough for many purposes.</li>
-<li><u>*<em>The difficulty of getting different organizations to agree on anything outweighs most other concerns *</em></u>;</li>
-</ul>
-</li>
-<li><strong>Binary encoding</strong>: for data that is used only internally within your organization, there is less pressure to use a <u>lowest-common-denominator</u> encoding format.<ul>
-<li><u>JSON is verbvose but it use lots of space</u>, hence it led to the development of a profusion of binary encodings for JSON (MessagePack, BSON, BJSON, UBJSON, BISON and Smile, to name a few) and for XML (WBXML and Fast Infoset, for example) [but they don’t save too much space neither]</li>
-</ul>
-</li>
-<li><strong>Thrift and Protocol Buffers</strong>: <u>Apache Thrift [by Facebook]</u> and <u>Protocol Buffers (protobuf) [by Google]</u> are binary encoding libraries that are based on the same principle.<ul>
-<li>both Thrift and Protocol Buffers<ul>
-<li>Requires a schema for any data that is encoded</li>
-<li>each come with a code generation tool</li>
-</ul>
-</li>
-<li><strong>Thrift</strong> has two different binary encoding formats <ul>
-<li>BinaryProtocal</li>
-<li>CompactProtocal (and DenseProtocal only support C++)</li>
-</ul>
-</li>
-<li><strong>Protocol</strong> only has binary encoding<ul>
-<li>Does not have a list or array data type, but instead has a <u>repeated</u> marker for fields (which is a third option alongside <u>required</u> and <u>optional</u>).</li>
-</ul>
-</li>
-<li><strong>Field tags and schema evolution</strong><ul>
-<li>to maintain backward compatibility, every filed you add after the initial deployment of the schema <u>must be optional or have a default value</u>.</li>
-<li>you can only remove a field that is optional (a required filed can never be removed), and you can never use the same tag number again.</li>
-</ul>
-</li>
-<li><strong>Data Types and schema evolution</strong></li>
-</ul>
-</li>
-<li><strong>Appache Avro</strong>: (subproject of Hadoop) is another binary encoding format that is interestingly different from Protocol Buffers and Thrift.<ul>
-<li><strong>The writer’s schema and the reader’s schema</strong><ul>
-<li>The key idea with Avro is that <u>the writer’s schema and the reader’s scheam don’t have to be the same</u> – they only need to be compatible.</li>
-</ul>
-</li>
-<li><strong>Schema evolution rules</strong><ul>
-<li>To maintain compatibility, you may only add or remove a field that has a default value.</li>
-</ul>
-</li>
-<li>In Avro<ul>
-<li>if you want to allow a field to bbe null, you have to sue a union type. For example, union {null, long, string} field.</li>
-<li>Dosen’t habe <u>optional</u> and <u>required</u> markers.</li>
-<li>Change field name: the reader’s schema can contain aliased for field names, so it can match and old write’s schema filed names against the aliases.</li>
-</ul>
-</li>
-<li>A database of schma version is a useful thing to have in any cases, since it acts as documentation and gives you a chance to check schema compatibility.</li>
-<li><strong>Dynamically generated schemas</strong></li>
-<li>Code generation and dynamically typed languages<ul>
-<li>After a schema has beed defiend, you can generate code that implements this chema is a programming language of your  choice.</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><strong>The Merits of Schemas</strong><ul>
-<li>schema evolution allows the same kind of flexibility as schemaless/schema-on-read JSON databases provided, while also providing better guarantees your data and better tooling.</li>
-</ul>
-</li>
-</ul>
-<h3 id="Modes-of-Dataflow"><a href="#Modes-of-Dataflow" class="headerlink" title="Modes of Dataflow"></a>Modes of Dataflow</h3><ul>
-<li>forwards and backward compatibility, which are important for <strong>evolvability</strong> (upgrade system independently, and not having to change everything at once)</li>
-<li><strong>Via Databases</strong><ul>
-<li><strong>Different values written at diferent times:</strong> A database generally allows any value to be updated at anytime. (aka <strong><u>data outlives code</u></strong>) using <u>Schema evolution</u> rules.</li>
-<li>Archival storage: use latest schema<ul>
-<li>Encode the data in an analytical-friendly column-oriented formatc such as <u>Parquet</u></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><strong>Via Sychronized Service call: REST</strong> or <strong>RPC</strong><ul>
-<li><strong>REST</strong> seems to be the predominant style for <strong>public</strong> APIs.</li>
-<li><strong>RPS</strong> frameworks are on requests between services owned by the same organization, typically within the same datacenter.</li>
-<li>The most common arrangement is to have two roles: <strong>client</strong> and <strong>servers</strong>.<ul>
-<li>The API exposed by the server is known as a <strong><u>service</u></strong>.</li>
-</ul>
-</li>
-<li>Moreover, a server can itself bbe a client to another service (e.g. wev app server acts as a client to a database)<ul>
-<li><strong><u>service-oriented architecture (SOA)</u></strong>, more recently refined and rebranded as <strong><u>microservices architecture</u></strong>;</li>
-<li>A key design goal of a <strong><u>service-oriented/microservices</u></strong> architecture is <strong>to make the application easier to change and maintain by manking services independently deployable and evovable</strong>.</li>
-</ul>
-</li>
-<li><strong>Web services: REST</strong> and <strong>SOAP</strong><ul>
-<li><strong>REST</strong> is not a protocal, but rather a <strong><u>design philosophy</u></strong> that builds upon the principles of HTTP. An API designed according to the principles of REST is called <u>RESTful</u>.<ul>
-<li>A defination format such as <strong><u>OpenAPT</u></strong>, also known as <u><strong>Swagger</strong></u>, can be used to describe RESTful APIs and produce documentation.</li>
-</ul>
-</li>
-<li><strong>SOAP</strong> is a XML-based protocal for making network API requests.<ul>
-<li>The API of a SOAP web service is described using an XML-based language called the <strong><u>Web Service Description Language</u></strong>, or <strong>WSDL</strong>. WSDL enables code generation so that a client can access a remote service using local classes and mothod calls;(good for static typed language like Java)</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><strong>RPC</strong><ul>
-<li>The  RPC model tries to make a requet to remote network service look the same as calling a function or method in your programming language, within the same process (this abstraction is called <strong><u>location transparency</u></strong>).</li>
-<li>Althought RPC seems convenient at first, the approach is <strong><u>fundamentally flawed</u></strong>.<u>Anetwrokd request is very different from a local function call</u>.<ul>
-<li>A network request is unpredictable;</li>
-<li>A networkd response is unpredictable;</li>
-<li><u>Idempotence is required for re-try</u>;</li>
-<li>A network request is much slower than a function call, and its latency is also wildy variable.</li>
-</ul>
-</li>
-<li><strong>Current directions for RPC</strong>: <u>Thrift</u> and <u>Avro</u> come with RPC support included, <u>gRPC</u> is an RPC implementation using Protocol Buffers, <u>Finagel</u> also uses Thrift, and <u>Rest.li</u> uses JSON over HTTP.<ul>
-<li>Custom RPC protocols with a binary encoding format can achieve better performance than something generic liek HSON over REST;</li>
-<li>But REST it is good for experimentation and debugging;</li>
-</ul>
-</li>
-<li>Data encoding and evolution for RPC</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><strong>Via Asynchronous message passing</strong>: <u>asynchronous message-passing systems</u>, which are somewhere between RPC and databases/<ul>
-<li><strong>Advantages</strong><ul>
-<li>Act as buffer;</li>
-<li>Auto-redeliver message;</li>
-<li>Allow message fan-out;</li>
-<li>Decouple the sender and recipient;</li>
-</ul>
-</li>
-<li><strong>Disadvantage</strong><ul>
-<li><u>message-passing communication is usually one-way</u>: a sender normally doesn’t expect receive a reply to its messages.</li>
-<li><u>communication pattern is asynchronous</u>: the sender doesn’t wait for the message to be delivered, but simply sends it and then forgets about it.</li>
-</ul>
-</li>
-<li><strong>Message brokers</strong>:open source implementation such as <strong><u>RabbitMQ</u></strong>, <u>ActiveMQ, HornetQ, NATS, and Apache <strong>Kafka</strong></u> have become popular.<ul>
-<li>one process sends a message to a named <strong>queue</strong> or <strong>topic</strong>, and the <strong>broker</strong> ensures that the message is delivered to one or more <strong>cunsumers</strong> of or <strong>subscribers</strong> to that <strong>queue</strong> or <strong>topic</strong>.</li>
-<li>There can be many <strong>producers</strong> and many <strong>consumers</strong> on the same topic.</li>
-<li>A topic porvides only one-way data flow. However, <u>a consumer may itself publish messages to another topic</u> (so you can chain them together), or to reply queue that is consumed bu the sender of the original message (allowing a request/response data flow,similar to RPC)</li>
-<li><strong>Distributed actor frameworks</strong>: The <u>actor model</u> is a programming model for concurrency in a single process. (e.g. Aka, Orlean, Erlang OTP)<ul>
-<li>A distributed actor framework essentially integrats a message broker and the actor programming model into a single framework.</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><ul>
-<li>many services need to support rolling upgrades -&gt; evolvability<ul>
-<li>released without downtime</li>
-<li>make deployments less risky</li>
-</ul>
-</li>
-<li>all data flowing around the system is encoded in a way that provides backward compatibility (new code can read old data) and forward compatibility (old code can read new data)<ul>
-<li>data encoding formates and it pros and cons;</li>
-</ul>
-</li>
-<li>several modes of data flow, illustrating different scenarios in which data encoding are important.<ul>
-<li><strong>Database</strong>, where the process writing to the database encodes the data and the process reading from the database decodes it.</li>
-<li><strong>RPC and REST APIs</strong>, where the client encodes a request, the server decodes the request and encodes a response, and the client finally decode the response.</li>
-<li><strong>Asynchronous message passing</strong> (using message broker or actors), where modes communicate by sending each other message that are encoded bby the sender and decoded bu the recipient.</li>
-</ul>
-</li>
-</ul>
+<h3 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h3><p>BitSet不是太懂，需要进一步学习。</p>
 
       
 
@@ -479,7 +302,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B05/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/08/16/Introduction-to-Bloom-Filter/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -493,18 +316,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2020/08/16/Introduction-to-Bloom-Filter/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Introduction to Bloom Filter
-        
-      </div>
-    </a>
   
-  
-    <a href="/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B04/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Designing-Data-Intensive-Application学习笔记4</div>
+    <a href="/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B05/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Designing-Data-Intensive-Application学习笔记5</div>
       <i class="icon-circle-right"></i>
     </a>
   
