@@ -6,15 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | 10K&#39;s</title>
+  <title>Designing-Data-Intensive-Application学习笔记4 | 10K&#39;s</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="10K&#39;s">
-<meta property="og:url" content="http://yoursite.com/archives/page/2/index.html">
+  <meta name="description" content="Chapter3 Storage and Retrieval">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Designing-Data-Intensive-Application学习笔记4">
+<meta property="og:url" content="http://yoursite.com/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B04/index.html">
 <meta property="og:site_name" content="10K&#39;s">
+<meta property="og:description" content="Chapter3 Storage and Retrieval">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1597595391/Design%20Data%20Intensive%20Application/p1-ch3-1_konjp0.png">
+<meta property="article:published_time" content="2020-08-16T17:45:40.000Z">
+<meta property="article:modified_time" content="2020-08-16T17:46:43.416Z">
 <meta property="article:author" content="10K">
+<meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1597595391/Design%20Data%20Intensive%20Application/p1-ch3-1_konjp0.png">
   
     <link rel="alternative" href="/atom.xml" title="10K&#39;s" type="application/atom+xml">
   
@@ -140,459 +147,490 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Designing-Data-Intensive-Application学习笔记4" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Designing-Data-Intensive-Application学习笔记4
+    </h1>
+  
+
+        
+        
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" class="archive-article-date">
+          <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+
+
+<a href="/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B04/" class="archive-article-date">
+  	<time datetime="2020-08-16T17:45:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-16</time>
+</a>
+        <!-- 需要添加的位置 -->
+        <!-- 开始添加字数统计-->
+        
+          <div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">2.5k字</span>
+      </span>
+    </span>
+
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">15分</span>
+      </span>
+    </span>
+</div>
+
+          
+        <!-- 添加完成 -->
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Chapter3 Storage and Retrieval</strong> </p>
+<a id="more"></a>
+
+<ul>
+<li>DB needs tod two things:<ul>
+<li>when you give it some data, it should store the data;</li>
+<li>when you ask it again later, it should give the data back to you.</li>
+</ul>
+</li>
+<li>How we can store the data that we’re given, and how we can find it agian when we’re ask for it.<ul>
+<li>There is a big difference between storage engines rhan are <u>optimized for <strong>transactionsal</strong></u> workloads and those that are <u>optimized for <strong>analytics</strong></u>.</li>
+</ul>
+</li>
+<li><strong>Two Types of DB Engine</strong><ul>
+<li><strong>log-structured</strong> storage engines: (Log: an <u>append-only</u> sequence of records.)<ul>
+<li>many databases internally use a log, which is an <u>append-only data file</u>;</li>
+</ul>
+</li>
+<li><strong>page-oriented</strong> stoarage engines such as B-trees(more popular)</li>
+</ul>
+</li>
+</ul>
+<h3 id="Data-Structure-That-Power-Your-Database"><a href="#Data-Structure-That-Power-Your-Database" class="headerlink" title="Data Structure That Power Your Database"></a>Data Structure That Power Your Database</h3><ul>
+<li><strong>Log-structured</strong> need <u>an index</u> to speed up look up time. An index is an addtional structure that is derived from the primary data.<ul>
+<li>Maintatining addtional structures <u>incurs overhead, especially on writes,</u> because it need update every time on write.</li>
+<li>Application developer or database administrator to choose index manually.</li>
+</ul>
+</li>
+<li><strong>Segment Files:</strong> break the log-file into segment<ul>
+<li><strong>Merging/Compaction</strong>: mean throwing away duplicate keys in the log, and keeping only the most recent update for each key.</li>
+</ul>
+</li>
+<li><strong>Hahs Indexes</strong>: basically use a HashMap(HashTable) to store index in memory for speed up the look up time:<ul>
+<li>Limitation: The hash table must fit in memory, Range queries are no efficient.</li>
+</ul>
+</li>
+<li><strong>SSTable and LSM-Trees</strong><ul>
+<li><strong>SSTable</strong>:(We call this format <strong><u>Sorted String Table</u></strong>, or <strong><u>SSTable</u></strong> for short)<ul>
+<li>We require that the sequence of key-value pairs is sorted by the key;</li>
+<li>We also require that each key only appears once within each merged segment file.</li>
+<li><strong>Advantage</strong>:<ul>
+<li><u>Merging segments is simple and efficient</u>, evne if the files are bigger than the available memory.(Kind like mergesort);</li>
+<li>No longer need to keep an index of all the keys in memroy</li>
+<li>Since read requests need to scan over several key-value pairs in the requested range anyway,  it’s possible to group those records into a block and compress it before writing it to disk.</li>
+</ul>
+</li>
+<li><strong>Construction and maintaining SSTables</strong>: e.g. LevelDB, RocksDB, RocksDB, <u>Canssandra</u> and <u>HBase</u><ul>
+<li>How to keep it sorted: <u>in-memory tree</u> is sometimes called a meltable, e.g. <u>red-black tree or AVL tree</u>;</li>
+<li>When memtable get bigger than some treshold, write it to disk;</li>
+<li>Serve a read request: start from memtable -&gt; most recent segment -&gt; other segments;</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Making an LSM-tree out of SSTables</strong>:<ul>
+<li>LSM-tree: <strong><u>Log-Structured Meger-Tree</u></strong> (or LSM-Tree)</li>
+<li>Stirage engines that are based on this principle of <strong><u>merging</u></strong> and <strong><u>compacting</u></strong> sorted files are often called LSM storage engines;</li>
+<li><strong><u>Lucene</u></strong>, an indexing engine for full-text search used by <u><strong>Elasticsearch</strong> and <strong>Solr</strong></u>.</li>
+</ul>
+</li>
+<li><strong>Performance optimizations</strong>:<ul>
+<li><strong>Bloom filters</strong>: a memory-efficient data structure for approximating the contents of a set. it can tell you if a key does/may not appear in the database, and thus saves many unnecessary disk reads for nonexistent keys.</li>
+<li><strong>Size-tiered</strong>: newer and smalled SSTables are successively mergerd into older and larger SSTables. (e.g. HBase, Canssandra)</li>
+<li><strong>Leveled compaction</strong>: the key range is split up into smalled SSTables and older data is moved into seperate “levels”, which allows the compaction to peceed more incrementallly and use less disk space.(e.g. LevelDB and RocksDB, Cassandra)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>B-trees(most popular)</strong><ul>
+<li>They remian the standard index implementation in almost all relational databases, and many non-relational databsed use them too;</li>
+<li>Like SSTables, B-trees keep key-value pairs sorted by key, but <u>B-trees have a very different design philosophy</u>.</li>
+<li>B-trees break the database down into <strong>fixed-size blocks or pages</strong>, traditionally 4KB in size (soemtimes bigger), and read or write one page at a time.(Corresponding to Hardware structure, HDD)</li>
+<li>The <u>number of references to child pages</u> in one page of the B-tree is called the <strong><u>branching factor</u></strong>. Growing a B-tree by splitting a page.</li>
+<li><u>The tree remains balanced</u>: a B-tree with n kets always has a deoth of O(logn).<ul>
+<li>Fun fact: A four-level tree of 4 KB pages with a branching factor of 500 can store up to 256 TB.</li>
+</ul>
+</li>
+<li><strong>Making B-trees reliable</strong><ul>
+<li>Common for B-tree implementations to include and additional data structure on disk: a <u>write-ahead log</u>(<strong>WAL</strong>, also known as a <u>redo log</u>).<ul>
+<li>This is an <u>append-only file</u> to which every B-tree modification must be written before it can be applied to the pages of the tree itself.</li>
+<li>protecting the tree’s data structure with latched (lightweight locks)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>B-tree optimizations</strong><ul>
+<li>Instead of overwriting pages and maintaining a WAL for crash recovery, some databases (like LMDB) use a <u>copy-on-write scheme</u>;</li>
+<li>We can save space in pages by not storing the entire key, but abbreviating it.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Comparing B-Trees and LSM-Trees</strong><ul>
+<li><strong>LSM-trees</strong> are typically <u>faster for writes</u>;<ul>
+<li><strong>Pros</strong> of LSM-trees:<ul>
+<li>sometiems have <strong><u>lower write amplification</u></strong></li>
+<li>LSM-tress can be <strong>compressed</strong> better</li>
+<li>They have <strong>lower storage overheads</strong>, especially when using leveled compaction</li>
+</ul>
+</li>
+<li><strong>Write Amplification</strong>: Rewrite data multiple times due to repeated compaction and merging of SSTables.</li>
+<li><strong>Cons</strong> of LSM-tress:<ul>
+<li>The compaction process can sometimes interfere with the performance of ongoing reads and writes</li>
+<li>The bigger the database gets, the more disk bandwidth is required for compaction</li>
+<li>If write thoughput is high and compaction is not configured carefully, it can happen that compaction cannot keep up with the rate of incoming writes.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>B-trees</strong> are thought to be <u>faster for reads</u>;<ul>
+<li>This aspect makes B-trees attractive in databases that want to offer <u>strong trasactional semantics</u>: in many relational databased, transaction isolation is implemented using locks on ranges of keys, and in a B-tree index, those locks can be directly attached to the tree.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Other indexing Structures</strong><ul>
+<li><strong>key-value indexes</strong>, which are like a primary key index in relational mdoel.</li>
+<li><strong>Secondary indexes</strong>, which are often crucial for performing joins efficiently.<ul>
+<li>Either way, both B-trees and log-structured indexes can be used as secondary indexes.</li>
+</ul>
+</li>
+<li><strong>Strong values within the index</strong>:<ul>
+<li>The Value: it could be the <u>actual row</u> (document, vertex) in question, or it could be a <u>reference to the row stored elsewhere(Heap file)</u>.<ul>
+<li>Eahc index just reference a location in the heap file, and the actual data is kept in one place. (avoid duplication when multiple secondary indexes)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Cluster index</strong>: it can be desired to store the indexed row directly within an index.</li>
+<li><strong>Covering index</strong> or index with included columns: A compromise between<ul>
+<li>a <u>clustered index</u> (storing all row data withing the index)</li>
+<li>a <u>nonclustered index</u> (strong only references to the data within the index), which stores some of a table’s columns  within the index.</li>
+</ul>
+</li>
+<li><strong>Multi-column indexes</strong><ul>
+<li><strong>concatenated index</strong>: which simply combines several fields into one key by appending one column to another.</li>
+<li><strong>Muti-dimensional indexes</strong>: are a more general way of querying several column at once, which is a particularly important for geospatial data.</li>
+</ul>
+</li>
+<li><strong>Full-text search and fuzzy indexes</strong><ul>
+<li>In Lucene, the in-memory index is a finite state automation over the chracters in the keys, silmilar to a trie; (C: aka. Reverse index)<ul>
+<li><u>Levenshtein</u> automation, which supports effient search for words within a given edit distance (add/remove/update)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Keeping everything in a memory</strong>: (e.g. <u>Meemcached</u>, VoltDB, MemSQL and Oracle TimesTen, RAMCloud, <u>Redis</u> and <u>Couchbase</u>)<ul>
+<li>Many datasets are simply not that big, so it’s quiet feasible to keep them entirely in memory, potentially distributed across several machines. This has led to the development of <strong>in-memory databases</strong>.</li>
+<li><strong>Persistence</strong>: special hardware (such as a battery-powered RAM), by writing a log of changes to disk, by writing periodic snapshots to disk, or by replication the in-memory state to other machines.</li>
+<li>They can be faster because <u>they can avoid the overheads of encoidng in-memory data structures</u> in a form that can be written to disk.</li>
+<li>Providing data models that are difficult to implement with disk-based indexes. (e.g. Redis with Priority-Queue and Sets)</li>
+</ul>
+</li>
+</ul>
+<h3 id="Transaction-Processing-or-Analytics"><a href="#Transaction-Processing-or-Analytics" class="headerlink" title="Transaction Processing or Analytics"></a>Transaction Processing or Analytics</h3><ul>
+<li><strong>ACID (Atomicity, Consistency, Isolation, Durability)</strong> properties.</li>
+<li><u>online trasactions processing</u> (<strong>OLTP</strong>) vs. <u>online analytical processing</u> (<strong>OLAP</strong>) <img src="https://res.cloudinary.com/shuaiz/image/upload/v1597595391/Design%20Data%20Intensive%20Application/p1-ch3-1_konjp0.png" alt="p1-ch3-img1" style="zoom:50%;" /></li>
+<li>Databases started being increasingly used for <u>data analytics</u> which has very different access patterns/<ul>
+<li>These queries are often written by <u>business analytics</u>, and feed into reports that help the management of a company make better decisions (<u>business intelligence <strong>BI</strong></u>)</li>
+</ul>
+</li>
+<li><strong>Data warehousing</strong>: is a seprate database that analytics can query to their hearts’ content, without affecting OLTP operations. It contains a <strong>read-only copy</strong> of the data in all the various OLTP system in the company.<ul>
+<li>Data is extracted from OLTP databases. This process is known as Extract-Transform-Load (ETL).</li>
+<li>Data warehouse ca nbe optimized for analytic access patterns.</li>
+</ul>
+</li>
+<li><strong>The divergence between OLTP databases and data warehouses</strong><ul>
+<li>Many database vendors now focus on supporting either transaction processiong or analytics workloads, but not both. (e.g. <u>Teradata, Vertica, SAP HANA, and ParAcce (RedShift from AWS), SQL-on-Hadoop, Apache Hive, Spark SQL, Cloudera Implala, Facebook Presto, Apache Tako and Apache Drill. Google Dremel</u>)</li>
+</ul>
+</li>
+</ul>
+<h3 id="Stars-and-Snowflakes-Schemas-for-Analytics"><a href="#Stars-and-Snowflakes-Schemas-for-Analytics" class="headerlink" title="Stars and Snowflakes: Schemas for Analytics"></a>Stars and Snowflakes: Schemas for Analytics</h3><ul>
+<li><strong>Star Schema</strong> (also known as <u>dimensional modeling</u>): the name “star schema” comes from the fact that when the table relationships are visualized, the <u>fact table</u> is in the middle, surrounded by its <u>dimension tables</u>; the connection to these tables are like the rays of a star.<ul>
+<li>At the center of the schema is so-called <u><strong>fact table</strong></u>;<ul>
+<li>fact tables often have over 100 columns, sometimes sevral hundred;</li>
+</ul>
+</li>
+<li>Some of the columns in the fact table are attributes, e.g. price at which the product was sold and teh cost of buying it from the supplier;</li>
+<li>Other columns in the fact table are foreign key references to other tables, called <u><strong>dimensional tables</strong></u>.<ul>
+<li>The dimensions represent the <strong><u>who, what, where, when, how and why</u></strong> of the event</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Snowflake Schema</strong>: where dimensions are further broken down into <u>subdimensions</u>.</li>
+<li><strong>Column-Oriented Storage</strong><ul>
+<li><strong>Row-Oriented fashion</strong>: all the vlaues from one row of a table are stored next to each other.</li>
+<li><u>The idea behind</u> <strong>Column-Oriented Storage</strong>: don’t store all the values from one row together, but store all the values from each other column together instead.<ul>
+<li>If each column is tored in a seprare file, a query only needs to read and parse those colunmns that are used in that query, which can save a lot of work.</li>
+</ul>
+</li>
+<li>The column-oriented storage layout <u>relies</u> on each column file containing the rows in the <u><strong>same order</strong></u>.</li>
+<li><strong>Column Compression</strong>: we can further reduce the demands on disk thoughtput by compression data.(e.g. bitmap encoding)<ul>
+<li>We can now table a columnn with <u>n</u> distinct values and turn it into n seprate bitmaps: one bitmap for each distinct value, with one bit for each row. The bit is 1 if the row has that value, and 0 if not.</li>
+<li>If <u>n is very small</u> (for exaplme, a country column may have approximately 200 distinct values), those bit maps can be stored with one bit per row.</li>
+<li>If <u>n is bigger</u>, there will be a lot of zeros in most of the bitmaps (we say that they are sparse), the bitmaps can additionally be run-length encoded.</li>
+</ul>
+</li>
+<li><strong>Memory bandwidth and vetorized processing</strong><ul>
+<li>Operators, such as the <u>bitwise AND and OR</u> described previously, can be designed to operate on such chunks of compressed column data directly.</li>
+</ul>
+</li>
+<li><strong>Sort order in Column Storage</strong>:<ul>
+<li>The data needs to be sorted an entire row at a time, even though it is stored by column.</li>
+<li>A second column can determine the sort order of any rows that have the same value in the first column.</li>
+<li>It can help with compressionn of columns.</li>
+<li><strong>Several different sort orders</strong><ul>
+<li>Different queries benefit from different sort orders, so wht not store the same data sorted in several different ways.</li>
+<li>Having multiple sort sorders in a column-oriented store is a bit similar to having multiple secondary indexes in a row-oriented sotre.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Writing to Colunmn-Oriented Storage</strong><ul>
+<li>Column-oriented storage, compression, and sorting all <u>help to make those read queries faster</u>.</li>
+<li>However, they have the downside of <u>making writing more difficult</u><ul>
+<li>One solution: <u>LSM-tress</u>. All writes first go to an in-memry store, where they are added to a sorted structure and prepared for writing to disk. (e.g. Vertica)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Aggregation: Data Cubes</strong> and <strong>Materialized Views</strong><ul>
+<li><strong>Aggregate functions</strong>: such as COUNT, SUM, AVG, MIN, or MAX in SQL.</li>
+<li><strong>materialized view</strong>: In a relational data model, it is often defiend like a standard (virtual) view: <u>a table-like object whose contents are teh result of some query</u>. (No often in OLTP)</li>
+<li>Special case of Materialized View: <u>data cube</u> or <u>OLAP cube</u>. it is a grid of aggregates grouped by different dimensions.<ul>
+<li><strong>The advantage of a materialized data cube</strong> is that certain gueries become very fast because they have efficiently been <u>precomputed</u>.</li>
+<li><strong>The disadvantage is that a data cube</strong> doesn’t have the same flexibility as quering the raw data.</li>
+<li>use aggregate such as data cubes only as a <u>performance boost</u> for certatin queries.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><ul>
+<li>Storage engine two broad categories:<ul>
+<li>Optimized for <strong>trasaction</strong> processing (OLTP)<ul>
+<li><strong>OLTP</strong> system are typicallu user-facing, which means that they may see a huge volume of requests. In order to handle the load, applications usually only touch a small number of records in each query. The application requests records using some kind of key. <u>Disk seek time is often the bottleneck here</u>.</li>
+</ul>
+</li>
+<li>Optimized for <strong>analytics</strong> (OLAP)<ul>
+<li>Data warehouses and similar analytic system are less well known, because they are primaryly used by business analytics, not by end users. Then handle a much lower column of queries than OLTP system, but each query is typically very demanding, requiring many millions of records to be scanned in a shorte time. <u>Disk bandwidth (not seek time) is often the bottleneck here</u>, and column-oreinted storage is an increasingly popular solution for this kind of workload.</li>
+<li><strong>Indexes are much less relevant.</strong> Instead it becomes important to encode data bery compactly, to minimize the amount of data that the query needs to read from disk. (<u>column-oriented storage helps achive this goal</u>)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>On the OLTP side, we sat storage engines from two main school of thought<ul>
+<li>The <strong>log-structured</strong> school, which only permits appending to files and deleting obsolete files, but never updates a file that has been written.<ul>
+<li><u>Bitcask, SSTable, LSM_trees, LevelDB, Cassandra, HBase, Lucene</u> and other belong to this group.</li>
+</ul>
+</li>
+<li>The <strong>update-in-place</strong> school, which treats the disk as a set of fixed-size pages that can be overwritten.<ul>
+<li><u>B-trees</u> are the biggest examples of this philosophy, being used in all major relational databases and also many non-relational ones.</li>
+</ul>
+</li>
+<li>Their <strong>key idea</strong> is that <u>they systematically turn random-access writes into sequential writes on disk</u>, which enables higher write throughput due to the performance characteristics of hard drives and SSDs.</li>
+</ul>
+</li>
+</ul>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-12T17:20:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-12</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之模板模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B04/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
 
-<a href="/2020/07/11/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-11T18:50:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-11</time>
-</a>
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2020/08/15/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B03/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Designing-Data-Intensive-Application学习笔记3</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/11/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之外观模式</a>
-    </h1>
-  
+        
+        
+    </div>
+</aside>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/09/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-09T12:59:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/09/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之组合模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-07T16:50:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之代理模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/05/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-05T22:06:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-05</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/05/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之状态模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/04/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-05T03:53:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-04</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/04/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之迭代器模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/04/%E5%8E%9F%E7%A0%81%E5%8F%8D%E7%A0%81%E5%92%8C%E8%A1%A5%E7%A0%81/" class="archive-article-date">
-  	<time datetime="2020-07-04T17:24:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-04</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/04/%E5%8E%9F%E7%A0%81%E5%8F%8D%E7%A0%81%E5%92%8C%E8%A1%A5%E7%A0%81/">原码反码和补码</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Other</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/06/30/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-06-30T15:49:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-30</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/06/30/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之适配器模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/06/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-06-30T02:48:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-29</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/06/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之装饰器模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/06/28/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-06-28T19:07:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-28</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/06/28/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之命令模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/">上一页</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/3/">下一页</a>
-    </nav>
   
 
+  
+
+  
+
+
+
+   
+       <section id="comments" class="comments">
+         <style>
+           .comments{margin:30px;padding:10px;background:#fff}
+           @media screen and (max-width:800px){.comments{margin:auto;padding:10px;background:#fff}}
+         </style>
+         <div id="vcomment" class="comment"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var notify = 'false' == true ? true : false;
+  var verify = 'false' == true ? true : false;
+  new Valine({
+    av: AV,
+    el: '#vcomment',
+    notify: notify,
+    app_id: "WsqeD0zCG3BCN0FWCJ1AToox-MdYXbMMI",
+    app_key: "MmbXeLMlHQnWMBU83kuB3eEy",
+    placeholder: "Just go go",
+    avatar: "mm",
+  });
+</script>
+
+     </section>
+   
 
 
           </div>
@@ -627,8 +665,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
