@@ -6,14 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | 10K&#39;s</title>
+  <title>Designing-Data-Intensive-Application学习笔记5 | 10K&#39;s</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="10K&#39;s">
-<meta property="og:url" content="http://yoursite.com/archives/page/2/index.html">
+  <meta name="description" content="Chapter4 Encoding adn Evolution">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Designing-Data-Intensive-Application学习笔记5">
+<meta property="og:url" content="http://yoursite.com/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B05/index.html">
 <meta property="og:site_name" content="10K&#39;s">
+<meta property="og:description" content="Chapter4 Encoding adn Evolution">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-08-16T22:53:01.000Z">
+<meta property="article:modified_time" content="2020-08-16T22:54:01.351Z">
 <meta property="article:author" content="10K">
+<meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="10K&#39;s" type="application/atom+xml">
@@ -140,459 +145,419 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Designing-Data-Intensive-Application学习笔记5" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Designing-Data-Intensive-Application学习笔记5
+    </h1>
+  
+
+        
+        
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" class="archive-article-date">
+          <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+
+
+<a href="/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B05/" class="archive-article-date">
+  	<time datetime="2020-08-16T22:53:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-16</time>
+</a>
+        <!-- 需要添加的位置 -->
+        <!-- 开始添加字数统计-->
+        
+          <div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">1.7k字</span>
+      </span>
+    </span>
+
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">10分</span>
+      </span>
+    </span>
+</div>
+
+          
+        <!-- 添加完成 -->
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Chapter4 Encoding adn Evolution</strong></p>
+<a id="more"></a>
+
+<ul>
+<li>Applications inevitably change over time.</li>
+<li><u>schema-on-read</u>(“<strong>schemaless</strong>“) databases don’t enforces schema, so the databases can contain a mixture of older and newer data formats written at different times.</li>
+<li>When data changes usually you will need code change, but in large application, code changes often connot happen instantaneously.<ul>
+<li>With <u>server-side</u> applications you may want to perform a <strong>rolling upgrade</strong> (also known as a <strong>staged rollout</strong>) </li>
+<li>WIth <u>client-side</u> applications you’re at the mercy of th user, who may noy install the update for some time.</li>
+</ul>
+</li>
+<li>We need to maintain compatibility in both directions<ul>
+<li><strong>Backward compatbility</strong>: Newer code can read data that was rwritten by older code. (relative easy,, since you already knew the existing old data schema)</li>
+<li><strong>Forward compatbility</strong>: Older code can read data taht was written by newer code. (raletive harderm it requires older code to ignore addtions made by a newer version of the code)</li>
+</ul>
+</li>
+</ul>
+<h3 id="Formats-for-Encoding-Data"><a href="#Formats-for-Encoding-Data" class="headerlink" title="Formats for Encoding Data"></a>Formats for Encoding Data</h3><ul>
+<li>The <u>transaction from the in-memory representation to a byte sequence</u> is called <strong>encoding</strong> (also known as <strong>serialization</strong> or <strong>marshalling</strong>), and the reverse is called <strong>decoding</strong> (<strong>pparsing, deserialization, unmarshalling</strong>).</li>
+<li><strong>Language-Specific Formats</strong>: (bad idea, usually don’t recommended)<ul>
+<li>Java has <strong>java.is.Serialization</strong>, Ruby has <strong>Marshal</strong>, Python has <strong>pickle</strong> and so on. Many third-party libraries also exist, such as <strong>Kryo</strong> for Java.</li>
+<li>Problems<ul>
+<li>The encoding is often tied to a particular programming language. and reading the datat in another language is very difficult.</li>
+<li>In order to restore data in same object types, the decoding process needs to be able to instantiate arbitrary classes. (Potentially security risk)</li>
+<li><strong>Versioning</strong> data is often an afterthought in these libraries.</li>
+<li><strong>Efficiency</strong> (CPU time taken to encode or decode, and the size of the encoded structure) is also often an afterthought.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>JSON, XML, and Binary Variants</strong><ul>
+<li>Problems<ul>
+<li>There is alot of ambiguity arund encoding of numbers. This is a problem when dealing with large numbers (e.g. 2^35);</li>
+<li>JSON and XML have good support for Unicode character string(i.e., human-readable text), but they don’t support binary strings;</li>
+<li>There is optional schema support for both XML and JSON (but complicated to learn and use);</li>
+<li>CSV does not have any schema, so it is up to the application to define the meaning of each row and column.</li>
+</ul>
+</li>
+<li>Despite these flaws, <u>JSON, XML and CSV</u> are good enough for many purposes.</li>
+<li><u>*<em>The difficulty of getting different organizations to agree on anything outweighs most other concerns *</em></u>;</li>
+</ul>
+</li>
+<li><strong>Binary encoding</strong>: for data that is used only internally within your organization, there is less pressure to use a <u>lowest-common-denominator</u> encoding format.<ul>
+<li><u>JSON is verbvose but it use lots of space</u>, hence it led to the development of a profusion of binary encodings for JSON (MessagePack, BSON, BJSON, UBJSON, BISON and Smile, to name a few) and for XML (WBXML and Fast Infoset, for example) [but they don’t save too much space neither]</li>
+</ul>
+</li>
+<li><strong>Thrift and Protocol Buffers</strong>: <u>Apache Thrift [by Facebook]</u> and <u>Protocol Buffers (protobuf) [by Google]</u> are binary encoding libraries that are based on the same principle.<ul>
+<li>both Thrift and Protocol Buffers<ul>
+<li>Requires a schema for any data that is encoded</li>
+<li>each come with a code generation tool</li>
+</ul>
+</li>
+<li><strong>Thrift</strong> has two different binary encoding formats <ul>
+<li>BinaryProtocal</li>
+<li>CompactProtocal (and DenseProtocal only support C++)</li>
+</ul>
+</li>
+<li><strong>Protocol</strong> only has binary encoding<ul>
+<li>Does not have a list or array data type, but instead has a <u>repeated</u> marker for fields (which is a third option alongside <u>required</u> and <u>optional</u>).</li>
+</ul>
+</li>
+<li><strong>Field tags and schema evolution</strong><ul>
+<li>to maintain backward compatibility, every filed you add after the initial deployment of the schema <u>must be optional or have a default value</u>.</li>
+<li>you can only remove a field that is optional (a required filed can never be removed), and you can never use the same tag number again.</li>
+</ul>
+</li>
+<li><strong>Data Types and schema evolution</strong></li>
+</ul>
+</li>
+<li><strong>Appache Avro</strong>: (subproject of Hadoop) is another binary encoding format that is interestingly different from Protocol Buffers and Thrift.<ul>
+<li><strong>The writer’s schema and the reader’s schema</strong><ul>
+<li>The key idea with Avro is that <u>the writer’s schema and the reader’s scheam don’t have to be the same</u> – they only need to be compatible.</li>
+</ul>
+</li>
+<li><strong>Schema evolution rules</strong><ul>
+<li>To maintain compatibility, you may only add or remove a field that has a default value.</li>
+</ul>
+</li>
+<li>In Avro<ul>
+<li>if you want to allow a field to bbe null, you have to sue a union type. For example, union {null, long, string} field.</li>
+<li>Dosen’t habe <u>optional</u> and <u>required</u> markers.</li>
+<li>Change field name: the reader’s schema can contain aliased for field names, so it can match and old write’s schema filed names against the aliases.</li>
+</ul>
+</li>
+<li>A database of schma version is a useful thing to have in any cases, since it acts as documentation and gives you a chance to check schema compatibility.</li>
+<li><strong>Dynamically generated schemas</strong></li>
+<li>Code generation and dynamically typed languages<ul>
+<li>After a schema has beed defiend, you can generate code that implements this chema is a programming language of your  choice.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>The Merits of Schemas</strong><ul>
+<li>schema evolution allows the same kind of flexibility as schemaless/schema-on-read JSON databases provided, while also providing better guarantees your data and better tooling.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Modes-of-Dataflow"><a href="#Modes-of-Dataflow" class="headerlink" title="Modes of Dataflow"></a>Modes of Dataflow</h3><ul>
+<li>forwards and backward compatibility, which are important for <strong>evolvability</strong> (upgrade system independently, and not having to change everything at once)</li>
+<li><strong>Via Databases</strong><ul>
+<li><strong>Different values written at diferent times:</strong> A database generally allows any value to be updated at anytime. (aka <strong><u>data outlives code</u></strong>) using <u>Schema evolution</u> rules.</li>
+<li>Archival storage: use latest schema<ul>
+<li>Encode the data in an analytical-friendly column-oriented formatc such as <u>Parquet</u></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Via Sychronized Service call: REST</strong> or <strong>RPC</strong><ul>
+<li><strong>REST</strong> seems to be the predominant style for <strong>public</strong> APIs.</li>
+<li><strong>RPS</strong> frameworks are on requests between services owned by the same organization, typically within the same datacenter.</li>
+<li>The most common arrangement is to have two roles: <strong>client</strong> and <strong>servers</strong>.<ul>
+<li>The API exposed by the server is known as a <strong><u>service</u></strong>.</li>
+</ul>
+</li>
+<li>Moreover, a server can itself bbe a client to another service (e.g. wev app server acts as a client to a database)<ul>
+<li><strong><u>service-oriented architecture (SOA)</u></strong>, more recently refined and rebranded as <strong><u>microservices architecture</u></strong>;</li>
+<li>A key design goal of a <strong><u>service-oriented/microservices</u></strong> architecture is <strong>to make the application easier to change and maintain by manking services independently deployable and evovable</strong>.</li>
+</ul>
+</li>
+<li><strong>Web services: REST</strong> and <strong>SOAP</strong><ul>
+<li><strong>REST</strong> is not a protocal, but rather a <strong><u>design philosophy</u></strong> that builds upon the principles of HTTP. An API designed according to the principles of REST is called <u>RESTful</u>.<ul>
+<li>A defination format such as <strong><u>OpenAPT</u></strong>, also known as <u><strong>Swagger</strong></u>, can be used to describe RESTful APIs and produce documentation.</li>
+</ul>
+</li>
+<li><strong>SOAP</strong> is a XML-based protocal for making network API requests.<ul>
+<li>The API of a SOAP web service is described using an XML-based language called the <strong><u>Web Service Description Language</u></strong>, or <strong>WSDL</strong>. WSDL enables code generation so that a client can access a remote service using local classes and mothod calls;(good for static typed language like Java)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>RPC</strong><ul>
+<li>The  RPC model tries to make a requet to remote network service look the same as calling a function or method in your programming language, within the same process (this abstraction is called <strong><u>location transparency</u></strong>).</li>
+<li>Althought RPC seems convenient at first, the approach is <strong><u>fundamentally flawed</u></strong>.<u>Anetwrokd request is very different from a local function call</u>.<ul>
+<li>A network request is unpredictable;</li>
+<li>A networkd response is unpredictable;</li>
+<li><u>Idempotence is required for re-try</u>;</li>
+<li>A network request is much slower than a function call, and its latency is also wildy variable.</li>
+</ul>
+</li>
+<li><strong>Current directions for RPC</strong>: <u>Thrift</u> and <u>Avro</u> come with RPC support included, <u>gRPC</u> is an RPC implementation using Protocol Buffers, <u>Finagel</u> also uses Thrift, and <u>Rest.li</u> uses JSON over HTTP.<ul>
+<li>Custom RPC protocols with a binary encoding format can achieve better performance than something generic liek HSON over REST;</li>
+<li>But REST it is good for experimentation and debugging;</li>
+</ul>
+</li>
+<li>Data encoding and evolution for RPC</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Via Asynchronous message passing</strong>: <u>asynchronous message-passing systems</u>, which are somewhere between RPC and databases/<ul>
+<li><strong>Advantages</strong><ul>
+<li>Act as buffer;</li>
+<li>Auto-redeliver message;</li>
+<li>Allow message fan-out;</li>
+<li>Decouple the sender and recipient;</li>
+</ul>
+</li>
+<li><strong>Disadvantage</strong><ul>
+<li><u>message-passing communication is usually one-way</u>: a sender normally doesn’t expect receive a reply to its messages.</li>
+<li><u>communication pattern is asynchronous</u>: the sender doesn’t wait for the message to be delivered, but simply sends it and then forgets about it.</li>
+</ul>
+</li>
+<li><strong>Message brokers</strong>:open source implementation such as <strong><u>RabbitMQ</u></strong>, <u>ActiveMQ, HornetQ, NATS, and Apache <strong>Kafka</strong></u> have become popular.<ul>
+<li>one process sends a message to a named <strong>queue</strong> or <strong>topic</strong>, and the <strong>broker</strong> ensures that the message is delivered to one or more <strong>cunsumers</strong> of or <strong>subscribers</strong> to that <strong>queue</strong> or <strong>topic</strong>.</li>
+<li>There can be many <strong>producers</strong> and many <strong>consumers</strong> on the same topic.</li>
+<li>A topic porvides only one-way data flow. However, <u>a consumer may itself publish messages to another topic</u> (so you can chain them together), or to reply queue that is consumed bu the sender of the original message (allowing a request/response data flow,similar to RPC)</li>
+<li><strong>Distributed actor frameworks</strong>: The <u>actor model</u> is a programming model for concurrency in a single process. (e.g. Aka, Orlean, Erlang OTP)<ul>
+<li>A distributed actor framework essentially integrats a message broker and the actor programming model into a single framework.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><ul>
+<li>many services need to support rolling upgrades -&gt; evolvability<ul>
+<li>released without downtime</li>
+<li>make deployments less risky</li>
+</ul>
+</li>
+<li>all data flowing around the system is encoded in a way that provides backward compatibility (new code can read old data) and forward compatibility (old code can read new data)<ul>
+<li>data encoding formates and it pros and cons;</li>
+</ul>
+</li>
+<li>several modes of data flow, illustrating different scenarios in which data encoding are important.<ul>
+<li><strong>Database</strong>, where the process writing to the database encodes the data and the process reading from the database decodes it.</li>
+<li><strong>RPC and REST APIs</strong>, where the client encodes a request, the server decodes the request and encodes a response, and the client finally decode the response.</li>
+<li><strong>Asynchronous message passing</strong> (using message broker or actors), where modes communicate by sending each other message that are encoded bby the sender and decoded bu the recipient.</li>
+</ul>
+</li>
+</ul>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-12T18:05:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-12</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之工厂模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B05/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
 
-<a href="/2020/07/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-12T17:20:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-12</time>
-</a>
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B04/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Designing-Data-Intensive-Application学习笔记4</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之模板模式</a>
-    </h1>
-  
+        
+        
+    </div>
+</aside>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/11/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-11T18:50:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/11/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之外观模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/09/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-09T12:59:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/09/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之组合模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-07T16:50:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之代理模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/05/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-05T22:06:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-05</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/05/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之状态模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/04/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-05T03:53:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-04</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/04/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之迭代器模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/04/%E5%8E%9F%E7%A0%81%E5%8F%8D%E7%A0%81%E5%92%8C%E8%A1%A5%E7%A0%81/" class="archive-article-date">
-  	<time datetime="2020-07-04T17:24:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-04</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/04/%E5%8E%9F%E7%A0%81%E5%8F%8D%E7%A0%81%E5%92%8C%E8%A1%A5%E7%A0%81/">原码反码和补码</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Other</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/06/30/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-06-30T15:49:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-30</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/06/30/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之适配器模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/06/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-06-30T02:48:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-29</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/06/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之装饰器模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/">上一页</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/3/">下一页</a>
-    </nav>
   
 
+  
+
+  
+
+
+
+   
+       <section id="comments" class="comments">
+         <style>
+           .comments{margin:30px;padding:10px;background:#fff}
+           @media screen and (max-width:800px){.comments{margin:auto;padding:10px;background:#fff}}
+         </style>
+         <div id="vcomment" class="comment"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var notify = 'false' == true ? true : false;
+  var verify = 'false' == true ? true : false;
+  new Valine({
+    av: AV,
+    el: '#vcomment',
+    notify: notify,
+    app_id: "WsqeD0zCG3BCN0FWCJ1AToox-MdYXbMMI",
+    app_key: "MmbXeLMlHQnWMBU83kuB3eEy",
+    placeholder: "Just go go",
+    avatar: "mm",
+  });
+</script>
+
+     </section>
+   
 
 
           </div>
@@ -627,8 +592,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
