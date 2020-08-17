@@ -17,7 +17,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1597595391/Design%20Data%20Intensive%20Application/p1-ch3-1_konjp0.png">
 <meta property="article:published_time" content="2020-08-16T17:45:40.000Z">
-<meta property="article:modified_time" content="2020-08-16T17:46:43.416Z">
+<meta property="article:modified_time" content="2020-08-17T05:16:20.991Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
@@ -202,13 +202,13 @@
 <a id="more"></a>
 
 <ul>
-<li>DB needs tod two things:<ul>
+<li>DB needs to do two things:<ul>
 <li>when you give it some data, it should store the data;</li>
 <li>when you ask it again later, it should give the data back to you.</li>
 </ul>
 </li>
 <li>How we can store the data that we’re given, and how we can find it agian when we’re ask for it.<ul>
-<li>There is a big difference between storage engines rhan are <u>optimized for <strong>transactionsal</strong></u> workloads and those that are <u>optimized for <strong>analytics</strong></u>.</li>
+<li>There is a big difference between storage engines that are <u>optimized for <strong>transactionsal</strong></u> workloads and those that are <u>optimized for <strong>analytics</strong></u>.</li>
 </ul>
 </li>
 <li><strong>Two Types of DB Engine</strong><ul>
@@ -222,7 +222,7 @@
 </ul>
 <h3 id="Data-Structure-That-Power-Your-Database"><a href="#Data-Structure-That-Power-Your-Database" class="headerlink" title="Data Structure That Power Your Database"></a>Data Structure That Power Your Database</h3><ul>
 <li><strong>Log-structured</strong> need <u>an index</u> to speed up look up time. An index is an addtional structure that is derived from the primary data.<ul>
-<li>Maintatining addtional structures <u>incurs overhead, especially on writes,</u> because it need update every time on write.</li>
+<li>Maintaining addtional structures <u>incurs overhead, especially on writes,</u> because it need update every time on write.</li>
 <li>Application developer or database administrator to choose index manually.</li>
 </ul>
 </li>
@@ -245,7 +245,7 @@
 </ul>
 </li>
 <li><strong>Construction and maintaining SSTables</strong>: e.g. LevelDB, RocksDB, RocksDB, <u>Canssandra</u> and <u>HBase</u><ul>
-<li>How to keep it sorted: <u>in-memory tree</u> is sometimes called a meltable, e.g. <u>red-black tree or AVL tree</u>;</li>
+<li>How to keep it sorted: <u>in-memory tree</u> is sometimes called a<u><strong>memtable</strong></u>, e.g. <u>red-black tree or AVL tree</u>;</li>
 <li>When memtable get bigger than some treshold, write it to disk;</li>
 <li>Serve a read request: start from memtable -&gt; most recent segment -&gt; other segments;</li>
 </ul>
@@ -253,32 +253,32 @@
 </ul>
 </li>
 <li><strong>Making an LSM-tree out of SSTables</strong>:<ul>
-<li>LSM-tree: <strong><u>Log-Structured Meger-Tree</u></strong> (or LSM-Tree)</li>
-<li>Stirage engines that are based on this principle of <strong><u>merging</u></strong> and <strong><u>compacting</u></strong> sorted files are often called LSM storage engines;</li>
+<li>LSM-tree: <strong><u>Log-Structured Merge-Tree</u></strong> (or LSM-Tree)</li>
+<li>Storage engines that are based on this principle of <strong><u>merging</u></strong> and <strong><u>compacting</u></strong> sorted files are often called LSM storage engines;</li>
 <li><strong><u>Lucene</u></strong>, an indexing engine for full-text search used by <u><strong>Elasticsearch</strong> and <strong>Solr</strong></u>.</li>
 </ul>
 </li>
 <li><strong>Performance optimizations</strong>:<ul>
-<li><strong>Bloom filters</strong>: a memory-efficient data structure for approximating the contents of a set. it can tell you if a key does/may not appear in the database, and thus saves many unnecessary disk reads for nonexistent keys.</li>
-<li><strong>Size-tiered</strong>: newer and smalled SSTables are successively mergerd into older and larger SSTables. (e.g. HBase, Canssandra)</li>
-<li><strong>Leveled compaction</strong>: the key range is split up into smalled SSTables and older data is moved into seperate “levels”, which allows the compaction to peceed more incrementallly and use less disk space.(e.g. LevelDB and RocksDB, Cassandra)</li>
+<li><strong>Bloom filters</strong>: a memory-efficient data structure for approximating the contents of a set. It can tell you if a key does/may not appear in the database, and thus saves many unnecessary disk reads for nonexistent keys.</li>
+<li><strong>Size-tiered</strong>: newer and smaller SSTables are successively mergerd into older and larger SSTables. (e.g. HBase, Canssandra)</li>
+<li><strong>Leveled compaction</strong>: the key range is split up into smalled SSTables and older data is moved into seperate “levels”, which allows the compaction to preceed more incrementallly and use less disk space.(e.g. LevelDB and RocksDB, Cassandra)</li>
 </ul>
 </li>
 </ul>
 </li>
 <li><strong>B-trees(most popular)</strong><ul>
-<li>They remian the standard index implementation in almost all relational databases, and many non-relational databsed use them too;</li>
+<li>They remian the standard index implementation in almost all relational databases, and many non-relational databases use them too;</li>
 <li>Like SSTables, B-trees keep key-value pairs sorted by key, but <u>B-trees have a very different design philosophy</u>.</li>
 <li>B-trees break the database down into <strong>fixed-size blocks or pages</strong>, traditionally 4KB in size (soemtimes bigger), and read or write one page at a time.(Corresponding to Hardware structure, HDD)</li>
-<li>The <u>number of references to child pages</u> in one page of the B-tree is called the <strong><u>branching factor</u></strong>. Growing a B-tree by splitting a page.</li>
-<li><u>The tree remains balanced</u>: a B-tree with n kets always has a deoth of O(logn).<ul>
+<li>The <u>number of references to child pages</u> in one page of the B-tree is called the <strong><u>branching factor</u></strong>. Growing a B-tree by spliting a page.</li>
+<li><u>The tree remains balanced</u>: a B-tree with n keys always has a depth of O(logn).<ul>
 <li>Fun fact: A four-level tree of 4 KB pages with a branching factor of 500 can store up to 256 TB.</li>
 </ul>
 </li>
 <li><strong>Making B-trees reliable</strong><ul>
 <li>Common for B-tree implementations to include and additional data structure on disk: a <u>write-ahead log</u>(<strong>WAL</strong>, also known as a <u>redo log</u>).<ul>
 <li>This is an <u>append-only file</u> to which every B-tree modification must be written before it can be applied to the pages of the tree itself.</li>
-<li>protecting the tree’s data structure with latched (lightweight locks)</li>
+<li>protecting the tree’s data structure with latches (lightweight locks)</li>
 </ul>
 </li>
 </ul>
@@ -308,7 +308,7 @@
 </ul>
 </li>
 <li><strong>B-trees</strong> are thought to be <u>faster for reads</u>;<ul>
-<li>This aspect makes B-trees attractive in databases that want to offer <u>strong trasactional semantics</u>: in many relational databased, transaction isolation is implemented using locks on ranges of keys, and in a B-tree index, those locks can be directly attached to the tree.</li>
+<li>This aspect makes B-trees attractive in databases that want to offer <u>strong trasactional semantics</u>: in many relational databases, transaction isolation is implemented using locks on ranges of keys, and in a B-tree index, those locks can be directly attached to the tree.</li>
 </ul>
 </li>
 </ul>
@@ -347,9 +347,9 @@
 </ul>
 </li>
 <li><strong>Keeping everything in a memory</strong>: (e.g. <u>Meemcached</u>, VoltDB, MemSQL and Oracle TimesTen, RAMCloud, <u>Redis</u> and <u>Couchbase</u>)<ul>
-<li>Many datasets are simply not that big, so it’s quiet feasible to keep them entirely in memory, potentially distributed across several machines. This has led to the development of <strong>in-memory databases</strong>.</li>
+<li>Many datasets are simply not that big, so it’s quite feasible to keep them entirely in memory, potentially distributed across several machines. This has led to the development of <strong>in-memory databases</strong>.</li>
 <li><strong>Persistence</strong>: special hardware (such as a battery-powered RAM), by writing a log of changes to disk, by writing periodic snapshots to disk, or by replication the in-memory state to other machines.</li>
-<li>They can be faster because <u>they can avoid the overheads of encoidng in-memory data structures</u> in a form that can be written to disk.</li>
+<li>They can be faster because <u>they can avoid the overheads of encoding in-memory data structures</u> in a form that can be written to disk.</li>
 <li>Providing data models that are difficult to implement with disk-based indexes. (e.g. Redis with Priority-Queue and Sets)</li>
 </ul>
 </li>
@@ -363,7 +363,7 @@
 </li>
 <li><strong>Data warehousing</strong>: is a seprate database that analytics can query to their hearts’ content, without affecting OLTP operations. It contains a <strong>read-only copy</strong> of the data in all the various OLTP system in the company.<ul>
 <li>Data is extracted from OLTP databases. This process is known as Extract-Transform-Load (ETL).</li>
-<li>Data warehouse ca nbe optimized for analytic access patterns.</li>
+<li>Data warehouse can be optimized for analytic access patterns.</li>
 </ul>
 </li>
 <li><strong>The divergence between OLTP databases and data warehouses</strong><ul>
@@ -377,7 +377,7 @@
 <li>fact tables often have over 100 columns, sometimes sevral hundred;</li>
 </ul>
 </li>
-<li>Some of the columns in the fact table are attributes, e.g. price at which the product was sold and teh cost of buying it from the supplier;</li>
+<li>Some of the columns in the fact table are attributes, e.g. price at which the product was sold and the cost of buying it from the supplier;</li>
 <li>Other columns in the fact table are foreign key references to other tables, called <u><strong>dimensional tables</strong></u>.<ul>
 <li>The dimensions represent the <strong><u>who, what, where, when, how and why</u></strong> of the event</li>
 </ul>
@@ -388,7 +388,7 @@
 <li><strong>Column-Oriented Storage</strong><ul>
 <li><strong>Row-Oriented fashion</strong>: all the vlaues from one row of a table are stored next to each other.</li>
 <li><u>The idea behind</u> <strong>Column-Oriented Storage</strong>: don’t store all the values from one row together, but store all the values from each other column together instead.<ul>
-<li>If each column is tored in a seprare file, a query only needs to read and parse those colunmns that are used in that query, which can save a lot of work.</li>
+<li>If each column is stored in a seprare file, a query only needs to read and parse those colunmns that are used in that query, which can save a lot of work.</li>
 </ul>
 </li>
 <li>The column-oriented storage layout <u>relies</u> on each column file containing the rows in the <u><strong>same order</strong></u>.</li>
@@ -416,7 +416,7 @@
 <li><strong>Writing to Colunmn-Oriented Storage</strong><ul>
 <li>Column-oriented storage, compression, and sorting all <u>help to make those read queries faster</u>.</li>
 <li>However, they have the downside of <u>making writing more difficult</u><ul>
-<li>One solution: <u>LSM-tress</u>. All writes first go to an in-memry store, where they are added to a sorted structure and prepared for writing to disk. (e.g. Vertica)</li>
+<li>One solution: <u>LSM-tress</u>. All writes first go to an in-memory store, where they are added to a sorted structure and prepared for writing to disk. (e.g. Vertica)</li>
 </ul>
 </li>
 </ul>
@@ -425,7 +425,7 @@
 </li>
 <li><strong>Aggregation: Data Cubes</strong> and <strong>Materialized Views</strong><ul>
 <li><strong>Aggregate functions</strong>: such as COUNT, SUM, AVG, MIN, or MAX in SQL.</li>
-<li><strong>materialized view</strong>: In a relational data model, it is often defiend like a standard (virtual) view: <u>a table-like object whose contents are teh result of some query</u>. (No often in OLTP)</li>
+<li><strong>materialized view</strong>: In a relational data model, it is often defiend like a standard (virtual) view: <u>a table-like object whose contents are teh result of some query</u>. (Not often in OLTP)</li>
 <li>Special case of Materialized View: <u>data cube</u> or <u>OLAP cube</u>. it is a grid of aggregates grouped by different dimensions.<ul>
 <li><strong>The advantage of a materialized data cube</strong> is that certain gueries become very fast because they have efficiently been <u>precomputed</u>.</li>
 <li><strong>The disadvantage is that a data cube</strong> doesn’t have the same flexibility as quering the raw data.</li>
@@ -438,17 +438,17 @@
 <h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><ul>
 <li>Storage engine two broad categories:<ul>
 <li>Optimized for <strong>trasaction</strong> processing (OLTP)<ul>
-<li><strong>OLTP</strong> system are typicallu user-facing, which means that they may see a huge volume of requests. In order to handle the load, applications usually only touch a small number of records in each query. The application requests records using some kind of key. <u>Disk seek time is often the bottleneck here</u>.</li>
+<li><strong>OLTP</strong> system are typically user-facing, which means that they may see a huge volume of requests. In order to handle the load, applications usually only touch a small number of records in each query. The application requests records using some kind of key. <u>Disk seek time is often the bottleneck here</u>.</li>
 </ul>
 </li>
 <li>Optimized for <strong>analytics</strong> (OLAP)<ul>
-<li>Data warehouses and similar analytic system are less well known, because they are primaryly used by business analytics, not by end users. Then handle a much lower column of queries than OLTP system, but each query is typically very demanding, requiring many millions of records to be scanned in a shorte time. <u>Disk bandwidth (not seek time) is often the bottleneck here</u>, and column-oreinted storage is an increasingly popular solution for this kind of workload.</li>
-<li><strong>Indexes are much less relevant.</strong> Instead it becomes important to encode data bery compactly, to minimize the amount of data that the query needs to read from disk. (<u>column-oriented storage helps achive this goal</u>)</li>
+<li>Data warehouses and similar analytic system are less well known, because they are primarily used by business analytics, not by end users. Then handle a much lower column of queries than OLTP system, but each query is typically very demanding, requiring many millions of records to be scanned in a short time. <u>Disk bandwidth (not seek time) is often the bottleneck here</u>, and column-oreinted storage is an increasingly popular solution for this kind of workload.</li>
+<li><strong>Indexes are much less relevant.</strong> Instead it becomes important to encode data very compactly, to minimize the amount of data that the query needs to read from disk. (<u>column-oriented storage helps achive this goal</u>)</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>On the OLTP side, we sat storage engines from two main school of thought<ul>
+<li>On the OLTP side, we saw storage engines from two main school of thought<ul>
 <li>The <strong>log-structured</strong> school, which only permits appending to files and deleting obsolete files, but never updates a file that has been written.<ul>
 <li><u>Bitcask, SSTable, LSM_trees, LevelDB, Cassandra, HBase, Lucene</u> and other belong to this group.</li>
 </ul>

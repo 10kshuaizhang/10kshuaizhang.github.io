@@ -18,7 +18,7 @@
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1597465063/Design%20Data%20Intensive%20Application/part1-c1-1_lbawdt.png">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1597465633/Design%20Data%20Intensive%20Application/p1-c1-2_yanuw0.png">
 <meta property="article:published_time" content="2020-08-15T05:03:12.000Z">
-<meta property="article:modified_time" content="2020-08-15T14:50:53.046Z">
+<meta property="article:modified_time" content="2020-08-17T03:53:08.099Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
@@ -217,7 +217,7 @@
 </ul>
 <h3 id="Scalability"><a href="#Scalability" class="headerlink" title="Scalability"></a>Scalability</h3><ul>
 <li>A system’s ability to <u>cope with increased load</u>.</li>
-<li><strong>Describing Load</strong>: defied by <u>“load parameters”</u>, it depend on architecture of your system, e.g.<ul>
+<li><strong>Describing Load</strong>: defined by <u>“load parameters”</u>, it depends on architecture of your system, e.g.<ul>
 <li>the <strong>requests per second</strong> to a web server,</li>
 <li>the <strong>ratio of reads to writes</strong> in a database,</li>
 <li>the <strong>number of simultaneously active users</strong> in a chatroom,</li>
@@ -235,7 +235,7 @@
 </ul>
 <ul>
 <li><strong>Describing Performance</strong>: when you increase a load parameter keep the same system resources, what will happen? How much do you need to increase resource to keep up the performance?<ul>
-<li>E.g. “”<strong>response time</strong>“” – the time between a client send a request and receiving a response.</li>
+<li>E.g. “<strong>response time</strong>“ – the time between a client sending a request and receiving a response.</li>
 <li><strong>Latency vs. response time</strong>: Latency is the duration that a request is waiting to be handled – during which is latent, awaiting service.</li>
 <li>Better use “<strong><u>percentiles</u></strong>“ to measure response time, e.g. median(p50)<img src="https://res.cloudinary.com/shuaiz/image/upload/v1597465633/Design Data Intensive Application/p1-c1-2_yanuw0.png" alt="img1" style="zoom:50%;" /><ul>
 <li>High percentiles of response times, also know as <u>tail latencies</u>, are important because they <u>directly affects users’ experience of the service</u>.</li>
@@ -244,19 +244,19 @@
 </ul>
 </li>
 <li>Amazon has also observed that a 100 ms increase in response time reduces sales by 1%, and others report that 1-second slowdown reduces a customer satisfaction metric by 16%.</li>
-<li><strong>It is importannce to <u>measure response times</u></strong> on the client side.</li>
+<li><strong>It is important to <u>measure response times</u></strong> on the client side.</li>
 </ul>
 </li>
 </ul>
 </li>
 <li><strong>Approachs for Coping with Load</strong>:<ul>
-<li>Good architectures ussually involve a pragmatic mixture of approachs: <strong>Scaling up</strong>(Vertical) &amp; <strong>Scaling out</strong>(horizental)<ul>
+<li>Good architectures usually involve a pragmatic mixture of approaches: <strong>Scaling up</strong>(Vertical) &amp; <strong>Scaling out</strong>(horizental)<ul>
 <li>Scaling out: <strong>Stateless</strong> service is fairly straightforward compared to Stateful service.</li>
 </ul>
 </li>
 <li>It is conceivable that <u>distributed data system will become the default in the future</u>.</li>
 <li>The architecture of system that operate at large scale is usually <u>highly specific to the application </u>.</li>
-<li>An scalable architecture usually built from generalp-purpose building blocks arranged in familiar patterns.</li>
+<li>An scalable architecture usually built from general-purpose building blocks arranged in familiar patterns.</li>
 </ul>
 </li>
 </ul>
@@ -266,14 +266,14 @@
 <li>By removing as much complexity as possible from the system. (Note: this is not the same as simplicity of the user interface.)</li>
 <li>Making a system simpler DOES NOT necessarily mean reducing its functionality;</li>
 <li><strong>Complexity</strong>: as accidental is it is not inherent in the problem that the software solves (as seen by the users) but arises only from the implementation.<ul>
-<li>One or the best tools we have for removing accidental complexity is <strong><u>abstraction</u></strong>. (However, finding good abstraction is very hard.)</li>
+<li>One of the best tools we have for removing accidental complexity is <strong><u>abstraction</u></strong>. (However, finding good abstraction is very hard.)</li>
 </ul>
 </li>
 </ul>
 </li>
 <li><strong>Evolvability</strong>:  Make it <u>easy for engineers to make changes</u> to the system in the future, <u>adapting</u> it for unanticipated use cases as requirements change. Also known as <strong>extensibility, modifiability</strong>, or <strong>plasticity</strong>.<ul>
 <li><u><strong>Agile</strong> working patterns</u> provide a framework for adapting to change.</li>
-<li><u>simple and easy-to-understand </u> system are usually easier to midify that complex ones (linked to the previous point - <strong>Maintainability</strong>)</li>
+<li><u>simple and easy-to-understand</u> system are usually easier to modify that complex ones (linked to the previous point - <strong>Maintainability</strong>)</li>
 </ul>
 </li>
 </ul>

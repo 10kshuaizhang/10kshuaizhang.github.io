@@ -8,15 +8,15 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Designing-Data-Intensive-Application学习笔记5 | 10K&#39;s</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Chapter4 Encoding adn Evolution">
+  <meta name="description" content="Chapter4 Encoding and Evolution">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Designing-Data-Intensive-Application学习笔记5">
 <meta property="og:url" content="http://yoursite.com/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B05/index.html">
 <meta property="og:site_name" content="10K&#39;s">
-<meta property="og:description" content="Chapter4 Encoding adn Evolution">
+<meta property="og:description" content="Chapter4 Encoding and Evolution">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-08-16T22:53:01.000Z">
-<meta property="article:modified_time" content="2020-08-16T22:54:01.351Z">
+<meta property="article:modified_time" content="2020-08-17T05:28:04.297Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
@@ -196,7 +196,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>Chapter4 Encoding adn Evolution</strong></p>
+        <p><strong>Chapter4 Encoding and Evolution</strong></p>
 <a id="more"></a>
 
 <ul>
@@ -204,7 +204,7 @@
 <li><u>schema-on-read</u>(“<strong>schemaless</strong>“) databases don’t enforces schema, so the databases can contain a mixture of older and newer data formats written at different times.</li>
 <li>When data changes usually you will need code change, but in large application, code changes often connot happen instantaneously.<ul>
 <li>With <u>server-side</u> applications you may want to perform a <strong>rolling upgrade</strong> (also known as a <strong>staged rollout</strong>) </li>
-<li>WIth <u>client-side</u> applications you’re at the mercy of th user, who may noy install the update for some time.</li>
+<li>WIth <u>client-side</u> applications you’re at the mercy of the user, who may noy install the update for some time.</li>
 </ul>
 </li>
 <li>We need to maintain compatibility in both directions<ul>
@@ -228,14 +228,14 @@
 </li>
 <li><strong>JSON, XML, and Binary Variants</strong><ul>
 <li>Problems<ul>
-<li>There is alot of ambiguity arund encoding of numbers. This is a problem when dealing with large numbers (e.g. 2^35);</li>
+<li>There is a lot of ambiguity around encoding of numbers. This is a problem when dealing with large numbers (e.g. 2^35);</li>
 <li>JSON and XML have good support for Unicode character string(i.e., human-readable text), but they don’t support binary strings;</li>
 <li>There is optional schema support for both XML and JSON (but complicated to learn and use);</li>
 <li>CSV does not have any schema, so it is up to the application to define the meaning of each row and column.</li>
 </ul>
 </li>
 <li>Despite these flaws, <u>JSON, XML and CSV</u> are good enough for many purposes.</li>
-<li><u>*<em>The difficulty of getting different organizations to agree on anything outweighs most other concerns *</em></u>;</li>
+<li><u><strong>The difficulty of getting different organizations to agree on anything outweighs most other concerns</strong></u>;</li>
 </ul>
 </li>
 <li><strong>Binary encoding</strong>: for data that is used only internally within your organization, there is less pressure to use a <u>lowest-common-denominator</u> encoding format.<ul>
@@ -275,15 +275,15 @@
 </ul>
 </li>
 <li>In Avro<ul>
-<li>if you want to allow a field to bbe null, you have to sue a union type. For example, union {null, long, string} field.</li>
-<li>Dosen’t habe <u>optional</u> and <u>required</u> markers.</li>
+<li>if you want to allow a field to be null, you have to use a union type. For example, union {null, long, string} field.</li>
+<li>Dosen’t have <u>optional</u> and <u>required</u> markers.</li>
 <li>Change field name: the reader’s schema can contain aliased for field names, so it can match and old write’s schema filed names against the aliases.</li>
 </ul>
 </li>
 <li>A database of schma version is a useful thing to have in any cases, since it acts as documentation and gives you a chance to check schema compatibility.</li>
 <li><strong>Dynamically generated schemas</strong></li>
 <li>Code generation and dynamically typed languages<ul>
-<li>After a schema has beed defiend, you can generate code that implements this chema is a programming language of your  choice.</li>
+<li>After a schema has been defiend, you can generate code that implements this schema in a programming language of your choice.</li>
 </ul>
 </li>
 </ul>
@@ -296,7 +296,7 @@
 <h3 id="Modes-of-Dataflow"><a href="#Modes-of-Dataflow" class="headerlink" title="Modes of Dataflow"></a>Modes of Dataflow</h3><ul>
 <li>forwards and backward compatibility, which are important for <strong>evolvability</strong> (upgrade system independently, and not having to change everything at once)</li>
 <li><strong>Via Databases</strong><ul>
-<li><strong>Different values written at diferent times:</strong> A database generally allows any value to be updated at anytime. (aka <strong><u>data outlives code</u></strong>) using <u>Schema evolution</u> rules.</li>
+<li><strong>Different values written at different times:</strong> A database generally allows any value to be updated at anytime. (aka <strong><u>data outlives code</u></strong>) using <u>Schema evolution</u> rules.</li>
 <li>Archival storage: use latest schema<ul>
 <li>Encode the data in an analytical-friendly column-oriented formatc such as <u>Parquet</u></li>
 </ul>
@@ -310,7 +310,7 @@
 <li>The API exposed by the server is known as a <strong><u>service</u></strong>.</li>
 </ul>
 </li>
-<li>Moreover, a server can itself bbe a client to another service (e.g. wev app server acts as a client to a database)<ul>
+<li>Moreover, a server can itself be a client to another service (e.g. wev app server acts as a client to a database)<ul>
 <li><strong><u>service-oriented architecture (SOA)</u></strong>, more recently refined and rebranded as <strong><u>microservices architecture</u></strong>;</li>
 <li>A key design goal of a <strong><u>service-oriented/microservices</u></strong> architecture is <strong>to make the application easier to change and maintain by manking services independently deployable and evovable</strong>.</li>
 </ul>
@@ -381,10 +381,10 @@
 <li>data encoding formates and it pros and cons;</li>
 </ul>
 </li>
-<li>several modes of data flow, illustrating different scenarios in which data encoding are important.<ul>
+<li>several modes of dataflow, illustrating different scenarios in which data encoding are important.<ul>
 <li><strong>Database</strong>, where the process writing to the database encodes the data and the process reading from the database decodes it.</li>
 <li><strong>RPC and REST APIs</strong>, where the client encodes a request, the server decodes the request and encodes a response, and the client finally decode the response.</li>
-<li><strong>Asynchronous message passing</strong> (using message broker or actors), where modes communicate by sending each other message that are encoded bby the sender and decoded bu the recipient.</li>
+<li><strong>Asynchronous message passing</strong> (using message broker or actors), where modes communicate by sending each other message that are encoded by the sender and decoded by the recipient.</li>
 </ul>
 </li>
 </ul>
