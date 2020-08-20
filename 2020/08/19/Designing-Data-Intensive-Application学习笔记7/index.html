@@ -6,15 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2020/8 | 10K&#39;s</title>
+  <title>Designing Data Intensive Application学习笔记7 | 10K&#39;s</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="10K&#39;s">
-<meta property="og:url" content="http://yoursite.com/archives/2020/08/index.html">
+  <meta name="description" content="Chapter5 Replication  Replication means keeping a copy of the same data on multiple machines that are connected via a network. To keeo data geographically close to your users (reduce latency) To allow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Designing Data Intensive Application学习笔记7">
+<meta property="og:url" content="http://yoursite.com/2020/08/19/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B07/index.html">
 <meta property="og:site_name" content="10K&#39;s">
+<meta property="og:description" content="Chapter5 Replication  Replication means keeping a copy of the same data on multiple machines that are connected via a network. To keeo data geographically close to your users (reduce latency) To allow">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1597853443/part2-ch5-img1_t9ci3q.png">
+<meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1597853882/part2-ch5-img2_pa6r2a.png">
+<meta property="article:published_time" content="2020-08-20T05:43:50.000Z">
+<meta property="article:modified_time" content="2020-08-20T05:44:29.124Z">
 <meta property="article:author" content="10K">
+<meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1597853443/part2-ch5-img1_t9ci3q.png">
   
     <link rel="alternative" href="/atom.xml" title="10K&#39;s" type="application/atom+xml">
   
@@ -140,38 +148,530 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-Designing-Data-Intensive-Application学习笔记7" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      Designing Data Intensive Application学习笔记7
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
+
+        
+        
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" class="archive-article-date">
+          <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+
 
 <a href="/2020/08/19/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B07/" class="archive-article-date">
   	<time datetime="2020-08-20T05:43:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-19</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/08/19/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B07/">Designing Data Intensive Application学习笔记7</a>
-    </h1>
-  
+        <!-- 需要添加的位置 -->
+        <!-- 开始添加字数统计-->
+        
+          <div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">4.2k字</span>
+      </span>
+    </span>
 
-        <div class="article-info info-on-right">
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">26分</span>
+      </span>
+    </span>
+</div>
+
           
+        <!-- 添加完成 -->
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Chapter5 Replication</strong></p>
+<ul>
+<li><strong>Replication</strong> means keeping a <u>copy of the same data on multiple machines</u> that are connected via a network.<ul>
+<li>To keeo data geographically close to your users (<strong>reduce latency</strong>)</li>
+<li>To allow the system to continue working evne if some if its parts have failed (<strong>increase availability</strong>)</li>
+<li>To scale out the numver of machines that can serve read queries (<strong>increase read throughput</strong>)</li>
+</ul>
+</li>
+<li><strong>All of the<u>difficulty</u> in replication lies in <u>handling changes to replicated</u> data</strong>;</li>
+<li>Three popular algorithms for replicating changes between nodes: <strong>single-leader</strong>, <strong>multi-leader</strong>, and <strong>leaderless</strong> replication.</li>
+</ul>
+<a id="more"></a>
+
+<h3 id="Leaders-and-Followers"><a href="#Leaders-and-Followers" class="headerlink" title="Leaders and Followers"></a>Leaders and Followers</h3><ul>
+<li>Each node that stores a copy of databases is called a <strong>replica</strong>;</li>
+<li>How do we ensure that all the data ends up one all the replicas?</li>
+<li>The most common sloution for this is called <u>leader-based</u> replication (also known as active/passive or master/slave replication)<ul>
+<li>One of the replicas is designated the <strong>leader</strong> (also know as <strong>master</strong> or <strong>primary</strong>).</li>
+<li>The other replicas are known as <strong>followers</strong> (read replicas, <strong>slaves</strong>, secondaries, or hot standbys).</li>
+<li>When a client wants to read from the database, it can query either leader or any of the followers.</li>
+<li>E.g. <ul>
+<li><strong>Relational DB</strong>: <u>PostgreSQL</u> (since version 9.0), MySQL, Oracle Data Guard, and SQL Server’s AlwaysOn Availability Groups.</li>
+<li><strong>Non-Relational DB</strong>: <u>MondoDB</u>, RethinkDB, and Expresso</li>
+<li><strong>Message Broker</strong>: <u>Kafka</u> and RabbitMQ highly available queues</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Synchronous vs. Asynchronous Replication</strong>: In <u>relational</u> databases, this is often a configurable option; other system are often hardcoded to be either one or the other.<ul>
+<li>Most databases system apply changes to followers in less than a second.</li>
+<li><strong>Synchronous</strong><ul>
+<li><u>Advantage</u>s: The followers is guaranteed to have an up-to-date copy of the data that is consistent with the leader.</li>
+<li><u>Disadvantages</u>: if the synchronous follower doesn’t respond (because it has crashed, or there is a network fault, or for any other reason), the write connot be processed</li>
+<li><strong>impractical</strong> for <u>all followers to be synonymous</u>: any one node outage would cause the whole system and grind to halt.</li>
+</ul>
+</li>
+<li><strong>Semi-synchronous</strong>: leader and one synchronous follower.</li>
+<li><strong>Often,</strong> <u>leader-based replcation is configured to be completely</u> <strong>asynchronous</strong>.<ul>
+<li>a fully asynchronous configuration has the advantage that the leader can continue processiong writes, even if all of its followers hava fallen behind.</li>
+<li>Especially if there are many followers or if they are geographically distributed.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Setting Up New Followers</strong><ul>
+<li>How do you ensure that the new followers has an accurate copy of the leader’s data?</li>
+<li>Four Step process: 1, take snapshot; 2, copy snapshot; 3, carry-over new change bu using leader’s <u>replication log</u> (e.g. log sequence number, and MySQL calls it the binlog coordinates.); 4, after caught up, keep process data from leader;<ul>
+<li>The practical steps of setting up a follower vary significantly by database.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Handling Node Outages</strong>: our goal is to keep the system as a whole running despite individual node failures, and to keep the impact of a node outage as small as possible.<ul>
+<li>How do you  achieve high availability with leader-based replication?</li>
+<li><strong>Follower failure: Catch-up recovery</strong><ul>
+<li>From its log, it knows the latest transaction that was processed before the fault occured.</li>
+</ul>
+</li>
+<li><strong>Leader failure: Failover</strong><ul>
+<li><strong>Failover</strong>: one of the followers needs to be promoted to be the new leader, clients need to be configured to send their writes to the new leader, and the other followers need to start cosuming data changes from new leader.</li>
+<li><strong>Automatic failover</strong> process usually consists of the following steps:<ul>
+<li><ol>
+<li>Determinig that the leader has failed. If a node doesn’t respond for some period of time – say 30 seconds – it is assumed to be dead;<ol start="2">
+<li>Choosing a new leader, through <u>election process</u> or <u>controller node</u> selection;</li>
+<li>Reconfiguring the system to use the new leader. The system needs to ensure that the old leader becomes a follower and recognizes the new leader.</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><strong>Failover is fraught with thing that can go wrong</strong><ul>
+<li>If asynchronous replication is used, the new leader may not have received all the writes from the old leader before it failed.</li>
+<li>Discarding writes is especially dangerous if other storage systems outside of the databases need to be coordinated with the database contents.</li>
+<li>In certain fault scenarios, it could happen that two nodes both believe that thay are the leader. – aka <strong><u>split brain</u></strong> which will cause conflict data.</li>
+<li>What is the rigte timeout before the leader is declared dead?</li>
+</ul>
+</li>
+<li>There are no easy solutions to these problems. For this reason, some operations team prefer to perform <u>failover manually</u>.</li>
+<li>These issues – <u>node failures; unreliable networks, and trade-offs</u> around replica <u>consistency, durability, availability and latency</u> – are in fact fundamental problems in distributed systems.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Implementing of REplication Logs</strong><ul>
+<li>How does leader-based replication work under the hood?</li>
+<li><strong>Statement-based replcation(Not recommended)</strong>: (e.g. early version of MySQL)<ul>
+<li>Simplest cases, the leader logs every write request (statement) taht it executes and sends that statement log to its follower.</li>
+<li>Potential <u>issues</u> with this approach <ul>
+<li>Any statement that calls a nondeterministic function, such as NOW() or RAND() will get different values;</li>
+<li>If statements use an auto-incrementing column, or if they defend on the existing data in the database;</li>
+<li>Statements that have side effects (e.g. triggers, stored procedures, user-defined functions)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Wirte-ahead log (WAL) shipping</strong>: (e.g. PostgreSQL and Oracle)<ul>
+<li>the log is an append-only sequence on bytes containing all writes to the database. Besides writing the log to disk, the leader also sends it accross the network to its followers.</li>
+<li>The main <u>disadvantage</u> is<ul>
+<li>The log describes the data on a very low level: a WAL contains details of which bytes were change in which disk blocks. -&gt; <strong><u>closely coupled to the storage engine</u></strong>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Logical (row-based) log replication</strong><ul>
+<li>An alternative is to use different logs formats for replication and for the storage engine, which allows the replcation to be <strong>decoupled from the storage engine interbals</strong>.</li>
+<li>since a <u><strong>logical log</strong> is decoupled from the storage engine</u> internals, it can more easily be kept backward compatible, allowing the leader and the follower to run different versions of the database software, or even different storage engines.</li>
+<li>A logical loh format is also easier for external applications to parse. Useful if you want to send the contents of a database to an external system (e.g. <strong>CDC</strong> change data capture)</li>
+</ul>
+</li>
+<li><strong>Trigger-based replication</strong>: (e.g. Goldengate for Oracle)<ul>
+<li>If you want to only replicate a subset of the data, or want to replicate from one kind of database to another, or if you need to conflict resolution logic then you may need to <u>move replication up to the application layer</u>.</li>
+<li>An alternative is to use featrues that are available in many relational databases: <u>trigger and stored procedures</u>.<ul>
+<li>A trigger lets you register custom application code that is automatically executed when a data change (write transaction) occurs in a database system.</li>
+</ul>
+</li>
+<li><u>Trigger-based replication typically has greater overheads that other replcation methods</u>, and is more prone to bugs and limitations than the database’s built-in replication.<ul>
+<li>But, provide greater flexibility.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Problems-with-replication-Lag"><a href="#Problems-with-replication-Lag" class="headerlink" title="Problems with replication Lag"></a>Problems with replication Lag</h3><ul>
+<li>Leader-based replication requires all writes to go through a single node, but read-only query can go though any replica.</li>
+<li><strong>For read heavy application</strong>: create many followers, and distribute the read requests across those followers. You can increase the capacity for serving read-only requests simply by adding more followers.</li>
+<li><strong>Eventual Consistent</strong>: This inconsistency is just a temporary satet – if you stop writing to the database and wait a while, the followers will <strong>eventually</strong> catch up and become consistent with the leader.<ul>
+<li>The term “<strong>eventually</strong>“ is deliberately vague: in general, there is no limit to how far a replica can fall behind.</li>
+</ul>
+</li>
+<li><strong>Reading Your Own Writes</strong><ul>
+<li>A user makes a write, followed by a read from stale replicat. To prevent this anomaly, we need <strong><u>read-after-write consistency </u></strong></li>
+<li><u>It makes no promises about the other users</u>: other users’ updates may not be visible until some later time. However, it reassures the user that their own input has been saved correctly.</li>
+<li>How can we implement read-after-write consistency in a system with leader-bbased replication? e.g.<ul>
+<li>When reading something that the user may have modified, read it from the leader; otherwise, read it from a follower.</li>
+<li>You could track the time of the last update and, for one minute after the last update, make all reads from the leader.</li>
+<li>The client can remember the timestamp of its most recent write</li>
+<li>Any request that needs to be served by the leader must be routed to the datacenter that containes the leader.</li>
+</ul>
+</li>
+<li><strong>cross-device read-after-write consistency</strong>： if the user enters some information on one device and then views it on another device, they should see the information they just entered.<ul>
+<li>If your approach requires reading from the leader, you may first need to route request from all of a user’s devices to the same datacenter</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Monotonic Reads</strong><ul>
+<li><u>when reading from asynchronous followers is that it’s possible for a user to see things moving backwards in time.</u> This can happen if a user makes several reads from different replicas.</li>
+<li><strong>Monotonic reads</strong>: it’s a lesser guarantee than <u>strong consistency</u>, but a strionger gurantee than <u>eventual consistency</u>.<ul>
+<li>One way of achieving monotonic reads is to <u>make sure that each user always <strong>makes their reads from the same replica</strong></u>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Consistent Prefix Reads</strong>:<ul>
+<li><u>violation of casuality</u>. E.g. If some partition are replicated slowers that others, an observer may see the answer before they see the question.</li>
+<li><strong>consistent prefix reads</strong>: This guarantee says that <u>if a sequence of writes happens in a certain order, then anyone reading those writes will see them appear in the same order.</u><ul>
+<li>This is a particular problem in partitioned (sharded) databases.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Solutions for Replication Lag</strong><ul>
+<li>Stronger guarantees;</li>
+<li><strong>Transactions:</strong> they are a way for a databases to provide stronger guarantees so that the application can be simpler.</li>
+<li><strong>Single-node transactions</strong> have exisited for a long time, but not for distributed systems.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Muti-Leader-Replication"><a href="#Muti-Leader-Replication" class="headerlink" title="Muti-Leader Replication"></a>Muti-Leader Replication</h3><ul>
+<li>Leader-based repliaction has one <u>major downside: there is only one leader, and all writes must go through it.</u> -&gt; single point failure.</li>
+<li><strong>Multi-leader configuration</strong> (also knwo as <u>master-master or active/active replication</u>): A natural extension of the leader-based replicaionmodel is to allow more that one node to accepts writes.<ul>
+<li>Replication the same: each node that processes a write must forward that data change to all the other nodes.</li>
+</ul>
+</li>
+<li><strong>Use Cases for Multi-Leader Replication</strong><ul>
+<li>It <u>rarely makes sence</u> to use a multi-leader setup <u>within a single datacenter</u>, because the <u>benefits rarely outweigh the added complexity</u>.</li>
+<li>Some databases support multi-leader configurations by default, but it is also often implemented with external tools/ (e.g. Tungsten Replicator for MySQL, BDR for PostgreSQL, and GoldenGate for Oracle) </li>
+<li><strong>Multi-datacenter operation</strong><ul>
+<li>In a multi-leader configuration, you can have <strong><u>a leader in each datacenter</u></strong>. Each datacenter’s leader replicates its changes to the leaders in other datacenters.</li>
+</ul>
+</li>
+<li><strong>Advantages</strong>: compare with SIngle-Leader design<ul>
+<li>Performance: reducy latency;</li>
+<li>Tolerance of datacenter outages;</li>
+<li>Tolerance of network problems;<ul>
+<li>A multi-leader configuration with asynchronous replication can ususally tolerate network problems better: a temporary network interruption does not preent writes being processed.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Downsides</strong><ul>
+<li>The same data may be concurrently modified in two different datacenter, and those <strong><u>write conflicts</u></strong> must be resolved.</li>
+<li>As multi-leader replication is a somewhat retrofitted feature in many databses, there are often subtle configuration pitfalls and surprising interactions with other databased features.</li>
+</ul>
+</li>
+<li><strong>Clients with offline operation</strong>: E.g. calendar, <u>mobile devices</u> etc. (CouchDB)<ul>
+<li>In this case, every devices has a local database that acts as a leader (it accepts write requests), and there is an asynchronous multi-leader replication process (sync) between the replicas of your calender on all of your devices.</li>
+<li>Multi-leader replication is a tricky thing to get right.</li>
+</ul>
+</li>
+<li><strong>Collaborative editing</strong><ul>
+<li>Real-time collaborative editing applications allow several people to edit a document simultaneously. E.g. Etherpad, Google Docs.</li>
+<li>For faster collaboration, you may want to make the unit of change very small (e.g., a single keystroke) and avoid locking</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Handling Wirte Conflicts</strong><ul>
+<li>The <strong>biggest problem</strong> with multi-leader replication is that <u>write conflics</u> can occur, which means that conflict resolution is required.</li>
+<li><strong>Synchronous versus asynchronous <u>conflict detetion</strong></u><ul>
+<li>the conflict is only detected <u>asynchronously</u> at some later point in time</li>
+<li>if you want <u>synchronous</u> conflict detection, you might as well just use singe-leader-replication.</li>
+</ul>
+</li>
+<li><strong>Conflic avoidance</strong><ul>
+<li>The simplest strategy for dealing with conflicts is to <strong><u>avoid</u></strong> themL if the application can ensure that all writes for a particular record <u>go though the same leader</u>, then conflicts cannot occur.</li>
+</ul>
+</li>
+<li><strong>Converging toward a consistent state</strong>:<ul>
+<li>The database must resolve the conflict in a <strong>convergent</strong> way, which means that <u>all replicas must arrive at the same final value when all chanegs have been replicated</u>.</li>
+<li><strong>Ways of achiving convergent conflict resolution</strong><ul>
+<li><u>Give <strong>each write a unique ID</strong></u> (e.g., a <u>timestamp</u>, a long random number, a <u>UUID</u>, or a <u>hash</u> of the key and value), pick the write with the highest ID as the winner, and throw away the other writes. (<strong>LWW– Last Write Wins</strong>)<ul>
+<li>This approach is popular, it is dangerously prone to data loss.</li>
+</ul>
+</li>
+<li>Give  <strong>each replica a unique ID</strong> (also potential data loss);</li>
+<li>Somehow <strong>merge</strong> the values together;</li>
+<li><strong>Record</strong> the conflict in an explicit data structure that preserves all information, and writes application code that <strong>resolves</strong> the conflict as some later time (e.g. prompt user)</li>
+</ul>
+</li>
+<li><strong>Custom conflict resolution logic</strong><ul>
+<li>Most multi-leader replication tools let you write conflict resolution logic using application code.<ul>
+<li><u>On write</u>: As soon as the databases system detects a conflict in the log of replicated changes, it calls the conflict handler. (e.g. Bucardo)</li>
+<li><u>On Read</u>: When a conflict is detected, all the conflicting writes are stroed. The next time the data is readm these multiple versions of the datat are returned to the application. (e.g. CouchDB)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Automatic Conflict Resolution</strong><ul>
+<li><strong>Conflict-free replicated data</strong> types (CRDTs, two-way merge) (e.g. Riak2.0)</li>
+<li><strong>Mergable persistent data</strong> structures (similar to git, perform threes-way merge)</li>
+<li><u>Operational transformation</u>: it was designed particularly for concurrent editing of an ordered list of iterms, such as the he list of characters that consititute a text document. (Etherpad, Google Docs)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Multi-Leader Replication Topologies</strong><ul>
+<li>A replication topology describes the communication paths along which writes are propagetes from one node to another. <img src="https://res.cloudinary.com/shuaiz/image/upload/v1597853443/part2-ch5-img1_t9ci3q.png" alt="p2-ch5-img1"></li>
+<li>The <u>most general topology is all-to-all</u> in which every leader sends its writes to every other leader.</li>
+<li>In <u>circular</u> and <u>star</u> topologies, a write may need to pass through several nodes before it reaches all replicas.<ul>
+<li>Problem: if just one node fails, it can interrupt the flow of replication messages between other nodes, causing them to be unable to communicate until the node is fixed.</li>
+</ul>
+</li>
+<li><u>Fault tolerance</u> of a more densely connected topology (such as all-to-all) is better because it allows message to travel along different paths, avoiding a single point failure.<ul>
+<li>Problem:  Some network linsk may be faster than others (e.g., due to network congestion), with the result that some replication messages may “overtake” others. <img src="https://res.cloudinary.com/shuaiz/image/upload/v1597853882/part2-ch5-img2_pa6r2a.png" alt="part2-ch5-img2"></li>
+<li>In the above procedure, Leader2 to will receive the value = 2 then receive the value = 1.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Leaderless-Replication"><a href="#Leaderless-Replication" class="headerlink" title="Leaderless Replication"></a>Leaderless Replication</h3><ul>
+<li>Amazon used it for its in-house <strong>Dynamo system</strong>. Vi <u>Riak, Cassandra</u>, and <u>Voldmort</u> are open source datastore with leaderless replication models inspired by Dynamo, so this kind of database is also knwos as <u>Dynamo-style</u>.(C: DynamoDB, single-leader?)</li>
+<li>In some leaderless implementations, the <u>client directly sends</u> its writes to several replicas, while in others, a <strong><u>coordinator</u></strong> node does this on behalf of the client.</li>
+<li><strong>Writing to the Database When a Node is Down</strong><ul>
+<li>In a leaderless configuration, <u>failover does not exist</u>.</li>
+<li>A <strong><u>quorum write, quorum read and read repair</u></strong> after a node outage.</li>
+<li>When a client reads from the database, it doesn’t just send its request to one replica: <strong>read requests are also send tos several nodes in parallel</strong>.</li>
+<li><strong>Read repair and anti-entrophy</strong><ul>
+<li>The replication shceme should ensure that eventually all the data is copied to every replica.</li>
+<li><strong>Read repair</strong>: When a client makes a read from several nodes in parallel, it can detect any stale response. (when read is heavy)</li>
+<li><strong>Anti-entropy process</strong>: In addition, some datastores have a background process that constantly looks for differences in the data between replicas and copies any missing data from one replica to another. (Maybe delay)</li>
+</ul>
+</li>
+<li><strong>Quorums for reading and writing</strong><ul>
+<li>As long as <strong><u>w + r &gt; n</u></strong>, we expects to get an up-to-date value when reading, because at least one of the r nodes we’re reading from must be up to date.</li>
+<li><strong>Reads and wirtes that obey there <u>r</u> and <u>w</u> values are called quorum reads and writes</strong><ul>
+<li>You can think of <strong>r</strong> and <strong>w</strong> as the <u>minimum number of votes</u> required for the read or write to be valid.</li>
+</ul>
+</li>
+<li>In Dynamo-style databases. the parameters n, w, and r are typically configurable. A common choices is to make <strong>n</strong> an odd number (typically 3 or 5) and to set w = r = (n + 1) / 2 (rounded up).</li>
+<li>The quorum condition, w + r &gt; n, allows the system to tolerate unavailable nodes as follows:<ul>
+<li>If w &lt; n, we can still process writes if a node is unavailable.</li>
+<li>if r &lt; n, we can still process reads if a node is unavailable.</li>
+<li>With n = 3, w = 2, r = 2 we can tolerate one unavailable node.</li>
+<li>With n = 5, w = 3, r = 3 we can tolerate two unavailable nodes.</li>
+<li>The parameters w and r determine how many nodes we wait for </li>
+</ul>
+</li>
+<li>If fewer that the required w or r nodes are available, writes or reads return an error.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Limitations of Quorum Consistency</strong><ul>
+<li>If you have <u>n</u> <strong>replicas</strong>, and you choose w and r such that w + r &gt; n, you can generally expect every read to return the most recent value written for a key.<ul>
+<li>because the set of nodes of which you’ve written and the set of nodes from which you’ve read must overlap.</li>
+</ul>
+</li>
+<li>Often, r and w are chosen to be a majority (more than n / 2) of nodes, because  that ensures w + r &gt; n while syill tolerating up to n / 2 node failures.</li>
+<li>With a smaller w and r<ul>
+<li>more like to read stale values</li>
+<li>But allows <u>lower latency and higher availability</u>: if there is a network interruption and many replicas become unreachable, there’s a higher chance that you can continue processing reads and writes.</li>
+</ul>
+</li>
+<li>Even with w + r &gt; n, there are many edges cases that could cause problems<ul>
+<li>Thus, although quorum appear to guarantee that a read returns the latest written value, in practice it is not so simple.</li>
+</ul>
+</li>
+<li>Dynamo-style databases are generally optimized for use cases that can tolerate <strong>eventual consistency</strong><ul>
+<li>Stronger guarantees generally require <u>tansactions</u> or <u>consensus</u>.</li>
+</ul>
+</li>
+<li><strong>Monitoring staleness</strong><ul>
+<li>For leader-based replication, the database typically expose metrics for the replication lag, which you can feed into a monitoring system.</li>
+<li>In system wuth <u>leaderless replication</u>, there is no fixed order in which writes are applied, which <u>makes monitoring more difficult</u>.</li>
+<li>Eventual consistency is a deliberately vauge gurantee, but for operability it’s important to be able to quantify “eventual”.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Sloppy Quorums and Hinted Handoff</strong><ul>
+<li>Databases with appropriately configuered quorums can tolerate the failure of individual nodex without the need of failover.</li>
+<li>Leaderless replication applealing for use cases that require <u>high availability and low latency</u>, and that can tolerate occasional stale reads.</li>
+<li><strong>Sloppy quorum</strong>: writes and reads still require w and r successful response, but those may include nodes that are not among the designated n “home” nodes for a value. (e.g. Riak enabled default, Cassandra, Voldemort disabled)<ul>
+<li>Particularly <u>useful for increasing write availability</u>: as long as any w nodes are available, the database can accept writes.</li>
+<li>isn’t a quorum at all in the traditional sense. It’s only an assurance of durability.</li>
+</ul>
+</li>
+<li><strong>Hinted handoff</strong>: Once the network interruption is fixed, any wirtes that one node temporarily accepted on behalf of another node are sent to the appropriate “home” nodes.</li>
+<li><strong>Multi-datacenter operation</strong><ul>
+<li><u><strong>Cassandra</strong> and Voldemort</u> implement their multi-datacenter support within the normal leaderless model: the number of replicas n includes nodes in all datacenters, and in the configuration you can specify how many of the n replicas you want to habe in each datacenter.</li>
+<li><strong><u>Riak</u></strong> keeps all communication between clients and databases node local to one datacenter, so n describes the number of replicas withi one datacenter.</li>
+<li>Cross-datacenter replication between databases clusters happens <u>asynchronously</u> in the background, in a style that is similar to multi-leader replication.</li>
+</ul>
+</li>
+<li><strong>Detecting Concurrent Writes</strong><ul>
+<li><strong>Dynamo-style databases</strong> allow several clients to concurrently write to the same key, which means that <u>conflicts will occur even if strict quorums are used</u>.</li>
+<li>In order to become eventually consistent, the replicas should converge toward the same values.</li>
+<li><strong>Last writes wins (discarding concurrent writes)</strong><ul>
+<li>Declare taht each replica need only store the most “recent” value and allow “older” calues to be overwritten and discarded.</li>
+<li>writes are concurrent, so their order is indefind.</li>
+<li>Even though the writes don’t have a natural ordering, we can force an arbitrary order on them.</li>
+<li>LWW achieves the goal of eventual convergence, but at the cost of durability<ul>
+<li>If losing data is not acceptable, LWW is a poor choice for confict resolution.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>The “happens-before” replationship and concurrency</strong><ul>
+<li>An opration A happens before another operation B if B knows about A, or depends on A, or builds upon A in some way.</li>
+<li><strong>Concurrency, Time and Relativity</strong><ul>
+<li><u>For defining <strong>concurrency</strong>, exact time doesn’t matter</u>: <strong>we simply call two operations concurrent if they are bothe unaware of each other, regardless of the physical time at which they occured.</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Capturing the happens-before relationship</strong><ul>
+<li>Server can determine whether two operatoins are concurrent by looking at the <strong>version numbers</strong> – it does not need to interpret the values itself (so the value could be any data structure).</li>
+<li>When a write includes the version number from prior read, that tells us which preivous state the writes is based on.</li>
+</ul>
+</li>
+<li><strong>Merging concurrentlu written values</strong><ul>
+<li>if several operations happen concurrently, the clients have to clean uo afterward by merging the concurrently written values. (Aka sibblings in Riak)<ul>
+<li>Merging sibling values is essentilaly the same problem as conflict resolution in multi-leader replication.</li>
+</ul>
+</li>
+<li>a reasonable approach to merging siblings is to just take the union.</li>
+</ul>
+</li>
+<li><strong>Version vectors</strong> (C: allow data to diverge and converge, like git)<ul>
+<li><u>We need to use a version number per replica as well as per key</u>.</li>
+<li>Each replica increments its own version number when processing a write, and also keeps track of the version numbers it has seen from each of the other replicas.</li>
+<li><strong>Version vector</strong>: <u>the collection of version numbers froma all the replicas</u><ul>
+<li>most interesting is probably the dotted version vector, which is used in Raik 2.0</li>
+</ul>
+</li>
+<li>The version vector allows the databaseds to distinguish between overwrites and concurrent writes.</li>
+<li>The version vector structure ensures that it is safe to read from one replica and subsequently write back to another replica.</li>
+<li><strong>Version vectors and vector clocks</strong><ul>
+<li>A version vector is sometimes also called a vector clock, even though they are not quite the same.</li>
+<li>when comparing the state of replicas, version vectors are the right data structure to use.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><ul>
+<li><strong>Replication</strong> can serve several purposes <ul>
+<li><strong>High availability</strong>: Keeping the system running, even when one machine (or several machines, or an entire datacenter) goes down</li>
+<li><strong>Disconnected operation</strong>: Allowing an application to continue working when there is a network interruption.</li>
+<li><strong>Latency</strong>: Placing data geographically close to users, so that users can onteract with it faster.</li>
+<li><strong>Scalability</strong>: being able to higer vlume of reads that a single machine could handle, bu performing reads on replicas.</li>
+</ul>
+</li>
+<li>Despite being a simple goal, keeping a copy of the same data on several machines’ replication turens out to be a remarkably tricky problem.</li>
+<li>Three main approaches to replication<ul>
+<li><strong>Single-leader</strong> replication <ul>
+<li>Clients send all writes to a single node (the leader), which sends a stream of data change events to the other replicas(followers). Reads can be perform on any replica, but reads from follwoers might be stale,</li>
+</ul>
+</li>
+<li><strong>Multi-leader</strong> replication<ul>
+<li>Clients send each write to several leader nodes, ant of which can accept writes. The leaders send stream of data change events to each other and to any follower nodes.</li>
+</ul>
+</li>
+<li><strong>Leaderless</strong> replication <ul>
+<li>Clients send each writs to several node, and read from several nodes in parallel on order to detect and correct node with stale data.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Each appoach has advantages and disadvantages<ul>
+<li>Single-leader<ul>
+<li>is popular because it is fairly easy to understand and there is no f=conflict resolution to worry about </li>
+</ul>
+</li>
+<li>Multi-leader &amp; Leaderless<ul>
+<li>Can be more rebust in there presence of faulty nodes, network interruptions and latency spikes – at the cost of being harder to reason about and providing only <u>very weak consistency</u> guarantees.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Replication can be <strong><u>synchronous</u></strong> or <strong><u>asynchronous</u></strong>, which ahs a profound effect on the system behavior when there is a fault.<ul>
+<li>It’s important to figure out what happens when replication lag increases and servers fail.</li>
+</ul>
+</li>
+<li><u>Consistency models</u> which are helpful for deciding how an application should behave under replication lag<ul>
+<li>Read-after-wirte consistency</li>
+<li>Monotonic reads</li>
+<li>Consistent prefix reads</li>
+</ul>
+</li>
+<li><strong>Concurrency</strong> issues that are onherent in multi-leader and leaderless replication approaches: because they allow multiple writes to happen concurrently, conflicts may occur.</li>
+</ul>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -183,388 +683,135 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/08/19/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B07/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
 
-<a href="/2020/08/17/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B06/" class="archive-article-date">
-  	<time datetime="2020-08-18T04:07:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-17</time>
-</a>
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2020/08/17/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B06/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Designing Data Intensive Application学习笔记6</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/08/17/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B06/">Designing Data Intensive Application学习笔记6</a>
-    </h1>
-  
+        
+        
+    </div>
+</aside>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
-        		</li>
-      		
-		</ul>
-	</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/08/16/A-Brief-Introduction-of-Cassandra/" class="archive-article-date">
-  	<time datetime="2020-08-16T23:38:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-16</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/08/16/A-Brief-Introduction-of-Cassandra/">A Brief Introduction of Cassandra</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Database</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/08/16/Introduction-to-Bloom-Filter/" class="archive-article-date">
-  	<time datetime="2020-08-16T23:22:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-16</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/08/16/Introduction-to-Bloom-Filter/">Introduction to Bloom Filter</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B05/" class="archive-article-date">
-  	<time datetime="2020-08-16T22:53:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-16</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B05/">Designing-Data-Intensive-Application学习笔记5</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B04/" class="archive-article-date">
-  	<time datetime="2020-08-16T17:45:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-16</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B04/">Designing-Data-Intensive-Application学习笔记4</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/08/15/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B03/" class="archive-article-date">
-  	<time datetime="2020-08-15T16:41:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-15</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/08/15/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B03/">Designing-Data-Intensive-Application学习笔记3</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/08/14/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02/" class="archive-article-date">
-  	<time datetime="2020-08-15T05:03:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-14</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/08/14/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02/">Designing-Data-Intensive-Application学习笔记2</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/08/14/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/" class="archive-article-date">
-  	<time datetime="2020-08-15T03:52:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-14</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/08/14/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01/">Designing-Data-Intensive-Application学习笔记1</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/08/14/Memcached%E7%AE%80%E4%BB%8B/" class="archive-article-date">
-  	<time datetime="2020-08-14T15:27:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-14</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/08/14/Memcached%E7%AE%80%E4%BB%8B/">Memcached简介</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/2020/08/page/2/">2</a><a class="extend next" rel="next" href="/archives/2020/08/page/2/">下一页</a>
-    </nav>
   
 
+  
+
+  
+
+
+
+   
+       <section id="comments" class="comments">
+         <style>
+           .comments{margin:30px;padding:10px;background:#fff}
+           @media screen and (max-width:800px){.comments{margin:auto;padding:10px;background:#fff}}
+         </style>
+         <div id="vcomment" class="comment"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var notify = 'false' == true ? true : false;
+  var verify = 'false' == true ? true : false;
+  new Valine({
+    av: AV,
+    el: '#vcomment',
+    notify: notify,
+    app_id: "WsqeD0zCG3BCN0FWCJ1AToox-MdYXbMMI",
+    app_key: "MmbXeLMlHQnWMBU83kuB3eEy",
+    placeholder: "Just go go",
+    avatar: "mm",
+  });
+</script>
+
+     </section>
+   
 
 
           </div>
@@ -599,8 +846,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
