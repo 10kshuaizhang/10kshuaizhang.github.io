@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Designing Data Intensive Application学习笔记7 | 10K&#39;s</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Chapter5 Replication  Replication means keeping a copy of the same data on multiple machines that are connected via a network. To keeo data geographically close to your users (reduce latency) To allow">
+  <meta name="description" content="Chapter5 Replication  Replication means keeping a copy of the same data on multiple machines that are connected via a network. To keep data geographically close to your users (reduce latency) To allow">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Designing Data Intensive Application学习笔记7">
 <meta property="og:url" content="http://yoursite.com/2020/08/19/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B07/index.html">
 <meta property="og:site_name" content="10K&#39;s">
-<meta property="og:description" content="Chapter5 Replication  Replication means keeping a copy of the same data on multiple machines that are connected via a network. To keeo data geographically close to your users (reduce latency) To allow">
+<meta property="og:description" content="Chapter5 Replication  Replication means keeping a copy of the same data on multiple machines that are connected via a network. To keep data geographically close to your users (reduce latency) To allow">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1597853443/part2-ch5-img1_t9ci3q.png">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1597853882/part2-ch5-img2_pa6r2a.png">
 <meta property="article:published_time" content="2020-08-20T05:43:50.000Z">
-<meta property="article:modified_time" content="2020-08-20T05:44:29.124Z">
+<meta property="article:modified_time" content="2020-08-21T04:41:46.091Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
@@ -202,12 +202,12 @@
         <p><strong>Chapter5 Replication</strong></p>
 <ul>
 <li><strong>Replication</strong> means keeping a <u>copy of the same data on multiple machines</u> that are connected via a network.<ul>
-<li>To keeo data geographically close to your users (<strong>reduce latency</strong>)</li>
+<li>To keep data geographically close to your users (<strong>reduce latency</strong>)</li>
 <li>To allow the system to continue working evne if some if its parts have failed (<strong>increase availability</strong>)</li>
-<li>To scale out the numver of machines that can serve read queries (<strong>increase read throughput</strong>)</li>
+<li>To scale out the number of machines that can serve read queries (<strong>increase read throughput</strong>)</li>
 </ul>
 </li>
-<li><strong>All of the<u>difficulty</u> in replication lies in <u>handling changes to replicated</u> data</strong>;</li>
+<li><strong>All of the <u>difficulty</u> in replication lies in <u>handling changes to replicated</u> data</strong>;</li>
 <li>Three popular algorithms for replicating changes between nodes: <strong>single-leader</strong>, <strong>multi-leader</strong>, and <strong>leaderless</strong> replication.</li>
 </ul>
 <a id="more"></a>
@@ -231,13 +231,13 @@
 <li>Most databases system apply changes to followers in less than a second.</li>
 <li><strong>Synchronous</strong><ul>
 <li><u>Advantage</u>s: The followers is guaranteed to have an up-to-date copy of the data that is consistent with the leader.</li>
-<li><u>Disadvantages</u>: if the synchronous follower doesn’t respond (because it has crashed, or there is a network fault, or for any other reason), the write connot be processed</li>
+<li><u>Disadvantages</u>: if the synchronous follower doesn’t respond (because it has crashed, or there is a network fault, or for any other reason), the write cannot be processed</li>
 <li><strong>impractical</strong> for <u>all followers to be synonymous</u>: any one node outage would cause the whole system and grind to halt.</li>
 </ul>
 </li>
 <li><strong>Semi-synchronous</strong>: leader and one synchronous follower.</li>
 <li><strong>Often,</strong> <u>leader-based replcation is configured to be completely</u> <strong>asynchronous</strong>.<ul>
-<li>a fully asynchronous configuration has the advantage that the leader can continue processiong writes, even if all of its followers hava fallen behind.</li>
+<li>a fully asynchronous configuration has the advantage that the leader can continue processiong writes, even if all of its followers have fallen behind.</li>
 <li>Especially if there are many followers or if they are geographically distributed.</li>
 </ul>
 </li>
@@ -245,7 +245,7 @@
 </li>
 <li><strong>Setting Up New Followers</strong><ul>
 <li>How do you ensure that the new followers has an accurate copy of the leader’s data?</li>
-<li>Four Step process: 1, take snapshot; 2, copy snapshot; 3, carry-over new change bu using leader’s <u>replication log</u> (e.g. log sequence number, and MySQL calls it the binlog coordinates.); 4, after caught up, keep process data from leader;<ul>
+<li>Four Step process: 1, take snapshot; 2, copy snapshot; 3, carry-over new change by using leader’s <u>replication log</u> (e.g. log sequence number, and MySQL calls it the binlog coordinates.); 4, after caught up, keep process data from leader;<ul>
 <li>The practical steps of setting up a follower vary significantly by database.</li>
 </ul>
 </li>
@@ -258,23 +258,18 @@
 </ul>
 </li>
 <li><strong>Leader failure: Failover</strong><ul>
-<li><strong>Failover</strong>: one of the followers needs to be promoted to be the new leader, clients need to be configured to send their writes to the new leader, and the other followers need to start cosuming data changes from new leader.</li>
-<li><strong>Automatic failover</strong> process usually consists of the following steps:<ul>
-<li><ol>
-<li>Determinig that the leader has failed. If a node doesn’t respond for some period of time – say 30 seconds – it is assumed to be dead;<ol start="2">
+<li><strong>Failover</strong>: one of the followers needs to be promoted to be the new leader, clients need to be configured to send their writes to the new leader, and the other followers need to start consuming data changes from new leader.</li>
+<li><strong>Automatic failover</strong> process usually consists of the following steps:<ol>
+<li>Determinig that the leader has failed. If a node doesn’t respond for some period of time – say 30 seconds – it is assumed to be dead;</li>
 <li>Choosing a new leader, through <u>election process</u> or <u>controller node</u> selection;</li>
 <li>Reconfiguring the system to use the new leader. The system needs to ensure that the old leader becomes a follower and recognizes the new leader.</li>
 </ol>
-</li>
-</ol>
-</li>
-</ul>
 </li>
 <li><strong>Failover is fraught with thing that can go wrong</strong><ul>
 <li>If asynchronous replication is used, the new leader may not have received all the writes from the old leader before it failed.</li>
 <li>Discarding writes is especially dangerous if other storage systems outside of the databases need to be coordinated with the database contents.</li>
 <li>In certain fault scenarios, it could happen that two nodes both believe that thay are the leader. – aka <strong><u>split brain</u></strong> which will cause conflict data.</li>
-<li>What is the rigte timeout before the leader is declared dead?</li>
+<li>What is the right timeout before the leader is declared dead?</li>
 </ul>
 </li>
 <li>There are no easy solutions to these problems. For this reason, some operations team prefer to perform <u>failover manually</u>.</li>
@@ -283,10 +278,10 @@
 </li>
 </ul>
 </li>
-<li><strong>Implementing of REplication Logs</strong><ul>
+<li><strong>Implementing of Replication Logs</strong><ul>
 <li>How does leader-based replication work under the hood?</li>
 <li><strong>Statement-based replcation(Not recommended)</strong>: (e.g. early version of MySQL)<ul>
-<li>Simplest cases, the leader logs every write request (statement) taht it executes and sends that statement log to its follower.</li>
+<li>Simplest cases, the leader logs every write request (statement) that it executes and sends that statement log to its follower.</li>
 <li>Potential <u>issues</u> with this approach <ul>
 <li>Any statement that calls a nondeterministic function, such as NOW() or RAND() will get different values;</li>
 <li>If statements use an auto-incrementing column, or if they defend on the existing data in the database;</li>
@@ -304,9 +299,9 @@
 </ul>
 </li>
 <li><strong>Logical (row-based) log replication</strong><ul>
-<li>An alternative is to use different logs formats for replication and for the storage engine, which allows the replcation to be <strong>decoupled from the storage engine interbals</strong>.</li>
+<li>An alternative is to use different logs formats for replication and for the storage engine, which allows the replcation to be <strong>decoupled from the storage engine internals</strong>.</li>
 <li>since a <u><strong>logical log</strong> is decoupled from the storage engine</u> internals, it can more easily be kept backward compatible, allowing the leader and the follower to run different versions of the database software, or even different storage engines.</li>
-<li>A logical loh format is also easier for external applications to parse. Useful if you want to send the contents of a database to an external system (e.g. <strong>CDC</strong> change data capture)</li>
+<li>A logical log format is also easier for external applications to parse. Useful if you want to send the contents of a database to an external system (e.g. <strong>CDC</strong> change data capture)</li>
 </ul>
 </li>
 <li><strong>Trigger-based replication</strong>: (e.g. Goldengate for Oracle)<ul>
@@ -327,14 +322,14 @@
 <h3 id="Problems-with-replication-Lag"><a href="#Problems-with-replication-Lag" class="headerlink" title="Problems with replication Lag"></a>Problems with replication Lag</h3><ul>
 <li>Leader-based replication requires all writes to go through a single node, but read-only query can go though any replica.</li>
 <li><strong>For read heavy application</strong>: create many followers, and distribute the read requests across those followers. You can increase the capacity for serving read-only requests simply by adding more followers.</li>
-<li><strong>Eventual Consistent</strong>: This inconsistency is just a temporary satet – if you stop writing to the database and wait a while, the followers will <strong>eventually</strong> catch up and become consistent with the leader.<ul>
+<li><strong>Eventual Consistent</strong>: This inconsistency is just a temporary state – if you stop writing to the database and wait a while, the followers will <strong>eventually</strong> catch up and become consistent with the leader.<ul>
 <li>The term “<strong>eventually</strong>“ is deliberately vague: in general, there is no limit to how far a replica can fall behind.</li>
 </ul>
 </li>
 <li><strong>Reading Your Own Writes</strong><ul>
 <li>A user makes a write, followed by a read from stale replicat. To prevent this anomaly, we need <strong><u>read-after-write consistency </u></strong></li>
 <li><u>It makes no promises about the other users</u>: other users’ updates may not be visible until some later time. However, it reassures the user that their own input has been saved correctly.</li>
-<li>How can we implement read-after-write consistency in a system with leader-bbased replication? e.g.<ul>
+<li>How can we implement read-after-write consistency in a system with leader-based replication? e.g.<ul>
 <li>When reading something that the user may have modified, read it from the leader; otherwise, read it from a follower.</li>
 <li>You could track the time of the last update and, for one minute after the last update, make all reads from the leader.</li>
 <li>The client can remember the timestamp of its most recent write</li>
@@ -372,22 +367,22 @@
 </ul>
 <h3 id="Muti-Leader-Replication"><a href="#Muti-Leader-Replication" class="headerlink" title="Muti-Leader Replication"></a>Muti-Leader Replication</h3><ul>
 <li>Leader-based repliaction has one <u>major downside: there is only one leader, and all writes must go through it.</u> -&gt; single point failure.</li>
-<li><strong>Multi-leader configuration</strong> (also knwo as <u>master-master or active/active replication</u>): A natural extension of the leader-based replicaionmodel is to allow more that one node to accepts writes.<ul>
+<li><strong>Multi-leader configuration</strong> (also knwo as <u>master-master or active/active replication</u>): A natural extension of the leader-based replicaion model is to allow more that one node to accepts writes.<ul>
 <li>Replication the same: each node that processes a write must forward that data change to all the other nodes.</li>
 </ul>
 </li>
 <li><strong>Use Cases for Multi-Leader Replication</strong><ul>
-<li>It <u>rarely makes sence</u> to use a multi-leader setup <u>within a single datacenter</u>, because the <u>benefits rarely outweigh the added complexity</u>.</li>
+<li>It <u>rarely makes sense</u> to use a multi-leader setup <u>within a single datacenter</u>, because the <u>benefits rarely outweight the added complexity</u>.</li>
 <li>Some databases support multi-leader configurations by default, but it is also often implemented with external tools/ (e.g. Tungsten Replicator for MySQL, BDR for PostgreSQL, and GoldenGate for Oracle) </li>
 <li><strong>Multi-datacenter operation</strong><ul>
 <li>In a multi-leader configuration, you can have <strong><u>a leader in each datacenter</u></strong>. Each datacenter’s leader replicates its changes to the leaders in other datacenters.</li>
 </ul>
 </li>
-<li><strong>Advantages</strong>: compare with SIngle-Leader design<ul>
-<li>Performance: reducy latency;</li>
+<li><strong>Advantages</strong>: compare with Single-Leader design<ul>
+<li>Performance: reduce latency;</li>
 <li>Tolerance of datacenter outages;</li>
 <li>Tolerance of network problems;<ul>
-<li>A multi-leader configuration with asynchronous replication can ususally tolerate network problems better: a temporary network interruption does not preent writes being processed.</li>
+<li>A multi-leader configuration with asynchronous replication can ususally tolerate network problems better: a temporary network interruption does not prevent writes being processed.</li>
 </ul>
 </li>
 </ul>
@@ -411,13 +406,13 @@
 </li>
 <li><strong>Handling Wirte Conflicts</strong><ul>
 <li>The <strong>biggest problem</strong> with multi-leader replication is that <u>write conflics</u> can occur, which means that conflict resolution is required.</li>
-<li><strong>Synchronous versus asynchronous <u>conflict detetion</strong></u><ul>
+<li><strong>Synchronous versus asynchronous <u>conflict detection</strong></u><ul>
 <li>the conflict is only detected <u>asynchronously</u> at some later point in time</li>
 <li>if you want <u>synchronous</u> conflict detection, you might as well just use singe-leader-replication.</li>
 </ul>
 </li>
 <li><strong>Conflic avoidance</strong><ul>
-<li>The simplest strategy for dealing with conflicts is to <strong><u>avoid</u></strong> themL if the application can ensure that all writes for a particular record <u>go though the same leader</u>, then conflicts cannot occur.</li>
+<li>The simplest strategy for dealing with conflicts is to <strong><u>avoid</u></strong> them if the application can ensure that all writes for a particular record <u>go though the same leader</u>, then conflicts cannot occur.</li>
 </ul>
 </li>
 <li><strong>Converging toward a consistent state</strong>:<ul>
@@ -435,7 +430,7 @@
 <li><strong>Custom conflict resolution logic</strong><ul>
 <li>Most multi-leader replication tools let you write conflict resolution logic using application code.<ul>
 <li><u>On write</u>: As soon as the databases system detects a conflict in the log of replicated changes, it calls the conflict handler. (e.g. Bucardo)</li>
-<li><u>On Read</u>: When a conflict is detected, all the conflicting writes are stroed. The next time the data is readm these multiple versions of the datat are returned to the application. (e.g. CouchDB)</li>
+<li><u>On Read</u>: When a conflict is detected, all the conflicting writes are stored. The next time the data is read these multiple versions of the data are returned to the application. (e.g. CouchDB)</li>
 </ul>
 </li>
 </ul>
@@ -458,7 +453,7 @@
 </ul>
 </li>
 <li><u>Fault tolerance</u> of a more densely connected topology (such as all-to-all) is better because it allows message to travel along different paths, avoiding a single point failure.<ul>
-<li>Problem:  Some network linsk may be faster than others (e.g., due to network congestion), with the result that some replication messages may “overtake” others. <img src="https://res.cloudinary.com/shuaiz/image/upload/v1597853882/part2-ch5-img2_pa6r2a.png" alt="part2-ch5-img2"></li>
+<li>Problem:  Some network links may be faster than others (e.g., due to network congestion), with the result that some replication messages may “overtake” others. <img src="https://res.cloudinary.com/shuaiz/image/upload/v1597853882/part2-ch5-img2_pa6r2a.png" alt="part2-ch5-img2"></li>
 <li>In the above procedure, Leader2 to will receive the value = 2 then receive the value = 1.</li>
 </ul>
 </li>
@@ -471,7 +466,7 @@
 <li><strong>Writing to the Database When a Node is Down</strong><ul>
 <li>In a leaderless configuration, <u>failover does not exist</u>.</li>
 <li>A <strong><u>quorum write, quorum read and read repair</u></strong> after a node outage.</li>
-<li>When a client reads from the database, it doesn’t just send its request to one replica: <strong>read requests are also send tos several nodes in parallel</strong>.</li>
+<li>When a client reads from the database, it doesn’t just send its request to one replica: <strong>read requests are also sent to several nodes in parallel</strong>.</li>
 <li><strong>Read repair and anti-entrophy</strong><ul>
 <li>The replication shceme should ensure that eventually all the data is copied to every replica.</li>
 <li><strong>Read repair</strong>: When a client makes a read from several nodes in parallel, it can detect any stale response. (when read is heavy)</li>
@@ -503,7 +498,7 @@
 <li>because the set of nodes of which you’ve written and the set of nodes from which you’ve read must overlap.</li>
 </ul>
 </li>
-<li>Often, r and w are chosen to be a majority (more than n / 2) of nodes, because  that ensures w + r &gt; n while syill tolerating up to n / 2 node failures.</li>
+<li>Often, r and w are chosen to be a majority (more than n / 2) of nodes, because  that ensures w + r &gt; n while still tolerating up to n / 2 node failures.</li>
 <li>With a smaller w and r<ul>
 <li>more like to read stale values</li>
 <li>But allows <u>lower latency and higher availability</u>: if there is a network interruption and many replicas become unreachable, there’s a higher chance that you can continue processing reads and writes.</li>
@@ -519,14 +514,14 @@
 </li>
 <li><strong>Monitoring staleness</strong><ul>
 <li>For leader-based replication, the database typically expose metrics for the replication lag, which you can feed into a monitoring system.</li>
-<li>In system wuth <u>leaderless replication</u>, there is no fixed order in which writes are applied, which <u>makes monitoring more difficult</u>.</li>
-<li>Eventual consistency is a deliberately vauge gurantee, but for operability it’s important to be able to quantify “eventual”.</li>
+<li>In system with <u>leaderless replication</u>, there is no fixed order in which writes are applied, which <u>makes monitoring more difficult</u>.</li>
+<li>Eventual consistency is a deliberately vauge guarantee, but for operability it’s important to be able to quantify “eventual”.</li>
 </ul>
 </li>
 </ul>
 </li>
 <li><strong>Sloppy Quorums and Hinted Handoff</strong><ul>
-<li>Databases with appropriately configuered quorums can tolerate the failure of individual nodex without the need of failover.</li>
+<li>Databases with appropriately configuered quorums can tolerate the failure of individual node without the need of failover.</li>
 <li>Leaderless replication applealing for use cases that require <u>high availability and low latency</u>, and that can tolerate occasional stale reads.</li>
 <li><strong>Sloppy quorum</strong>: writes and reads still require w and r successful response, but those may include nodes that are not among the designated n “home” nodes for a value. (e.g. Riak enabled default, Cassandra, Voldemort disabled)<ul>
 <li>Particularly <u>useful for increasing write availability</u>: as long as any w nodes are available, the database can accept writes.</li>
@@ -535,8 +530,8 @@
 </li>
 <li><strong>Hinted handoff</strong>: Once the network interruption is fixed, any wirtes that one node temporarily accepted on behalf of another node are sent to the appropriate “home” nodes.</li>
 <li><strong>Multi-datacenter operation</strong><ul>
-<li><u><strong>Cassandra</strong> and Voldemort</u> implement their multi-datacenter support within the normal leaderless model: the number of replicas n includes nodes in all datacenters, and in the configuration you can specify how many of the n replicas you want to habe in each datacenter.</li>
-<li><strong><u>Riak</u></strong> keeps all communication between clients and databases node local to one datacenter, so n describes the number of replicas withi one datacenter.</li>
+<li><u><strong>Cassandra</strong> and Voldemort</u> implement their multi-datacenter support within the normal leaderless model: the number of replicas n includes nodes in all datacenters, and in the configuration you can specify how many of the n replicas you want to have in each datacenter.</li>
+<li><strong><u>Riak</u></strong> keeps all communication between clients and databases node local to one datacenter, so n describes the number of replicas within one datacenter.</li>
 <li>Cross-datacenter replication between databases clusters happens <u>asynchronously</u> in the background, in a style that is similar to multi-leader replication.</li>
 </ul>
 </li>
@@ -544,7 +539,7 @@
 <li><strong>Dynamo-style databases</strong> allow several clients to concurrently write to the same key, which means that <u>conflicts will occur even if strict quorums are used</u>.</li>
 <li>In order to become eventually consistent, the replicas should converge toward the same values.</li>
 <li><strong>Last writes wins (discarding concurrent writes)</strong><ul>
-<li>Declare taht each replica need only store the most “recent” value and allow “older” calues to be overwritten and discarded.</li>
+<li>Declare that each replica need only store the most “recent” value and allow “older” values to be overwritten and discarded.</li>
 <li>writes are concurrent, so their order is indefind.</li>
 <li>Even though the writes don’t have a natural ordering, we can force an arbitrary order on them.</li>
 <li>LWW achieves the goal of eventual convergence, but at the cost of durability<ul>
@@ -556,7 +551,7 @@
 <li><strong>The “happens-before” replationship and concurrency</strong><ul>
 <li>An opration A happens before another operation B if B knows about A, or depends on A, or builds upon A in some way.</li>
 <li><strong>Concurrency, Time and Relativity</strong><ul>
-<li><u>For defining <strong>concurrency</strong>, exact time doesn’t matter</u>: <strong>we simply call two operations concurrent if they are bothe unaware of each other, regardless of the physical time at which they occured.</strong></li>
+<li><u>For defining <strong>concurrency</strong>, exact time doesn’t matter</u>: <strong>we simply call two operations concurrent if they are both unaware of each other, regardless of the physical time at which they occured.</strong></li>
 </ul>
 </li>
 </ul>
@@ -566,9 +561,9 @@
 <li>When a write includes the version number from prior read, that tells us which preivous state the writes is based on.</li>
 </ul>
 </li>
-<li><strong>Merging concurrentlu written values</strong><ul>
-<li>if several operations happen concurrently, the clients have to clean uo afterward by merging the concurrently written values. (Aka sibblings in Riak)<ul>
-<li>Merging sibling values is essentilaly the same problem as conflict resolution in multi-leader replication.</li>
+<li><strong>Merging concurrently written values</strong><ul>
+<li>if several operations happen concurrently, the clients have to clean up afterward by merging the concurrently written values. (Aka sibblings in Riak)<ul>
+<li>Merging sibling values is essentially the same problem as conflict resolution in multi-leader replication.</li>
 </ul>
 </li>
 <li>a reasonable approach to merging siblings is to just take the union.</li>
@@ -577,7 +572,7 @@
 <li><strong>Version vectors</strong> (C: allow data to diverge and converge, like git)<ul>
 <li><u>We need to use a version number per replica as well as per key</u>.</li>
 <li>Each replica increments its own version number when processing a write, and also keeps track of the version numbers it has seen from each of the other replicas.</li>
-<li><strong>Version vector</strong>: <u>the collection of version numbers froma all the replicas</u><ul>
+<li><strong>Version vector</strong>: <u>the collection of version numbers from all the replicas</u><ul>
 <li>most interesting is probably the dotted version vector, which is used in Raik 2.0</li>
 </ul>
 </li>
@@ -600,13 +595,13 @@
 <li><strong>High availability</strong>: Keeping the system running, even when one machine (or several machines, or an entire datacenter) goes down</li>
 <li><strong>Disconnected operation</strong>: Allowing an application to continue working when there is a network interruption.</li>
 <li><strong>Latency</strong>: Placing data geographically close to users, so that users can onteract with it faster.</li>
-<li><strong>Scalability</strong>: being able to higer vlume of reads that a single machine could handle, bu performing reads on replicas.</li>
+<li><strong>Scalability</strong>: being able to higer volume of reads that a single machine could handle, by performing reads on replicas.</li>
 </ul>
 </li>
-<li>Despite being a simple goal, keeping a copy of the same data on several machines’ replication turens out to be a remarkably tricky problem.</li>
+<li>Despite being a simple goal, keeping a copy of the same data on several machines’ replication turns out to be a remarkably tricky problem.</li>
 <li>Three main approaches to replication<ul>
 <li><strong>Single-leader</strong> replication <ul>
-<li>Clients send all writes to a single node (the leader), which sends a stream of data change events to the other replicas(followers). Reads can be perform on any replica, but reads from follwoers might be stale,</li>
+<li>Clients send all writes to a single node (the leader), which sends a stream of data change events to the other replicas(followers). Reads can be perform on any replica, but reads from follwoers might be stale.</li>
 </ul>
 </li>
 <li><strong>Multi-leader</strong> replication<ul>
@@ -614,14 +609,14 @@
 </ul>
 </li>
 <li><strong>Leaderless</strong> replication <ul>
-<li>Clients send each writs to several node, and read from several nodes in parallel on order to detect and correct node with stale data.</li>
+<li>Clients send each writes to several node, and read from several nodes in parallel on order to detect and correct node with stale data.</li>
 </ul>
 </li>
 </ul>
 </li>
 <li>Each appoach has advantages and disadvantages<ul>
 <li>Single-leader<ul>
-<li>is popular because it is fairly easy to understand and there is no f=conflict resolution to worry about </li>
+<li>is popular because it is fairly easy to understand and there is no conflict resolution to worry about </li>
 </ul>
 </li>
 <li>Multi-leader &amp; Leaderless<ul>
@@ -630,7 +625,7 @@
 </li>
 </ul>
 </li>
-<li>Replication can be <strong><u>synchronous</u></strong> or <strong><u>asynchronous</u></strong>, which ahs a profound effect on the system behavior when there is a fault.<ul>
+<li>Replication can be <strong><u>synchronous</u></strong> or <strong><u>asynchronous</u></strong>, which has a profound effect on the system behavior when there is a fault.<ul>
 <li>It’s important to figure out what happens when replication lag increases and servers fail.</li>
 </ul>
 </li>
@@ -640,7 +635,7 @@
 <li>Consistent prefix reads</li>
 </ul>
 </li>
-<li><strong>Concurrency</strong> issues that are onherent in multi-leader and leaderless replication approaches: because they allow multiple writes to happen concurrently, conflicts may occur.</li>
+<li><strong>Concurrency</strong> issues that are inherent in multi-leader and leaderless replication approaches: because they allow multiple writes to happen concurrently, conflicts may occur.</li>
 </ul>
 
       
