@@ -18,7 +18,7 @@
 <meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2014/08/AB6B814A-0B09-4863-93D6-1E22D6B07FF8.jpg">
 <meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2014/08/3E13CDD1-2CD2-4C66-BD33-DECBF172AE03.jpg">
 <meta property="article:published_time" content="2020-07-12T18:05:26.000Z">
-<meta property="article:modified_time" content="2020-08-21T15:11:00.782Z">
+<meta property="article:modified_time" content="2020-08-21T15:13:42.031Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="Design Pattern">
 <meta property="article:tag" content="Java">
@@ -233,7 +233,7 @@
 <p>在抽象工厂模式中，接口是负责创建一个相关对象的工厂，不需要显式指定它们的类。每个生成的工厂都能按照工厂模式提供对象。</p>
 <p><strong>意图：</strong>提供一个创建一系列相关或相互依赖对象的接口，而无需指定它们具体的类。<br><strong>主要解决：</strong>主要解决接口选择的问题。<br><strong>何时使用：</strong>系统的产品有多于一个的产品族，而系统只消费其中某一族的产品。<br><strong>如何解决：</strong>在一个产品族里面，定义多个产品。<br><strong>关键代码：</strong>在一个工厂里聚合多个同类产品。</p>
 <h3 id="抽象工厂模式实现"><a href="#抽象工厂模式实现" class="headerlink" title="抽象工厂模式实现"></a>抽象工厂模式实现</h3><p>我们将创建 <em>Shape</em> 和 <em>Color</em> 接口和实现这些接口的实体类。下一步是创建抽象工厂类 <em>AbstractFactory</em> 。接着定义工厂类 <em>ShapeFactory</em> 和 <em>ColorFactory</em> ，这两个工厂类都是扩展了 <em>AbstractFactory</em> 。然后创建一个工厂创造器/生成器类 <em>FactoryProducer</em> 。</p>
-<p><em>AbstractFactoryPatternDemo</em> ，我们的演示类使用 <em>FactoryProducer</em> 来获取 <em>AbstractFactory</em> 对象。它将向 <em>AbstractFactory</em> 传递形状信息 <em>Shape*（ *CIRCLE / RECTANGLE / SQUARE</em> ），以便获取它所需对象的类型。同时它还向 <em>AbstractFactory</em> 传递颜色信息 <em>Color</em>（<em>RED / GREEN / BLUE</em>），以便获取它所需对象的类型。</p>
+<p><em>AbstractFactoryPatternDemo</em> ，我们的演示类使用 <em>FactoryProducer</em> 来获取 <em>AbstractFactory</em> 对象。它将向 <em>AbstractFactory</em> 传递形状信息 <em>Shape</em> （ <em>CIRCLE / RECTANGLE / SQUARE</em> ），以便获取它所需对象的类型。同时它还向 <em>AbstractFactory</em> 传递颜色信息 <em>Color</em>（<em>RED / GREEN / BLUE</em>），以便获取它所需对象的类型。</p>
 <p><img src="https://www.runoob.com/wp-content/uploads/2014/08/3E13CDD1-2CD2-4C66-BD33-DECBF172AE03.jpg" alt="抽象工厂模式的 UML 图"></p>
 <p><strong>Step1</strong> 创建一个接口。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Shape</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
