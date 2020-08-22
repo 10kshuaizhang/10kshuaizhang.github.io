@@ -142,6 +142,99 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Designing-Data-Intensive-Application学习笔记8" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/08/21/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B08/">Designing Data Intensive Application学习笔记8</a>
+    </h1>
+  
+
+        
+        
+
+<a href="/2020/08/21/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B08/" class="archive-article-date">
+  	<time datetime="2020-08-22T04:36:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-21</time>
+</a>
+        <!-- 需要添加的位置 -->
+        <!-- 开始添加字数统计-->
+        
+        <!-- 添加完成 -->
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Chapter6 Partitioning</strong></p>
+<ul>
+<li>The main reason for wanting patition data is <strong>scalability</strong>.</li>
+<li>For <u>very <strong>large dataset</strong></u>, or <u>very <strong>high throughtput</strong></u>, that is not sufficient: we need to break the data into <strong><u>partitions</u>, alson known as <u>sharding</u></strong>.<ul>
+<li>What we call a <strong>partition</strong> here is called a <u>shard</u> in <u>MongoDB, ElasticSearch, and SolrClound</u>; it’s known as a <strong>region</strong> in <u>HBase</u>, a <strong>tablet</strong> in <u>Bigtable</u>, a <strong>vnode</strong> in <u>Cassandra</u> and <u>Riak</u>, and a <strong>vBucket</strong> in <u>CouchBase</u>.</li>
+</ul>
+</li>
+<li>Recently discovered by NoSQL databases and Hadoop-based data warehouse.</li>
+</ul>
+        
+          <a class="article-more-a" href="/2020/08/21/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B08/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/08/21/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B08/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+  
     <article id="post-Designing-Data-Intensive-Application学习笔记7" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -925,94 +1018,9 @@
 
 
   
-    <article id="post-Memcached简介" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/08/14/Memcached%E7%AE%80%E4%BB%8B/">Memcached简介</a>
-    </h1>
-  
-
-        
-        
-
-<a href="/2020/08/14/Memcached%E7%AE%80%E4%BB%8B/" class="archive-article-date">
-  	<time datetime="2020-08-14T15:27:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-14</time>
-</a>
-        <!-- 需要添加的位置 -->
-        <!-- 开始添加字数统计-->
-        
-        <!-- 添加完成 -->
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="Memcached-是什么"><a href="#Memcached-是什么" class="headerlink" title="Memcached 是什么"></a>Memcached 是什么</h3><p>Memcached 是一套高性能的、分布式内存对象缓存系统。</p>
-        
-          <a class="article-more-a" href="/2020/08/14/Memcached%E7%AE%80%E4%BB%8B/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/08/14/Memcached%E7%AE%80%E4%BB%8B/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
     </nav>
   
 
