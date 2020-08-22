@@ -15,14 +15,14 @@
 <meta property="og:site_name" content="10K&#39;s">
 <meta property="og:description" content="文章大纲 介绍 实现 结束">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2014/08/iterator_pattern_uml_diagram.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598109545/Design%20Pattern/iterator_pattern_uml_diagram_akq8d6.jpg">
 <meta property="article:published_time" content="2020-07-05T03:53:45.000Z">
-<meta property="article:modified_time" content="2020-07-18T16:20:34.426Z">
+<meta property="article:modified_time" content="2020-08-22T15:20:06.523Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="Design Pattern">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.runoob.com/wp-content/uploads/2014/08/iterator_pattern_uml_diagram.jpg">
+<meta name="twitter:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598109545/Design%20Pattern/iterator_pattern_uml_diagram_akq8d6.jpg">
   
     <link rel="alternative" href="/atom.xml" title="10K&#39;s" type="application/atom+xml">
   
@@ -208,7 +208,7 @@
 
 <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p><strong>意图</strong>：提供一种方法顺序访问一个聚合对象中的各个元素，而又无需暴露该对象的内部表示。<br><strong>主要解决</strong>：不同的方式来遍历整个整合对象。<br><strong>何时使用</strong>：遍历一个聚合对象。<br><strong>如何解决</strong> ：把元素之间游走的责任交给迭代器，而不是聚合对象。<br><strong>关键代码</strong> ：定义接口。hasNext, next</p>
 <h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>我们将创建一个叙述导航方法的Iterator接口和一个返回迭代器的Container接口。实现了Container接口的实体类将负责实现Iterator接口。<br>IteratorPatternDemo，我们的演示类使用实体类NamesRepository来打印NamesRepository中存储为集合的Names。</p>
-<p><img src="https://www.runoob.com/wp-content/uploads/2014/08/iterator_pattern_uml_diagram.jpg" alt="迭代器模式的 UML 图"></p>
+<p><img src="https://res.cloudinary.com/shuaiz/image/upload/v1598109545/Design%20Pattern/iterator_pattern_uml_diagram_akq8d6.jpg" alt="迭代器模式的 UML 图"></p>
 <p><strong>Step1</strong> 创建接口</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Iterator</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> Object <span class="title">next</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
