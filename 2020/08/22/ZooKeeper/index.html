@@ -8,15 +8,15 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>ZooKeeper | 10K&#39;s</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言提到ZooKeeper，相信大家都不会陌生。Dubbo，Kafka,Hadoop等等项目里都能看到它的影子。但是你真的了解 ZooKeeper 吗？如果面试官让你给他讲讲 ZooKeeper 是个什么东西，你能回答到什么地步呢？ 我会用两个篇幅介绍ZooKeeper ，第一篇是概念性的认识，这篇你会得到 ZooKeeper 是什么，ZooKeeper 设计的目标，ZooKeeper 能做什么和">
+  <meta name="description" content="提到ZooKeeper，相信大家都不会陌生。Dubbo，Kafka,Hadoop等等项目里都能看到它的影子。但是你真的了解 ZooKeeper 吗？如果面试官让你给他讲讲 ZooKeeper 是个什么东西，你能回答到什么地步呢？这篇文章是概念性的认识，你会得到 ZooKeeper 是什么，ZooKeeper 设计的目标，ZooKeeper 能做什么和ZooKeeper 基本的概念。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ZooKeeper">
 <meta property="og:url" content="http://yoursite.com/2020/08/22/ZooKeeper/index.html">
 <meta property="og:site_name" content="10K&#39;s">
-<meta property="og:description" content="前言提到ZooKeeper，相信大家都不会陌生。Dubbo，Kafka,Hadoop等等项目里都能看到它的影子。但是你真的了解 ZooKeeper 吗？如果面试官让你给他讲讲 ZooKeeper 是个什么东西，你能回答到什么地步呢？ 我会用两个篇幅介绍ZooKeeper ，第一篇是概念性的认识，这篇你会得到 ZooKeeper 是什么，ZooKeeper 设计的目标，ZooKeeper 能做什么和">
+<meta property="og:description" content="提到ZooKeeper，相信大家都不会陌生。Dubbo，Kafka,Hadoop等等项目里都能看到它的影子。但是你真的了解 ZooKeeper 吗？如果面试官让你给他讲讲 ZooKeeper 是个什么东西，你能回答到什么地步呢？这篇文章是概念性的认识，你会得到 ZooKeeper 是什么，ZooKeeper 设计的目标，ZooKeeper 能做什么和ZooKeeper 基本的概念。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-08-23T03:18:56.000Z">
-<meta property="article:modified_time" content="2020-08-23T03:19:53.318Z">
+<meta property="article:modified_time" content="2020-08-23T16:55:47.783Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
@@ -196,8 +196,9 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>提到ZooKeeper，相信大家都不会陌生。Dubbo，Kafka,Hadoop等等项目里都能看到它的影子。但是你真的了解 ZooKeeper 吗？如果面试官让你给他讲讲 ZooKeeper 是个什么东西，你能回答到什么地步呢？</p>
-<p>我会用两个篇幅介绍ZooKeeper ，第一篇是概念性的认识，这篇你会得到 ZooKeeper 是什么，ZooKeeper 设计的目标，ZooKeeper 能做什么和ZooKeeper 基本的概念。第二篇我会从实战出发，安装ZooKeeper，写一些ZooKeeper 具体应用场景的代码实现。</p>
+        <p>提到ZooKeeper，相信大家都不会陌生。Dubbo，Kafka,Hadoop等等项目里都能看到它的影子。但是你真的了解 ZooKeeper 吗？如果面试官让你给他讲讲 ZooKeeper 是个什么东西，你能回答到什么地步呢？<br>这篇文章是概念性的认识，你会得到 ZooKeeper 是什么，ZooKeeper 设计的目标，ZooKeeper 能做什么和ZooKeeper 基本的概念。</p>
+<a id="more"></a>
+
 <h3 id="一、ZooKeeper是什么"><a href="#一、ZooKeeper是什么" class="headerlink" title="一、ZooKeeper是什么"></a>一、ZooKeeper是什么</h3><p>ZooKeeper 是一个分布式的，开放源码的分布式应用程序协调服务，是Google的Chubby一个开源的实现，是Hadoop和Hbase的重要组件。它是一个为分布式应用提供一致性服务的软件，提供的功能包括：配置维护、域名服务、分布式同步、组服务等。</p>
 <p>官网：<a href="http://zookeeper.apache.org/" target="_blank" rel="noopener">http://zookeeper.apache.org/</a></p>
 <p>源码：<a href="https://github.com/apache/zookeeper" target="_blank" rel="noopener">https://github.com/apache/zookeeper</a></p>
