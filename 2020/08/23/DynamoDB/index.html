@@ -6,14 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: Database | 10K&#39;s</title>
+  <title>DynamoDB | 10K&#39;s</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="10K&#39;s">
-<meta property="og:url" content="http://yoursite.com/tags/Database/index.html">
+  <meta name="description" content="AmazonDynamoDB被设计成用来托管的NoSQL数据库服务、可预期的性能、可实现无缝扩展性和可靠性等核心问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DynamoDB">
+<meta property="og:url" content="http://yoursite.com/2020/08/23/DynamoDB/index.html">
 <meta property="og:site_name" content="10K&#39;s">
+<meta property="og:description" content="AmazonDynamoDB被设计成用来托管的NoSQL数据库服务、可预期的性能、可实现无缝扩展性和可靠性等核心问题。">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-08-23T16:52:37.000Z">
+<meta property="article:modified_time" content="2020-08-23T16:53:35.124Z">
 <meta property="article:author" content="10K">
+<meta property="article:tag" content="System Design">
+<meta property="article:tag" content="Database">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="10K&#39;s" type="application/atom+xml">
@@ -140,38 +146,118 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-DynamoDB" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      DynamoDB
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
+
+        
+        
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" class="archive-article-date">
+          <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+
 
 <a href="/2020/08/23/DynamoDB/" class="archive-article-date">
   	<time datetime="2020-08-23T16:52:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-23</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/08/23/DynamoDB/">DynamoDB</a>
-    </h1>
-  
+        <!-- 需要添加的位置 -->
+        <!-- 开始添加字数统计-->
+        
+          <div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">2.6k字</span>
+      </span>
+    </span>
 
-        <div class="article-info info-on-right">
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">9分</span>
+      </span>
+    </span>
+</div>
+
           
+        <!-- 添加完成 -->
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>AmazonDynamoDB被设计成用来托管的NoSQL数据库服务、可预期的性能、可实现无缝扩展性和可靠性等核心问题。</p>
+<a id="more"></a>
+
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Amazon DynamoDB是一个完全托管的<a href="https://baike.baidu.com/item/NoSQL" target="_blank" rel="noopener">NoSQL</a>数据库服务，可以提供快速的、可预期的性能，并且可以实现无缝扩展。只需要在<a href="https://baike.baidu.com/item/AWS/7630528" target="_blank" rel="noopener">AWS</a>（Amazon Web Service）管理控制台上面，用鼠标轻松点击几下，用户就可以自己创建一个新的Amazon DynamoDB数据库表，并可以根据实际需求对表进行扩展和收缩，这个过程既不需要停止对外服务，也不会降低服务性能。通过AWS管理控制台，用户还可以看见资源利用情况和各种性能指标。Amazon DynamoDB可以使得用户把操作和扩展分布式数据库的沉重负担，交付给AWS来处理，这样，用户就不需要担心硬件配置、复制、软件安装和打补丁包、簇扩展等。</p>
+<h3 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h3><p><strong>1、可扩展性：</strong>AWS DynamoDB的设计，可以支持在吞吐量和存储能力上的无缝扩展；<br>额定的吞吐量：在创建一个表的时候，可以很简单地设定你的表所需要的处理请求的能力。AWS DynamoDB会根据你的处理能力要求，为你的表分配专用的资源，从而满足你的性能需求，并且会把数据分区到足够多的服务器上，从而满足你对处理能力的要求。如果你的吞吐量需求改变了，你可以使用AWS管理控制台或者AWS DynamoDB API对你的表所需要的处理请求的能力进行修改。当扩展正在进行时，你仍然可以获得先前级别的处理能力。</p>
+<p>自动存储扩展：AWS DynamoDB没有对一个表中可以存储的数据量的大小进行限制，当你使用AWS DynamoDB的写操作API存入更多数据时，就会自动为你分配更多的存储空间。</p>
+<p>完全分布式、非共享架构：AWS DynamoDB可以实现水平扩展，可以无缝地把一个表扩展到多个（几百个）服务器上。</p>
+<p><strong>2、快速、可预期的性能：</strong>AWS DynamoDB的服务端的平均延迟，通常是几毫秒(millisecond)。运行在固态盘上面的服务，可以在任何扩展级别下维持一致性和低延迟。</p>
+<p><strong>3、简易的管理：</strong>AWS DynamoDB是一个完全托管的服务，你只需要简单地创建一个数据库表，剩下的所有事情都交给AWS服务来处理。你不需要担心硬件和软件的配给、建立、配置，也不要担心软件安装和打补丁包，更不必担心如何运行一个可靠的分布式数据库簇，或者把数据分区到多个实例。</p>
+<p><strong>4、内置的容错性：</strong>AWS DynamoDB具有内在的容错能力，可以自动、同步地把你的数据复制到一个Region中的多个可用的Zone中，即使遇到单个机器或设施的实效，你的数据也可以得到很好的保护。</p>
+<p><strong>5、灵活性</strong>：AWS DynamoDB没有固定的模式（schema）。相反，每个项目(item)都具有不同数量的属性，可以支持多种数据类型，比如string、number和set。</p>
+<p><strong>6、强一致性、原子计数器：</strong>和许多非关系型数据库不同，AWS DynamoDB使你的开发工作变得更加简单，它可以支持读操作的强一致性，从而保证你可以总是获得最新的数据。读操作支持多个本地(native)数据类型，比如number、string和multi-value attribute。这种服务也可以支持原子计数器（Atomic Counter），允许你通过一个简单的API调用就可以自动增加和减少数值属性。</p>
+<p><strong>7、性价比高：</strong>AWS DynamoDB被设计成在任何级别的负载下都可以取得很高的性价比。你可以从一个免费的等级开始，这种级别只支持每个月4000万次的数据库操作，对于超出这个免费级别的范围，你只需要为你使用的资源支付以小时计费的很低的费用。由于具备了简易的管理和高效的请求定价能力，采用AWS DynamoDB相比采用其他非关系型数据库而言，具有更低的总体拥有成本（TCO：total cost of owership）。</p>
+<p><strong>8、安全：</strong>AWS DynamoDB使用可靠的密钥方法，只允许授权用户访问数据，而绝对不允许非授权用户的非法访问。AWS DynamoDB集成了AWS Identiy and Access Management(简称AWS IAM)，可以实现更细粒度的访问控制。</p>
+<p><strong>9、集成的监视功能：</strong>AWS DynamoDB可以在AWS管理控制台中，把关于你的表的关键性能指标都显示出来。同时还集成了Amazon CloudWatch，可以让用户每个表的请求吞吐量和延迟，从而很容易实现对资源的跟踪。</p>
+<p><strong>10、弹性的MapReduce集成：</strong>AWS DynamoDB同时集成了Amazon Elastic MapReduce（简称Amazon EMR）。Amazon EMR可以支持对大型的数据集执行复杂的分析操作，并且采用AWS中按需付费的Hadoop框架。随着AWS DynamoDB的发布，对于用户而言，很容易使用Amazon EMR来对存储在DynamoDB中的数据集进行分析，并且把分析结果存储在Amazon Simple Storage Service（简称Amazon S3）中，而原来的数据仍然原封不动地保存在AWS DynamoDB中。用户也可以使用Amazon EMR来访问存储在多个地方的数据，比如AWS DynamoDB、Amazon RDS和Amazon S3，并且对来自这些地方的数据进行合并以后，做更加复杂的分析，并且把分析结果存储在Amazon S3中。</p>
+<h3 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h3><p><strong>DynamoDB和SimpleDB的区别</strong></p>
+<p>熟悉Amazon AWS的朋友应该知道SimpleDB。细心的朋友还会发现，自DynamoDB上线以后，在AWS首页的Database列表中，只能看到RDS和DynamoDB，DynamoDB已经替换了SimpleDB原来在这个列表中的位置，似乎SimpleDB已被打入冷宫</p>
+<p>SimpleDB是AWS上的第一个NoSQL数据库服务，AWS团队也在博客上详数SimpleDB几个致命的缺点，正是这些缺点导致AWS开发全新的数据库服务。</p>
+<ul>
+<li>SimpleDB有单表限制。SimpleDB也有类似于Table的东西叫做Domain，每个Domain最多只能保存10GB的数据，而DynamoDB并没有单表存储的任何限制。虽然SimpleDB提供的Schema Free可以提高开发者的效率和灵活性，但10GB这种无法扩展的限制妨碍了很多开发者的使用，使得很多开发者采用了其他NoSQL解决方案。</li>
+<li>性能不稳定。SimpleDB以简单为设计目标，SimpleDB并不需要用户指定Primary Key，也不需要用户创建索引，会默认对所有Attribute创建索引。然而这种简洁性也带来了一些副作用：如果用户插入的一条数据带有非常多的Attribute，SimpleDB就需要去更新所有Attribute的索引，而且不管用户将来是否需要。真是所谓的：用或者不用，索引就在那里。正是由于默认对所有Attribute创建索引，整个Domain才会有10GB这么奇怪的限制，以避免数据量变得比较大时，创建索引的过程会变得极慢无比，根本不能忍受。而DynamoDB因为有了Provisioned Throughput的限制以及采用了固态硬盘，可以保证每个请求的性能是非常稳定而且高效的。</li>
+<li>一致性问题。SimpleDB设计时采用的是最终一致性模型，而DynamoDB读数据时用户可以选择弱一致性或者强一致性，对用户而言可以根据业务特征来进行选择，毕竟强一致性在逻辑上更容易让用户接受。</li>
+</ul>
+<p>在Schema上，两者都不需要固定Schema，但value类型不够丰富，在API设计上DynamoDB继承了SimpleDB的风格，请求的参数个数显得比较臃肿，好在有不同语言的SDK，方便了用户的开发。</p>
+<p>DynamoDB不是SimpleDB 2.0，但DynamoDB也吸收了SimpleDB以及其他NoSQL数据设计思想的精华，相信会有不少用户会采用DynamoDB作为他们的NoSQL解决方案。</p>
+<p><strong>DynamoDB和Cassandra、MongoDB的比较</strong></p>
+<p>前面说过Cassandra受2007年Amazon发表的Dynamo论文影响非常深，在DynamoDB发布的第一天，提供Cassandra商业化支持的DataStax公司的Jonathan Ellis就写了一篇文章，分析了Cassandra和DynamoDB的差异。</p>
+<p>虽然Jonathan Ellis认为DynamoDB不支持Secondary Key Indexes是在开历史的倒车，但如果DynamoDB支持了Secondary Key Indexes，那么它是无法保证每个请求性能的高效性的。这和DynamoDB的设计理念相冲突，于是舍弃了这部分的功能。</p>
+<p>其实从开发的易用角度来讲，DynamoDB没有Cassandra和MongoDB强大，Cassandra有CQL可以做非常丰富的查询，<a href="https://baike.baidu.com/item/MongoDB/60411" target="_blank" rel="noopener">MongoDB</a>的查询功能也非常强大，而且后两者都提供Shell客户端，并有不少第三方开发的工具可以进行管理与使用。在条件更新上，DynamoDB也没有MongoDB使用起来那么方便，并且MongoDB提供了更多的原子性操作。在对value类型的支持上，另两者都不如MongoDB，毕竟MongoDB是文档型的数据库，可以理解为底层存储的是JSON。毕竟，JSON支持的类型以及在JSON上可以做的操作是很丰富的。我一直觉得DynamoDB没有支持类JSON格式是个遗憾。也许可能是DynamoDB团队觉得如果支持类JSON格式的话，在API的设计上会显得更加臃肿和让用户更难理解API如何使用。但个人认为，DynamoDB如果提供相应的SDK其实是可以解决这个问题的，就算MongoDB的开放接口相对DynamoDB更加复杂，开发者都是直接使用驱动（相当于SDK）进行开发，于是在开发应用上MongoDB远胜于DynamoDB。</p>
+<p>但从运维的角度来讲，DynamoDB省去开发者部署/监控/维护数据库环节，给开发者节约了大量时间，强大的扩展能力又减轻了后续运维的压力，这正是DynamoDB最大的价值所在。</p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -187,64 +273,135 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/08/23/DynamoDB/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
 
-<a href="/2020/08/16/A-Brief-Introduction-of-Cassandra/" class="archive-article-date">
-  	<time datetime="2020-08-16T23:38:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-16</time>
-</a>
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2020/08/23/Kafka/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Kafka</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/08/16/A-Brief-Introduction-of-Cassandra/">A Brief Introduction of Cassandra</a>
-    </h1>
-  
+        
+        
+    </div>
+</aside>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Database</a>
-        		</li>
-      		
-		</ul>
-	</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
+  
 
+  
+
+  
+
+
+
+   
+       <section id="comments" class="comments">
+         <style>
+           .comments{margin:30px;padding:10px;background:#fff}
+           @media screen and (max-width:800px){.comments{margin:auto;padding:10px;background:#fff}}
+         </style>
+         <div id="vcomment" class="comment"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var notify = 'false' == true ? true : false;
+  var verify = 'false' == true ? true : false;
+  new Valine({
+    av: AV,
+    el: '#vcomment',
+    notify: notify,
+    app_id: "WsqeD0zCG3BCN0FWCJ1AToox-MdYXbMMI",
+    app_key: "MmbXeLMlHQnWMBU83kuB3eEy",
+    placeholder: "Just go go",
+    avatar: "mm",
+  });
+</script>
+
+     </section>
+   
 
 
           </div>
@@ -279,9 +436,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
