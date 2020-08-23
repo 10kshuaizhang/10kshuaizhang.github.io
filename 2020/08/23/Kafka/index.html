@@ -6,15 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>10K&#39;s</title>
+  <title>Kafka | 10K&#39;s</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="10K&#39;s">
-<meta property="og:url" content="http://yoursite.com/page/4/index.html">
+  <meta name="description" content="Kafka是由Apache软件基金会开发的一个开源流处理平台，由Scala和Java编写。该项目的目标是为处理实时数据提供一个统一、高吞吐、低延迟的平台。其持久化层本质上是一个“按照分布式事务日志架构的大规模发布&#x2F;订阅消息队列”，这使它作为企业级基础设施来处理流式数据非常有价值。此外，Kafka可以通过Kafka Connect连接到外部系统（用于数据输入&#x2F;输出），并提供了Kafka Stream">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka">
+<meta property="og:url" content="http://yoursite.com/2020/08/23/Kafka/index.html">
 <meta property="og:site_name" content="10K&#39;s">
+<meta property="og:description" content="Kafka是由Apache软件基金会开发的一个开源流处理平台，由Scala和Java编写。该项目的目标是为处理实时数据提供一个统一、高吞吐、低延迟的平台。其持久化层本质上是一个“按照分布式事务日志架构的大规模发布&#x2F;订阅消息队列”，这使它作为企业级基础设施来处理流式数据非常有价值。此外，Kafka可以通过Kafka Connect连接到外部系统（用于数据输入&#x2F;输出），并提供了Kafka Stream">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img-blog.csdn.net/20160319184902274">
+<meta property="article:published_time" content="2020-08-23T16:45:36.000Z">
+<meta property="article:modified_time" content="2020-08-23T16:46:54.272Z">
 <meta property="article:author" content="10K">
+<meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdn.net/20160319184902274">
   
     <link rel="alternative" href="/atom.xml" title="10K&#39;s" type="application/atom+xml">
   
@@ -140,44 +147,100 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-设计模式之观察者模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-Kafka" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/26/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之观察者模式</a>
+    <h1 class="article-title" itemprop="name">
+      Kafka
     </h1>
   
 
         
         
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" class="archive-article-date">
+          <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
 
-<a href="/2020/06/26/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-06-27T06:02:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-26</time>
+
+<a href="/2020/08/23/Kafka/" class="archive-article-date">
+  	<time datetime="2020-08-23T16:45:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-23</time>
 </a>
         <!-- 需要添加的位置 -->
         <!-- 开始添加字数统计-->
         
+          <div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">1.3k字</span>
+      </span>
+    </span>
+
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">4分</span>
+      </span>
+    </span>
+</div>
+
+          
         <!-- 添加完成 -->
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="文章大纲"><a href="#文章大纲" class="headerlink" title="文章大纲"></a>文章大纲</h3><ol>
-<li>介绍</li>
-<li>实现</li>
-<li>结束</li>
-</ol>
-        
-          <a class="article-more-a" href="/2020/06/26/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/#more">more >></a>
-        
+        <p><strong>Kafka</strong>是由<a href="https://zh.wikipedia.org/wiki/Apache软件基金会" target="_blank" rel="noopener">Apache软件基金会</a>开发的一个<a href="https://zh.wikipedia.org/wiki/开源" target="_blank" rel="noopener">开源</a><a href="https://zh.wikipedia.org/wiki/流处理" target="_blank" rel="noopener">流处理</a>平台，由<a href="https://zh.wikipedia.org/wiki/Scala" target="_blank" rel="noopener">Scala</a>和<a href="https://zh.wikipedia.org/wiki/Java" target="_blank" rel="noopener">Java</a>编写。该项目的目标是为处理实时数据提供一个统一、高吞吐、低延迟的平台。其持久化层本质上是一个“按照分布式事务日志架构的大规模发布/订阅消息队列”，这使它作为企业级基础设施来处理流式数据非常有价值。此外，Kafka可以通过Kafka Connect连接到外部系统（用于数据输入/输出），并提供了Kafka Streams——一个<a href="https://zh.wikipedia.org/wiki/Java" target="_blank" rel="noopener">Java</a>流式处理<a href="https://zh.wikipedia.org/wiki/库_(计算机)" target="_blank" rel="noopener">库</a>。</p>
+<p>该设计受<a href="https://zh.wikipedia.org/w/index.php?title=事务日志&action=edit&redlink=1" target="_blank" rel="noopener">事务日志</a>的影响较大。</p>
+<a id="more"></a>
+
+<h3 id="kafka是什么"><a href="#kafka是什么" class="headerlink" title="kafka是什么"></a>kafka是什么</h3><p>Kafka是由LinkedIn开发的一个分布式基于发布/订阅的消息系统，使用Scala编写，它以可水平扩展和高吞吐率而被广泛使用。</p>
+<h3 id="产生背景"><a href="#产生背景" class="headerlink" title="产生背景"></a>产生背景</h3><p>Kafka是一个消息系统，用作LinkedIn的活动流（Activity Stream）和运营数据处理管道（Pipeline）的基础。活动流数据是几乎所有站点在对其网站使用情况做报表时都要用到的数据中最常规的部分。活动数据包括页面访问量（Page View）、被查看内容方面的信息以及搜索情况等内容。这种数据通常的处理方式是先把各种活动以日志的形式写入某种文件，然后周期性地对这些文件进行统计分析。运营数据指的是服务器的性能数据（CPU、IO使用率、请求时间、服务日志等等数据)。运营数据的统计方法种类繁多。</p>
+<h3 id="基本架构图"><a href="#基本架构图" class="headerlink" title="基本架构图"></a>基本架构图</h3><p><img src="https://img-blog.csdn.net/20160319184902274" alt="img"></p>
+<h3 id="基本概念解释"><a href="#基本概念解释" class="headerlink" title="基本概念解释"></a>基本概念解释</h3><p><strong>Broker</strong><br>Kafka集群包含一个或多个服务器，这种服务器被称为broker。broker端不维护数据的消费状态，提升了性能。直接使用磁盘进行存储，线性读写，速度快：避免了数据在JVM内存和系统内存之间的复制，减少耗性能的创建对象和垃圾回收。 </p>
+<p><strong>Producer</strong><br>负责发布消息到Kafka broke</p>
+<p><strong>Consumer</strong><br>消息消费者，向Kafka broker读取消息的客户端，consumer从broker拉取(pull)数据并进行处理。</p>
+<p><strong>Topic</strong><br>每条发布到Kafka集群的消息都有一个类别，这个类别被称为Topic。（物理上不同Topic的消息分开存储，逻辑上一个Topic的消息虽然保存于一个或多个broker上但用户只需指定消息的Topic即可生产或消费数据而不必关心数据存于何处）</p>
+<p><strong>Partition</strong><br>Parition是物理上的概念，每个Topic包含一个或多个Partition.</p>
+<p><strong>Consumer Group</strong><br>每个Consumer属于一个特定的Consumer Group（可为每个Consumer指定group name，若不指定group name则属于默认的group）</p>
+<p><strong>Topic &amp; Partition</strong><br>Topic在逻辑上可以被认为是一个queue，每条消费都必须指定它的Topic，可以简单理解为必须指明把这条消息放进哪个queue里。为了使得Kafka的吞吐率可以线性提高，物理上把Topic分成一个或多个Partition，每个Partition在物理上对应一个文件夹，该文件夹下存储这个Partition的所有消息和索引文件。若创建topic1和topic2两个topic，且分别有13个和19个分区，则整个集群上会相应会生成共32个文件夹（本文所用集群共8个节点，此处topic1和topic2 replication-factor均为1）。</p>
+<h3 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h3><p>1、Messaging<br>  对于一些常规的消息系统,kafka是个不错的选择;partitons/replication和容错,可以使kafka具有良好的扩展性和性能优势.不过到目前为止,我们应该很清楚认识到,kafka并没有提供JMS中的”事务性””消息传输担保(消息确认机制)””消息分组”等企业级特性;kafka只能使用作为”常规”的消息系统,在一定程度上,尚未确保消息的发送与接收绝对可靠(比如,消息重发,消息发送丢失等)</p>
+<p>2、Website activity tracking<br>  kafka可以作为”网站活性跟踪”的最佳工具;可以将网页/用户操作等信息发送到kafka中.并实时监控,或者离线统计分析等</p>
+<p>3、Metrics<br>  Kafka通常被用于可操作的监控数据。这包括从分布式应用程序来的聚合统计用来生产集中的运营数据提要。</p>
+<p>4、Log Aggregation<br>kafka的特性决定它非常适合作为”日志收集中心”;application可以将操作日志”批量””异步”的发送到kafka集群中,而不是保存在本地或者DB中;kafka可以批量提交消息/压缩消息等,这对producer端而言,几乎感觉不到性能的开支.此时consumer端可以使hadoop等其他系统化的存储和分析系统。</p>
+<h3 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h3><p>原文作者：宝哥-NO1<br>转自链接：<a href="https://blog.csdn.net/Love_JavaProgram/article/details/50475511" target="_blank" rel="noopener">https://blog.csdn.net/Love_JavaProgram/article/details/50475511</a><br>版权声明：著作权归作者所有。商业转载请联系作者获得授权，非商业转载请保留以上作者信息和原文链接。</p>
+
       
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
       
     </div>
     <div class="article-info article-info-index">
@@ -189,7 +252,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
         		</li>
       		
 		</ul>
@@ -198,16 +261,75 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/26/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/08/23/Kafka/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2020/08/23/RabbitMQ/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">RabbitMQ</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -227,284 +349,44 @@
 
 
 
-
-
-
-  
-    <article id="post-Mac设置环境变量Path和查看Path" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/26/Mac%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8FPath%E5%92%8C%E6%9F%A5%E7%9C%8BPath/">Mac设置环境变量Path和查看Path</a>
-    </h1>
-  
-
-        
-        
-
-<a href="/2020/06/26/Mac%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8FPath%E5%92%8C%E6%9F%A5%E7%9C%8BPath/" class="archive-article-date">
-  	<time datetime="2020-06-26T16:05:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-26</time>
-</a>
-        <!-- 需要添加的位置 -->
-        <!-- 开始添加字数统计-->
-        
-        <!-- 添加完成 -->
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="文章大纲"><a href="#文章大纲" class="headerlink" title="文章大纲"></a>文章大纲</h3><ol>
-<li>理论篇</li>
-<li>操作篇</li>
-</ol>
-        
-          <a class="article-more-a" href="/2020/06/26/Mac%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8FPath%E5%92%8C%E6%9F%A5%E7%9C%8BPath/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Other</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/26/Mac%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8FPath%E5%92%8C%E6%9F%A5%E7%9C%8BPath/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-  
-    <article id="post-数据结构与算法系列之桶排序" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%B3%BB%E5%88%97%E4%B9%8B%E6%A1%B6%E6%8E%92%E5%BA%8F/">数据结构与算法系列之桶排序</a>
-    </h1>
-  
-
-        
-        
-
-<a href="/2020/06/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%B3%BB%E5%88%97%E4%B9%8B%E6%A1%B6%E6%8E%92%E5%BA%8F/" class="archive-article-date">
-  	<time datetime="2020-06-22T04:59:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-21</time>
-</a>
-        <!-- 需要添加的位置 -->
-        <!-- 开始添加字数统计-->
-        
-        <!-- 添加完成 -->
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="文章大纲"><a href="#文章大纲" class="headerlink" title="文章大纲"></a>文章大纲</h3><ol>
-<li>简介桶排序</li>
-<li>Java实现算法</li>
-<li>总结</li>
-</ol>
-        
-          <a class="article-more-a" href="/2020/06/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%B3%BB%E5%88%97%E4%B9%8B%E6%A1%B6%E6%8E%92%E5%BA%8F/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数据结构与算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%B3%BB%E5%88%97%E4%B9%8B%E6%A1%B6%E6%8E%92%E5%BA%8F/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-  
-    <article id="post-hexo极速搭建个人博客并部署到Github" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/20/hexo%E6%9E%81%E9%80%9F%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0Github/">hexo极速搭建个人博客并部署到Github</a>
-    </h1>
-  
-
-        
-        
-
-<a href="/2020/06/20/hexo%E6%9E%81%E9%80%9F%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0Github/" class="archive-article-date">
-  	<time datetime="2020-06-20T23:42:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-20</time>
-</a>
-        <!-- 需要添加的位置 -->
-        <!-- 开始添加字数统计-->
-        
-        <!-- 添加完成 -->
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="文章大纲："><a href="#文章大纲：" class="headerlink" title="文章大纲："></a>文章大纲：</h3><ol>
-<li>什么是Hexo</li>
-<li>为什么要用Hexo</li>
-<li>具体步骤 </li>
-<li>总结</li>
-</ol>
-<hr>
-        
-          <a class="article-more-a" href="/2020/06/20/hexo%E6%9E%81%E9%80%9F%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0Github/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/20/hexo%E6%9E%81%E9%80%9F%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0Github/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/3/">上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
-    </nav>
   
 
+  
+
+  
+
+  
+
+
+
+   
+       <section id="comments" class="comments">
+         <style>
+           .comments{margin:30px;padding:10px;background:#fff}
+           @media screen and (max-width:800px){.comments{margin:auto;padding:10px;background:#fff}}
+         </style>
+         <div id="vcomment" class="comment"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var notify = 'false' == true ? true : false;
+  var verify = 'false' == true ? true : false;
+  new Valine({
+    av: AV,
+    el: '#vcomment',
+    notify: notify,
+    app_id: "WsqeD0zCG3BCN0FWCJ1AToox-MdYXbMMI",
+    app_key: "MmbXeLMlHQnWMBU83kuB3eEy",
+    placeholder: "Just go go",
+    avatar: "mm",
+  });
+</script>
+
+     </section>
+   
 
 
           </div>
@@ -538,8 +420,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
