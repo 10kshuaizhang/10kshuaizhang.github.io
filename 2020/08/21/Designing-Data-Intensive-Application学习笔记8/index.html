@@ -19,7 +19,7 @@
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598067772/p2-ch6-img3_rbkciy.png">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598070041/p2-ch6-img2_rwkqzo.png">
 <meta property="article:published_time" content="2020-08-22T04:36:28.000Z">
-<meta property="article:modified_time" content="2020-08-22T04:37:22.529Z">
+<meta property="article:modified_time" content="2020-08-25T19:06:37.838Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
@@ -212,8 +212,8 @@
 <a id="more"></a>
 
 <h4 id="Partitioning-and-Replication"><a href="#Partitioning-and-Replication" class="headerlink" title="Partitioning and Replication"></a>Partitioning and Replication</h4><ul>
-<li><strong>Partitioning</strong> is usually combiend with <strong>replication</strong> so that copies of each partition are stored on multiple nodes.</li>
-<li>A node may store more that one partition.<ul>
+<li><strong>Partitioning</strong> is usually combined with <strong>replication</strong> so that copies of each partition are stored on multiple nodes.</li>
+<li>A node may store more than one partition.<ul>
 <li>Each partition’s leader is assigned to one node, and its followers are assigned to others nodes.</li>
 <li>Each node may be leader for some partitions and follower for other partitions.</li>
 </ul>
@@ -234,7 +234,7 @@
 <li>One way of partitioning is to assign a <u>continuous range of keys</u> (from some minimum to some maximum) to each partition, like the volumn of a paper encyclopedia.</li>
 <li>The ranges of keys are not necessarily evenly spaced, because your data may not be evenly distributed.<ul>
 <li>In order to distribute the data evenly, <u>the partition boundaries need to adapt to the data</u>.</li>
-<li>Automatically choose: Bigtable, HBase, RethinkDBB, and <strong>MongoDB</strong> (&lt;2.4)</li>
+<li>Automatically choose: Bigtable, HBase, RethinkDB, and <strong>MongoDB</strong> (&lt;2.4)</li>
 </ul>
 </li>
 <li>Within each partition, we can keep keys in sorted order. (see “SSTables and LSM-Trees”)</li>
@@ -246,7 +246,7 @@
 <li>For partitioning purpose, the hash function need NOT to be cryptographically strong: e.g. <u><strong>Cassandra</strong> and <strong>MongoDB</strong></u> use <strong>MD5</strong>, and <u>Voldemort</u> uses the FowlerNoll-Vo function.</li>
 </ul>
 </li>
-<li>Once you have a suitable hash function for keys, you can <u>assign each partition a range of hashes (rather that a range of keys)</u>, and every key whose hash falls within a partition’s range will be stored in that partition <img src="https://res.cloudinary.com/shuaiz/image/upload/v1598055676/p2-ch6-img1_fgn8fx.png" alt="image-20200821171121981"><ul>
+<li>Once you have a suitable hash function for keys, you can <u>assign each partition a range of hashes (rather than a range of keys)</u>, and every key whose hash falls within a partition’s range will be stored in that partition <img src="https://res.cloudinary.com/shuaiz/image/upload/v1598055676/p2-ch6-img1_fgn8fx.png" alt="image-20200821171121981"><ul>
 <li><u>pseudo-randomly</u> (in which case the technique is sometimes known as <strong>consistent hashing</strong>)</li>
 </ul>
 </li>
@@ -255,7 +255,7 @@
 <li>this particular approach actually doesn’t work very well for databases, so it is rarely used in practice. (C: seems totally not aligned with what sime Youtuber was saying…)</li>
 </ul>
 </li>
-<li><u>Downside is we lose a nice property of key0range partitioning</u>: the ability to do efficient range queries. (C: this is very similar that when Partition a MQ. the order of the message will not be aligned)<ul>
+<li><u>Downside is we lose a nice property of key-range partitioning</u>: the ability to do efficient range queries. (C: this is very similar that when Partition a MQ, the order of the message will not be aligned)<ul>
 <li><u>In MongoDB</u>, if you have enabled hash-based sharding mode, any <u>range query has to be sent to all partitions</u>.</li>
 <li>Range queries on the primary key are <u>NOT supported</u> by Riak, Couchbase, or Voldemort.</li>
 </ul>
@@ -280,7 +280,7 @@
 <h4 id="Partitioning-and-Secondary-Indexes"><a href="#Partitioning-and-Secondary-Indexes" class="headerlink" title="Partitioning and Secondary Indexes"></a>Partitioning and Secondary Indexes</h4><ul>
 <li>The situation becomes more complicated if <u>secondary indexed</u> are involved.</li>
 <li>A secondary index usually doesn’t identify a record uniquely but rather <u>is a way of searching for occurrences of a particular value</u>.</li>
-<li>Secondary indexed are the bread and butter of relational databases, and they are common in document databases too.</li>
+<li>Secondary indexes are the bread and butter of relational databases, and they are common in document databases too.</li>
 <li>Many key-value stores (such as HBase and Voldemort) have avoided secondary indexes <ul>
 <li>But some (such as <u>Riak</u>) have</li>
 </ul>
@@ -290,7 +290,7 @@
 <li>There are two main approaches to partitioning a databases with secondary indexes: <strong><u>document-based partitioning</u></strong> <u>and</u> <u><strong>term-based partitoning</strong></u> .</li>
 <li><strong>Partitioning Secondary Indexes <u>by Document</u></strong> (e.g. Used car selling sites)<ul>
 <li>Widely used: <strong><u>MongoDB</u></strong>, Riak, <u><strong>Cassandra</strong></u>, <u>Elasticsearch</u>, SolrCloud, and VoltDB.</li>
-<li>In this indexing approach, each partition is completly seprate: <u>each partition maintains its own secondary indexes, covering only the documents in that partition</u> <img src="https://res.cloudinary.com/shuaiz/image/upload/v1598067772/p2-ch6-img3_rbkciy.png" alt="p2-ch6-img3"></li>
+<li>In this indexing approach, each partition is completly seperate: <u>each partition maintains its own secondary indexes, covering only the documents in that partition</u> <img src="https://res.cloudinary.com/shuaiz/image/upload/v1598067772/p2-ch6-img3_rbkciy.png" alt="p2-ch6-img3"></li>
 <li>A document-partitoned index is also known as a <u>local index</u> (as opposed to a <u>global index</u>, described in the next section)<ul>
 <li>You need to send the query to all partitions, and combine all the results you get back</li>
 <li>This approach to querying a partitioned database is sometimes known as <strong>scatter/gather</strong>, and it can make read queries on secondary indexes quite expensive. (prone to tail latency amplification)</li>
@@ -303,7 +303,7 @@
 <li>A <u>global index</u> must also be partitioned, but it can be partitioned differently from the primary key index.</li>
 <li>We call this kind of index <u>term-partitioned</u>, because the term we’re looking for determines the partition of the index.</li>
 <li><strong>Pros</strong> it can make reads more efficient<ul>
-<li>rather that doing scatter/gather over all partitions, a client only needs to make a request to partition containing the term that it wants.</li>
+<li>rather than doing scatter/gather over all partitions, a client only needs to make a request to partition containing the term that it wants.</li>
 </ul>
 </li>
 <li><strong>Cons</strong> it writes are slower and more complicated<ul>
@@ -329,7 +329,7 @@
 </li>
 <li><strong>1, Fixed number of partitions</strong>: used in Riak, <u>Elasticsearch</u>, Couchbase, and Voldemort<ul>
 <li>create many more partitions that there are nodes and assign several partitions to each one.<ul>
-<li>If a node is added to the cluster, the new node can steal a few partitions from every existing node until partiions are fairly distributed once again.</li>
+<li>If a node is added to the cluster, the new node can steal a few partitions from every existing node until partitions are fairly distributed once again.</li>
 </ul>
 </li>
 <li>the number of partitions configured at the outset is the maximum number of nodes you can have</li>
@@ -338,16 +338,16 @@
 <li><strong>2, Dynamic partitioning</strong>: key range partitoned databases such as <u>HBase (in HDFS)</u> and <u>RethinkDB</u> create partitons dynamically. <u><strong>MongoDB</strong></u>(&gt;2.4)<ul>
 <li>Each partition is assigned to one node, and each node can handle multiple partitions, like in the case of a fixed number of partitions.</li>
 <li><strong>An advantage</strong> of dynamic partitioning is that the nunber of partitions adapts to the total data volume.</li>
-<li><strong>A caveat</strong> is that an empty database starts off with a single partition, since there is no a priori information about where to draw the partition boundaries. (mitigated by “pre-splitting”)</li>
+<li><strong>A caveat</strong> is that an empty database starts off with a single partition, since there is no a prior information about where to draw the partition boundaries. (mitigated by “pre-splitting”)</li>
 </ul>
 </li>
 <li><strong>3, Partitioning proportionally to nodes</strong>: used by <u><strong>Cassandra</strong></u> and Ketama<ul>
-<li>In other words, to <u>have a fixed number of partitions per node</u>. This approach also keeps the size of each partition faily stable.</li>
+<li>In other words, to <u>have a fixed number of partitions per node</u>. This approach also keeps the size of each partition fairly stable.</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><strong>Operations: Automaci or Manual Rebalancing</strong><ul>
+<li><strong>Operations: Automatic or Manual Rebalancing</strong><ul>
 <li><u>Couchbase, Riak, and Voldemort</u> generate a suggested partition assignment automatically, but require an administrator to commit it before it takes effect.</li>
 <li>Fully automated rebalancing can be convenient, but it is <u>unpredictable</u>. (Consider rebalancing is a large overhaul), especially dangerous when combiend with automatic failure detection.</li>
 </ul>
@@ -360,11 +360,11 @@
 </li>
 <li>Few different approaches<ul>
 <li>Allow clients to <u>contact any</u> node (e.g., via a round-robin load balancer)</li>
-<li>Send all requests from flients to a <u>routing tier</u> first, which determines the node that should handle each request and forwards it accordingly.</li>
+<li>Send all requests from clients to a <u>routing tier</u> first, which determines the node that should handle each request and forwards it accordingly.</li>
 <li>Requires that clients <u>be aware of the partitioning</u> and the assignment of partitions to nodes.</li>
 </ul>
 </li>
-<li>How doesthe component making the routing decision (which may be one of the nodes, or the routing tier, or the client) learn about changes in the assignment of partitions to nodes?<ul>
+<li>How does the component making the routing decision (which may be one of the nodes, or the routing tier, or the client) learn about changes in the assignment of partitions to nodes?<ul>
 <li>Hard to handle, but many <u>distributed systems</u> rely on a seperate coordination services such as <strong>Zookeeper</strong> to keep track of this cluster metadata. <img src="https://res.cloudinary.com/shuaiz/image/upload/v1598070041/p2-ch6-img2_rwkqzo.png" alt="p2-ch6-img2"></li>
 <li><strong>Zookeeper</strong> maintains the authorizative mapping of partitions to nodes. Whenever a partition changes ownership, or a node is added or removed, <strong><u>Zookeeper</u> notifies the routing tier</strong> so that it can keep its routing information up to date.</li>
 <li>LinkedIn’s <u>Espresso</u> uses <u>Helix</u> for cluster management (which it turns relies on Zookeeper).</li>
@@ -393,7 +393,7 @@
 <li>Risk of hot spots</li>
 </ul>
 </li>
-<li><strong>Hash partitioning</strong>, where a hash function is applied to each key, and a partition owns a range of hashes/<ul>
+<li><strong>Hash partitioning</strong>, where a hash function is applied to each key, and a partition owns a range of hashes.<ul>
 <li>partitioning by hash, it is common to create a fixed number of partition in advance</li>
 <li>Destroy the ordering of keys.</li>
 </ul>
@@ -405,7 +405,7 @@
 <li><strong>Term-partitioned indexes (global indexes)</strong>, where the secondary indexes are partitioned separately, using the indexed values.</li>
 </ul>
 </li>
-<li>Operations that need to write to several partitions can be difficult to reason about: for example, what happens if the write to ine partition secceeds, but another fails?</li>
+<li>Operations that need to write to several partitions can be difficult to reason about: for example, what happens if the write to one partition secceeds, but another fails?</li>
 </ul>
 
       
