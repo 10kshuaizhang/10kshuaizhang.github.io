@@ -18,7 +18,7 @@
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598371028/Design%20Data%20Intensive%20Application/p2-ch7-img01_llpsok.png">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598371030/Design%20Data%20Intensive%20Application/p2-ch7-img02_idbdbh.png">
 <meta property="article:published_time" content="2020-08-25T16:13:27.000Z">
-<meta property="article:modified_time" content="2020-08-25T16:13:49.351Z">
+<meta property="article:modified_time" content="2020-08-26T04:29:24.308Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
@@ -204,7 +204,7 @@
 <a id="more"></a>
 
 <ul>
-<li>A <strong>transaction</strong> is a way for an application to group several reads and writes togethers into a logical unit<ul>
+<li>A <strong>transaction</strong> is a way for an application to group several reads and writes together into a logical unit.<ul>
 <li>Conceptually, all the reads and writes in a transaction are executed as one operation: <u>either that entire transaction succeeds (commit) or it fails (abort, rollback)</u>.</li>
 </ul>
 </li>
@@ -226,11 +226,11 @@
 </ul>
 </li>
 <li><strong>Atomicity</strong>: atomic refers to something that cannot be broken down into smaller parts.<ul>
-<li>If the wirtes are grouped together into an <strong>automic transaction</strong>, and the transaction cannot be completed (committed) dut to a fault, then the transaction is aborted and the database must discard or undo any writes it has make so far in that application.</li>
+<li>If the writes are grouped together into an <strong>automic transaction</strong>, and the transaction cannot be completed (committed) due to a fault, then the transaction is aborted and the database must discard or undo any writes it has make so far in that application.</li>
 </ul>
 </li>
 <li><strong>Consistency</strong>: refers to an application-specific notion of the database being in a “good state”<ul>
-<li>You have certain statements about your data (invariants) that must always be true – e.g. In an accounting system, credits and debits across all acounts must be balanced/<ul>
+<li>You have certain statements about your data (invariants) that must always be true – e.g. In an accounting system, credits and debits across all acounts must be balanced.<ul>
 <li>However, this depends on the application’s notion of invariants.</li>
 </ul>
 </li>
@@ -242,13 +242,13 @@
 </ul>
 </li>
 <li><strong>Durability</strong>: the promise that once a transaction has committed successfully, any data it has written will not be forgotten, even if there is a hardware fault or the database crashes.<ul>
-<li><strong>In a single-node database</strong>, durability typically means that the data has beem written to non-volatile storage such as a hard driver or SSD.</li>
-<li><strong>In a replicated database</strong>, durability typically means that the data has been successfully copied to sime number of nodes.</li>
-<li><u>perfect durability does not exits</u>. (e.g. What if earch were destroyed)</li>
+<li><strong>In a single-node database</strong>, durability typically means that the data has been written to non-volatile storage such as a hard driver or SSD.</li>
+<li><strong>In a replicated database</strong>, durability typically means that the data has been successfully copied to some number of nodes.</li>
+<li><u>perfect durability does not exits</u>. (e.g. What if earth were destroyed)</li>
 </ul>
 </li>
 <li><strong>Replication and Durability</strong><ul>
-<li>In practice, there is not one technique that can provide absolute guarantees. There are only varous risk-reduction techniques, including writing to disk, replicating to remote machiens, and backups – and they can and should be used together.</li>
+<li>In practice, there is not one technique that can provide absolute guarantees. There are only various risk-reduction techniques, including writing to disk, replicating to remote machines, and backups – and they can and should be used together.</li>
 </ul>
 </li>
 </ul>
@@ -262,11 +262,11 @@
 </li>
 <li><strong>Single-Object writes</strong><ul>
 <li>Increment operation, which removes the need for a read-modify-write cycle.</li>
-<li><strong>Compare-and-set</strong> and other single-object operations have been dubbed “light-weight transactions” or evem “ACID” for marketing purposes</li>
+<li><strong>Compare-and-set</strong> and other single-object operations have been dubbed “light-weight transactions” or even “ACID” for marketing purposes</li>
 </ul>
 </li>
 <li><strong>The need for multi-object transactions</strong><ul>
-<li>Many distributed datastores have abondoned multi-object transactions because they are difficult to implemeny across partitions, and they can get in the way in some scenarios where every high availability or performance is required.</li>
+<li>Many distributed datastores have abondoned multi-object transactions because they are difficult to implement across partitions, and they can get in the way in some scenarios where every high availability or performance is required.</li>
 <li><u>In a relational data model</u>, a row in one table often has a foreign key reference to row in another tabel.</li>
 <li><u>In a document data model</u>, the fields that need tp be updated together are often within the same document, which is treated as a single object </li>
 <li><u>In databases with secondary indexes</u> (almost everything except pure key-value stores), this indexes also need to be updated every time you change a  value.</li>
@@ -275,8 +275,8 @@
 </ul>
 </li>
 <li><strong>Handle errors and aborts</strong><ul>
-<li>A key feature of a transaction is that it can be <u>aborted and safely retried</u> if a error occurred.<ul>
-<li>If the database is in danger of violating its guarantee of atomicity, isolation or durability, it would rather abandon the transaction ebtirely that allow it to remian half finished.</li>
+<li>A key feature of a transaction is that it can be <u>aborted and safely retried</u> if an error occurred.<ul>
+<li>If the database is in danger of violating its guarantee of atomicity, isolation or eurability, it would rather abandon the transaction entirely that allow it to remain half finished.</li>
 <li>But datastores with leaderless replication won’t obey such rules but work much more on a “best effort” basis, so it’s the application’s responsibility to recover from errors.</li>
 </ul>
 </li>
@@ -312,7 +312,7 @@
 <li>When reading from database, you will only see data that has been commiteed (<u>no dirty reads</u>)</li>
 <li>when writing to the databases, you will only overwrite data has been committed (<u>no dirty writes</u>)</li>
 <li><strong>No dirty reads</strong><ul>
-<li>Imagine a transaction has written some data to the database, but the trasaction has not yet committed or aborted. Can another trasaction see that uncommitted data? If yes, that is called a dirty read.</li>
+<li>Imagine e transaction has written some data to the database, but the traesaction has not yet committed or aborted. Can another transaction see that uncommitted data? If yes, that is called a dirty read.</li>
 </ul>
 </li>
 <li><strong>No dirty Writes</strong><ul>
@@ -322,12 +322,12 @@
 </li>
 <li><strong>Implementing read committed</strong><ul>
 <li>Database <strong><u>prevent dirty writes</u></strong> by using <strong><u>row-level locks</u></strong>: when a transaction wants to modify a particular object (row or document), it must first acquire a lock on that object.</li>
-<li>Most databases  <strong><u>prevent dirty reads</u></strong> using the approach: fro every object that is written, the database <u>remembers bother the old commited value and the new value set by the trasaction</u> that currently holds the write lock.</li>
+<li>Most databases  <strong><u>prevent dirty reads</u></strong> using the approach: for every object that is written, the database <u>remembers bother the old commited value and the new value set by the trasaction</u> that currently holds the write lock.</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p><strong><u>Snapshot Isolation</u> and <u>Repeatable Read</u></strong>: (it is supporte by PostgreSQL, MySQL with the InnoDB storage engine, Oracle, SQL Server, and others)</p>
+<li><p><strong><u>Snapshot Isolation</u> and <u>Repeatable Read</u></strong>: (it is supported by PostgreSQL, MySQL with the InnoDB storage engine, Oracle, SQL Server, and others)</p>
 <ul>
 <li>Snapshot isolation is a popular feature</li>
 <li><strong>Non-repeatable read  or read skew</strong>: if Alice were to read the balance of account 1 again at the end of the transaction, she would see a different value ($600) than she saw in her previously query.</li>
@@ -342,15 +342,15 @@
 <li>However, <u>reads do not require any locks</u>.</li>
 </ul>
 </li>
-<li>From a performance point of view, a key principle of snapshot isolation is <u>readers never block wriets, and writers never block readers</u>.</li>
+<li>From a performance point of view, a key principle of snapshot isolation is <u>readers never block writers, and writers never block readers</u>.</li>
 <li>Because it maintains several version of an object side by side, this technique is knwo as <strong>Multi-version Concurrency Control (MVCC)</strong>.</li>
 </ul>
 </li>
 <li><strong>Visibility rules for observering a consistent snapshot</strong><ul>
-<li>when a transaction reads from database, trasaction IDs are used to decide which objects it can see and which are invisible</li>
+<li>when a transaction reads from database, transaction IDs are used to decide which objects it can see and which are invisible</li>
 <li>An object is visible if both of the following conditions are true:<ul>
-<li>At the time when the reader’s trasaction started, the trasaction that created the obejcts had already committed.</li>
-<li>The object is marked for deletion, or if it is, the transaction that reqeusted deletion had yet not committed at the time when the reader’s trasaction started.</li>
+<li>At the time when the reader’s trasaction started, the transaction that created the obejcts had already committed.</li>
+<li>The object is marked for deletion, or if it is, the transaction that reqeusted deletion had yet not committed at the time when the reader’s transaction started.</li>
 </ul>
 </li>
 <li>By never updating values in place but instead creating a new version every time a value is changed, the database can provide a consistent snapshot while incurring only a small overhead.</li>
@@ -363,7 +363,7 @@
 <li><strong>Repeatbale read and naming confusion</strong><ul>
 <li>Many databases that implement it call it bu different names. In Oracle it is called serializable, and in PostgreSQL and MySQL, it is called repeateable read.</li>
 <li>It defines repeatable read, which looks superficially similar to snapshot isolation. (C: Because the concept of “snapshot-isolation” haven’t invented yet back then)</li>
-<li>As a result, nobody really knwos what repeatable read means.</li>
+<li>As a result, nobody really knows what repeatable read means.</li>
 </ul>
 </li>
 </ul>
@@ -392,7 +392,7 @@
 </li>
 </ul>
 </li>
-<li><strong>Exlicit locking</strong><ul>
+<li><strong>Explicit locking</strong><ul>
 <li>If the databses’s built-in atomic operations don’t provide the necessary functionality, it is for the <u>application to explicitly lock objects that are going to be updated</u>.<ul>
 <li>E.g. The <strong>FOR UPDATE</strong> clause indicates that the database should take a lock on all rows returened by this query.</li>
 </ul>
@@ -400,27 +400,27 @@
 </ul>
 </li>
 <li><strong>Automatically detecting lost updates</strong>: (e.g. PostgreSQL, Oracle, SQL)<ul>
-<li>An alternative is to allow them to execute in parallel and, if the trasaction manager detects a lost update, abort the trasaction and orce it to retry its read-modify-write cycle.</li>
+<li>An alternative is to allow them to execute in parallel and, if the transaction manager detects a lost update, abort the transaction and force it to retry its read-modify-write cycle.</li>
 </ul>
 </li>
 <li><strong>Compare-and-set</strong><ul>
-<li>In databases that don’t provide trasactions, you sometiems find an atomic <strong>compare-and-set</strong> operation<ul>
-<li>Avoid lost updates by allowing an update yo happen onlu if the value has not changed since you last read it.</li>
+<li>In databases that don’t provide transactions, you sometimes find an atomic <strong>compare-and-set</strong> operation<ul>
+<li>Avoid lost updates by allowing an update to happen only if the value has not changed since you last read it.</li>
 </ul>
 </li>
 </ul>
 </li>
 <li><strong>Conflict resolution and replication</strong><ul>
 <li>Locks and compare-and-set operations assume that there is a sinle up-to-date copy of the data. Thus techniques based on locks or compare-and-set do not apply in this context.</li>
-<li><strong>Solution</strong>: allow concurrten writes to create several conflicting versions of a value (also known as siblings), and to use application code or special data structures to resolve and merge these versions after the fact.</li>
+<li><strong>Solution</strong>: allow concurrent writes to create several conflicting versions of a value (also known as siblings), and to use application code or special data structures to resolve and merge these versions after the fact.</li>
 <li>The last write wins (LWW) conflict resolution method is <u>prone to lost updates</u> and unfortunately, LWW is the default in many replicated databases.</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p><strong>Write Skew and Phantoms</strong>)e.g. Hospital doctor on call schedule App)</p>
+<li><p><strong>Write Skew and Phantoms</strong> (e.g. Hospital doctor on call schedule App)</p>
 <ul>
-<li><strong>Write skew</strong>. it is neithera dirty write nor a lost update, because the two transactions are updating two diffrent objects (Alice’s and Bob’s on-call schedule, respectively)<ul>
+<li><strong>Write skew</strong>. it is neithera dirty write nor a lost update, because the two transactions are updating two different objects (Alice’s and Bob’s on-call schedule, respectively)<ul>
 <li>You can thing of <strong>Write skew</strong> as a generalization of the lost update problem.</li>
 </ul>
 </li>
@@ -433,11 +433,11 @@
 <li>Meeting room booking system;</li>
 <li>Multiplayer game;</li>
 <li>Claming a username;(C: reason why website tend to use. Email as username, because Email usually guarantee to be unique) Unique constraint could solve this problem.</li>
-<li>Preventinf double-spending</li>
+<li>Preventing double-spending</li>
 </ul>
 </li>
-<li><strong>Phantoms causing Wirte skew</strong><ul>
-<li>Where a wrire in one transation chanegs the result of a search query in another transaction, is called a phantom.</li>
+<li><strong>Phantoms causing Write skew</strong><ul>
+<li>Where a write in one transation chanegs the result of a search query in another transaction, is called a phantom.</li>
 </ul>
 </li>
 <li><strong>Materializing conflics</strong>: (last resort, a serializable isolation level is much preferable in most cases)<ul>
@@ -461,21 +461,21 @@
 </li>
 <li><strong>Actual Serial Execution</strong>: (e.g. Redis, VoldDB/H-store, Datomic)<ul>
 <li>The simplest way of avoiding concurrency problems is to <strong>remove the concurrency entirely</strong>: to execute only one transaction at a time, in serial order on a single thread.</li>
-<li>Two reasons whya this starting pick momentum late until 2007<ul>
+<li>Two reasons why this starting pick momentum late until 2007<ul>
 <li>RAM became cheap enough that for many use cases is now feasible to keep the entire active dataset in memory</li>
 <li>Database designers realized that OLTP transactions are usually short and only make a small number of reads and writes.</li>
 </ul>
 </li>
 <li>Sometimes perform better that a system that supprort concurrency, because it can avoid the coordination overhead of locking, but its throughput is limited to that of a single CPU core.</li>
 <li><strong>Encapsulating transactions in stored procedures</strong><ul>
-<li>System withi single-threaded serial trasaction processing don’t allow interactive multi-statement transactions.<ul>
+<li>System with single-threaded serial trasaction processing don’t allow interactive multi-statement transactions.<ul>
 <li>Instead, the application must submit the entire trasaction code to teh database ahead of time as a <strong>stored procedure</strong></li>
 </ul>
 </li>
 <li><strong>Pros and cons of stored procedures</strong><ul>
 <li>Each database vender has its own language for stored procedures (Oracle has PL/SQL, SQL Server has T-SQL, PostgreSQL has PL/pgSQL, etc.)</li>
-<li>Code running in a database is difficult to manage: conpared to an application server.</li>
-<li>A database is often much more performance-sensitive than an application server, because a single database instance is often shared by many application servers. (C; wider “negative” impact if a badly written SP)</li>
+<li>Code running in a database is difficult to manage: compared to an application server.</li>
+<li>A database is often much more performance-sensitive than an application server, because a single database instance is often shared by many application servers. (C: wider “negative” impact if a badly written SP)</li>
 </ul>
 </li>
 <li>Modern implementations of stored procedures have abandoned PL/SQL and use existing general-purpose programming languages instead: VoltDB uses Java or Groovy, Datomic uses Java or Clojure, and Redis uses Lua.</li>
@@ -483,13 +483,13 @@
 </li>
 <li><strong>Partitioning</strong><ul>
 <li>for applications with high write throughput, the single-thread transaction processor can become a serious bottleneck.</li>
-<li>If you can find a way of partitioning tou dataset so that each trasaction obly needs to read and write data within a single partition, then each partition can have its own trasaction processiong thread running independently from the others.</li>
-<li>Whether transactions can be single-partition depends very much on the structure of the data usedd by the application.</li>
+<li>If you can find a way of partitioning you dataset so that each trasaction oely needs to read and write data within a single partition, then each partition can have its own transaction processiong thread running independently from the others.</li>
+<li>Whether transactions can be single-partition depends very much on the structure of the data used by the application.</li>
 </ul>
 </li>
 <li><strong>Summary of serial execution</strong><ul>
 <li>A viable way of achieving serializable isolation within certain constraints <ul>
-<li>Every trasaction must be small and fast, because it takes only one slow transaction to stall all transactions processing.</li>
+<li>Every transaction must be small and fast, because it takes only one slow transaction to stall all transactions processing.</li>
 <li>It is limited to use cases where the active dataset can fit in memory. (C: use anti-catching if the dataset is in disk)</li>
 <li>Write thoughput must be low enought to be handled on a single CPU core or trasactions need to be partitioned withought requiring cross-partition coordination.</li>
 <li>Cross-partition transactions are possible, but there is a hard limit to the extent to which they can be used.</li>
@@ -500,12 +500,12 @@
 </ul>
 </li>
 <li><strong>Two-phase Locking (2PL)</strong>: (2PL is not 2PC)<ul>
-<li>Several transactions are allowed to concurrently read same the samke object as long as nobody is writing to it. But as soon as anyone wants to write (modify or delete) an object, exclusive access is required.<ul>
+<li>Several transactions are allowed to concurrently read same the same object as long as nobody is writing to it. But as soon as anyone wants to write (modify or delete) an object, exclusive access is required.<ul>
 <li>If transaction A has read an object and transaction B wants to write to that object, B must wait until A commits or aborts before it can continue. (This ensures that B can’t change the object unexpectedly behind A’s back.)</li>
 <li>If transaction A has written an object and transactions B wants to read that object, B must wait until A commits or aborts before it can continue. (Reading an old version of object, like in Figure 7-1, is not acceptable under 2PL.)</li>
 </ul>
 </li>
-<li>In 2PL, writes don’t jusr <strong>block other writes; they also block readers</strong> and vice versa.<ul>
+<li>In 2PL, writes don’t just <strong>block other writers; they also block readers</strong> and vice versa.<ul>
 <li>Because 2PL provides serializability, it protects against all the race conditions discussed earlier, including lost updates and write skew.</li>
 </ul>
 </li>
@@ -513,19 +513,19 @@
 <li><u>Shared</u> and <u>Exclusive</u> lock</li>
 <li>The <u>first phase</u> (while the trasaction is execuding) is when the locks are acquired. and the <u>second phase</u> (at the end of the trasaction) is when all the locks are released.</li>
 <li>Since so many locks are in use, it can happend quite easily that transaction A is stuck waiting for transaction B to release its lock, and vice versa –&gt; <strong>deadlock</strong><ul>
-<li>The database automatically detects deadlocks between transactions and aborts one of them so that the otehrs can make progress.</li>
+<li>The database automatically detects deadlocks between transactions and aborts one of them so that the others can make progress.</li>
 <li>Application need retry after abort</li>
 </ul>
 </li>
 </ul>
 </li>
 <li><strong>Performance of two-phase locking</strong><ul>
-<li>trasactions throughput and response times queries are significantly worse under two-phase locking that under weak isolation.</li>
-<li>databases running 2PL can have quite unsatble latencies, and they can be very slow at high percentiles.</li>
+<li>transactions throughput and response times queries are significantly worse under two-phase locking than under weak isolation.</li>
+<li>databases running 2PL can have quite unstable latencies, and they can be very slow at high percentiles.</li>
 </ul>
 </li>
 <li><strong>Predicate locks</strong><ul>
-<li>a database with serializable isolation must <u>prevernt phantoms</u>.</li>
+<li>a database with serializable isolation must <u>prevent phantoms</u>.</li>
 <li><strong>predicate lock</strong>: it works similarly to the shared/exclusive lock described earlier, but rather than belonging to a particular object (e.g., one row in a table), it belongs to all objects that match some search condition.</li>
 <li>A predicate lock applies even to objects that do not yet exist in the database, but which might be added in the future. (phantoms)</li>
 </ul>
@@ -533,14 +533,14 @@
 <li><strong>Index-range locks</strong><ul>
 <li>Unfortunately, <u>predicate locks</u> do not preform well: if there are many locks by active transactions, checking for matching locks becomes time-consuming.</li>
 <li>Most databases with 2PL actually implement <strong><u>index-range locking</u></strong> (also known as next-key locking), which is a simplified approximation of predicate locking.</li>
-<li>Index-range locks are not as precise as predicate locks would be, but since they have much lower overheads, the yare a good compromise.</li>
+<li>Index-range locks are not as precise as predicate locks would be, but since they have much lower overheads, the are a good compromise.</li>
 </ul>
 </li>
 </ul>
 </li>
 <li><strong><u>Serializable Snapshot Isolation (SSI)</u></strong>: (new default in the future)<ul>
 <li>It provides full <strong>serializability</strong>, but has only a small performance penalty compared to a <strong>snapshot isolation</strong><ul>
-<li>SSI is fialy new: it was first described in 2008 and is the subject of Michael Cahill’s PhD thesis.</li>
+<li>SSI is fairly new: it was first described in 2008 and is the subject of Michael Cahill’s PhD thesis.</li>
 </ul>
 </li>
 <li><strong>Pessimistic vs. optimistic concurrency control</strong><ul>
@@ -558,7 +558,7 @@
 </li>
 <li><strong>Decisions based on an outdated premise</strong><ul>
 <li>How does the database know if a query result might have changed? There are two cases to consider<ul>
-<li><strong>Detecting reads</strong> of a stale MVCC object version (uncommitted write occurred before th read)</li>
+<li><strong>Detecting reads</strong> of a stale MVCC object version (uncommitted write occurred before the read)</li>
 <li><strong>Detecting writes</strong> that affect prior reads (the write occurs after that read)</li>
 </ul>
 </li>
@@ -566,7 +566,7 @@
 </li>
 <li><strong>Detecting stale MVCC reads</strong><ul>
 <li>in order to prevent this anomaly, the database needs to track when a trasaction ignores another trasaction’s writes due to MVCC visibility rules. <img src="https://res.cloudinary.com/shuaiz/image/upload/v1598371028/Design Data Intensive Application/p2-ch7-img01_llpsok.png" alt="p2-ch7-img01" style="zoom:50%;" /></li>
-<li>By avoiding unnecessary aborts, SSQ preserve snapshot isolation’s support for long-running reads from a cosistent snaoshot.</li>
+<li>By avoiding unnecessary aborts, SSQ preserve snapshot isolation’s support for long-running reads from a consistent snapshot.</li>
 </ul>
 </li>
 <li><strong>Detecting writes that affect prior reads</strong><ul>
@@ -579,7 +579,7 @@
 </li>
 <li><strong>Performance of serializable snapshot isolation</strong><ul>
 <li>Compared to two-phase locking, the big advantage of serializable snapshot isolation is that one transaction doesn’t need to block waiting for locks held by another transaction.<ul>
-<li>Like under sanpshot isolation, wirtes don’t block readers, and vice versa.</li>
+<li>Like under sanpshot isolation, writes don’t block readers, and vice versa.</li>
 <li>The rate of aborts significantly affects the overall performance of SSI.</li>
 </ul>
 </li>
@@ -621,7 +621,7 @@
 </ul>
 </li>
 </ul>
-<h4 id="End"><a href="#End" class="headerlink" title="End"></a>End</h4><p>The illustration structure of chapter 7 is not very clear, my recommendation is to read this blog first : <a href="https://www.jyt0532.com/2019/04/21/transactions/" target="_blank" rel="noopener">jyt0523’s blog</a>.It’s good for peopel who are new to this topics or read this book for the first time.</p>
+<h4 id="End"><a href="#End" class="headerlink" title="End"></a>End</h4><p>The illustration structure of chapter 7 is not very clear, my recommendation is to read this blog first : <a href="https://www.jyt0532.com/2019/04/21/transactions/" target="_blank" rel="noopener">jyt0523’s blog</a>. It’s good for people who are new to this topics or read this book for the first time.</p>
 
       
 
