@@ -8,19 +8,19 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Designing Data Intensive Application学习笔记10 | 10K&#39;s</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Chapter8 The Trouble with Distributed System  this chapter is a thoroughly pessimistic and depressing overview of things that may go wrong in a distributed system.  Network issues Clocks &amp; timing">
+  <meta name="description" content="Chapter8 The Trouble with Distributed System  this chapter is a thoroughly pessimistic and depressing overview of things that may go wrong in a distributed system. Network issues Clocks &amp; timing i">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Designing Data Intensive Application学习笔记10">
 <meta property="og:url" content="http://yoursite.com/2020/08/26/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B010/index.html">
 <meta property="og:site_name" content="10K&#39;s">
-<meta property="og:description" content="Chapter8 The Trouble with Distributed System  this chapter is a thoroughly pessimistic and depressing overview of things that may go wrong in a distributed system.  Network issues Clocks &amp; timing">
+<meta property="og:description" content="Chapter8 The Trouble with Distributed System  this chapter is a thoroughly pessimistic and depressing overview of things that may go wrong in a distributed system. Network issues Clocks &amp; timing i">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598455635/Design%20Data%20Intensive%20Application/p2-ch8-img1_hz1atv.png">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598481999/Design%20Data%20Intensive%20Application/p2-ch8-img2_esujdx.png">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598481916/Design%20Data%20Intensive%20Application/p2-ch8-img3_h3rahr.png">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598482200/Design%20Data%20Intensive%20Application/p2-ch8-img4_wbr7xt.png">
 <meta property="article:published_time" content="2020-08-26T23:44:38.000Z">
-<meta property="article:modified_time" content="2020-08-27T02:49:20.771Z">
+<meta property="article:modified_time" content="2020-08-27T02:53:18.137Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
@@ -203,27 +203,25 @@
       
         <p><strong>Chapter8 The Trouble with Distributed System</strong></p>
 <ul>
-<li><p>this chapter is a thoroughly pessimistic and depressing overview of things that may go wrong in a distributed system.</p>
-<ul>
+<li>this chapter is a thoroughly pessimistic and depressing overview of things that may go wrong in a distributed system.<ul>
 <li>Network issues</li>
-<li>Clocks &amp; timing issues<a id="more"></a>
-<h4 id="Faults-and-Partial-Failures"><a href="#Faults-and-Partial-Failures" class="headerlink" title="Faults and Partial Failures"></a>Faults and Partial Failures</h4></li>
+<li>Clocks &amp; timing issues</li>
 </ul>
 </li>
-<li><p>SIngle machines software is <strong><u>deterministic</u></strong></p>
-<ul>
+</ul>
+<a id="more"></a>
+
+<h4 id="Faults-and-Partial-Failures"><a href="#Faults-and-Partial-Failures" class="headerlink" title="Faults and Partial Failures"></a>Faults and Partial Failures</h4><ul>
+<li>SIngle machines software is <strong><u>deterministic</u></strong><ul>
 <li>An individual computer with good software is usually either fully functional or entirely broken, but not sometihng in between</li>
 </ul>
 </li>
-<li><p>In distributed system, we are no longer operating in an idealized system model – we have no choice but to confront the messy reality of the physical world.</p>
-</li>
-<li><p>The difficulty is that <strong>partial failures</strong> are <strong>non-deterministic</strong>: if you try to do anything involving multiple nodes and the network, it may soemtimes work and sometimes unpredictably fail.</p>
-<ul>
+<li>In distributed system, we are no longer operating in an idealized system model – we have no choice but to confront the messy reality of the physical world.</li>
+<li>The difficulty is that <strong>partial failures</strong> are <strong>non-deterministic</strong>: if you try to do anything involving multiple nodes and the network, it may soemtimes work and sometimes unpredictably fail.<ul>
 <li><u>This <strong>non-determinism</strong> and possibility of <strong>partial failures</strong> is what makes distributed systems hard to work with</u>.</li>
 </ul>
 </li>
-<li><p><strong>Cloud-Computing and Super-Computing</strong>: (C: Vertical scaling and Horizontal Scaling)</p>
-<ul>
+<li><strong>Cloud-Computing and Super-Computing</strong>: (C: Vertical scaling and Horizontal Scaling)<ul>
 <li>High-performance computing (HPC) vs Cloud Computing <ul>
 <li>Supercomputer is more like a single-node computer than a distributed system: it deals with partial failure by letting it escalate into total failure.</li>
 </ul>
