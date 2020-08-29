@@ -142,6 +142,113 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Designing-Data-Intensive-Application学习笔记11" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/08/29/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B011/">Designing Data Intensive Application学习笔记11</a>
+    </h1>
+  
+
+        
+        
+
+<a href="/2020/08/29/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B011/" class="archive-article-date">
+  	<time datetime="2020-08-29T16:27:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-29</time>
+</a>
+        <!-- 需要添加的位置 -->
+        <!-- 开始添加字数统计-->
+        
+        <!-- 添加完成 -->
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Chapter 9 Consistency and Consensus</strong></p>
+<ul>
+<li>In this chapter, we will talk about some examples of algorithms and protocols for building <strong><u>fault-tolerant distributed systems</u></strong>.</li>
+<li>We will assume that all the problems from Chapter 8 can occur:<ul>
+<li>packets can be lost, reordered, duplicated</li>
+<li>Arbitrarily delayed in the network</li>
+<li>Clocks are approximate the best</li>
+<li>and nodes can pause (e.g., due to garbage collection) or crash at any time.</li>
+</ul>
+</li>
+<li>The best way of building fault-tolerent system is to find some <strong>general-purpose abstractions with useful guarantees</strong>, implement them once, and then let applications rely on those guarantees.</li>
+<li>This is the same approach as we used with transactions in Chapter 7: <u>by using a trasaction</u>, the application can pretend:<ul>
+<li>that there are no crashes (<strong>atomicity</strong>),</li>
+<li>that nobody else is concurently accessing the database (<strong>isolation</strong>)</li>
+<li>that storage devices are perfectly reliable (<strong>durability</strong>)</li>
+</ul>
+</li>
+<li><u>One of the most important abstractions</u> for distributed systems is <strong>consensus</strong>: that is, getting all of the nodes to agree on something.<ul>
+<li><u>Once you have an implementation of consensus, applications can use it for various purposes</u>.</li>
+<li>Correct implementations of consensus help avoid problems.</li>
+</ul>
+</li>
+</ul>
+        
+          <a class="article-more-a" href="/2020/08/29/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B011/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/08/29/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B011/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+  
     <article id="post-Designing-Data-Intensive-Application学习笔记10" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -909,96 +1016,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2020/08/17/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B06/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-  
-    <article id="post-A-Brief-Introduction-of-Cassandra" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/08/16/A-Brief-Introduction-of-Cassandra/">A Brief Introduction of Cassandra</a>
-    </h1>
-  
-
-        
-        
-
-<a href="/2020/08/16/A-Brief-Introduction-of-Cassandra/" class="archive-article-date">
-  	<time datetime="2020-08-16T23:38:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-16</time>
-</a>
-        <!-- 需要添加的位置 -->
-        <!-- 开始添加字数统计-->
-        
-        <!-- 添加完成 -->
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Apache Cassandra 是一个开源的、分布式、去中心化、弹性可扩展、高可用性、容错、一致性可调、面向行的数据库，它基于 Amazon Dynamo 的分布式设计和 Google Bigtable 的数据模型。它最初由 Facebook 创建，用于储存收件箱等简单格式数据，于2008年开源。此后，由于 Cassandra 良好的可扩展性，被 Digg、Twitter 等知名 Web 2.0 网站所采纳，成为了一种流行的分布式结构化数据存储方案。截止目前，Apache Cassandra 最新版本为 3.7。</p>
-<p>Apache Cassandra 官方网站为 <a href="https://link.jianshu.com?t=http://cassandra.apache.org/" target="_blank" rel="noopener">http://cassandra.apache.org/</a>。</p>
-        
-          <a class="article-more-a" href="/2020/08/16/A-Brief-Introduction-of-Cassandra/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Database</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/08/16/A-Brief-Introduction-of-Cassandra/">展开全文 >></a>
         </p>
       
 
