@@ -368,7 +368,20 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p><strong>Chapter7 Transactions</strong></p>
-<p>Some authors have claimed that general two-phrase commit is too expensive to support, because of the performance or availability that it brings. We believe it is better to have application programmers deal with performance problems due to overuse of transactions as bottlenecks arise, rather that always coding around the lack of transactions. – James Corbett et al., <strong>Spanner: Google’s Globally-Distributed Database</strong>(2012)</p>
+<ul>
+<li>A <strong>transaction</strong> is a way for an application to group several reads and writes together into a logical unit.<ul>
+<li>Conceptually, all the reads and writes in a transaction are executed as one operation: <u>either that entire transaction succeeds (commit) or it fails (abort, rollback)</u>.</li>
+</ul>
+</li>
+<li>By using transactions, the application is free to ignore certain potential error scenarios and concurrency issues, because the database takes care of them instead (we call these <u>safety quarantees</u>)<ul>
+<li>Vs. <strong>higher performance</strong> or <strong>higher availability</strong></li>
+</ul>
+</li>
+<li><strong>How do you figure out whether you need transactions?</strong><ul>
+<li>In order to answer that question, we first need to understand exactly what <u>safety quanrantees transactions</u> can provide, and what costs are associated with them.</li>
+</ul>
+</li>
+</ul>
         
           <a class="article-more-a" href="/2020/08/25/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B09/#more">more >></a>
         

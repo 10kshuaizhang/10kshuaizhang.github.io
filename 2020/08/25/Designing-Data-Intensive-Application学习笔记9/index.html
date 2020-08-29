@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Designing Data Intensive Application学习笔记9 | 10K&#39;s</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Chapter7 Transactions Some authors have claimed that general two-phrase commit is too expensive to support, because of the performance or availability that it brings. We believe it is better to have a">
+  <meta name="description" content="Chapter7 Transactions  A transaction is a way for an application to group several reads and writes together into a logical unit. Conceptually, all the reads and writes in a transaction are executed as">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Designing Data Intensive Application学习笔记9">
 <meta property="og:url" content="http://yoursite.com/2020/08/25/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B09/index.html">
 <meta property="og:site_name" content="10K&#39;s">
-<meta property="og:description" content="Chapter7 Transactions Some authors have claimed that general two-phrase commit is too expensive to support, because of the performance or availability that it brings. We believe it is better to have a">
+<meta property="og:description" content="Chapter7 Transactions  A transaction is a way for an application to group several reads and writes together into a logical unit. Conceptually, all the reads and writes in a transaction are executed as">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598371028/Design%20Data%20Intensive%20Application/p2-ch7-img01_llpsok.png">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598371030/Design%20Data%20Intensive%20Application/p2-ch7-img02_idbdbh.png">
 <meta property="article:published_time" content="2020-08-25T16:13:27.000Z">
-<meta property="article:modified_time" content="2020-08-26T04:29:24.308Z">
+<meta property="article:modified_time" content="2020-08-29T16:30:50.308Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
@@ -178,7 +178,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text">  字数统计: </span>
-        <span class="post-count">3.9k字</span>
+        <span class="post-count">3.8k字</span>
       </span>
     </span>
 
@@ -187,7 +187,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-hourglass-half"></i>
         <span class="post-meta-item-text">  阅读时长: </span>
-        <span class="post-count">24分</span>
+        <span class="post-count">23分</span>
       </span>
     </span>
 </div>
@@ -200,9 +200,6 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p><strong>Chapter7 Transactions</strong></p>
-<p>Some authors have claimed that general two-phrase commit is too expensive to support, because of the performance or availability that it brings. We believe it is better to have application programmers deal with performance problems due to overuse of transactions as bottlenecks arise, rather that always coding around the lack of transactions. – James Corbett et al., <strong>Spanner: Google’s Globally-Distributed Database</strong>(2012)</p>
-<a id="more"></a>
-
 <ul>
 <li>A <strong>transaction</strong> is a way for an application to group several reads and writes together into a logical unit.<ul>
 <li>Conceptually, all the reads and writes in a transaction are executed as one operation: <u>either that entire transaction succeeds (commit) or it fails (abort, rollback)</u>.</li>
@@ -217,6 +214,8 @@
 </ul>
 </li>
 </ul>
+<a id="more"></a>
+
 <h4 id="The-slippery-Concept-of-a-Transaction"><a href="#The-slippery-Concept-of-a-Transaction" class="headerlink" title="The slippery Concept of a Transaction"></a>The slippery Concept of a Transaction</h4><ul>
 <li>Almost all relational databases today, and some non-relational databases, support transactions. E.g. MqSQL, MSSQL, Oracle, PostgreSQL etc.</li>
 <li><strong>The meaning of ACID</strong><ul>
