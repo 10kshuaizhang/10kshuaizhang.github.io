@@ -16,7 +16,7 @@
 <meta property="og:description" content="Chapter4 Encoding and Evolution">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-08-16T22:53:01.000Z">
-<meta property="article:modified_time" content="2020-08-25T18:21:43.680Z">
+<meta property="article:modified_time" content="2020-09-10T21:28:15.217Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
@@ -209,7 +209,7 @@
 </li>
 <li>We need to maintain compatibility in both directions<ul>
 <li><strong>Backward compatbility</strong>: Newer code can read data that was rewritten by older code. (relative easy, since you already knew the existing old data schema)</li>
-<li><strong>Forward compatbility</strong>: Older code can read data taht was written by newer code. (raletive harder, it requires older code to ignore addtions made by a newer version of the code)</li>
+<li><strong>Forward compatbility</strong>: Older code can read data taht was written by newer code. (raletive harder, it requires older code to ignore additions made by a newer version of the code)</li>
 </ul>
 </li>
 </ul>
@@ -330,7 +330,7 @@
 <li>The  RPC model tries to make a request to remote network service look the same as calling a function or method in your programming language, within the same process (this abstraction is called <strong><u>location transparency</u></strong>).</li>
 <li>Althought RPC seems convenient at first, the approach is <strong><u>fundamentally flawed</u></strong>. <u>A netwrok request is very different from a local function call</u>.<ul>
 <li>A network request is unpredictable;</li>
-<li>A networkd response is unpredictable;</li>
+<li>A network response is unpredictable;</li>
 <li><u>Idempotence is required for re-try</u>;</li>
 <li>A network request is much slower than a function call, and its latency is also wildy variable.</li>
 </ul>
