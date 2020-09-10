@@ -25,7 +25,7 @@
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598710825/Design%20Data%20Intensive%20Application/p2-ch9-img8_chdlye.png">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598710824/Design%20Data%20Intensive%20Application/p2-ch9-img9_gptfcy.png">
 <meta property="article:published_time" content="2020-08-29T16:27:02.000Z">
-<meta property="article:modified_time" content="2020-08-29T16:27:29.284Z">
+<meta property="article:modified_time" content="2020-09-10T18:01:27.085Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
@@ -217,9 +217,9 @@
 </ul>
 </li>
 <li>The best way of building fault-tolerent system is to find some <strong>general-purpose abstractions with useful guarantees</strong>, implement them once, and then let applications rely on those guarantees.</li>
-<li>This is the same approach as we used with transactions in Chapter 7: <u>by using a trasaction</u>, the application can pretend:<ul>
+<li>This is the same approach as we used with transactions in Chapter 7: <u>by using a transaction</u>, the application can pretend:<ul>
 <li>that there are no crashes (<strong>atomicity</strong>),</li>
-<li>that nobody else is concurently accessing the database (<strong>isolation</strong>)</li>
+<li>that nobody else is concurrently accessing the database (<strong>isolation</strong>)</li>
 <li>that storage devices are perfectly reliable (<strong>durability</strong>)</li>
 </ul>
 </li>
@@ -234,14 +234,14 @@
 <h4 id="Consistency-Guarantees-Weak-vs-Strong"><a href="#Consistency-Guarantees-Weak-vs-Strong" class="headerlink" title="Consistency Guarantees (Weak vs. Strong)"></a>Consistency Guarantees (Weak vs. Strong)</h4><ul>
 <li>Inconsistencies occur no matter what replication method the database uses (single-leader, multi-leader, or leaderless replication).<ul>
 <li>Most replicated databases provide at least <strong>eventual consistency</strong>. A better name for eventual consistency may be <strong><u>convergence</u></strong>, as we expect all the replicas to eventually converge to the same value.</li>
-<li><strong>Weak guarantee</strong>: it doesn’t say anthing abbout when the replicas will converge.</li>
+<li><strong>Weak guarantee</strong>: it doesn’t say anything about when the replicas will converge.</li>
 </ul>
 </li>
 <li><strong>Eventual consistency</strong> is hard for application developers because it is so different from the behavior of variables in a normal single-threaded program.</li>
 <li>System with <strong>Strong guarantees</strong> may have worse performance or be less fault-tolerant than systems with weaker guarantees.</li>
-<li><strong>Distributed consistency models</strong> vs. <strong>Hierarchy of trasaction isolation levels</strong><ul>
-<li><strong>transaction isolation</strong> is primarily about <u>avoiding race conditions</u> due to concurrently executing trasactions;</li>
-<li><strong>distributed consistency</strong> is mostly about <u>coordianting the state of replicas</u> in the face of delays and faults.</li>
+<li><strong>Distributed consistency models</strong> vs. <strong>Hierarchy of transaction isolation levels</strong><ul>
+<li><strong>transaction isolation</strong> is primarily about <u>avoiding race conditions</u> due to concurrently executing transactions;</li>
+<li><strong>distributed consistency</strong> is mostly about <u>coordinating the state of replicas</u> in the face of delays and faults.</li>
 </ul>
 </li>
 </ul>
@@ -274,7 +274,7 @@
 <li><strong>Relying on Linearizability</strong><ul>
 <li>In what circumstances in linearizability useful?<ul>
 <li><strong>Locking and leader election</strong>: (e.g. ZooKeeper, etc.)<ul>
-<li>Lock must be linearizable: all nodes mustagree which node owns the lock; other wise it is useless.</li>
+<li>Lock must be linearizable: all nodes must agree which node owns the lock; otherwise it is useless.</li>
 <li>Distributed locking is also used at a much more granular level in some distributed databases, such as Oracle Real Application Clusters (RAC)</li>
 </ul>
 </li>
@@ -283,7 +283,7 @@
 </ul>
 </li>
 <li><strong>Constraints and Uniqueness guarantees</strong><ul>
-<li>if you want to enforce this constraint as the data is written (such that two people try to concurrently create a user or a file withe same name, one of them will be returned an error), you need <strong>linearizavility</strong>. (C: kind like “lock”)</li>
+<li>if you want to enforce this constraint as the data is written (such that two people try to concurrently create a user or a file with same name, one of them will be returned an error), you need <strong>linearizavility</strong>. (C: kind like “lock”)</li>
 <li>a hard uniqueness constraint, such as the one you typically find in relational databases, requires linearizability.</li>
 </ul>
 </li>
@@ -294,7 +294,7 @@
 <li>The message queue (steps 3 and 4 in Figuer 9-5) might be faster than the internal replication inside the storage service.</li>
 </ul>
 </li>
-<li>This problem arises because there are <u>two different communication channels</u> between the web server and the resizer: the file storage and the he message queue.</li>
+<li>This problem arises because there are <u>two different communication channels</u> between the web server and the resizer: the file storage and the message queue.</li>
 </ul>
 </li>
 </ul>
@@ -303,7 +303,7 @@
 <ul>
 <li><strong>Replication &amp; Linearizable</strong><ul>
 <li>Single-leader replication (potentially linearizable);</li>
-<li>COnsensus algorithms (linearizable) [e.g. Zookeeper and etcd]</li>
+<li>Consensus algorithms (linearizable) [e.g. Zookeeper and etcd]</li>
 <li>Multi-leader replication (not linearizable)</li>
 <li>Leaderless replication (probably not linearizable)</li>
 </ul>
@@ -320,7 +320,7 @@
 <li><strong>The CAP therom</strong>(very narrow scope)<ul>
 <li>CAP is sometimes presented as <strong>Consistency, Availability, Partition tolerence</strong>: pick 2 out of three</li>
 <li><strong>The Unhelpeful CAP Theorem</strong><ul>
-<li>Unfortunately, putting it this way is misleading because <strong>network partitions are a kind of fault</strong>, so thet aren’t something about which you have a  choice, <strong><u>they will happen whether you like it or not</u></strong>.</li>
+<li>Unfortunately, putting it this way is misleading because <strong>network partitions are a kind of fault</strong>, so that aren’t something about which you have a  choice, <strong><u>they will happen whether you like it or not</u></strong>.</li>
 <li>A better way of phrasing CAP would be either <strong>Consistent</strong> or <strong>Available</strong> when <u><strong>Partitioned</strong></u>. (Aka, CP or AP)</li>
 <li>All in all, there is a lot of misunderstanding and confusion around CAP, and <strong>it does not help us understand system better, so CAP is best avoided</strong></li>
 </ul>
@@ -328,9 +328,9 @@
 </ul>
 </li>
 <li><strong>Linearizability and network delays</strong><ul>
-<li>Although linearizabbility is a useful guarantee, surprisingly few system are actually linearizable in practice.</li>
-<li>Many distributed databases that choose not to provice linearizable guarantees: <u>they do so primarily to increase performance, not so much for fault tolerance</u>.</li>
-<li>Linearizability is <strong>slow</strong> – and this is true all the time, not only during a netwrok fault.</li>
+<li>Although linearizability is a useful guarantee, surprisingly few system are actually linearizable in practice.</li>
+<li>Many distributed databases that choose not to provide linearizable guarantees: <u>they do so primarily to increase performance, not so much for fault tolerance</u>.</li>
+<li>Linearizability is <strong>slow</strong> – and this is true all the time, not only during a network fault.</li>
 </ul>
 </li>
 </ul>
@@ -354,7 +354,7 @@
 </ul>
 </li>
 <li><strong>The causal order is NOT a total order</strong><ul>
-<li>A <strong>total order</strong> allwos ant two elements to be compared, so if you have two elements, you can always say which one is greater and which one is smaller.</li>
+<li>A <strong>total order</strong> allows any two elements to be compared, so if you have two elements, you can always say which one is greater and which one is smaller.</li>
 <li>However, mathematical sets are not totally ordered: is {a, b} greater than {b ,c}?<ul>
 <li>We say they are <strong>incomparable</strong>, and therefore mathematical sets are partially ordered.</li>
 </ul>
@@ -370,18 +370,18 @@
 </li>
 <li><strong>Linearizability is stronger than causal consistency</strong><ul>
 <li>what is the relationship between the causal order and linearizability?<ul>
-<li><strong>linearizability implies casusality</strong>: any system that is linearizable will preseve causality correctly.</li>
+<li><strong>linearizability implies casusality</strong>: any system that is linearizable will preserve causality correctly.</li>
 </ul>
 </li>
 <li><strong>Causal Consistency</strong> is the <strong><u>Strongest</u></strong> possible consistency model that does <strong><u>NOT slow down</u></strong> due to network delay, and remains available in the face of the network failures.</li>
-<li>In many cases, systems tof hat appear to require linearizability in fact only really require causal consistency, which can be implemented more efficiently.</li>
+<li>In many cases, systems that appear to require linearizability in fact only really require causal consistency, which can be implemented more efficiently.</li>
 </ul>
 </li>
 <li><strong>Capturing causal dependencies</strong><ul>
-<li>In order to maintain causality, you need to knwo which operation happens before which other operation.</li>
+<li>In order to maintain causality, you need to know which operation happens before which other operation.</li>
 <li>In order to determine causal dependencies, we need some way of describing the “knowledge” of a node in the system.</li>
 <li>The techniques for determining which operation happened before which other operation are similar to what we discussed in “Detecting Concurrent Writes”</li>
-<li>In order to determine the causal ordering, the database needs to know which cersion of the data was read by application. (e.g. Version Vectors, or conflic detection of SSI)</li>
+<li>In order to determine the causal ordering, the database needs to know which version of the data was read by application. (e.g. Version Vectors, or conflic detection of SSI)</li>
 </ul>
 </li>
 </ul>
@@ -404,20 +404,20 @@
 </ul>
 </li>
 <li><strong>Lamport timestamps</strong><ul>
-<li>a simple method for <strong>generating sequnce numbers that is consistent with h causality</strong></li>
-<li><strong>The Lamport timestamp is then simply a pari of (counter, node ID).</strong> <img src="https://res.cloudinary.com/shuaiz/image/upload/v1598708519/Design%20Data%20Intensive%20Application/p2-ch9-img7_vfjktj.png" alt="p2-ch9-img4" style="zoom:50%;" /></li>
+<li>a simple method for <strong>generating sequnce numbers that is consistent with causality</strong></li>
+<li><strong>The Lamport timestamp is then simply a pair of (counter, node ID).</strong> <img src="https://res.cloudinary.com/shuaiz/image/upload/v1598708519/Design%20Data%20Intensive%20Application/p2-ch9-img7_vfjktj.png" alt="p2-ch9-img4" style="zoom:50%;" /></li>
 <li>A lamport timestamp bears no relationship to a physical time-of-day clock, but it provides total ordering<ul>
 <li>if you have two timestamps, the one with a greater counter value is the greater timestamp;</li>
 <li>if the counter values are the same, the one withe the greater node ID is the greater timestamp.</li>
 </ul>
 </li>
-<li>Key idea: <strong>every node and every client keeps track of the maximum counter value it has see so far, and including that maximun on every request</strong>.<ul>
-<li>When a node receives a request pr response with a maximum counter value greater that its own counter value, it immediately increases its own counter to that maximum. (: kind like “Read repair”? )</li>
+<li>Key idea: <strong>every node and every client keeps track of the maximum counter value it has seen so far, and including that maximun on every request</strong>.<ul>
+<li>When a node receives a request or response with a maximum counter value greater that its own counter value, it immediately increases its own counter to that maximum. (: kind like “Read repair”? )</li>
 </ul>
 </li>
 <li><u>As long as the maximum counter value is carried along with every operation</u>, this scheme ensures that the ordering from the Lamport timestamps is consistent with causality, because every causal dependency results in an increased timestamp.</li>
 <li><strong>vs. Version Vector</strong><ul>
-<li>version vectors can distinguage whether two operations are concurrent or whether one is causally dependent on the other;</li>
+<li>version vectors can distingush whether two operations are concurrent or whether one is causally dependent on the other;</li>
 <li>whereas Lamport timestamps always enforce a total ordering.</li>
 </ul>
 </li>
@@ -462,7 +462,7 @@
 </ul>
 </li>
 <li>While this procedure ensures <strong>linearizable writes</strong>, it doesn’t guarantee linearizable reads. (due to async. update)<ul>
-<li>To be precise, the procedure described here provides <strong>sequential consistency</strong>, sometimes also known as <strong>timeline consistency</strong>, a <u>slightly weaker guarantee</u> that linearizability.</li>
+<li>To be precise, the procedure described here provides <strong>sequential consistency</strong>, sometimes also known as <strong>timeline consistency</strong>, a <u>slightly weaker guarantee</u> than linearizability.</li>
 <li>There are ways to make reads linearizable tho.</li>
 </ul>
 </li>
@@ -473,7 +473,7 @@
 <li>Alternatively, an <u>atomic compare-and-set</u> operation would also do the job.</li>
 </ul>
 </li>
-<li>It can be proved that a linearizable compare-and-set (or increment-and-get) register and ttal oder broadcast are bothe equivalent to consensus.</li>
+<li>It can be proved that a linearizable compare-and-set (or increment-and-get) register and total order broadcast are both equivalent to consensus.</li>
 </ul>
 </li>
 </ul>
@@ -536,7 +536,7 @@
 <li>E.g. distributed transactions in MySQL are reported to be over 10 times slower than single-node transactions.</li>
 </ul>
 </li>
-<li><strong>Twp quite different types of distributed transactions</strong><ul>
+<li><strong>Two quite different types of distributed transactions</strong><ul>
 <li><strong>Database-internal distributed transactions</strong><ul>
 <li>Some distributed databases (i.e., databases that hat use replcation and partitioning in their standard configuration) support interbnal transactions among the nodes of that database.</li>
 </ul>
@@ -598,14 +598,14 @@
 <li>Most consensus algorithms <u>assume</u> that there are no Byzantine faults.</li>
 <li><strong>Consensus algorithms and total order broadcast</strong><ul>
 <li>The best-known fault-tolerant consensus algorithms are <u>Viewstampsed Replication (VSR), <strong>Paxos</strong>, Raft, and Zab</u>.</li>
-<li>They decide oin a sequence of values, which makes them <strong>total order broadcast</strong> algorithms, as discussed previously.</li>
+<li>They decide on a sequence of values, which makes them <strong>total order broadcast</strong> algorithms, as discussed previously.</li>
 </ul>
 </li>
 <li><strong>Single-leader replication and consensus</strong></li>
-<li><strong>Epoch numbering andn quorums</strong><ul>
+<li><strong>Epoch numbering and quorums</strong><ul>
 <li>All of the consensus protocal discussed so far internally use a leader in some form of another, but they don’t guarantee that the leader is unique.</li>
 <li>Instead, they can make a <strong>weaker guarantee</strong><ul>
-<li>The protocal defiens an <strong>epoch numver</strong> (called the <strong>ballot</strong> number in Paxos, <strong>view</strong> number in Viewstamped Replication, and <strong>term</strong> number in Raft) and guarantee that within each epoch, the leader is unique.</li>
+<li>The protocal defines an <strong>epoch number</strong> (called the <strong>ballot</strong> number in Paxos, <strong>view</strong> number in Viewstamped Replication, and <strong>term</strong> number in Raft) and guarantee that within each epoch, the leader is unique.</li>
 </ul>
 </li>
 <li>How does a leader know that it hasn’t been ousted by another node?<ul>
@@ -616,7 +616,7 @@
 <li>We have <u>two rounds of voting</u>: <strong>once</strong> to choose a leader, and a <strong>second</strong> time to vote on a leader’s proposal.</li>
 <li><strong>Key insight is</strong> that the quorums for those two votes must overlap: if a vote n a proposal succeeds, at least one of the nodes that voted for it must have also participated in most recent leader’s election.</li>
 <li>Vs. <strong>2PC</strong> which the coordinator is not elected <ul>
-<li>Moreover, the consensus algorithms define a recovery process by which nodes can get into a consistent state after a new leader os elected, ensuring that the safety properties are always met.</li>
+<li>Moreover, the consensus algorithms define a recovery process by which nodes can get into a consistent state after a new leader is elected, ensuring that the safety properties are always met.</li>
 </ul>
 </li>
 </ul>
@@ -625,23 +625,23 @@
 <li>Consensus algorithms are a huge breakthrough for distributed systems <ul>
 <li>they bring concrete safety properties (agreement, integratity, and validity) to systems where everything else is uncertain,</li>
 <li>they nevertheless remain fault-tolerant (able to make progress as long as a majority of nodes are working and reachable).</li>
-<li>they can also implement linearizabal atomic operations in a fault-tolerant way.</li>
+<li>they can also implement linearizable atomic operations in a fault-tolerant way.</li>
 </ul>
 </li>
 <li>But everything come at a cost</li>
 <li>Consensus systems <strong>always require a strict majority to operate.</strong> (1 out of 3, 2 out of 5 etc.)</li>
 <li>Most consensus algorithms <strong>assume</strong> a fixed set of nodes that participate in voting, which means that you can’t just add or remove nodes in the cluster.</li>
 <li>Consensus systems generally rely on timeouts to detect failed node. (within highly variable netwrok delays, this could be lost of false failed) result in frequent leader elections result in terrible performance.</li>
-<li>Sometimes, consensus algorithms are particularly <strong>sensitive to netwrok problems</strong>.</li>
+<li>Sometimes, consensus algorithms are particularly <strong>sensitive to network problems</strong>.</li>
 </ul>
 </li>
 </ul>
 </li>
 <li><p><strong>Membership and Coordination Service</strong></p>
 <ul>
-<li><p>projects like <strong>ZooKeeper</strong> or <strong>etcd</strong> are often described as “distributed key-value stroes” or “coordination and configuration services”. (Useful for distributed coordination)</p>
+<li><p>projects like <strong>ZooKeeper</strong> or <strong>etcd</strong> are often described as “distributed key-value stores” or “coordination and configuration services”. (Useful for distributed coordination)</p>
 </li>
-<li><p>ZooKeeper not for general-purpose databases, but indirectly via soem other project.</p>
+<li><p>ZooKeeper not for general-purpose databases, but indirectly via some other project.</p>
 <ul>
 <li>E.g. <u>HBase, Hadoop YARN, OpenStack Nova, and <strong>Kafka</strong></u> all rely on ZooKeeper running in the background.</li>
 </ul>
@@ -673,7 +673,7 @@
 <li>If the application state needs to be replicated from one node to another, other tools (such as Apache BookKeeper) can be used.</li>
 </ul>
 </li>
-<li><p>*<em>Service discovery *</em></p>
+<li><p><strong>Service discovery</strong></p>
 <ul>
 <li><strong>Zookeeper, etcd</strong>, and <strong>Consul</strong> are also often used for service discovery – that is, to find out which IP address you need to connect to in prder to reach a particular service.</li>
 <li>In cloud data center environments, where it is common for virtual machines to continually come and go, you often don’t know the IP addresses of you services ahead of time.<ul>
@@ -695,35 +695,35 @@
 <h4 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h4><ul>
 <li>In this chapter we examined the topics of <strong>consistency</strong> and <strong>consensus</strong> form several different angles.<ul>
 <li><strong>Linearizability</strong> (Consistency Model)<ul>
-<li>Its goal is to make replicated data appear as though there were only a single copy, and t omake all operations act on it atomically. (Downside: being slow especially when there is larget netwrod delays)</li>
+<li>Its goal is to make replicated data appear as though there were only a single copy, and to make all operations act on it atomically. (Downside: being slow especially when there is large network delays)</li>
 </ul>
 </li>
 <li><strong>Causality</strong> (weaker consistency model)<ul>
 <li>which imposes an ordering on events in a system (what happend before what, based on cause and effect).</li>
-<li><strong>Causal consistency</strong> does not have the coordination overhead of linearizability and is much less sensitive to netwrok problems.</li>
+<li><strong>Causal consistency</strong> does not have the coordination overhead of linearizability and is much less sensitive to network problems.</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>We saw that achieving <strong>consensus</strong> means deciding something in such a way that all nodes agree on what was was decided, and such that the decidsion is irrevocable.<ul>
+<li>We saw that achieving <strong>consensus</strong> means deciding something in such a way that all nodes agree on what was was decided, and such that the decision is irrevocable.<ul>
 <li>Wide range of problems are actully reducible to consensus and are equivalent to each other<ul>
 <li><strong>Linearizable compare-and-set registers</strong>: The register needs to atomically decide whether to set its value, based in whether its current value equals the parameter given in the operation.</li>
-<li><strong>Atomic transaction commit</strong>: A database must decide whether to commit or abrort a disrupted transaction.</li>
+<li><strong>Atomic transaction commit</strong>: A database must decide whether to commit or abort a disrupted transaction.</li>
 <li><strong>Total order broadcast</strong>: The messageing system must decide on the order in which to deliver messages.</li>
 <li><strong>Locks and leases</strong>: When several cilents are racing to grab a lock or lease, the lock decides which one successfully acquired it.</li>
-<li><strong>Membership/Coordination service</strong>: Given a failure detector (e.g., timeouts), the system must decide which nodes are alive, and which shoudb be considered dead because of their sessions timeout out.</li>
+<li><strong>Membership/Coordination service</strong>: Given a failure detector (e.g., timeouts), the system must decide which nodes are alive, and which should be considered dead because of their sessions timeout out.</li>
 <li><strong>Uniqueness constraint</strong>: When several transactions concurrently try to create conflicting records with the same key, the constraint must decide which one to allow and which should fail with a constraint violation.</li>
 </ul>
 </li>
 <li>How to handle leader-failure<ol>
 <li>wait for the leader to recover, and accept that the system will be blocked in the meantime.</li>
 <li>Manually fail over by getting humans to choose a new leader node and reconfigure the system to use it.</li>
-<li>USe an algorithm to automatically choose a new leader</li>
+<li>Use an algorithm to automatically choose a new leader</li>
 </ol>
 </li>
 </ul>
 </li>
-<li>Tooles like <strong>ZooKeeper</strong> play an important role in providing an “outsourced” <strong>consensus</strong>, <strong>failure detection</strong>, and <strong>membership service</strong> that application can use.</li>
+<li>Tools like <strong>ZooKeeper</strong> play an important role in providing an “outsourced” <strong>consensus</strong>, <strong>failure detection</strong>, and <strong>membership service</strong> that application can use.</li>
 <li>Not every system necessarily requires consensus: for example, <strong>leaderless</strong> and <strong>multi-leader</strong> replication systems typically do not use global consensus.</li>
 </ul>
 
