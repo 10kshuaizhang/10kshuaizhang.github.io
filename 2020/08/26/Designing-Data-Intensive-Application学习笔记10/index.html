@@ -20,7 +20,7 @@
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598481916/Design%20Data%20Intensive%20Application/p2-ch8-img3_h3rahr.png">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598482200/Design%20Data%20Intensive%20Application/p2-ch8-img4_wbr7xt.png">
 <meta property="article:published_time" content="2020-08-26T23:44:38.000Z">
-<meta property="article:modified_time" content="2020-09-09T22:46:29.177Z">
+<meta property="article:modified_time" content="2020-09-10T15:45:16.277Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
@@ -446,13 +446,13 @@
 </li>
 <li><p>Although it is possible to make software well behaved in an unreliable system model, it is not straightforward to do so.</p>
 </li>
-<li><p><strong>The Truth IS Deifned by Majority</strong></p>
+<li><p><strong>The Truth Is Deifned by Majority</strong></p>
 <ul>
 <li><p>Netwrok with an <u>asymmetric fault</u>: a node is able to receive all messages sent to it, but any outgoing message from that node are dropped or delayed.</p>
 </li>
 <li><p><u>In a distributed system a node cannot necessarily trust its own judgment of a situation</u>.</p>
 </li>
-<li><p>Instead, many distributed algorithms rely on a <strong>Quorum</strong>, that is, voting aong the nodes: <u>decisions require some minimum number of votes from several nodes in order to reduce the dependence on any one particular node</u>.</p>
+<li><p>Instead, many distributed algorithms rely on a <strong>Quorum</strong>, that is, voting among the nodes: <u>decisions require some minimum number of votes from several nodes in order to reduce the dependence on any one particular node</u>.</p>
 <ul>
 <li>Most commonly, the quorum is an absolute <strong>majority of more than half the nodes</strong>.</li>
 </ul>
@@ -479,7 +479,7 @@
 </li>
 <li>A system is <strong>Byzantine fault-tolerant</strong> if it continues to operate correctly even if some of the nodes are malfunctioning and not obey the protocal, or if malicious attackers are interfering with the network.</li>
 <li><strong>Weak forms of lying</strong><ul>
-<li>It can be wortj adding mechanisms to software that guard against weak forms of “lying”<ul>
+<li>It can be worth adding mechanisms to software that guard against weak forms of “lying”<ul>
 <li>E.g. invalid messages due to hardware issues, software bugs, and misconfigurations.</li>
 </ul>
 </li>
@@ -504,7 +504,7 @@
 <li><strong>Timing assumptions</strong>, three system models are in common use<ul>
 <li><strong>Synchronous</strong> model: assumes bounded network delay, bounded process pauses, and bounded clock error.</li>
 <li><strong>Partially synchronous</strong> model: means that a system behaves like a synchronous system most of the time, but it sometimes exceeds the bounds for netwrok delay, process pauses, and clock drift.</li>
-<li><strong>Asynchronous</strong> model: an algorithm is not allowed to make any timing assumptions– in fact, it does not even have a clock (so it cannot use tomeouts)</li>
+<li><strong>Asynchronous</strong> model: an algorithm is not allowed to make any timing assumptions– in fact, it does not even have a clock (so it cannot use timeouts)</li>
 </ul>
 </li>
 <li><strong>Node failures</strong>. The three most common system models of nodes are<ul>
@@ -513,7 +513,7 @@
 <li><strong>Byzantine (arbitrary) faults</strong>: Nodes may do absolutely anything, including trying to trick and deceive other nodes.</li>
 </ul>
 </li>
-<li>For modeling reaal systems, the <u>partially synchronous model</u> with <u>crash-recovery faults</u> is generally <strong>the most useful model</strong>.</li>
+<li>For modeling real systems, the <u>partially synchronous model</u> with <u>crash-recovery faults</u> is generally <strong>the most useful model</strong>.</li>
 <li><strong>Correctness of an algorithm</strong><ul>
 <li><strong>An algorithm is correct in some system model</strong> if it always satisfies its properties in all situations that we assume may occur in that system model.</li>
 </ul>
@@ -528,7 +528,7 @@
 <li>After a safety property has been violated, the violation cannot be undone – the damage is already done.</li>
 </ul>
 </li>
-<li><strong>A liveness property works the other way round</strong>: it may not hold at some point in time (e.g., a node may habe sent a request but not yet received a response)<ul>
+<li><strong>A liveness property works the other way round</strong>: it may not hold at some point in time (e.g., a node may have sent a request but not yet received a response)<ul>
 <li>but there is always hope that it may be satisfied in the future (namely by receiving a response).</li>
 </ul>
 </li>
@@ -552,10 +552,10 @@
 <li>Pause of execution (maybe due to GC)</li>
 </ul>
 </li>
-<li>Such <strong>partial failures</strong> can occur is the difining <u>characteristic</u> of distribbuted systems.</li>
-<li>In distributed systems, we tru to build tolerance of partial failures into software, so that the system as a whole may continue functioning even when some of its constituent parts are broken.</li>
+<li>Such <strong>partial failures</strong> can occur is the difining <u>characteristic</u> of distributed systems.</li>
+<li>In distributed systems, we try to build tolerance of partial failures into software, so that the system as a whole may continue functioning even when some of its constituent parts are broken.</li>
 <li>To tolerate faults, the first step is to detect them, but even that is hard.</li>
-<li>Once a fault is detected, making a system tolerate it is not easy either: there is no global variable, no shared memory, no common knowledge or ant other kind of shared state between the machines. (e.g. Solution: Quorum to agree)</li>
+<li>Once a fault is detected, making a system tolerate it is not easy either: there is no global variable, no shared memory, no common knowledge or any other kind of shared state between the machines. (e.g. Solution: Quorum to agree)</li>
 <li>If you can avoid opening Pandora’s box and simply keep things on a single machine, it is generally worth doing so.  -</li>
 </ul>
 
