@@ -18,7 +18,7 @@
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1597853443/part2-ch5-img1_t9ci3q.png">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1597853882/part2-ch5-img2_pa6r2a.png">
 <meta property="article:published_time" content="2020-08-20T05:43:50.000Z">
-<meta property="article:modified_time" content="2020-08-25T22:50:21.724Z">
+<meta property="article:modified_time" content="2020-09-11T03:35:14.207Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
@@ -260,7 +260,7 @@
 <li><strong>Leader failure: Failover</strong><ul>
 <li><strong>Failover</strong>: one of the followers needs to be promoted to be the new leader, clients need to be configured to send their writes to the new leader, and the other followers need to start consuming data changes from new leader.</li>
 <li><strong>Automatic failover</strong> process usually consists of the following steps:<ol>
-<li>Determinig that the leader has failed. If a node doesn’t respond for some period of time – say 30 seconds – it is assumed to be dead;</li>
+<li>Determining that the leader has failed. If a node doesn’t respond for some period of time – say 30 seconds – it is assumed to be dead;</li>
 <li>Choosing a new leader, through <u>election process</u> or <u>controller node</u> selection;</li>
 <li>Reconfiguring the system to use the new leader. The system needs to ensure that the old leader becomes a follower and recognizes the new leader.</li>
 </ol>
@@ -310,7 +310,7 @@
 <li>A trigger lets you register custom application code that is automatically executed when a data change (write transaction) occurs in a database system.</li>
 </ul>
 </li>
-<li><u>Trigger-based replication typically has greater overheads that other replcation methods</u>, and is more prone to bugs and limitations than the database’s built-in replication.<ul>
+<li><u>Trigger-based replication typically has greater overheads than other replcation methods</u>, and is more prone to bugs and limitations than the database’s built-in replication.<ul>
 <li>But, provide greater flexibility.</li>
 </ul>
 </li>
@@ -327,7 +327,7 @@
 </ul>
 </li>
 <li><strong>Reading Your Own Writes</strong><ul>
-<li>A user makes a write, followed by a read from stale replicat. To prevent this anomaly, we need <strong><u>read-after-write consistency </u></strong></li>
+<li>A user makes a write, followed by a read from stale replica. To prevent this anomaly, we need <strong><u>read-after-write consistency </u></strong></li>
 <li><u>It makes no promises about the other users</u>: other users’ updates may not be visible until some later time. However, it reassures the user that their own input has been saved correctly.</li>
 <li>How can we implement read-after-write consistency in a system with leader-based replication? e.g.<ul>
 <li>When reading something that the user may have modified, read it from the leader; otherwise, read it from a follower.</li>
@@ -367,7 +367,7 @@
 </ul>
 <h3 id="Muti-Leader-Replication"><a href="#Muti-Leader-Replication" class="headerlink" title="Muti-Leader Replication"></a>Muti-Leader Replication</h3><ul>
 <li>Leader-based repliaction has one <u>major downside: there is only one leader, and all writes must go through it.</u> -&gt; single point failure.</li>
-<li><strong>Multi-leader configuration</strong> (also known as <u>master-master or active/active replication</u>): A natural extension of the leader-based replicaion model is to allow more that one node to accepts writes.<ul>
+<li><strong>Multi-leader configuration</strong> (also known as <u>master-master or active/active replication</u>): A natural extension of the leader-based replication model is to allow more than one node to accepts writes.<ul>
 <li>Replication the same: each node that processes a write must forward that data change to all the other nodes.</li>
 </ul>
 </li>
@@ -389,7 +389,7 @@
 </li>
 <li><strong>Downsides</strong><ul>
 <li>The same data may be concurrently modified in two different datacenter, and those <strong><u>write conflicts</u></strong> must be resolved.</li>
-<li>As multi-leader replication is a somewhat retrofitted feature in many databses, there are often subtle configuration pitfalls and surprising interactions with other databased features.</li>
+<li>As multi-leader replication is a somewhat retrofitted feature in many databses, there are often subtle configuration pitfalls and surprising interactions with other database features.</li>
 </ul>
 </li>
 <li><strong>Clients with offline operation</strong>: E.g. calendar, <u>mobile devices</u> etc. (CouchDB)<ul>
@@ -467,7 +467,8 @@
 <li>In a leaderless configuration, <u>failover does not exist</u>.</li>
 <li>A <strong><u>quorum write, quorum read and read repair</u></strong> after a node outage.</li>
 <li>When a client reads from the database, it doesn’t just send its request to one replica: <strong>read requests are also sent to several nodes in parallel</strong>.</li>
-<li><strong>Read repair and anti-entrophy</strong><br>r       * The replication scheme should ensure that eventually all the data is copied to every replica.<ul>
+<li><strong>Read repair and anti-entrophy</strong><ul>
+<li>The replication scheme should ensure that eventually all the data is copied to every replica.</li>
 <li><strong>Read repair</strong>: When a client makes a read from several nodes in parallel, it can detect any stale response. (when read is heavy)</li>
 <li><strong>Anti-entropy process</strong>: In addition, some datastores have a background process that constantly looks for differences in the data between replicas and copies any missing data from one replica to another. (Maybe delay)</li>
 </ul>
@@ -508,7 +509,7 @@
 </ul>
 </li>
 <li>Dynamo-style databases are generally optimized for use cases that can tolerate <strong>eventual consistency</strong><ul>
-<li>Stronger guarantees generally require <u>tansactions</u> or <u>consensus</u>.</li>
+<li>Stronger guarantees generally require <u>transactions</u> or <u>consensus</u>.</li>
 </ul>
 </li>
 <li><strong>Monitoring staleness</strong><ul>
@@ -539,7 +540,7 @@
 <li>In order to become eventually consistent, the replicas should converge toward the same values.</li>
 <li><strong>Last writes wins (discarding concurrent writes)</strong><ul>
 <li>Declare that each replica need only store the most “recent” value and allow “older” values to be overwritten and discarded.</li>
-<li>writes are concurrent, so their order is indefind.</li>
+<li>writes are concurrent, so their order is undefind.</li>
 <li>Even though the writes don’t have a natural ordering, we can force an arbitrary order on them.</li>
 <li>LWW achieves the goal of eventual convergence, but at the cost of durability<ul>
 <li>If losing data is not acceptable, LWW is a poor choice for confict resolution.</li>
@@ -618,7 +619,10 @@
 <li>is popular because it is fairly easy to understand and there is no conflict resolution to worry about </li>
 </ul>
 </li>
-<li>Multi-leader &amp; Leaderless<br>e       * Can be more robust in there presence of faulty nodes, network interruptions and latency spikes – at the cost of being harder to reason about and providing only <u>very weak consistency</u> guarantees.</li>
+<li>Multi-leader &amp; Leaderless<ul>
+<li>Can be more robust in there presence of faulty nodes, network interruptions and latency spikes – at the cost of being harder to reason about and providing only <u>very weak consistency</u> guarantees.</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>Replication can be <strong><u>synchronous</u></strong> or <strong><u>asynchronous</u></strong>, which has a profound effect on the system behavior when there is a fault.<ul>

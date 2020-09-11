@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://yoursite.com/2020/08/19/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B07/</loc>
+    <lastmod>2020-09-11</lastmod>
+  </url>  <url>
     <loc>http://yoursite.com/2020/08/23/Kafka/</loc>
     <lastmod>2020-09-11</lastmod>
   </url>  <url>
@@ -24,9 +27,6 @@
   </url>  <url>
     <loc>http://yoursite.com/2020/08/07/%E5%B0%8F%E7%BB%83%E4%B9%A0-%E7%BD%91%E9%A1%B5%E6%BA%90%E7%A0%81%E5%A4%84%E7%90%86/</loc>
     <lastmod>2020-09-09</lastmod>
-  </url>  <url>
-    <loc>http://yoursite.com/2020/08/19/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B07/</loc>
-    <lastmod>2020-08-25</lastmod>
   </url>  <url>
     <loc>http://yoursite.com/2020/08/21/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B08/</loc>
     <lastmod>2020-08-25</lastmod>
