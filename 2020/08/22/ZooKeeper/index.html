@@ -8,15 +8,15 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>ZooKeeper | 10K&#39;s</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="提到ZooKeeper，相信大家都不会陌生。Dubbo，Kafka,Hadoop等等项目里都能看到它的影子。但是你真的了解 ZooKeeper 吗？如果面试官让你给他讲讲 ZooKeeper 是个什么东西，你能回答到什么地步呢？这篇文章是概念性的认识，你会得到 ZooKeeper 是什么，ZooKeeper 设计的目标，ZooKeeper 能做什么和ZooKeeper 基本的概念。">
+  <meta name="description" content="提到ZooKeeper，相信大家都不会陌生。Dubbo, Kafka, Hadoop等等项目里都能看到它的影子。但是你真的了解 ZooKeeper 吗？如果面试官让你给他讲讲 ZooKeeper 是个什么东西，你能回答到什么地步呢？这篇文章是概念性的认识，你会得到 ZooKeeper 是什么，ZooKeeper 设计的目标，ZooKeeper 能做什么和ZooKeeper 基本的概念。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ZooKeeper">
 <meta property="og:url" content="http://yoursite.com/2020/08/22/ZooKeeper/index.html">
 <meta property="og:site_name" content="10K&#39;s">
-<meta property="og:description" content="提到ZooKeeper，相信大家都不会陌生。Dubbo，Kafka,Hadoop等等项目里都能看到它的影子。但是你真的了解 ZooKeeper 吗？如果面试官让你给他讲讲 ZooKeeper 是个什么东西，你能回答到什么地步呢？这篇文章是概念性的认识，你会得到 ZooKeeper 是什么，ZooKeeper 设计的目标，ZooKeeper 能做什么和ZooKeeper 基本的概念。">
+<meta property="og:description" content="提到ZooKeeper，相信大家都不会陌生。Dubbo, Kafka, Hadoop等等项目里都能看到它的影子。但是你真的了解 ZooKeeper 吗？如果面试官让你给他讲讲 ZooKeeper 是个什么东西，你能回答到什么地步呢？这篇文章是概念性的认识，你会得到 ZooKeeper 是什么，ZooKeeper 设计的目标，ZooKeeper 能做什么和ZooKeeper 基本的概念。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-08-23T03:18:56.000Z">
-<meta property="article:modified_time" content="2020-08-23T16:55:47.783Z">
+<meta property="article:modified_time" content="2020-09-11T01:58:01.955Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
@@ -196,7 +196,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>提到ZooKeeper，相信大家都不会陌生。Dubbo，Kafka,Hadoop等等项目里都能看到它的影子。但是你真的了解 ZooKeeper 吗？如果面试官让你给他讲讲 ZooKeeper 是个什么东西，你能回答到什么地步呢？<br>这篇文章是概念性的认识，你会得到 ZooKeeper 是什么，ZooKeeper 设计的目标，ZooKeeper 能做什么和ZooKeeper 基本的概念。</p>
+        <p>提到ZooKeeper，相信大家都不会陌生。Dubbo, Kafka, Hadoop等等项目里都能看到它的影子。但是你真的了解 ZooKeeper 吗？如果面试官让你给他讲讲 ZooKeeper 是个什么东西，你能回答到什么地步呢？<br>这篇文章是概念性的认识，你会得到 ZooKeeper 是什么，ZooKeeper 设计的目标，ZooKeeper 能做什么和ZooKeeper 基本的概念。</p>
 <a id="more"></a>
 
 <h3 id="一、ZooKeeper是什么"><a href="#一、ZooKeeper是什么" class="headerlink" title="一、ZooKeeper是什么"></a>一、ZooKeeper是什么</h3><p>ZooKeeper 是一个分布式的，开放源码的分布式应用程序协调服务，是Google的Chubby一个开源的实现，是Hadoop和Hbase的重要组件。它是一个为分布式应用提供一致性服务的软件，提供的功能包括：配置维护、域名服务、分布式同步、组服务等。</p>
@@ -219,7 +219,7 @@
 <li>顺序访问<br>  对于来自客户端的每个更新请求，Zookeeper 都会分配一个全局唯一的递增编号，这个编号反映了所有事务操作的先后顺序。</li>
 <li>高性能<br>  Zookeeper 和Redis一样全量数据存储在内存中，100%读请求压测QPS 12-13W。</li>
 </ul>
-<h3 id="五、关于-ZooKeeper-的一些重要概念"><a href="#五、关于-ZooKeeper-的一些重要概念" class="headerlink" title="五、关于 ZooKeeper 的一些重要概念"></a>五、关于 ZooKeeper 的一些重要概念</h3><h4 id="5-1-Zookeeper-集群："><a href="#5-1-Zookeeper-集群：" class="headerlink" title="5.1 Zookeeper 集群："></a>5.1 Zookeeper 集群：</h4><p>Zookeeper 是一个由多个 server 组成的集群,一个 leader，多个 follower。（这个不同于我们常见的Master/Slave模式）leader 为客户端服务器提供读写服务，除了leader外其他的机器只能提供读服务。<br>每个 server 保存一份数据副本全数据一致，分布式读 follower，写由 leader 实施更新请求转发，由 leader 实施更新请求顺序进行，来自同一个 client 的更新请求按其发送顺序依次执行数据更新原子性，一次数据更新要么成功，要么失败。全局唯一数据视图，client 无论连接到哪个 server，数据视图都是一致的实时性，在一定事件范围内，client 能读到最新数据。</p>
+<h3 id="五、关于-ZooKeeper-的一些重要概念"><a href="#五、关于-ZooKeeper-的一些重要概念" class="headerlink" title="五、关于 ZooKeeper 的一些重要概念"></a>五、关于 ZooKeeper 的一些重要概念</h3><h4 id="5-1-Zookeeper-集群"><a href="#5-1-Zookeeper-集群" class="headerlink" title="5.1 Zookeeper 集群"></a>5.1 Zookeeper 集群</h4><p>Zookeeper是一个由多个server组成的集群, 一个leader，多个follower。（这个不同于我们常见的Master/Slave模式）leader为客户端服务器提供读写服务，除了leader外其他的机器只能提供读服务。<br>每个 server 保存一份数据副本全数据一致，分布式读 follower，写由 leader 实施更新请求转发，由 leader 实施更新请求顺序进行，来自同一个 client 的更新请求按其发送顺序依次执行数据更新原子性，一次数据更新要么成功，要么失败。全局唯一数据视图，client 无论连接到哪个 server，数据视图都是一致的实时性，在一定事件范围内，client 能读到最新数据。</p>
 <h4 id="5-2-集群角色"><a href="#5-2-集群角色" class="headerlink" title="5.2 集群角色"></a>5.2 集群角色</h4><p><strong>Leader</strong>：是整个 Zookeeper 集群工作机制中的核心 。Leader 作为整个 ZooKeeper 集群的主节点，负责响应所有对 ZooKeeper 状态变更的请求。<br>主要工作：</p>
 <ul>
 <li>事务请求的唯一调度和处理，保障集群处理事务的顺序性。</li>
@@ -227,9 +227,9 @@
 </ul>
 <p>Leader 选举是 Zookeeper 最重要的技术之一，也是保障分布式数据一致性的关键所在。我们以三台机器为例，在服务器集群初始化阶段，当有一台服务器Server1启动时候是无法完成选举的，当第二台机器 Server2 启动后两台机器能互相通信，每台机器都试图找到一个leader，于是便进入了 leader 选举流程.</p>
 <ol>
-<li>每个 server 发出一个投票<br> 投票的最基本元素是（SID-服务器id,ZXID-事物id）</li>
+<li>每个 server 发出一个投票<br> 投票的最基本元素是（SID-服务器id,ZXID-事务id）</li>
 <li>接受来自各个服务器的投票</li>
-<li>处理投票<br> 优先检查 ZXID(数据越新ZXID越大),ZXID比较大的作为leader，ZXID一样的情况下比较SID</li>
+<li>处理投票<br> 优先检查 ZXID(数据越新ZXID越大), ZXID比较大的作为leader，ZXID一样的情况下比较SID</li>
 <li>统计投票<br> 这里有个<strong>过半</strong>的概念，大于集群机器数量的一半，即大于或等于（n/2+1）,我们这里的由三台，大于等于2即为达到“过半”的要求。<br> 这里也有引申到为什么 Zookeeper 集群推荐是单数。</li>
 </ol>
 <table>
@@ -283,14 +283,14 @@
 <li>isClosing。标记一个会话是否已经被关闭，当服务端检测到会话已经超时失效时，会将该会话的isClosing标记为”已关闭”，这样就能确保不再处理来自该会话的心情求了。</li>
 </ol>
 <p>Zookeeper为了保证请求会话的全局唯一性，在SessionTracker初始化时，调用initializeNextSession方法生成一个sessionID，之后在Zookeeper运行过程中，会在该sessionID的基础上为每个会话进行分配，初始化算法如下</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">```</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">initializeNextSession</span><span class="params">(<span class="keyword">long</span> id)</span> </span>&#123;</span><br><span class="line">	  <span class="keyword">long</span> nextSid = <span class="number">0</span>;</span><br><span class="line">	  <span class="comment">// 无符号右移8位使为了避免左移24后，再右移8位出现负数而无法通过高8位确定sid值</span></span><br><span class="line">	  nextSid = (System.currentTimeMillis() &lt;&lt; <span class="number">24</span>) &gt;&gt;&gt; <span class="number">8</span>;</span><br><span class="line">	  nextSid = nextSid | (id &lt;&lt; <span class="number">56</span>);</span><br><span class="line">	  <span class="keyword">return</span> nextSid;</span><br><span class="line">	&#125;</span><br><span class="line">	```</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">initializeNextSession</span><span class="params">(<span class="keyword">long</span> id)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">long</span> nextSid = <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// 无符号右移8位使为了避免左移24后，再右移8位出现负数而无法通过高8位确定sid值</span></span><br><span class="line">  nextSid = (System.currentTimeMillis() &lt;&lt; <span class="number">24</span>) &gt;&gt;&gt; <span class="number">8</span>;</span><br><span class="line">  nextSid = nextSid | (id &lt;&lt; <span class="number">56</span>);</span><br><span class="line">  <span class="keyword">return</span> nextSid;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="5-3-3-会话管理"><a href="#5-3-3-会话管理" class="headerlink" title="5.3.3 会话管理"></a>5.3.3 会话管理</h4><p>Zookeeper的会话管理主要是通过SessionTracker来负责，其采用了<strong>分桶策略</strong>（将类似的会话放在同一区块中进行管理）进行管理，以便Zookeeper对会话进行不同区块的隔离处理以及同一区块的统一处理。5.4 数据节点 Znode</p>
-<p>在Zookeeper中，“节点”分为两类，第一类同样是指构成集群的机器，我们称之为机器节点；第二类则是指数据模型中的数据单元，我们称之为数据节点一一ZNode。<br>Zookeeper将所有数据存储在内存中，数据模型是一棵树（Znode Tree)，由斜杠（/）的进行分割的路径，就是一个Znode，例如/foo/path1。每个上都会保存自己的数据内容，同时还会保存一系列属性信息。</p>
+<h4 id="5-3-3-会话管理"><a href="#5-3-3-会话管理" class="headerlink" title="5.3.3 会话管理"></a>5.3.3 会话管理</h4><p>Zookeeper的会话管理主要是通过SessionTracker来负责，其采用了<strong>分桶策略</strong>（将类似的会话放在同一区块中进行管理）进行管理，以便Zookeeper对会话进行不同区块的隔离处理以及同一区块的统一处理。</p>
+<h3 id="5-4-数据节点-Znode"><a href="#5-4-数据节点-Znode" class="headerlink" title="5.4 数据节点 Znode"></a>5.4 数据节点 Znode</h3><p>在Zookeeper中，“节点”分为两类，第一类同样是指构成集群的机器，我们称之为机器节点；第二类则是指数据模型中的数据单元，我们称之为数据节点一一ZNode。<br>Zookeeper将所有数据存储在内存中，数据模型是一棵树（Znode Tree)，由斜杠（/）的进行分割的路径，就是一个Znode，例如/foo/path1。每个上都会保存自己的数据内容，同时还会保存一系列属性信息。</p>
 <h5 id="5-4-1-节点类型"><a href="#5-4-1-节点类型" class="headerlink" title="5.4.1 节点类型"></a>5.4.1 节点类型</h5><p>在Zookeeper中，node可以分为持久节点和临时节点和顺序节点三大类。<br>可以通过组合生成如下四种类型节点</p>
 <ol>
-<li>PERSISTENT<br> 持久节点,节点创建后便一直存在于Zookeeper服务器上，直到有删除操作来主动清楚该节点。</li>
-<li>PERSISTENT_SEQUENTIAL<br> 持久顺序节点,相比持久节点，其新增了顺序特性，每个父节点都会为它的第一级子节点维护一份顺序，用于记录每个子节点创建的先后顺序。在创建节点时，会自动添加一个数字后缀，作为新的节点名，该数字后缀的上限是整形的最大值。</li>
+<li>PERSISTENT<br> 持久节点,节点创建后便一直存在于Zookeeper服务器上，直到有删除操作来主动清除该节点。</li>
+<li>PERSISTENT_SEQUENTIAL<br> 持久顺序节点, 相比持久节点，其新增了顺序特性，每个父节点都会为它的第一级子节点维护一份顺序，用于记录每个子节点创建的先后顺序。在创建节点时，会自动添加一个数字后缀，作为新的节点名，该数字后缀的上限是整形的最大值。</li>
 <li>EPEMERAL<br> 临时节点，临时节点的生命周期与客户端会话绑定，客户端失效，节点会被自动清理。同时，Zookeeper规定不能基于临时节点来创建子节点，即临时节点只能作为叶子节点。</li>
 <li>EPEMERAL_SEQUENTIAL<br> 临时顺序节点,在临时节点的基础添加了顺序特性。</li>
 </ol>
@@ -321,7 +321,7 @@
 <ul>
 <li>分布式锁，这个主要得益于ZooKeeper为我们保证了数据的强一致性。锁服务可以分为两类，一个是保持独占，另一个是控制时序。</li>
 <li>所谓保持独占，就是所有试图来获取这个锁的客户端，最终只有一个可以成功获得这把锁。通常的做法是把zk上的一个znode看作是一把锁，通过create znode的方式来实现。所有客户端都去创建 /distribute_lock 节点，最终成功创建的那个客户端也即拥有了这把锁。</li>
-<li>控制时序，就是所有视图来获取这个锁的客户端，最终都是会被安排执行，只是有个全局时序了。做法和上面基本类似，只是这里 /distribute_lock 已绊预先存在，客户端在它下面创建临时有序节点（这个可以通过节点的属性控制：CreateMode.EPHEMERAL_SEQUENTIAL来指定）。Zk的父节 (/distribute_lock）维持一份sequence,保证子节点创建的时序性，从而也形成了每个客户端的全局时序</li>
+<li>控制时序，就是所有视图来获取这个锁的客户端，最终都是会被安排执行，只是有个全局时序了。做法和上面基本类似，只是这里 /distribute_lock 已绊预先存在，客户端在它下面创建临时有序节点（这个可以通过节点的属性控制：CreateMode.EPHEMERAL_SEQUENTIAL来指定）。Zk的父节 (/distribute_lock）维持一份sequence, 保证子节点创建的时序性，从而也形成了每个客户端的全局时序。</li>
 </ul>
 </li>
 <li><p>Master选举</p>
