@@ -15,13 +15,13 @@
 <meta property="og:site_name" content="10K&#39;s">
 <meta property="og:description" content="Kafka是由Apache软件基金会开发的一个开源流处理平台，由Scala和Java编写。该项目的目标是为处理实时数据提供一个统一、高吞吐、低延迟的平台。其持久化层本质上是一个“按照分布式事务日志架构的大规模发布&#x2F;订阅消息队列”，这使它作为企业级基础设施来处理流式数据非常有价值。此外，Kafka可以通过Kafka Connect连接到外部系统（用于数据输入&#x2F;输出），并提供了Kafka Stream">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://img-blog.csdn.net/20160319184902274">
+<meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1599789703/kafka_qxjq9d.png">
 <meta property="article:published_time" content="2020-08-23T16:45:36.000Z">
-<meta property="article:modified_time" content="2020-08-23T16:46:54.272Z">
+<meta property="article:modified_time" content="2020-09-11T02:04:34.031Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://img-blog.csdn.net/20160319184902274">
+<meta name="twitter:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1599789703/kafka_qxjq9d.png">
   
     <link rel="alternative" href="/atom.xml" title="10K&#39;s" type="application/atom+xml">
   
@@ -204,9 +204,9 @@
 
 <h3 id="kafka是什么"><a href="#kafka是什么" class="headerlink" title="kafka是什么"></a>kafka是什么</h3><p>Kafka是由LinkedIn开发的一个分布式基于发布/订阅的消息系统，使用Scala编写，它以可水平扩展和高吞吐率而被广泛使用。</p>
 <h3 id="产生背景"><a href="#产生背景" class="headerlink" title="产生背景"></a>产生背景</h3><p>Kafka是一个消息系统，用作LinkedIn的活动流（Activity Stream）和运营数据处理管道（Pipeline）的基础。活动流数据是几乎所有站点在对其网站使用情况做报表时都要用到的数据中最常规的部分。活动数据包括页面访问量（Page View）、被查看内容方面的信息以及搜索情况等内容。这种数据通常的处理方式是先把各种活动以日志的形式写入某种文件，然后周期性地对这些文件进行统计分析。运营数据指的是服务器的性能数据（CPU、IO使用率、请求时间、服务日志等等数据)。运营数据的统计方法种类繁多。</p>
-<h3 id="基本架构图"><a href="#基本架构图" class="headerlink" title="基本架构图"></a>基本架构图</h3><p><img src="https://img-blog.csdn.net/20160319184902274" alt="img"></p>
+<h3 id="基本架构图"><a href="#基本架构图" class="headerlink" title="基本架构图"></a>基本架构图</h3><p><img src="https://res.cloudinary.com/shuaiz/image/upload/v1599789703/kafka_qxjq9d.png" alt="kafka_architecture"></p>
 <h3 id="基本概念解释"><a href="#基本概念解释" class="headerlink" title="基本概念解释"></a>基本概念解释</h3><p><strong>Broker</strong><br>Kafka集群包含一个或多个服务器，这种服务器被称为broker。broker端不维护数据的消费状态，提升了性能。直接使用磁盘进行存储，线性读写，速度快：避免了数据在JVM内存和系统内存之间的复制，减少耗性能的创建对象和垃圾回收。 </p>
-<p><strong>Producer</strong><br>负责发布消息到Kafka broke</p>
+<p><strong>Producer</strong><br>负责发布消息到Kafka broker</p>
 <p><strong>Consumer</strong><br>消息消费者，向Kafka broker读取消息的客户端，consumer从broker拉取(pull)数据并进行处理。</p>
 <p><strong>Topic</strong><br>每条发布到Kafka集群的消息都有一个类别，这个类别被称为Topic。（物理上不同Topic的消息分开存储，逻辑上一个Topic的消息虽然保存于一个或多个broker上但用户只需指定消息的Topic即可生产或消费数据而不必关心数据存于何处）</p>
 <p><strong>Partition</strong><br>Parition是物理上的概念，每个Topic包含一个或多个Partition.</p>
