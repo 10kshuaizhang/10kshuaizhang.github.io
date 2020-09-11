@@ -19,7 +19,7 @@
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598067772/p2-ch6-img3_rbkciy.png">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598070041/p2-ch6-img2_rwkqzo.png">
 <meta property="article:published_time" content="2020-08-22T04:36:28.000Z">
-<meta property="article:modified_time" content="2020-08-25T19:06:37.838Z">
+<meta property="article:modified_time" content="2020-09-11T15:51:38.045Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
@@ -203,7 +203,7 @@
         <p><strong>Chapter6 Partitioning</strong></p>
 <ul>
 <li>The main reason for wanting patition data is <strong>scalability</strong>.</li>
-<li>For <u>very <strong>large dataset</strong></u>, or <u>very <strong>high throughtput</strong></u>, that is not sufficient: we need to break the data into <strong><u>partitions</u>, alson known as <u>sharding</u></strong>.<ul>
+<li>For <u>very <strong>large dataset</strong></u>, or <u>very <strong>high throughtput</strong></u>, that is not sufficient: we need to break the data into <strong><u>partitions</u>, also known as <u>sharding</u></strong>.<ul>
 <li>What we call a <strong>partition</strong> here is called a <u>shard</u> in <u>MongoDB, ElasticSearch, and SolrClound</u>; it’s known as a <strong>region</strong> in <u>HBase</u>, a <strong>tablet</strong> in <u>Bigtable</u>, a <strong>vnode</strong> in <u>Cassandra</u> and <u>Riak</u>, and a <strong>vBucket</strong> in <u>CouchBase</u>.</li>
 </ul>
 </li>
@@ -252,7 +252,7 @@
 </li>
 <li><strong>Consistent Hashing</strong><ul>
 <li>is a way of evenly distributing load across an internet-wide system of caches such as content delivery network (CDN).</li>
-<li>this particular approach actually doesn’t work very well for databases, so it is rarely used in practice. (C: seems totally not aligned with what sime Youtuber was saying…)</li>
+<li>this particular approach actually doesn’t work very well for databases, so it is rarely used in practice. (C: seems totally not aligned with what some Youtuber was saying…)</li>
 </ul>
 </li>
 <li><u>Downside is we lose a nice property of key-range partitioning</u>: the ability to do efficient range queries. (C: this is very similar that when Partition a MQ, the order of the message will not be aligned)<ul>
@@ -290,7 +290,7 @@
 <li>There are two main approaches to partitioning a databases with secondary indexes: <strong><u>document-based partitioning</u></strong> <u>and</u> <u><strong>term-based partitoning</strong></u> .</li>
 <li><strong>Partitioning Secondary Indexes <u>by Document</u></strong> (e.g. Used car selling sites)<ul>
 <li>Widely used: <strong><u>MongoDB</u></strong>, Riak, <u><strong>Cassandra</strong></u>, <u>Elasticsearch</u>, SolrCloud, and VoltDB.</li>
-<li>In this indexing approach, each partition is completly seperate: <u>each partition maintains its own secondary indexes, covering only the documents in that partition</u> <img src="https://res.cloudinary.com/shuaiz/image/upload/v1598067772/p2-ch6-img3_rbkciy.png" alt="p2-ch6-img3"></li>
+<li>In this indexing approach, each partition is completely seperate: <u>each partition maintains its own secondary indexes, covering only the documents in that partition</u> <img src="https://res.cloudinary.com/shuaiz/image/upload/v1598067772/p2-ch6-img3_rbkciy.png" alt="p2-ch6-img3"></li>
 <li>A document-partitoned index is also known as a <u>local index</u> (as opposed to a <u>global index</u>, described in the next section)<ul>
 <li>You need to send the query to all partitions, and combine all the results you get back</li>
 <li>This approach to querying a partitioned database is sometimes known as <strong>scatter/gather</strong>, and it can make read queries on secondary indexes quite expensive. (prone to tail latency amplification)</li>
@@ -349,12 +349,12 @@
 </li>
 <li><strong>Operations: Automatic or Manual Rebalancing</strong><ul>
 <li><u>Couchbase, Riak, and Voldemort</u> generate a suggested partition assignment automatically, but require an administrator to commit it before it takes effect.</li>
-<li>Fully automated rebalancing can be convenient, but it is <u>unpredictable</u>. (Consider rebalancing is a large overhaul), especially dangerous when combiend with automatic failure detection.</li>
+<li>Fully automated rebalancing can be convenient, but it is <u>unpredictable</u>. (Consider rebalancing is a large overhaul), especially dangerous when combined with automatic failure detection.</li>
 </ul>
 </li>
 </ul>
 <h4 id="Request-Routing-e-g-ZooKeeper"><a href="#Request-Routing-e-g-ZooKeeper" class="headerlink" title="Request Routing (e.g. ZooKeeper)"></a>Request Routing (e.g. ZooKeeper)</h4><ul>
-<li>when  a client wants to make a request, how does it which node to connect to?<ul>
+<li>when  a client wants to make a request, how does it know which node to connect to?<ul>
 <li>This is an instance of a more general problem called <u><strong>service discovery</strong></u>, which isn’t limited to just databases. (Common problem among “high availability” network applications)</li>
 </ul>
 </li>
@@ -367,7 +367,7 @@
 <li>How does the component making the routing decision (which may be one of the nodes, or the routing tier, or the client) learn about changes in the assignment of partitions to nodes?<ul>
 <li>Hard to handle, but many <u>distributed systems</u> rely on a seperate coordination services such as <strong>Zookeeper</strong> to keep track of this cluster metadata. <img src="https://res.cloudinary.com/shuaiz/image/upload/v1598070041/p2-ch6-img2_rwkqzo.png" alt="p2-ch6-img2"></li>
 <li><strong>Zookeeper</strong> maintains the authorizative mapping of partitions to nodes. Whenever a partition changes ownership, or a node is added or removed, <strong><u>Zookeeper</u> notifies the routing tier</strong> so that it can keep its routing information up to date.</li>
-<li>LinkedIn’s <u>Espresso</u> uses <u>Helix</u> for cluster management (which it turns relies on Zookeeper).</li>
+<li>LinkedIn’s <u>Espresso</u> uses <u>Helix</u> for cluster management (which in turn relies on Zookeeper).</li>
 <li><u>HBase, SolrCloud, and <strong>Kafka</strong></u> also use Zookeeper to track partition assignment <ul>
 <li><strong><u>MongoDB</u></strong> has a simpler architecture </li>
 <li>(C: Latest version of Kafka seems removed Zookeeper)</li>
@@ -386,7 +386,7 @@
 </li>
 </ul>
 <h4 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h4><ul>
-<li>The goal of partitioing is to <u>spread the data and query load evenly across multiple machines, avoiding hot spots</u> (nodes with disproportionately high load).</li>
+<li>The goal of partitioning is to <u>spread the data and query load evenly across multiple machines, avoiding hot spots</u> (nodes with disproportionately high load).</li>
 <li>Two main approaches to partitioning <ul>
 <li><strong>Key range partitioning</strong>, where keys are sorted, and a partition owns all the keys from some minimum up to some maximum.<ul>
 <li>partitions are typically rebalanced dynamically by splitting</li>
@@ -405,7 +405,7 @@
 <li><strong>Term-partitioned indexes (global indexes)</strong>, where the secondary indexes are partitioned separately, using the indexed values.</li>
 </ul>
 </li>
-<li>Operations that need to write to several partitions can be difficult to reason about: for example, what happens if the write to one partition secceeds, but another fails?</li>
+<li>Operations that need to write to several partitions can be difficult to reason about: for example, what happens if the write to one partition succeeds, but another fails?</li>
 </ul>
 
       
