@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2020/08/26/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B010/</loc>
+    
+    <lastmod>2020-09-22T16:55:40.570Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2020/07/09/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/</loc>
     
     <lastmod>2020-09-11T16:00:51.555Z</lastmod>
@@ -61,13 +68,6 @@
     <loc>http://yoursite.com/2020/08/29/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B011/</loc>
     
     <lastmod>2020-09-10T18:01:27.085Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2020/08/26/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B010/</loc>
-    
-    <lastmod>2020-09-10T15:45:16.277Z</lastmod>
     
   </url>
   

@@ -20,7 +20,7 @@
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598481916/Design%20Data%20Intensive%20Application/p2-ch8-img3_h3rahr.png">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598482200/Design%20Data%20Intensive%20Application/p2-ch8-img4_wbr7xt.png">
 <meta property="article:published_time" content="2020-08-26T23:44:38.000Z">
-<meta property="article:modified_time" content="2020-09-10T15:45:16.277Z">
+<meta property="article:modified_time" content="2020-09-22T16:55:40.570Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
@@ -217,7 +217,7 @@
 </ul>
 </li>
 <li>In distributed system, we are no longer operating in an idealized system model – we have no choice but to confront the messy reality of the physical world.</li>
-<li>The difficulty is that <strong>partial failures</strong> are <strong>non-deterministic</strong>: if you try to do anything involving multiple nodes and the network, it may soemtimes work and sometimes unpredictably fail.<ul>
+<li>The difficulty is that <strong>partial failures</strong> are <strong>non-deterministic</strong>: if you try to do anything involving multiple nodes and the network, it may sometimes work and sometimes unpredictably fail.<ul>
 <li><u>This <strong>non-determinism</strong> and possibility of <strong>partial failures</strong> is what makes distributed systems hard to work with</u>.</li>
 </ul>
 </li>
@@ -240,7 +240,7 @@
 </li>
 </ul>
 <h4 id="Unreliable-Networks"><a href="#Unreliable-Networks" class="headerlink" title="Unreliable Networks"></a>Unreliable Networks</h4><ul>
-<li>the <u>distributed systems</u> we focus on in this book are <strong>shared-nothing systems</strong>: i.e., a buch of machines connected by a network.<ul>
+<li>the <u>distributed systems</u> we focus on in this book are <strong>shared-nothing systems</strong>: i.e., a bunch of machines connected by a network.<ul>
 <li>Why ?<ul>
 <li>It’s comparatively cheap because it requires no special hardware;</li>
 <li>it can make use of commoditized cloud computing services;</li>
@@ -281,7 +281,7 @@
 </li>
 <li><strong>Asynchronous network have unbounded delays</strong> (that is, they try to deliver packets as quickly as possible, but there is no upper limit on the time it may take for a packet to arrive)</li>
 <li><strong>Networking congestion and queueing</strong><ul>
-<li>The variability of packet delays on Computer networks is most often due to queueing. (e.g. Network, CPU, VMs, TCP flow-control etc.)</li>
+<li>The variability of packet delays on computer networks is most often due to queueing. (e.g. Network, CPU, VMs, TCP flow-control etc.)</li>
 <li><strong>TCP</strong> considers a packet to be lost if it is not acknowledged within some timeout (which is calculated from observed round-trip times), and lost packets are automatically retransmitted.</li>
 <li><strong>TCP vs. UDP</strong> (C: delayed message meaningless/worthless –&gt; UDP)<ul>
 <li>Trade-off between <u>reliability</u> and <u>variability of delays</u>: as UDP does not perform flow control and does not retransmit lost packets.</li>
@@ -294,11 +294,11 @@
 </ul>
 </li>
 <li><strong>Synchronous vs. Asynchronous Networks</strong><ul>
-<li>Phone call networks is <strong>synchronous</strong>: even as data passes though several routers, it does not suffer from queueing, because the 16 bits of spance for the call have already been <strong>reserved</strong> in the next hop of the network. <ul>
+<li>Phone call networks is <strong>synchronous</strong>: even as data passes though several routers, it does not suffer from queueing, because the 16 bits of space for the call have already been <strong>reserved</strong> in the next hop of the network. <ul>
 <li><strong><u>bounded delay</u></strong>: No queueing, the maximum end-to-end latency of the network is fixed.</li>
 </ul>
 </li>
-<li>Can we not simply make netwrok delays predictable?<ul>
+<li>Can we not simply make network delays predictable?<ul>
 <li>Ethernet and IP are <u>packet-switch protocals</u>, which suffer from queueing and thus unbounded delays in the network. These protocols do not have the concept of a circuit.</li>
 <li>Why do datacenter networks and the internet use packet switching?<ul>
 <li>The answer is that they are <strong>optimized for bursty traffic</strong>.</li>
@@ -350,7 +350,7 @@
 <li><p><strong>Clock Synchronization and Accuracy</strong></p>
 <ul>
 <li>Monotonic clocks don’t need synchronization, but time-of-day clocks need to be set according to an <strong>NTP</strong> server or other external time source in order to be useful.<ul>
-<li>Hardware clocks and NTP can be fickle beats.</li>
+<li>Hardware clocks and NTP can be fickle beast.</li>
 </ul>
 </li>
 <li>It is possible to achieve very good clock accuracy if you care about it sufficiently to invest significant resources.<ul>
@@ -385,7 +385,7 @@
 </li>
 <li><p>So-called <strong><u>logical clocks</u></strong>, which are based on <u>incrementing counters</u> rather than an oscillating quartz crystal, are a safer alternative for ordering events.</p>
 <ul>
-<li><u>Logical clocks only meak sure the relative ordering of events</u> (whether one even happened before or after another)</li>
+<li><u>Logical clocks only make sure the relative ordering of events</u> (whether one even happened before or after another)</li>
 </ul>
 </li>
 </ul>
@@ -393,7 +393,7 @@
 <li><p><strong>Clock readings have a confidence interval</strong></p>
 <ul>
 <li>Thus, it doesn’t make sense to think of a clock reading as point in time – it is more like a <strong>range of times</strong>, within a confidence interval.</li>
-<li>Google’s <u>TrueTime API</u> in <u>Spanner</u>, which explicitly reports the confidence interval on the locak clock.<ul>
+<li>Google’s <u>TrueTime API</u> in <u>Spanner</u>, which explicitly reports the confidence interval on the local clock.<ul>
 <li>When you ask it for the cuncurrent time, you get back two values: [earlist, latest]</li>
 </ul>
 </li>
@@ -401,7 +401,7 @@
 </li>
 <li><p><strong>Synchronized clocks for global snapshots</strong></p>
 <ul>
-<li>With lots of small, rapid trasactions, creating transaction IDs in a distributed system becomes am untenable bottleneck.</li>
+<li>With lots of small, rapid transactions, creating transaction IDs in a distributed system becomes an untenable bottleneck.</li>
 <li>Can we use the timestamps from synchronized time-of-day as transaction IDs?<ul>
 <li>If we could get the synchronization good enough, they would have the right properties: later transactions have a higher timestamp.</li>
 </ul>
@@ -424,7 +424,7 @@
 </li>
 <li><p><strong>Response time guarantee</strong></p>
 <ul>
-<li>In some systems. There is a specific deadline by which the software must respond; if it doesn’t meet the deadline, that may cause a failure of the entire system. These are so-called <strong>Hard real-time systems</strong>.</li>
+<li>In some systems, there is a specific deadline by which the software must respond; if it doesn’t meet the deadline, that may cause a failure of the entire system. These are so-called <strong>Hard real-time systems</strong>.</li>
 <li>A <strong>real-time operating system (RTOS)</strong> that allows processes to be scheduled with a guaranteed allocation of CPU time in specified intervals is needed.</li>
 <li>For most server-side data processiong systems, real-time guarantees are simply not ecnomical or appropriate.</li>
 </ul>
@@ -441,7 +441,7 @@
 <li><p>For Distributed Systems: there is <strong>no shared memory</strong>, only <strong>message passing</strong> via an unreliable network with variable delays, and the system may suffer from <u>partial failures, unreliable clocks, and processing pauses</u>.</p>
 <ul>
 <li>A node in the network cannot know anything for sure – it can only make guesses based on the messages it receives (or doesn’t receive) via network.</li>
-<li>A node can only find out what state another node is in (wat data it has stored, whether it is correctly functioning, etc.) by exchanging messages with it.</li>
+<li>A node can only find out what state another node is in (what data it has stored, whether it is correctly functioning, etc.) by exchanging messages with it.</li>
 </ul>
 </li>
 <li><p>Although it is possible to make software well behaved in an unreliable system model, it is not straightforward to do so.</p>
@@ -457,11 +457,15 @@
 <li>Most commonly, the quorum is an absolute <strong>majority of more than half the nodes</strong>.</li>
 </ul>
 </li>
-<li><p><strong>The leader and the clock</strong> <img src="https://res.cloudinary.com/shuaiz/image/upload/v1598481916/Design Data Intensive Application/p2-ch8-img3_h3rahr.png" alt="p2-ch8-img3" style="zoom:50%;" /></p>
+<li><p><strong>The leader and the clock</strong></p>
+<ul>
+<li><img src="https://res.cloudinary.com/shuaiz/image/upload/v1598481916/Design Data Intensive Application/p2-ch8-img3_h3rahr.png" alt="p2-ch8-img3" style="zoom:50%;" />
+</li>
+</ul>
 </li>
 <li><p><strong>Fencing tokens</strong></p>
 <ul>
-<li><p>we need to ensure that a node that is under a false belief of being “the chosen one” cannot disrupt the rest of the system. A fairly somple technique that achieves this goal is called <strong>fencing</strong></p>
+<li><p>we need to ensure that a node that is under a false belief of being “the chosen one” cannot disrupt the rest of the system. A fairly simple technique that achieves this goal is called <strong>fencing</strong></p>
 <p>  . <img src="https://res.cloudinary.com/shuaiz/image/upload/v1598482200/Design Data Intensive Application/p2-ch8-img4_wbr7xt.png" alt="p2-ch8-img4" style="zoom:50%;" /></p>
 <ul>
 <li>If ZooKeeper is used as a lock service, the transaction ID zxid or the node version cversion can be used as a fencing token.</li>
@@ -474,7 +478,7 @@
 <li><p><strong>Byzantine Faults</strong></p>
 <ul>
 <li>Distributed system problems become much harder if there is a risk that nodes may “<strong>lie</strong>“ (send arbitrary fault or corrupted response)<ul>
-<li>E.g. if a node may clain to have received a particular message when in fact it didn’t.  (Such behaviors is knwo as  a <strong>Byzantine fault</strong>, and the problem of reaching cosensues in this untrusting environment is known as the <strong><u>Byzantine Generals Problem</u></strong>)</li>
+<li>E.g. if a node may claim to have received a particular message when in fact it didn’t.  (Such behaviors is knwo as  a <strong>Byzantine fault</strong>, and the problem of reaching cosensues in this untrusting environment is known as the <strong><u>Byzantine Generals Problem</u></strong>)</li>
 </ul>
 </li>
 <li>A system is <strong>Byzantine fault-tolerant</strong> if it continues to operate correctly even if some of the nodes are malfunctioning and not obey the protocal, or if malicious attackers are interfering with the network.</li>
@@ -495,7 +499,7 @@
 </li>
 <li><p><strong>System Model and Reality</strong></p>
 <ul>
-<li>Many algorithms have beed designed to solve distributed system problems <ul>
+<li>Many algorithms have been designed to solve distributed system problems <ul>
 <li>Algorithms need to be tolerate various faults of distributed system that we discussed in this chapter.</li>
 <li>Algorithms need to be written in a way that does not depend too heavily on the details of the hardware and software configuration on which they are run.</li>
 </ul>
@@ -556,7 +560,7 @@
 <li>In distributed systems, we try to build tolerance of partial failures into software, so that the system as a whole may continue functioning even when some of its constituent parts are broken.</li>
 <li>To tolerate faults, the first step is to detect them, but even that is hard.</li>
 <li>Once a fault is detected, making a system tolerate it is not easy either: there is no global variable, no shared memory, no common knowledge or any other kind of shared state between the machines. (e.g. Solution: Quorum to agree)</li>
-<li>If you can avoid opening Pandora’s box and simply keep things on a single machine, it is generally worth doing so.  -</li>
+<li>If you can avoid opening Pandora’s box and simply keep things on a single machine, it is generally worth doing so. </li>
 </ul>
 
       
