@@ -6,15 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: Java | 10K&#39;s</title>
+  <title>Long Polling - Concepts and Considerations | 10K&#39;s</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="10K&#39;s">
-<meta property="og:url" content="http://yoursite.com/tags/Java/index.html">
+  <meta name="description" content="In this article, we’ll provide an insight into the technique known as “long polling”, how it came to be, how it’s implemented, how you might use it in your own applications, and how we use it at Ably.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Long Polling - Concepts and Considerations">
+<meta property="og:url" content="http://yoursite.com/2020/09/29/Long-Polling-Concepts-and-Considerations/index.html">
 <meta property="og:site_name" content="10K&#39;s">
+<meta property="og:description" content="In this article, we’ll provide an insight into the technique known as “long polling”, how it came to be, how it’s implemented, how you might use it in your own applications, and how we use it at Ably.">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://images.ctfassets.net/ee3ypdtck0rk/5Wrkjt1K4mc9B0EUsSW1GS/61ce12ea8b81913c1574f3216a10f0a1/browser-wars.png">
+<meta property="og:image" content="https://images.ctfassets.net/ee3ypdtck0rk/1UuClqOdPD71XXPcFC8th1/67a75ff8542382ade6fd809671d96b44/long-polling-f6e3a73a589fe25d7c7b622a8487a2e8a27a11f00b22b574abb021fbcd7ac2db.png">
+<meta property="article:published_time" content="2020-09-29T17:29:03.000Z">
+<meta property="article:modified_time" content="2020-09-29T17:30:47.972Z">
 <meta property="article:author" content="10K">
+<meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.ctfassets.net/ee3ypdtck0rk/5Wrkjt1K4mc9B0EUsSW1GS/61ce12ea8b81913c1574f3216a10f0a1/browser-wars.png">
   
     <link rel="alternative" href="/atom.xml" title="10K&#39;s" type="application/atom+xml">
   
@@ -140,467 +148,303 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Long-Polling-Concepts-and-Considerations" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Long Polling - Concepts and Considerations
+    </h1>
+  
+
+        
+        
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" class="archive-article-date">
+          <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+
+
+<a href="/2020/09/29/Long-Polling-Concepts-and-Considerations/" class="archive-article-date">
+  	<time datetime="2020-09-29T17:29:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-09-29</time>
+</a>
+        <!-- 需要添加的位置 -->
+        <!-- 开始添加字数统计-->
+        
+          <div style="margin-top:10px;">
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text">  字数统计: </span>
+        <span class="post-count">2.6k字</span>
+      </span>
+    </span>
+
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text">  阅读时长: </span>
+        <span class="post-count">16分</span>
+      </span>
+    </span>
+</div>
+
+          
+        <!-- 添加完成 -->
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>In this article, we’ll provide an insight into the technique known as “long polling”, how it came to be, how it’s implemented, how you might use it in your own applications, and how we use it at Ably.</p>
+<a id="more"></a>
+
+<h2 id="A-brief-history-–-how-did-long-polling-come-about"><a href="#A-brief-history-–-how-did-long-polling-come-about" class="headerlink" title="A brief history – how did long polling come about?"></a>A brief history – how did long polling come about?</h2><p>In the early days of the web, <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol" target="_blank" rel="noopener">HTTP</a> made sense as a simple request-response protocol because it was designed as a way to distribute structured documents to interested readers, each document generally having links to others that could be browsed at the reader’s leisure. A request-response model was the right strategy because a browser needed only make a request for the resource that the user wished to consume, and the job was done.</p>
+<p>The technology of the time was vastly more limited than that of today, and holding a connection open would not only have been a significant issue for web server load management, but would have had little-to-no value anyway in relation to the goals and use cases that the early web was designed to solve. Early browsers such as Mosaic and the first version of Netscape Navigator were implemented with this in mind and had no support for JavaScript or other features that might position the web as anything more than a distributed resource-sharing network.</p>
+<p>In 1995, <a href="https://en.wikipedia.org/wiki/Netscape" target="_blank" rel="noopener">Netscape Communications</a> hired Brendan Eich to implement scripting capabilities in Netscape Navigator, and over a ten-day period, the JavaScript language was born. Its capabilities as a language were initially very limited compared to modern-day JavaScript, and its ability to interact with the browser’s document object model (DOM) was even more limited. JavaScript was mostly useful for providing limited enhancements to enrich document consumption capabilities, examples being in-browser form validation and lightweight insertion of dynamic HTML into an existing document.</p>
+<p>As the <a href="https://en.wikipedia.org/wiki/Browser_wars" target="_blank" rel="noopener">browser wars</a> heated up, with Microsoft’s Internet Explorer reaching version 4 and beyond, the battle for the most robust feature set led to Microsoft’s introduction of what ultimately became the <a href="https://xhr.spec.whatwg.org/" target="_blank" rel="noopener">XMLHttpRequest</a> object which all browsers have now universally supported for well over a decade.</p>
+<p><img src="https://images.ctfassets.net/ee3ypdtck0rk/5Wrkjt1K4mc9B0EUsSW1GS/61ce12ea8b81913c1574f3216a10f0a1/browser-wars.png" alt="browser-wars"></p>
+<p><code>XMLHttpRequest</code> could be thought of as a black swan event for the web, because it opened up the potential for web developers to start building truly-dynamic web applications that could communicate with the server silently in the background, without interrupting the user’s browsing experience. Because browser DOM capabilities had also been expanding significantly, particularly as Internet Explorer approached version 6, dynamic web “applications” started to become commonplace, offering everything from rich web-based email interfaces to in-browser website content management systems.</p>
+<p>Progress begets progress, as they say, and naturally, developers began to explore ways to implement applications having more of a “realtime” aspect to their function. Web-based chat rooms and simple games were early examples at the time. The HTTP protocol made these sorts of use cases very challenging to implement though, and it was common to see applications polling servers repeatedly to check for new data, seeing as servers had no way to proactively notify a user whenever new data became available. Given the extreme inefficiency of this approach, creative ways to manipulate the HTTP request-response model into more of a real-time medium began to emerge. Among these techniques, probably the most popular to emerge was <strong>long polling</strong>.</p>
+<h2 id="How-does-long-polling-work"><a href="#How-does-long-polling-work" class="headerlink" title="How does long polling work?"></a>How does long polling work?</h2><p><a href="https://en.wikipedia.org/wiki/Push_technology#Long_polling" target="_blank" rel="noopener">Long polling</a> is essentially a more efficient form of the original polling technique. Making repeated requests to a server wastes resources, as each new incoming connection must be established, the HTTP headers must be parsed, a query for new data must be performed, and a response (usually with no new data to offer) must be generated and delivered. The connection must then be closed, and any resources cleaned up. Rather than having to repeat this process multiple times for every client until new data for a given client becomes available, long polling is a technique where the server elects to hold a client’s connection open for as long as possible, delivering a response only after data becomes available or a timeout threshold has been reached.</p>
+<p>Implementation is mostly a server-side concern. On the client side, only a single request to the server needs to be managed. When the response is received, the client can initiate a new request, repeating this process as many times as is necessary. The only difference to basic polling, as far as the client is concerned, is that a client performing basic polling may deliberately leave a small time window between each request so as to reduce its load on the server, and it may respond to timeouts with different assumptions than it would for a server that does not support long polling. With long polling, the client may be configured to allow for a longer timeout period (via a <code>Keep-Alive</code> header) when listening for a response – something that would usually be avoided seeing as the timeout period is generally used to indicate problems communicating with the server.</p>
+<p><img src="https://images.ctfassets.net/ee3ypdtck0rk/1UuClqOdPD71XXPcFC8th1/67a75ff8542382ade6fd809671d96b44/long-polling-f6e3a73a589fe25d7c7b622a8487a2e8a27a11f00b22b574abb021fbcd7ac2db.png" alt="long-polling"></p>
+<p>Apart from these concerns, there is little else that a client needs to do that would be different than if it were engaging in basic polling. By contrast, the server needs to manage the unresolved state of multiple connections, and it may need to implement strategies for preserving session state when multiple servers and load balancers are in use (commonly referred to as session “stickiness”). It also needs to gracefully handle connection timeout issues, which are much more likely to occur than with designed-for-purpose protocols such as <a href="https://www.ably.io/concepts/websockets" target="_blank" rel="noopener">WebSockets</a>, a standard which did not arrive until years after long polling was established as a conventional technique for pseudo-realtime communication.</p>
+<h2 id="Considerations-when-using-long-polling"><a href="#Considerations-when-using-long-polling" class="headerlink" title="Considerations when using long polling"></a>Considerations when using long polling</h2><p>As long polling is really just an improvisation applied to an underlying request-response mechanism, it comes with an additional degree of complexity in its implementation. There are various concerns you’ll need to account for when considering the design of your system’s architecture.</p>
+<h3 id="Message-ordering-and-delivery-guarantees"><a href="#Message-ordering-and-delivery-guarantees" class="headerlink" title="Message ordering and delivery guarantees"></a>Message ordering and delivery guarantees</h3><p>Reliable message ordering can be an issue with long polling because it’s possible for multiple HTTP requests from the same client to be in flight simultaneously. For example, if a client has two browser tabs open consuming the same server resource, and the client-side application is persisting data to a local store such as <code>localStorage</code> or <code>IndexedDb</code>, there is no in-built guarantee that duplicate data won’t be written more than once. This could also happen if the client implementation uses more than one connection at a time, whether deliberately or as a result of a bug in the code.</p>
+<p>Another issue is that a server may send a response, but network or browser issues may prevent the message from being successfully received. Unless some sort of message receipt confirmation process is implemented, a subsequent call to the server may result in missed messages.</p>
+<p>Depending on the server implementation, confirmation of message receipt by one client instance may also cause another client instance to never receive an expected message at all, as the server could mistakenly believe that the client has already received the data it is expecting.</p>
+<p>All of these concerns, and more need to be considered when implementing robust support for long polling in any realtime messaging system.</p>
+<h3 id="Performance-and-scaling"><a href="#Performance-and-scaling" class="headerlink" title="Performance and scaling"></a>Performance and scaling</h3><p>Unfortunately, such complexity is difficult to scale effectively. To maintain the session state for a given client, that state must either be shareable among all servers behind a load balancer – a task with significant architectural complexity – or subsequent client requests within the same session must be routed to the same server to which their original request was processed. This form of deterministic “sticky” routing is problematic by design, especially when routing is performed on the basis of IP address, as it can place undue load on a single server in a cluster while leaving other servers mostly idle instead of spreading the load around efficiently. This can also become a potential denial-of-service attack vector – a problem which then requires further layers of infrastructure to mitigate that might otherwise have been unnecessary.</p>
+<h3 id="Device-support-and-fallbacks"><a href="#Device-support-and-fallbacks" class="headerlink" title="Device support and fallbacks"></a>Device support and fallbacks</h3><p>In modern times (2018 at the time of this article), long polling can be less relevant for web application development given the widespread availability of real-time communication standards such as WebSockets and WebRTC. That said, there are cases where proxies and routers on certain networks will block WebSocket and WebRTC connections, or where network connectivity can make long-lived connection protocols such as these less practical. Besides, for certain client demographics, there may still be numerous devices and clients in use that lack support for newer standards. For these, long polling can serve as a good fail-safe fallback to ensure support for everyone, irrespective of their situation.</p>
+<p>Given that long polling is implemented on the back of <code>XMLHttpRequest</code>, which is near universal in its support by devices that still have a non-negligible degree of remaining relevant on the modern web, there’s usually not much of a need to support further fallback layers. In cases where exceptions must be handled though, or where a server can be queried for new data but does not support long polling (let alone other more modern technology standards), basic polling can sometimes still be of limited use, and can be implemented using <code>XMLHttpRequest</code>, or via JSONP through simple HTML script tags.</p>
+<p>Long polling can be implemented via JSONP if absolutely necessary. That said, given the time and effort – not to mention the inefficiency of resource consumption – involved in implementing these approaches, care should be taken to assess whether their support is worth the added cost when developing new applications and system architectures. In many cases, you may be able to get away with exclusive support for something more modern, such as <a href="https://www.ably.io/concepts/websockets" target="_blank" rel="noopener">WebSockets</a>. Alternatively, you may wish to offload the management of these sorts of concerns to a specialist cloud provider such as <a href="https://www.ably.io/" target="_blank" rel="noopener">Ably</a>.</p>
+<h2 id="Open-source-long-polling-solutions"><a href="#Open-source-long-polling-solutions" class="headerlink" title="Open source long polling solutions"></a>Open source long polling solutions</h2><p>Most libraries don’t implement long polling in isolation from other transports because, in general, long polling is usually accompanied with other transport strategies, either as a fallback, or with those transports as fallbacks when long polling doesn’t work. In 2018 and beyond, standalone long polling libraries are particularly uncommon, given that it’s a technique that is quickly losing relevance in the face of widespread support for more modern alternatives.</p>
+<p>Nevertheless, below are a handful of options for a few different languages:</p>
+<h3 id="Go"><a href="#Go" class="headerlink" title="Go"></a>Go</h3><p>Golongpoll is a decent library for implementing long polling in the Go language:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import  &quot;github.com&#x2F;jcuga&#x2F;golongpoll&quot;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; This launches a goroutine and creates channels for all the plumbing</span><br><span class="line">manager, err :&#x3D; golongpoll.StartLongpoll(golongpoll.Options&#123;&#125;)  &#x2F;&#x2F; default options</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Pass the manager around or create closures and publish:</span><br><span class="line">manager.Publish(&quot;subscription-category&quot;, &quot;Some data.  Can be string or any obj convertible to JSON&quot;)</span><br><span class="line">manager.Publish(&quot;different-category&quot;, &quot;More data&quot;)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Expose events to browsers</span><br><span class="line">&#x2F;&#x2F; See subsection on how to interact with the subscription handler</span><br><span class="line">http.HandleFunc(&quot;&#x2F;events&quot;, manager.SubscriptionHandler)</span><br><span class="line">http.ListenAndServe(&quot;127.0.0.1:8081&quot;, nil)</span><br></pre></td></tr></table></figure>
+
+<p>You can find out more about this library from the original <a href="https://github.com/jcuga/golongpoll" target="_blank" rel="noopener">GitHub repo</a>.</p>
+<h3 id="PHP"><a href="#PHP" class="headerlink" title="PHP"></a>PHP</h3><p>As per its <a href="https://github.com/panique/php-long-polling/blob/master/README.md" target="_blank" rel="noopener">README</a>, php-long-polling is</p>
+<blockquote>
+<p><em>“a very simple demonstration of long-polling with AJAX (jQuery) and PHP […] This is an improved, cleaned and documented fork of</em> <a href="https://github.com/lincolnbrito/php-ajax-long-polling" target="_blank" rel="noopener"><em>php-ajax-long-polling</em></a><em>“</em></p>
+</blockquote>
+<p>As the code for this library is extremely simple you can take a look at the <a href="https://github.com/panique/php-long-polling/blob/master/server/server.php" target="_blank" rel="noopener">implementation</a> directly – it’s fairly self-explanatory.</p>
+<p>You can find out more about this library from the original <a href="https://github.com/panique/php-long-polling" target="_blank" rel="noopener">GitHub repo</a>.</p>
+<h3 id="Node-js"><a href="#Node-js" class="headerlink" title="Node.js"></a>Node.js</h3><p>From its <a href="https://github.com/fanout/pollymer/blob/master/README.md" target="_blank" rel="noopener">README</a>, we find out that</p>
+<blockquote>
+<p>*”Pollymer is a general-purpose AJAX library that provides conveniences for long-polling applications, such as request retries, exponential backoff between requests, randomized request delaying, and workarounds for browser ‘busy’ indications. It also implements multiple transports to ensure cross-domain access works in all major browsers”.*</p>
+</blockquote>
+<p>Optional extras include support for JSON-P and logging.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">var req &#x3D; new Pollymer.Request();</span><br><span class="line">req.on(&#39;finished&#39;, function(code, result, headers) &#123; ... &#125;);</span><br><span class="line">req.on(&#39;error&#39;, function(reason) &#123; ... &#125;);</span><br><span class="line">var headers &#x3D; &#123; ... &#125;;</span><br><span class="line">var body &#x3D; &#39;some data&#39;;</span><br><span class="line">req.maxTries &#x3D; 2; &#x2F;&#x2F; try twice</span><br><span class="line">req.start(&#39;POST&#39;, &#39;http:&#x2F;&#x2F;example.com&#x2F;path&#39;, headers, body);</span><br></pre></td></tr></table></figure>
+
+<p>You can find out more about this library from the original <a href="https://github.com/fanout/pollymer" target="_blank" rel="noopener">GitHub repo</a>.</p>
+<h3 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h3><p>Simple-Comet-Server is a minimalist HTTP long-polling server for the Python language. It supports multiple channels and cross-domain requests. It requires Python &gt;= 2.5 and the <a href="https://twistedmatrix.com/trac/" target="_blank" rel="noopener">Twisted framework</a>. Unlike the other libraries mentioned above, this server runs as a kind of broker that sits between the client and the server-side applications. When the server wishes to publish messages to a client, it can make a request to an HTTP endpoint that can be easily hidden behind a firewall, ensuring that is only accessible by server-side processes.</p>
+<p>The <a href="https://github.com/jedisct1/Simple-Comet-Server/blob/master/README.markdown" target="_blank" rel="noopener">README </a>provides examples for:</p>
+<ul>
+<li>Registering a channel</li>
+<li>Pushing data to a channel</li>
+<li>Registering a client</li>
+<li>Monitoring the server</li>
+<li>Reading data from channels</li>
+</ul>
+<p>You can find out more about this library from the original <a href="https://github.com/jedisct1/Simple-Comet-Server" target="_blank" rel="noopener">GitHub repo</a>.</p>
+<h2 id="Long-polling-and-Ably"><a href="#Long-polling-and-Ably" class="headerlink" title="Long polling and Ably"></a>Long polling and Ably</h2><p>Ably is an enterprise-ready <a href="https://ably.com/channels" target="_blank" rel="noopener">pub/sub messaging platform</a>. We make it easy to efficiently design, quickly ship, and seamlessly scale critical realtime functionality delivered directly to end-users. Everyday we deliver billions of realtime messages to millions of users for thousands of companies.</p>
+<p>We power the apps people, organizations, and enterprises depend on everyday like <strong>Lightspeed System’s</strong> realtime device management platform for over seven million school-owned devices, <strong>Vitac’s</strong> live captioning for 100s of millions of multilingual viewers for events like the Olympic Games, and <strong>Split’s</strong> realtime feature flagging for one trillion feature flags per month.</p>
+<p>We’re the only pub/sub platform with a <a href="https://ably.com/platform" target="_blank" rel="noopener">suite of baked-in services</a> to build complete realtime functionality: <a href="https://ably.com/documentation/realtime/presence" target="_blank" rel="noopener">presence</a> shows a driver’s live GPS location on a home-delivery app, <a href="https://www.ably.io/documentation/core-features/history" target="_blank" rel="noopener">history</a> instantly loads the most recent score when opening a sports app, <a href="https://www.ably.io/documentation/realtime/connection#connection-state-recovery" target="_blank" rel="noopener">stream resume</a> automatically handles reconnection when swapping networks, and our <a href="https://ably.com/reactor" target="_blank" rel="noopener">integrations</a> extend Ably into third-party clouds and systems like AWS Kinesis and RabbitMQ. With 25+ SDKs we target every major platform across web, mobile, and IoT.</p>
+<p>Our platform is mathematically modelled around Four Pillars of Dependability so we’re able to ensure messages don’t get lost while still being delivered at low latency over a <a href="https://ably.com/security-and-compliance" target="_blank" rel="noopener">secure</a>, reliable, and <a href="https://www.ably.io/uptime" target="_blank" rel="noopener">highly available</a> <a href="https://ably.com/network" target="_blank" rel="noopener">global edge network</a>.</p>
+<p>Developers from startups to industrial giants choose to build on Ably because they simplify engineering, minimize DevOps overhead, and increase development velocity.</p>
+<p>As part of our offering, we’ve implemented a robust suite of transports in the <a href="https://www.ably.io/download" target="_blank" rel="noopener">client libraries</a> that we make available for communication with our servers, with WebSockets being the primary protocol for realtime communications. However, long polling is fully-supported as an automatic fallback transport when newer standards such as WebSockets are not available on the client-side.</p>
+<h2 id="References-and-further-reading"><a href="#References-and-further-reading" class="headerlink" title="References and further reading"></a>References and further reading</h2><ul>
+<li><a href="https://www.ably.io/concepts/websockets" target="_blank" rel="noopener">WebSockets – A Conceptual Deep-Dive</a></li>
+<li><a href="https://www.ably.io/blog/tag/ably-engineering" target="_blank" rel="noopener">Ably Engineering blog</a>, which covers a wide spectrum of engineering challenges related to building a globally-distributed serverless realtime infrastructure at scale</li>
+<li><a href="https://tools.ietf.org/id/draft-loreto-http-bidirectional-07.html" target="_blank" rel="noopener">IETF: Known Issues and Best Practices for the Use of Long Polling and Streaming in Bidirectional HTTP</a></li>
+<li><a href="https://blog.baasil.io/why-you-shouldnt-use-long-polling-fallbacks-for-websockets-c1fff32a064a" target="_blank" rel="noopener">The Myth of Long Polling</a></li>
+<li><a href="http://websocket.org/quantum.html" target="_blank" rel="noopener">HTML5 WebSocket: A Quantum Leap in Scalability for the Web</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Push_technology#Long_polling" target="_blank" rel="noopener">Wikipedia: Push Technology</a></li>
+</ul>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/18/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-18T16:44:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-18</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/18/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之策略模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/09/29/Long-Polling-Concepts-and-Considerations/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
 
-<a href="/2020/07/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-%E4%BA%8C/" class="archive-article-date">
-  	<time datetime="2020-07-12T18:17:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-12</time>
-</a>
+  
+<nav id="article-nav">
+  
+    <a href="/2020/09/29/Long-Polling-vs-WebSockets-vs-Server-Sent-Events/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Long Polling vs WebSockets vs Server-Sent Events
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/09/29/Understand-Apache-Cassandra-Architecture-part3/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Understand Apache Cassandra Architecture part3</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F-%E4%BA%8C/">设计模式学习笔记之工厂模式(二)</a>
-    </h1>
-  
+        
+        
+    </div>
+</aside>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-12T18:05:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-12</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之工厂模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-12T17:20:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-12</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之模板模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/11/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-11T18:50:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/11/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之外观模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/09/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-09T12:59:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/09/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之组合模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-07T16:50:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之代理模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/05/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-05T22:06:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-05</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/05/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之状态模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/07/04/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-07-05T03:53:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-04</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/04/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之迭代器模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-<a href="/2020/06/30/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2020-06-30T15:49:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-30</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/06/30/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8B%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/">设计模式学习笔记之适配器模式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Design Pattern</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/tags/Java/page/2/">2</a><a class="extend next" rel="next" href="/tags/Java/page/2/">下一页</a>
-    </nav>
   
 
+  
+
+  
+
+
+
+   
+       <section id="comments" class="comments">
+         <style>
+           .comments{margin:30px;padding:10px;background:#fff}
+           @media screen and (max-width:800px){.comments{margin:auto;padding:10px;background:#fff}}
+         </style>
+         <div id="vcomment" class="comment"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var notify = 'false' == true ? true : false;
+  var verify = 'false' == true ? true : false;
+  new Valine({
+    av: AV,
+    el: '#vcomment',
+    notify: notify,
+    app_id: "WsqeD0zCG3BCN0FWCJ1AToox-MdYXbMMI",
+    app_key: "MmbXeLMlHQnWMBU83kuB3eEy",
+    placeholder: "Just go go",
+    avatar: "mm",
+  });
+</script>
+
+     </section>
+   
 
 
           </div>
@@ -635,9 +479,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

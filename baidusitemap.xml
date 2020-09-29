@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://yoursite.com/2020/09/29/Long-Polling-vs-WebSockets-vs-Server-Sent-Events/</loc>
+    <lastmod>2020-09-29</lastmod>
+  </url>  <url>
+    <loc>http://yoursite.com/2020/09/29/Long-Polling-Concepts-and-Considerations/</loc>
+    <lastmod>2020-09-29</lastmod>
+  </url>  <url>
     <loc>http://yoursite.com/2020/09/29/Understand-Apache-Cassandra-Architecture-part3/</loc>
     <lastmod>2020-09-29</lastmod>
   </url>  <url>
