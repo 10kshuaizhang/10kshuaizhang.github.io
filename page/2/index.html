@@ -142,6 +142,105 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Designing-Data-Intensive-Application学习笔记9" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/08/25/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B09/">Designing Data Intensive Application学习笔记9</a>
+    </h1>
+  
+
+        
+        
+
+<a href="/2020/08/25/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B09/" class="archive-article-date">
+  	<time datetime="2020-08-25T16:13:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-25</time>
+</a>
+        <!-- 需要添加的位置 -->
+        <!-- 开始添加字数统计-->
+        
+        <!-- 添加完成 -->
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Chapter7 Transactions</strong></p>
+<ul>
+<li>A <strong>transaction</strong> is a way for an application to group several reads and writes together into a logical unit.<ul>
+<li>Conceptually, all the reads and writes in a transaction are executed as one operation: <u>either that entire transaction succeeds (commit) or it fails (abort, rollback)</u>.</li>
+</ul>
+</li>
+<li>By using transactions, the application is free to ignore certain potential error scenarios and concurrency issues, because the database takes care of them instead (we call these <u>safety quarantees</u>)<ul>
+<li>Vs. <strong>higher performance</strong> or <strong>higher availability</strong></li>
+</ul>
+</li>
+<li><strong>How do you figure out whether you need transactions?</strong><ul>
+<li>In order to answer that question, we first need to understand exactly what <u>safety quanrantees transactions</u> can provide, and what costs are associated with them.</li>
+</ul>
+</li>
+</ul>
+        
+          <a class="article-more-a" href="/2020/08/25/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B09/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/08/25/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B09/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+
+
+  
     <article id="post-DynamoDB" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -938,91 +1037,6 @@
 
 
   
-    <article id="post-Designing-Data-Intensive-Application学习笔记5" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B05/">Designing-Data-Intensive-Application学习笔记5</a>
-    </h1>
-  
-
-        
-        
-
-<a href="/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B05/" class="archive-article-date">
-  	<time datetime="2020-08-16T22:53:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-16</time>
-</a>
-        <!-- 需要添加的位置 -->
-        <!-- 开始添加字数统计-->
-        
-        <!-- 添加完成 -->
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>Chapter4 Encoding and Evolution</strong></p>
-        
-          <a class="article-more-a" href="/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B05/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">System Design</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/08/16/Designing-Data-Intensive-Application%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B05/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">下一页</a>
@@ -1166,6 +1180,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Others</a>
               </li>
             
             <div class="clearfix"></div>
