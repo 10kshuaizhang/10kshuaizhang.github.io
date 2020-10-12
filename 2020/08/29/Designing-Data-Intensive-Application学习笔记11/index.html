@@ -25,7 +25,7 @@
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598710825/Design%20Data%20Intensive%20Application/p2-ch9-img8_chdlye.png">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598710824/Design%20Data%20Intensive%20Application/p2-ch9-img9_gptfcy.png">
 <meta property="article:published_time" content="2020-08-29T16:27:02.000Z">
-<meta property="article:modified_time" content="2020-10-12T22:07:10.780Z">
+<meta property="article:modified_time" content="2020-10-12T22:30:55.604Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
@@ -413,7 +413,10 @@
 </li>
 <li><strong>Lamport timestamps</strong><ul>
 <li>a simple method for <strong>generating sequnce numbers that is consistent with causality</strong></li>
-<li><strong>The Lamport timestamp is then simply a pair of (counter, node ID).</strong> <img src="https://res.cloudinary.com/shuaiz/image/upload/v1598708519/Design%20Data%20Intensive%20Application/p2-ch9-img7_vfjktj.png" alt="p2-ch9-img4" style="zoom:50%;" /></li>
+<li><strong>The Lamport timestamp is then simply a pair of (counter, node ID).</strong> <ul>
+<li><img src="https://res.cloudinary.com/shuaiz/image/upload/v1598708519/Design%20Data%20Intensive%20Application/p2-ch9-img7_vfjktj.png" alt="p2-ch9-img4" style="zoom:50%;" /></li>
+</ul>
+</li>
 <li>A lamport timestamp bears no relationship to a physical time-of-day clock, but it provides total ordering<ul>
 <li>if you have two timestamps, the one with a greater counter value is the greater timestamp;</li>
 <li>if the counter values are the same, the one withe the greater node ID is the greater timestamp.</li>
@@ -430,7 +433,7 @@
 </ul>
 </li>
 <li><strong>Timestamp ordering is not sufficient</strong><ul>
-<li>The problem here is that the total order of operations enly emerges after you have collected all of the operations.</li>
+<li>The problem here is that the total order of operations only emerges after you have collected all of the operations.</li>
 <li>To conclude: in order to implement something like a uniqueness constraint for usernames, it’s not sufficient when that order is finalized.<ul>
 <li>This idea of knowing when your total order is finalized is captured in the topic of <strong>total order broadcast</strong>.</li>
 </ul>
@@ -664,7 +667,7 @@
 <li>if each message represents a write to the database, applying the same writes in teh same order keeps replicas consistent with each other.</li>
 </ul>
 </li>
-<li><p>ZooKeeper not only <strong>total oder broadcast</strong> (and hence consensus), but also:</p>
+<li><p>ZooKeeper not only <strong>total order broadcast</strong> (and hence consensus), but also:</p>
 <ul>
 <li><strong>Linearizabble atomic operations</strong>: Using an atomic compare-and-set operation, you can implement a lock;</li>
 <li><strong>Total ordering of operations</strong>: fencing token –&gt; monotonically increasing transaction ID (zxid) and version number (cversion)</li>
