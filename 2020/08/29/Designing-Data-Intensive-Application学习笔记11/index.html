@@ -25,7 +25,7 @@
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598710825/Design%20Data%20Intensive%20Application/p2-ch9-img8_chdlye.png">
 <meta property="og:image" content="https://res.cloudinary.com/shuaiz/image/upload/v1598710824/Design%20Data%20Intensive%20Application/p2-ch9-img9_gptfcy.png">
 <meta property="article:published_time" content="2020-08-29T16:27:02.000Z">
-<meta property="article:modified_time" content="2020-09-10T18:01:27.085Z">
+<meta property="article:modified_time" content="2020-10-12T22:07:10.780Z">
 <meta property="article:author" content="10K">
 <meta property="article:tag" content="System Design">
 <meta name="twitter:card" content="summary">
@@ -257,7 +257,8 @@
 </li>
 <li><p><strong>What Makes a System Linearizable?</strong> To make a system appear as if there is only a single copy of the data. <img src="https://res.cloudinary.com/shuaiz/image/upload/v1598587297/Design Data Intensive Application/p2-ch9-img2_de6emd.png" alt="p2-ch9-img1" style="zoom:50%;" /></p>
 <ul>
-<li><strong>automic compare-and-set (cas)</strong> <img src="https://res.cloudinary.com/shuaiz/image/upload/v1598587295/Design%20Data%20Intensive%20Application/p2-ch9-img3_soo79u.png" alt="p2-ch9-img1" style="zoom:50%;" /><ul>
+<li><strong>automic compare-and-set (cas)</strong><ul>
+<li><img src="https://res.cloudinary.com/shuaiz/image/upload/v1598587295/Design%20Data%20Intensive%20Application/p2-ch9-img3_soo79u.png" alt="p2-ch9-img1" style="zoom:50%;" /></li>
 <li>when the operation in the rectangle was truly executed, we project a bold black line on the database axis.</li>
 </ul>
 </li>
@@ -309,15 +310,21 @@
 </ul>
 </li>
 <li><strong>linearizability and quorums</strong><ul>
-<li>it seems as though strict quorum reads and writes should be linearizable in  a Dynamo-style model. However, when we have variable network delays, it is possible to have race conditions. <img src="https://res.cloudinary.com/shuaiz/image/upload/v1598587294/Design%20Data%20Intensive%20Application/p2-ch9-img5_w4g1ca.png" alt="p2-ch9-img4" style="zoom:50%;" /></li>
+<li>it seems as though strict quorum reads and writes should be linearizable in  a Dynamo-style model. However, when we have variable network delays, it is possible to have race conditions. <ul>
+<li><img src="https://res.cloudinary.com/shuaiz/image/upload/v1598587294/Design%20Data%20Intensive%20Application/p2-ch9-img5_w4g1ca.png" alt="p2-ch9-img4" style="zoom:50%;" /></li>
+</ul>
+</li>
 <li>it is safest assume that a <u>leaderless system with Dynamo-style replication does not provide linearizability</u>.</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p><strong>The Cost of Linearizability</strong><img src="https://res.cloudinary.com/shuaiz/image/upload/v1598587296/Design%20Data%20Intensive%20Application/p2-ch9-img6_bavmw6.png" alt="p2-ch9-img4" style="zoom:50%;" /></p>
+<li><p><strong>The Cost of Linearizability</strong> </p>
 <ul>
-<li><strong>The CAP therom</strong>(very narrow scope)<ul>
+<li><img src="https://res.cloudinary.com/shuaiz/image/upload/v1598587296/Design%20Data%20Intensive%20Application/p2-ch9-img6_bavmw6.png" alt="p2-ch9-img4" style="zoom:50%;" />
+</li>
+<li><p><strong>The CAP therom</strong>(very narrow scope)</p>
+<ul>
 <li>CAP is sometimes presented as <strong>Consistency, Availability, Partition tolerence</strong>: pick 2 out of three</li>
 <li><strong>The Unhelpeful CAP Theorem</strong><ul>
 <li>Unfortunately, putting it this way is misleading because <strong>network partitions are a kind of fault</strong>, so that aren’t something about which you have a  choice, <strong><u>they will happen whether you like it or not</u></strong>.</li>
@@ -327,7 +334,8 @@
 </li>
 </ul>
 </li>
-<li><strong>Linearizability and network delays</strong><ul>
+<li><p><strong>Linearizability and network delays</strong></p>
+<ul>
 <li>Although linearizability is a useful guarantee, surprisingly few system are actually linearizable in practice.</li>
 <li>Many distributed databases that choose not to provide linearizable guarantees: <u>they do so primarily to increase performance, not so much for fault tolerance</u>.</li>
 <li>Linearizability is <strong>slow</strong> – and this is true all the time, not only during a network fault.</li>
