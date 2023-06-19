@@ -1,0 +1,530 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>设计模式之美-课程笔记2 | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="设计模式之美-课程笔记2 | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="理论三：面向对象的优势以及面向过程编程的意义
+
+什么是面向过程编程以及面向过程编程语言？
+面向对象编程相比于面向过程编程的优势？
+为什么说POP更高级？
+有哪些看似是OO其实是PO风格的代码？
+在面向对象编程中，为什么更容易写出面向过程风格..." />
+    <meta name="keywords" content="OOD" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              设计模式之美-课程笔记2
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-05-23
+              </span>
+              <span>
+                10 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/sSLhqMzY-/" class="post-tag">
+                  # OOD
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="理论三面向对象的优势以及面向过程编程的意义">理论三：面向对象的优势以及面向过程编程的意义</h2>
+<ol>
+<li>什么是面向过程编程以及面向过程编程语言？</li>
+<li>面向对象编程相比于面向过程编程的优势？</li>
+<li>为什么说POP更高级？</li>
+<li>有哪些看似是OO其实是PO风格的代码？</li>
+<li>在面向对象编程中，为什么更容易写出面向过程风格的代码？</li>
+<li>OPP和PP没用武之地了吗？</li>
+</ol>
+<h4 id="什么是面向过程编程以及面向过程编程语言">什么是面向过程编程以及面向过程编程语言</h4>
+<p>类比于OOD和OOP，定义如下：</p>
+<ul>
+<li>面向过程编程也是一种编程范式或编程风格。它以过程（方法、函数、操作）作为组织代码的基本单元，以<u>数据（成员变量、属性）与方法相分离</u>为最主要特点。它是一种流程化的编程风格，通过拼接一组顺序执行的方法来操作数据完成功能。</li>
+<li>面向过程编程语言，不支持类和对象，不支持面向对象编程，仅支持面向过程编程。</li>
+</ul>
+<p>看例子对比下</p>
+<p>面向过程，按照步骤（动作）一步步来操作数据。<strong>方法和数据的定义分开。</strong></p>
+<pre><code class="language-c">struct User {
+  char name[64];
+  int age;
+  char gender[16];
+};
+
+struct User parse_to_user(char* text) {
+  // 将text(“小王&amp;28&amp;男”)解析成结构体struct User
+}
+
+char* format_to_text(struct User user) {
+  // 将结构体struct User格式化成文本（&quot;小王\t28\t男&quot;）
+}
+
+void sort_users_by_age(struct User users[]) {
+  // 按照年龄从小到大排序users
+}
+
+void format_user_file(char* origin_file_path, char* new_file_path) {
+  // open files...
+  struct User users[1024]; // 假设最大1024个用户
+  int count = 0;
+  while(1) { // read until the file is empty
+    struct User user = parse_to_user(line);
+    users[count++] = user;
+  }
+  
+  sort_users_by_age(users);
+  
+  for (int i = 0; i &lt; count; ++i) {
+    char* formatted_user_text = format_to_text(users[i]);
+    // write to new file...
+  }
+  // close files...
+}
+
+int main(char** args, int argv) {
+  format_user_file(&quot;/home/zheng/user.txt&quot;, &quot;/home/zheng/formatted_users.txt&quot;);
+}
+</code></pre>
+<p>面向对象：分析得到对象，给对象几个方法（操作对象）。</p>
+<pre><code class="language-java"> public class User {
+  private String name;
+  private int age;
+  private String gender;
+  
+  public User(String name, int age, String gender) {
+    this.name = name;
+    this.age = age;
+    this.gender = gender;
+  }
+  
+  public static User praseFrom(String userInfoText) {
+    // 将text(“小王&amp;28&amp;男”)解析成类User
+  }
+  
+  public String formatToText() {
+    // 将类User格式化成文本（&quot;小王\t28\t男&quot;）
+  }
+}
+
+public class UserFileFormatter {
+  public void format(String userFile, String formattedUserFile) {
+    // Open files...
+    List users = new ArrayList&lt;&gt;();
+    while (1) { // read until file is empty 
+      // read from file into userText...
+      User user = User.parseFrom(userText);
+      users.add(user);
+    }
+    // sort users by age...
+    for (int i = 0; i &lt; users.size(); ++i) {
+      String formattedUserText = user.formatToText();
+      // write to new file...
+    }
+    // close files...
+  }
+}
+
+public class MainApplication {
+  public static void main(String[] args) {
+    UserFileFormatter userFileFormatter = new UserFileFormatter();
+    userFileFormatter.format(&quot;/home/zheng/users.txt&quot;, &quot;/home/zheng/formatted_users.txt&quot;);
+  }
+}
+</code></pre>
+<h4 id="面向对象编程相比于面向过程的优势">面向对象编程相比于面向过程的优势</h4>
+<h5 id="1-oop更能应对大规模复杂程序的开发">1. OOP更能应对大规模复杂程序的开发</h5>
+<p>大规模程序的处理流程会成为一张网状图错综复杂。主线也不止一条。</p>
+<p>OOP允许我们先建模，再考虑他们的行为，最后才是按照流程把他们搭建。相比更清晰容易一点。另外，类天然作为组织数据对象和行为的一个载体，较好的帮我们组织代码，形成模块化。</p>
+<h5 id="2-oop的代码更加易复用-易扩展-易维护">2. OOP的代码更加易复用、易扩展、易维护</h5>
+<p>OOP的四大特性让这些实现变得更容易。</p>
+<h5 id="3-oop更人性化-更高级-更智能">3. OOP更人性化、更高级、更智能</h5>
+<p>更贴近人类的思路。（相比于指令化顺序运行。）</p>
+<h2 id="理论四哪些代码设计看似是面向对象其实是面向过程">理论四：哪些代码设计看似是面向对象，其实是面向过程？</h2>
+<h3 id="哪些代码设计看似是面向对象其实是面向过程">哪些代码设计看似是面向对象，其实是面向过程？</h3>
+<h4 id="1-滥用getter和setter">1. 滥用Getter和Setter</h4>
+<p>一段代码分析</p>
+<pre><code class="language-java">public class ShoppingCart {
+  private int itemsCount;
+  private double totalPrice;
+  private List&lt;ShoppingCartItem&gt; items = new ArrayList&lt;&gt;();
+  
+  public int getItemsCount() {
+    return this.itemsCount;
+  }
+  
+  public void setItemsCount(int itemsCount) {
+    this.itemsCount = itemsCount;
+  }
+  
+  public double getTotalPrice() {
+    return this.totalPrice;
+  }
+  
+  public void setTotalPrice(double totalPrice) {
+    this.totalPrice = totalPrice;
+  }
+
+  public List&lt;ShoppingCartItem&gt; getItems() {
+    return this.items;
+  }
+  
+  public void addItem(ShoppingCartItem item) {
+    items.add(item);
+    itemsCount++;
+    totalPrice += item.getPrice();
+  }
+  // ...省略其他方法...
+}
+</code></pre>
+<p>这个代码中，我们定义了三个变量，对于<code>itemsCount</code>和<code>totalPrice</code>，我们定义了Getter和Setter，对于<code>items</code>，我们定义了<code>Getter</code>和<code>addItem</code>。</p>
+<ol>
+<li>
+<p>乍一看没问题，仔细一想（通过业务逻辑），前两个变量的Setter方法提供了修改的途径，可能导致被不正确修改后，与iterms里属性不一致。面向对象封装，就是通过控制访问权限，隐藏内部数据，暴露<u>有限</u>的接口访问、修改内部数据。</p>
+</li>
+<li>
+<p>Items是一个集合，他的Getter返回的是一个集合容器List，外部调用者拿到它之后仍然可以改变。比如</p>
+<pre><code class="language-java">ShoppingCart cart = new ShoppCart();
+...
+cart.getItems().clear(); // 清空购物车
+</code></pre>
+<p>同样的，清空购物车可能会导致数据不一致与总数量和价格。我们应该定义一个clear方法，将清空逻辑封装在里面， 透明的给使用者调用。</p>
+<pre><code class="language-java">public class ShoppingCart {
+  // ...省略其他代码...
+  public void clear() {
+    items.clear();
+    itemsCount = 0;
+    totalPrice = 0.0;
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>此时我们又要获取到items，获取购物车列表，怎么办？Java中提供了一个<code>Collections.unmodifiableList()</code>方法，这个方法重写了List容器中修改相关的方法add(),clear(),一旦调用这些，会抛出一个<code>UnsupportedOperationException</code>异常。因此实现让Getter返回一个不可变容器。</p>
+<pre><code class="language-java">public class ShoppingCart {
+  // ...省略其他代码...
+  public List&lt;ShoppingCartItem&gt; getItems() {
+    return Collections.unmodifiableList(this.items);
+  }
+}
+
+public class UnmodifiableList&lt;E&gt; extends UnmodifiableCollection&lt;E&gt;
+                          implements List&lt;E&gt; {
+  public boolean add(E e) {
+    throw new UnsupportedOperationException();
+  }
+  public void clear() {
+    throw new UnsupportedOperationException();
+  }
+  // ...省略其他代码...
+}
+
+ShoppingCart cart = new ShoppingCart();
+List&lt;ShoppingCartItem&gt; items = cart.getItems();
+items.clear();//抛出UnsupportedOperationException异常
+</code></pre>
+</li>
+<li>
+<p>还有一个问题，虽然改变不了容器，但是对于每个对象的属性，我们还是可以更改。e.g.</p>
+<pre><code class="language-java">ShoppingCart cart = new ShoppingCart();
+cart.add(new ShoppingCartItem(...));
+List&lt;ShoppingCartItem&gt; items = cart.getItems();
+ShoppingCartItem item = items.get(0);
+item.setPrice(19.0); // 这里修改了item的价格属性
+</code></pre>
+</li>
+</ol>
+<p>总结下来就是，除非真的需要，尽量不定义Setter方法。除此之外，Getter返回集合容器的时候也要注意。</p>
+<h4 id="2-滥用全局变量和全局方法">2. 滥用全局变量和全局方法</h4>
+<ol>
+<li>
+<p>全局变量：单例类对象，静态成员变量，常量。常见的全局方法有静态方法。静态方法一般用来操作变量或者外部数据。（数据和方法分类，不符合封装特性）-&gt;面向过程风格。</p>
+</li>
+<li>
+<p>例子看看(常量)</p>
+<pre><code class="language-java">public class Constants {
+  public static final String MYSQL_ADDR_KEY = &quot;mysql_addr&quot;;
+  public static final String MYSQL_DB_NAME_KEY = &quot;db_name&quot;;
+  public static final String MYSQL_USERNAME_KEY = &quot;mysql_username&quot;;
+  public static final String MYSQL_PASSWORD_KEY = &quot;mysql_password&quot;;
+  
+  public static final String REDIS_DEFAULT_ADDR = &quot;192.168.7.2:7234&quot;;
+  public static final int REDIS_DEFAULT_MAX_TOTAL = 50;
+  public static final int REDIS_DEFAULT_MAX_IDLE = 50;
+  public static final int REDIS_DEFAULT_MIN_IDLE = 20;
+  public static final String REDIS_DEFAULT_KEY_PREFIX = &quot;rt:&quot;;
+  
+  // ...省略更多的常量定义...
+}
+</code></pre>
+<p>代码的可维护性变差。大家都在往这个常量类中增加内容，这个类会变得很大，查找费时，代码提交容易冲突。</p>
+<p>增加了代码的编译时间。</p>
+<p>依赖这个类的代码越来越多，每次修改这个Constant类，依赖他的类都得重新编译，浪费时间。可能影响开发效率。</p>
+<p>影响代码的复用性。比如在另一个项目中要复用一个类，而这个类依赖这个Constant，那么又得将整个Constant一并引入。（许多无关的常量）</p>
+</li>
+<li>
+<p>如何改进？</p>
+<ol>
+<li>拆分。mysql相关的就拆成MySQLConstant，Redis就是RedisConstant。</li>
+<li>或者不定义Constant，而是哪个类使用这个常量，就将它定义在那个类中。比如RedisConfig中定义Redis相关的常量。提高了类设计的内聚性和代码的复用性。</li>
+</ol>
+</li>
+<li>
+<p>另一个例子（Utils）</p>
+<p>Utils类存在的意义就是复用通用的工具。</p>
+<p>我们也知道，继承可以提供代码复用，但是有时两个类不一定具有继承关系。所以定义一个静态类，来使用的时候拼接到合适的地方。</p>
+<p>这个其实是非常“面向过程”的。但是他确实解决了开发中的问题，所以我们辩证对待，不能滥用而非不能用。认真思考是否需要定义这种类每次。</p>
+<blockquote>
+<p>你需要单独定义util类吗？是否可以将utils中的方法放到其他类？都回答完这些问题再做决定。</p>
+<p>我们的最终目的是写出合适的代码以尽可能小的代价。</p>
+</blockquote>
+<p>utils也可以像Constant一样适当的细化拆分。</p>
+</li>
+</ol>
+<h4 id="3-定义数据和方法分离的类">3. 定义数据和方法分离的类</h4>
+<ol>
+<li>
+<p>数据在一个类，操作数据的方法在另一个类。</p>
+<blockquote>
+<p>后端开发MVC中到处都是-&gt; _-&gt;</p>
+<p>传统的 MVC 结构分为 Model 层、Controller 层、View 层这三层。不过，在做前后端分离之后，三层结构在后端开发中，会稍微有些调整，被分为 Controller 层、Service 层、Repository 层。Controller 层负责暴露接口给前端调用，Service 层负责核心业务逻辑，Repository 层负责数据读写。而在每一层中，我们又会定义相应的 VO（View Object）、BO（Business Object）、Entity。一般情况下，VO、BO、Entity 中只会定义数据，不会定义方法，所有操作这些数据的业务逻辑都定义在对应的 Controller 类、Service 类、Repository 类中。这就是典型的面向过程的编程风格</p>
+</blockquote>
+</li>
+<li>
+<p>这种叫做基于贫血模型的开发模式。后续会讲。</p>
+</li>
+</ol>
+<h3 id="在面向对象编程中为什么容易写出面向过程风格的代码">在面向对象编程中，为什么容易写出面向过程风格的代码？</h3>
+<p>面向过程更符合一种流程化的思想（相对简单），面向对象自底向上，先将任务和实体分解，理清之间的交互再组装。</p>
+<h3 id="面向过程编程及面向过程编程语言就真的无用武之地了吗">面向过程编程及面向过程编程语言就真的无用武之地了吗？</h3>
+<ol>
+<li>微小程序;</li>
+<li>数据处理;</li>
+<li>以算法为主，数据为辅助，面向过程更适合一点;</li>
+<li>面向过程有点像面向对象的基础;</li>
+<li>辩证看待两种风格的配合。最终目的是写出好代码。易用易拓展，易读易维护。</li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E7%90%86%E8%AE%BA%E4%B8%89%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E4%BC%98%E5%8A%BF%E4%BB%A5%E5%8F%8A%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E7%BC%96%E7%A8%8B%E7%9A%84%E6%84%8F%E4%B9%89">理论三：面向对象的优势以及面向过程编程的意义</a><br>
+*
+<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E7%BC%96%E7%A8%8B%E4%BB%A5%E5%8F%8A%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80">什么是面向过程编程以及面向过程编程语言</a></li>
+<li><a href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B%E7%9B%B8%E6%AF%94%E4%BA%8E%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E7%9A%84%E4%BC%98%E5%8A%BF">面向对象编程相比于面向过程的优势</a>
+<ul>
+<li><a href="#1-oop%E6%9B%B4%E8%83%BD%E5%BA%94%E5%AF%B9%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%A4%8D%E6%9D%82%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%BC%80%E5%8F%91">1. OOP更能应对大规模复杂程序的开发</a></li>
+<li><a href="#2-oop%E7%9A%84%E4%BB%A3%E7%A0%81%E6%9B%B4%E5%8A%A0%E6%98%93%E5%A4%8D%E7%94%A8-%E6%98%93%E6%89%A9%E5%B1%95-%E6%98%93%E7%BB%B4%E6%8A%A4">2. OOP的代码更加易复用、易扩展、易维护</a></li>
+<li><a href="#3-oop%E6%9B%B4%E4%BA%BA%E6%80%A7%E5%8C%96-%E6%9B%B4%E9%AB%98%E7%BA%A7-%E6%9B%B4%E6%99%BA%E8%83%BD">3. OOP更人性化、更高级、更智能</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%90%86%E8%AE%BA%E5%9B%9B%E5%93%AA%E4%BA%9B%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1%E7%9C%8B%E4%BC%BC%E6%98%AF%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%85%B6%E5%AE%9E%E6%98%AF%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B">理论四：哪些代码设计看似是面向对象，其实是面向过程？</a>
+<ul>
+<li><a href="#%E5%93%AA%E4%BA%9B%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1%E7%9C%8B%E4%BC%BC%E6%98%AF%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%85%B6%E5%AE%9E%E6%98%AF%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B">哪些代码设计看似是面向对象，其实是面向过程？</a>
+<ul>
+<li><a href="#1-%E6%BB%A5%E7%94%A8getter%E5%92%8Csetter">1. 滥用Getter和Setter</a></li>
+<li><a href="#2-%E6%BB%A5%E7%94%A8%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E5%92%8C%E5%85%A8%E5%B1%80%E6%96%B9%E6%B3%95">2. 滥用全局变量和全局方法</a></li>
+<li><a href="#3-%E5%AE%9A%E4%B9%89%E6%95%B0%E6%8D%AE%E5%92%8C%E6%96%B9%E6%B3%95%E5%88%86%E7%A6%BB%E7%9A%84%E7%B1%BB">3. 定义数据和方法分离的类</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9C%A8%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B%E4%B8%AD%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AE%B9%E6%98%93%E5%86%99%E5%87%BA%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E9%A3%8E%E6%A0%BC%E7%9A%84%E4%BB%A3%E7%A0%81">在面向对象编程中，为什么容易写出面向过程风格的代码？</a></li>
+<li><a href="#%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E7%BC%96%E7%A8%8B%E5%8F%8A%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E5%B0%B1%E7%9C%9F%E7%9A%84%E6%97%A0%E7%94%A8%E6%AD%A6%E4%B9%8B%E5%9C%B0%E4%BA%86%E5%90%97">面向过程编程及面向过程编程语言就真的无用武之地了吗？</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/227-basic-calculator-ii/">
+              <h3 class="post-title">
+                227. Basic Calculator II 
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

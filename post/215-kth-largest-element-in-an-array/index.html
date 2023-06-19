@@ -1,0 +1,414 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>215. Kth Largest Element in an Array | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="215. Kth Largest Element in an Array | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="
+Kth Largest Element in an Array
+
+Question
+Given an integer array nums and an integer k, return the kth largest element ..." />
+    <meta name="keywords" content="QuickSelect,Priority Queue,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              215. Kth Largest Element in an Array
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-05-06
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/Qb0rTWfsk/" class="post-tag">
+                  # QuickSelect
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/ySj41MDgL3/" class="post-tag">
+                  # Priority Queue
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <ol start="215">
+<li>Kth Largest Element in an Array</li>
+</ol>
+<h2 id="question">Question</h2>
+<p>Given an integer array <code>nums</code> and an integer <code>k</code>, return <em>the</em> <code>kth</code> <em>largest element in the array</em>.</p>
+<p>Note that it is the <code>kth</code> largest element in the sorted order, not the <code>kth</code> distinct element.</p>
+<p>You must solve it in <code>O(n)</code> time complexity.</p>
+<h2 id="algorithm">Algorithm</h2>
+<ol>
+<li>Use priorityQueue: By construct a priority queue, we poll elements until next one is the nth largest one.</li>
+</ol>
+<h2 id="code1">Code1</h2>
+<pre><code class="language-java">class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        PriorityQueue&lt;Integer&gt; pq = new PriorityQueue&lt;&gt;();
+        for (int num : nums) {
+            pq.offer(num);
+            if (pq.size() &gt; k) {
+                pq.poll();
+            }
+        }
+        return pq.poll();
+    }
+}
+</code></pre>
+<h2 id="algorithm2">Algorithm2</h2>
+<p><a href="https://en.wikipedia.org/wiki/Quickselect">QuickSelect Algorithm</a></p>
+<p>This is an awesome algorithm. The Wiki gives us a very detailed explanation, you could that one. Here, I only explain the code based on this particular question 215.</p>
+<p>Two main for this answer if you want to use the quick select algorithm.</p>
+<ul>
+<li>Quick select
+<ul>
+<li>By using a pivot(similar thoughts in quick sort), each time you do a select, the pivot's position is the final position, and the elements before it are all smaller that the nums[pivot], and the number behind it it are all larger(assume we are constructing a <code>nums</code> from small to large). So if you get a pivot smaller than k, you need to find the larger part of <code>nums</code>. Otherwise, go to the smaller side.</li>
+</ul>
+</li>
+<li>Partition
+<ul>
+<li>The is the procedure that moves numbers based on the pivot. In the end, we got the position where pivot should be at, and we swap the number of that position and the pivot we set at first.</li>
+<li>The algorithm chooses the left most number as pivot each time. Some choose right most, some choose random, and some choose the median-of-3. The choose of pivot may affect the time complexity of the algorithm.</li>
+</ul>
+</li>
+<li>In the quick select, we do it in place, the space complexity is O(n) for we are using the stack in recursion.  And the time complicity is O(n) (but the worst time is O(n^2) . <a href="https://blog.csdn.net/W__M__W/article/details/105684438">Why the average time complexity is O(n)</a></li>
+</ul>
+<h2 id="code2-0">Code2-0</h2>
+<pre><code class="language-java">class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        return quickSelect(nums, 0, nums.length - 1, nums.length - k);
+    }
+    
+    private int quickSelect(int[] nums, int left, int right, int k) {
+        if (left == right) return nums[left];
+        int pivot = partition(nums, left, right);
+        if (pivot == k) {
+            return nums[k];
+        } else if (pivot &lt;= k) {
+            return quickSelect(nums, pivot + 1, right, k);           
+        } else {
+            return quickSelect(nums, left, pivot - 1, k);  
+        }
+    }
+    
+    private int partition(int[] nums, int left, int right) {
+        int pivot = nums[left];
+        int l = left + 1;
+        int r = right;
+        while (l &lt;= r) {
+            if (nums[r] &lt; pivot &amp;&amp; nums[l] &gt; pivot) {
+                swap(nums, l, r);
+            } 
+            if (nums[l] &lt;= pivot) {
+                l++;
+            }
+            if (nums[r] &gt;= pivot) {
+                r--;
+            }
+        }
+        swap(nums, left, r);
+        return r;
+    }
+    
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+</code></pre>
+<p>Well you could modify slightly to remove the <a href="https://stackoverflow.com/questions/33923/what-is-tail-recursion">tail recursion.</a> Using a loop.</p>
+<h2 id="code2-1">Code2-1</h2>
+<pre><code class="language-java">class Solution {
+    public int findKthLargest(int[] nums, int k) {
+      
+        int l = 0, r = nums.length - 1;
+        while (true) {
+            int pos = partition(nums, l, r);
+            if(nums.length - pos == k) {
+                return nums[pos];
+            } else if (nums.length - pos &lt; k) {
+                r = pos - 1;
+            } else {
+                l = pos + 1;
+            }
+        }
+    }
+    
+    private int partition(int[] nums, int left, int right) {
+        int pivot = nums[left];
+        int l = left + 1;
+        int r = right;
+        while (l &lt;= r) {
+            if (nums[r] &lt; pivot &amp;&amp; nums[l] &gt; pivot) {
+                swap(nums, l, r);
+            } 
+            if (nums[l] &lt;= pivot) {
+                l++;
+            }
+            if (nums[r] &gt;= pivot) {
+                r--;
+            }
+        }
+        swap(nums, left, r);
+        return r;
+    }
+    
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+</code></pre>
+<p>Or you could sort the algorithm from large to small so you don't have to check the position <code>nums.length - k</code>.</p>
+<h2 id="code2-2">Code2-2</h2>
+<pre><code class="language-java">class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        if(nums == null || nums.length == 0) return 0;
+        int l = 0; 
+        int r = nums.length-1; 
+        
+        while(true) {
+            int pos = partition(nums, l, r);
+            if(pos + 1 == k) {
+                return nums[pos];
+            } else if (pos + 1 &gt; k) {
+                r = pos - 1;
+            } else {
+                l = pos + 1;
+            }
+        }
+    }
+    private int partition(int[] nums, int left, int right) {
+        int pivotIndex = left;
+        int pivot = nums[pivotIndex];
+        int l = left + 1;
+        int r = right;
+        while(l &lt;= r) {
+            if(nums[l] &lt; pivot &amp;&amp; nums[r] &gt; pivot) {
+                swap(nums, l++, r--);
+            }
+            if(nums[l] &gt;= pivot) l++;
+            if(nums[r] &lt;= pivot) r--;
+        }
+        swap(nums, pivotIndex, r);
+        return r;
+    }
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#question">Question</a></li>
+<li><a href="#algorithm">Algorithm</a></li>
+<li><a href="#code1">Code1</a></li>
+<li><a href="#algorithm2">Algorithm2</a></li>
+<li><a href="#code2-0">Code2-0</a></li>
+<li><a href="#code2-1">Code2-1</a></li>
+<li><a href="#code2-2">Code2-2</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/41-first-missing-positive/">
+              <h3 class="post-title">
+                41. First Missing Positive
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

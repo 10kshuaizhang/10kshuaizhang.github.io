@@ -1,0 +1,262 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>39. Combination Sum | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="39. Combination Sum | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Question
+Given a candidates and a target, find all the combination of the candidates which sum of all the elements equal..." />
+    <meta name="keywords" content="Backtracking,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              39. Combination Sum
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-17
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/KQ57awumk/" class="post-tag">
+                  # Backtracking
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="question">Question</h2>
+<p>Given a candidates and a target, find all the combination of the candidates which sum of all the elements equals to the target.</p>
+<h2 id="algorithm">Algorithm</h2>
+<p>First you might think we could find all the combination and then traverse each of them to see if the sum of them is target. This will introduce extra complex.</p>
+<p>This is a question based on the combination of an array. We follow the same pattern of getting the combination.We could do it when we doing backtracking, it's a dfs procedure and we are adding the elements one by one, so we could maintain a sum, the end of the recursion is sum == target.</p>
+<h2 id="code">Code</h2>
+<pre><code class="language-java">class Solution {
+    public List&lt;List&lt;Integer&gt;&gt; combinationSum(int[] candidates, int target) {
+        List&lt;List&lt;Integer&gt;&gt; res = new ArrayList&lt;&gt;();
+        if (candidates == null || candidates.length == 0) {
+            return res;
+        }
+        
+        helper(res, candidates, 0, target, new ArrayList&lt;&gt;(), 0);
+        return res;
+    }
+    
+    private void helper(List&lt;List&lt;Integer&gt;&gt; res, int[] candidates, int index, int target, List&lt;Integer&gt; list, int sum) {
+        if (sum == target) {
+            res.add(new ArrayList&lt;&gt;(list));
+            return;
+        } else if (sum &lt; target) {
+            for (int i = index; i &lt; candidates.length; i++) {
+                list.add(candidates[i]);
+                helper(res, candidates, i, target, list, sum + candidates[i]);
+                list.remove(list.size() - 1);
+            }
+        }
+    }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#question">Question</a></li>
+<li><a href="#algorithm">Algorithm</a></li>
+<li><a href="#code">Code</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/77-combinations/">
+              <h3 class="post-title">
+                77. Combinations
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

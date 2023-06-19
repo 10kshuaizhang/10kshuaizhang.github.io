@@ -1,0 +1,352 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>设计模式之美-课程笔记7-设计原则1-单一职责(SRP) | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="设计模式之美-课程笔记7-设计原则1-单一职责(SRP) | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="理论一：对于单一职责原则，如何判定某个类的职责是否够“单一”？
+如何理解单一职责原则（SRP)
+
+单一职责原则:Single responsibility Principle, SRP. A class or module should h..." />
+    <meta name="keywords" content="OOD,Design Pattern" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              设计模式之美-课程笔记7-设计原则1-单一职责(SRP)
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-06-16
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/sSLhqMzY-/" class="post-tag">
+                  # OOD
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/d2JaGqwpzA/" class="post-tag">
+                  # Design Pattern
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="理论一对于单一职责原则如何判定某个类的职责是否够单一">理论一：对于单一职责原则，如何判定某个类的职责是否够“单一”？</h2>
+<h3 id="如何理解单一职责原则srp">如何理解单一职责原则（SRP)</h3>
+<ol>
+<li>单一职责原则:Single responsibility Principle, SRP. A class or module should have a single responsibility. 一个类或模块只负责完成一个职责（或者功能）。关于模块和类有两种理解：
+<ol>
+<li>模块可以看做更抽象的类，类也可看成一个模块。</li>
+<li>模块可以看做更粗粒度的代码块，包含多个类。</li>
+</ol>
+</li>
+<li>解读就是不要设计大而全的类，要设计粒度小，功能单一的类。比如一个类既包含订单的操作，又包含用户的操作，他们（用户和订单）是不同的领域模型，我们应该将其拆分。</li>
+</ol>
+<h3 id="如何判断类的职责足够单一">如何判断类的职责足够单一</h3>
+<p>举个例子，比如我们要设计一个社交产品，其中UserInfo用来记录用户的信息，以下这个类是否满足单一职责原则：</p>
+<pre><code class="language-java">public class UserInfo {
+  private long userId;
+  private String username;
+  private String email;
+  private String telephone;
+  private long createTime;
+  private long lastLoginTime;
+  private String avatarUrl;
+  private String provinceOfAddress; // 省
+  private String cityOfAddress; // 市
+  private String regionOfAddress; // 区 
+  private String detailedAddress; // 详细地址
+  // ...省略其他属性和方法...
+}
+</code></pre>
+<blockquote>
+<p>反正我看着属性有点多，下面的省市区详细地址可以拆成另一个类。</p>
+</blockquote>
+<p>作者提供的两个观点：1是和我的一样，地址信息占比较高，可以继续拆分成独立的UserAddress类，UserInfo只保留地址以外的信息。2. 是所有的信息都是用户相关的，所以满足SRP。</p>
+<ol>
+<li><strong>结合实际的应用业务场景</strong>。如何地址信息只是单纯的用来展示的，和其他的属性一样，那么就可以保留在UserInfo中。但是如果业务在拓展，有了电商模块，用户的地址信息还会用在电商物流中，那么我们最好将其分离出来，独立成物流信息。</li>
+<li>如果业务继续发展，这个公司开发出来其他的一些应用，公司希望支持统一账号系统（一个账号可以登陆旗下所有app），那么我们还需要对UserInfo继续拆分，将身份认证的信息例如email， phone抽取成独立的的类。</li>
+<li>不同的应用场景、不同阶段的需求背景下，对一个类的单一职责判定是不同的。</li>
+<li>在实际开发中，<strong>我们可以先写一个粗粒度的类，满足业务需求。随着业务发展，如果粗粒度的类越来越庞大，代码越来越多，这个时候我们那就可以将这个类拆分成几个更细粒度的类。这就是所谓的持续重构。</strong></li>
+<li>为什么做拆分
+<ol>
+<li>类中的代码行数、函数或属性过多。影响代码的可读性可维护性。</li>
+<li>类依赖的其他类过多，或者依赖这个类的其他类过多，不符合高内聚、低耦合的设计思想。</li>
+<li>所有方法过多的，我们可以考虑是否可以将私有方法独立到新类中设置为公有方法，以供更多类使用提高代码复用。</li>
+<li>比较难起名字。这时候说明类的职责不是十分清晰。</li>
+<li>大量的方法都集中操作某几个属性，比如在UserInfo中一半的方法在操作address信息，那么就可以考虑将address相关的信息和方法拆分出来。</li>
+</ol>
+</li>
+<li>没有很具体的方法论和很定量说多少属性算多。如果要找一个标准，可以通过一个类是否已经让你感觉十分复杂和过多功能了来判断。</li>
+</ol>
+<h3 id="类的职责是否越单一越好">类的职责是否越单一越好？</h3>
+<p>看个例子：</p>
+<pre><code class="language-java">/**
+ * Protocol format: identifier-string;{gson string}
+ * For example: UEUEUE;{&quot;a&quot;:&quot;A&quot;,&quot;b&quot;:&quot;B&quot;}
+ */
+public class Serialization {
+  private static final String IDENTIFIER_STRING = &quot;UEUEUE;&quot;;
+  private Gson gson;
+  
+  public Serialization() {
+    this.gson = new Gson();
+  }
+  
+  public String serialize(Map&lt;String, String&gt; object) {
+    StringBuilder textBuilder = new StringBuilder();
+    textBuilder.append(IDENTIFIER_STRING);
+    textBuilder.append(gson.toJson(object));
+    return textBuilder.toString();
+  }
+  
+  public Map&lt;String, String&gt; deserialize(String text) {
+    if (!text.startsWith(IDENTIFIER_STRING)) {
+        return Collections.emptyMap();
+    }
+    String gsonStr = text.substring(IDENTIFIER_STRING.length());
+    return gson.fromJson(gsonStr, Map.class);
+  }
+}
+</code></pre>
+<p>如果我们想拆分这个类，让职责更单一，拆分出Serializer和Deserializer</p>
+<pre><code class="language-java">public class Serializer {
+  private static final String IDENTIFIER_STRING = &quot;UEUEUE;&quot;;
+  private Gson gson;
+  
+  public Serializer() {
+    this.gson = new Gson();
+  }
+  
+  public String serialize(Map&lt;String, String&gt; object) {
+    StringBuilder textBuilder = new StringBuilder();
+    textBuilder.append(IDENTIFIER_STRING);
+    textBuilder.append(gson.toJson(object));
+    return textBuilder.toString();
+  }
+}
+
+public class Deserializer {
+  private static final String IDENTIFIER_STRING = &quot;UEUEUE;&quot;;
+  private Gson gson;
+  
+  public Deserializer() {
+    this.gson = new Gson();
+  }
+  
+  public Map&lt;String, String&gt; deserialize(String text) {
+    if (!text.startsWith(IDENTIFIER_STRING)) {
+        return Collections.emptyMap();
+    }
+    String gsonStr = text.substring(IDENTIFIER_STRING.length());
+    return gson.fromJson(gsonStr, Map.class);
+  }
+}
+</code></pre>
+<p>拆分后功能更单一了，但是我们如果修改了协议的格式，数据标识从“UEUEUE”改为“DFDFDF”，或者序列化方式从 JSON 改为了 XML，那 Serializer 类和 Deserializer 类都需要做相应的修改，代码的内聚性显然没有原来 Serialization 高了</p>
+<p>或者我们只改了desirializer。忘记了serializer，那么就会导致序列化反序列化不匹配。这其实是可维护性变差了。</p>
+<p><strong>总体还是要从代码的可读性，可维护性和可扩展性去考虑。</strong></p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E7%90%86%E8%AE%BA%E4%B8%80%E5%AF%B9%E4%BA%8E%E5%8D%95%E4%B8%80%E8%81%8C%E8%B4%A3%E5%8E%9F%E5%88%99%E5%A6%82%E4%BD%95%E5%88%A4%E5%AE%9A%E6%9F%90%E4%B8%AA%E7%B1%BB%E7%9A%84%E8%81%8C%E8%B4%A3%E6%98%AF%E5%90%A6%E5%A4%9F%E5%8D%95%E4%B8%80">理论一：对于单一职责原则，如何判定某个类的职责是否够“单一”？</a>
+<ul>
+<li><a href="#%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3%E5%8D%95%E4%B8%80%E8%81%8C%E8%B4%A3%E5%8E%9F%E5%88%99srp">如何理解单一职责原则（SRP)</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E7%B1%BB%E7%9A%84%E8%81%8C%E8%B4%A3%E8%B6%B3%E5%A4%9F%E5%8D%95%E4%B8%80">如何判断类的职责足够单一</a></li>
+<li><a href="#%E7%B1%BB%E7%9A%84%E8%81%8C%E8%B4%A3%E6%98%AF%E5%90%A6%E8%B6%8A%E5%8D%95%E4%B8%80%E8%B6%8A%E5%A5%BD">类的职责是否越单一越好？</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/74-search-a-2d-matrix/">
+              <h3 class="post-title">
+                74. Search a 2D Matrix
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

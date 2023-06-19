@@ -1,0 +1,349 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>743. Network Delay Time | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="743. Network Delay Time | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Question
+You are given a network of n nodes, labeled from 1 to n. You are also given times, a list of travel times as di..." />
+    <meta name="keywords" content="Shortest Path,Depth First Search&Bread First Search,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              743. Network Delay Time
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-05-03
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/cUTq6TfI9/" class="post-tag">
+                  # Shortest Path
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/SQ7QEvjYu/" class="post-tag">
+                  # Depth First Search&amp;Bread First Search
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="question">Question</h2>
+<p>You are given a network of <code>n</code> nodes, labeled from <code>1</code> to <code>n</code>. You are also given <code>times</code>, a list of travel times as directed edges <code>times[i] = (ui, vi, wi)</code>, where <code>ui</code> is the source node, <code>vi</code> is the target node, and <code>wi</code> is the time it takes for a signal to travel from source to target.</p>
+<p>We will send a signal from a given node <code>k</code>. Return <em>the <strong>minimum</strong> time it takes for all the</em> <code>n</code> <em>nodes to receive the signal</em>. If it is impossible for all the <code>n</code> nodes to receive the signal, return <code>-1</code>.</p>
+<h2 id="algorithm">Algorithm</h2>
+<p>This question is a typical shortest path problem. I use Dijkstra algorithm to solve it. We do bfs and maintain a <code>minDistTo</code>, finally we check the max value, if it could not send to all the nodes, the res would be MAX_VALUE, otherwise, the max value is the min value or latency required to send signal to all the nodes.</p>
+<p>Code2 is the standard answer, which optimize the time by maintain an adjacency list.</p>
+<h2 id="code">Code</h2>
+<pre><code class="language-java">class Solution {
+    public int networkDelayTime(int[][] times, int n, int k) {
+        int[] minDistTo = new int[n + 1];
+        boolean[] visited = new boolean[n + 1];
+        Arrays.fill(minDistTo, Integer.MAX_VALUE);
+        PriorityQueue&lt;Pair&lt;Integer, Integer&gt;&gt; pq = new PriorityQueue&lt;&gt;((a, b) -&gt; (a.getValue() - b.getValue()));
+        
+        minDistTo[k] = 0;
+        pq.offer(new Pair(k, minDistTo[1]));
+        
+        while (!pq.isEmpty()) {
+            Pair&lt;Integer, Integer&gt; pair = pq.poll();
+            visited[pair.getKey()] = true;
+            int curNode = pair.getKey();
+            for (int[] time : times) {
+                int start = time[0];
+                int end = time[1];
+                int latency = time[2];
+                if (start == curNode &amp;&amp; !visited[end]) {
+                    int curDist = minDistTo[start] + latency;
+                    if (curDist &lt; minDistTo[end]) {
+                        minDistTo[end] = curDist;
+                        pq.offer(new Pair(end, curDist));
+                    }
+                }
+            }
+        }
+        
+        int res = Integer.MIN_VALUE;
+        for (int i = 1; i &lt; minDistTo.length; i++) {
+            res = Math.max(minDistTo[i], res);
+        }
+        return res != Integer.MAX_VALUE ? res : -1;
+        
+    }
+}
+</code></pre>
+<h2 id="code2">Code2</h2>
+<pre><code class="language-java">class Solution {
+    // Adjacency list
+    Map&lt;Integer, List&lt;Pair&lt;Integer, Integer&gt;&gt;&gt; adj = new HashMap&lt;&gt;();
+    
+    private void dijkstra(int[] signalReceivedAt, int source, int n) {
+        Queue&lt;Pair&lt;Integer, Integer&gt;&gt; pq = new PriorityQueue&lt;Pair&lt;Integer,Integer&gt;&gt;
+            (Comparator.comparing(Pair::getKey));
+        pq.add(new Pair(0, source));
+        
+        // Time for starting node is 0
+        signalReceivedAt[source] = 0;
+        
+        while (!pq.isEmpty()) {
+            Pair&lt;Integer, Integer&gt; topPair = pq.remove();
+            
+            int currNode = topPair.getValue();
+            int currNodeTime = topPair.getKey();
+            
+            if (currNodeTime &gt; signalReceivedAt[currNode]) {
+                continue;
+            }
+            
+            if (!adj.containsKey(currNode)) {
+                continue;
+            }
+            
+            // Broadcast the signal to adjacent nodes
+            for (Pair&lt;Integer, Integer&gt; edge : adj.get(currNode)) {
+                int time = edge.getKey();
+                int neighborNode = edge.getValue();
+                
+                // Fastest signal time for neighborNode so far
+                // signalReceivedAt[currNode] + time : 
+                // time when signal reaches neighborNode
+                if (signalReceivedAt[neighborNode] &gt; currNodeTime + time) {
+                    signalReceivedAt[neighborNode] = currNodeTime + time;
+                    pq.add(new Pair(signalReceivedAt[neighborNode], neighborNode));
+                }
+            }
+        }
+    }
+    
+    public int networkDelayTime(int[][] times, int n, int k) {
+        // Build the adjacency list
+        for (int[] time : times) {
+            int source = time[0];
+            int dest = time[1];
+            int travelTime = time[2];
+            
+            adj.putIfAbsent(source, new ArrayList&lt;&gt;());
+            adj.get(source).add(new Pair(travelTime, dest));
+        }
+        
+        int[] signalReceivedAt = new int[n + 1];
+        Arrays.fill(signalReceivedAt, Integer.MAX_VALUE);
+        
+        dijkstra(signalReceivedAt, k, n);
+        
+        int answer = Integer.MIN_VALUE;
+        for (int i = 1; i &lt;= n; i++) {
+            answer = Math.max(answer, signalReceivedAt[i]);
+        }
+        
+        // INT_MAX signifies atleat one node is unreachable
+        return answer == Integer.MAX_VALUE ? -1 : answer;
+    }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#question">Question</a></li>
+<li><a href="#algorithm">Algorithm</a></li>
+<li><a href="#code">Code</a></li>
+<li><a href="#code2">Code2</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/1135-connecting-cities-with-minimum-cost/">
+              <h3 class="post-title">
+                1135.  Connecting Cities With Minimum Cost
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

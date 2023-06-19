@@ -1,0 +1,389 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>130. Surrounded Regions | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="130. Surrounded Regions | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Question
+This question says that there is a checkerboard board with 'X' and 'O' on it. Flip all 'O's into 'X's. The rule..." />
+    <meta name="keywords" content="Depth First Search&Bread First Search,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              130. Surrounded Regions
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-08
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/SQ7QEvjYu/" class="post-tag">
+                  # Depth First Search&amp;Bread First Search
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="question">Question</h2>
+<p>This question says that there is a checkerboard board with 'X' and 'O' on it. Flip all 'O's into 'X's. The rule is that 'O' at the boundary cannot be flipped and 'O' connected to 'O' which cannot be reversed cannot be flipped.</p>
+<h2 id="algorithm">Algorithm</h2>
+<p>This topic is more intuitive approach is to first dfs the border of the grid once, to find the grid connected to it, are marked as visited. after the non-border grid traversal and the execution of dfs, then the border and its connected grid are visited, the remaining can dfs to and is 'O' can be flipped. My code 1 is this idea. Time and space complexity are O(m * n).</p>
+<p>Code 2 is a previous commit, should be a reference to the standard answer. There are two ingenious ideas. The first one is to reduce some duplicate code in finding node neighbors by defining DIRECTIONS array; another better ingenuity is that he does not define an additional visited array to store the traversed information, but directly inplace the modified board.</p>
+<p>When traversing the boundaries, the boundaries and the squares connected to them are directly set to 'A'. The remaining 'O's on the board can be flipped. At this point, you can directly traverse the board, flip the remaining 'O' to 'X', and then set 'A' to 'O' during the traversal.</p>
+<h2 id="code1">Code1</h2>
+<pre><code class="language-java">class Solution {
+    boolean[][] visited;
+    public void solve(char[][] board) {
+        if (board == null || board.length == 0 || board[0] == null || board[0].length == 0) {
+            return;
+        }
+        int m = board.length, n = board[0].length;
+        visited = new boolean[m][n];
+        
+        for (int i = 0; i &lt; m; i++) {
+            if (board[i][0] == 'O' &amp;&amp; !visited[i][0]) {
+                dfs(board, i, 0, false);
+            }
+        }
+        for (int i = 0; i &lt; m; i++) {
+            if (board[i][n-1] == 'O' &amp;&amp; !visited[i][n-1]) {
+                dfs(board, i, n-1, false);
+            }
+        }
+        for (int i = 0; i &lt; n; i++) {
+            if (board[0][i] == 'O' &amp;&amp; !visited[0][i]) {
+                dfs(board, 0, i, false);
+            }
+        }
+        for (int i = 0; i &lt; n; i++) {
+            if (board[m-1][i] == 'O' &amp;&amp; !visited[m-1][i]) {
+                dfs(board, m-1, i, false);
+            }
+        }
+        
+        for (int i = 1; i &lt; m-1; i++) {
+            for (int j = 1; j &lt; n-1; j++) {
+                if (board[i][j] == 'O' &amp;&amp; !visited[i][j]) {
+                    dfs(board, i, j, true);
+                }
+            }
+        }
+    }
+    
+    private void dfs(char[][] board, int i, int j, boolean flip) {
+        Stack&lt;int[]&gt; stack = new Stack();
+        stack.push(new int[]{i, j});
+        visited[i][j] = true;
+        while (!stack.isEmpty()) {
+            int[] pair = stack.pop();
+            int row = pair[0], col = pair[1];
+            if (flip) {
+                board[row][col] = 'X';
+            }
+            if (row - 1 &gt;= 0) {
+                int x = row-1, y = col;
+                if (board[x][y] == 'O' &amp;&amp; !visited[x][y]) {
+                    visited[x][y] = true;
+                    stack.push(new int[]{x, y});
+                }
+            }
+            if (col - 1 &gt;= 0) {
+                int x = row, y = col-1;
+                if (board[x][y] == 'O' &amp;&amp; !visited[x][y]) {
+                    visited[x][y] = true;
+                    stack.push(new int[]{x, y});
+                }
+            }
+            if (row + 1 &lt; board.length) {
+                int x = row+1, y = col;
+                if (board[x][y] == 'O' &amp;&amp; !visited[x][y]) {
+                    visited[x][y] = true;
+                    stack.push(new int[]{x, y});
+                }
+            }
+            if (col + 1 &lt; board[0].length) {
+                int x = row, y = col+1;
+                if (board[x][y] == 'O' &amp;&amp; !visited[x][y]) {
+                    visited[x][y] = true;
+                    stack.push(new int[]{x, y});
+                }
+            }
+            
+        }
+    }
+}
+</code></pre>
+<h2 id="code2">Code2</h2>
+<pre><code class="language-java">class Solution {
+    protected static int[][] DIRECTIONS = {
+        {1, 0},
+        {-1, 0},
+        {0, 1},
+        {0, -1}
+    };
+    public void solve(char[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        for (int i = 0; i &lt; m; i++) {
+            if (board[i][0] == 'O') {
+                dfs(board, i, 0);
+            }
+            if (board[i][n - 1] == 'O') {
+                dfs(board, i, n - 1);
+            }
+        }
+
+        for (int i = 0; i &lt; n; i++) {
+            if (board[0][i] == 'O') {
+                dfs(board, 0, i);
+            }
+            if (board[m - 1][i] == 'O') {
+                dfs(board, m - 1, i);
+            }
+        }
+
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                } 
+                if (board[i][j] == 'A') {
+                    board[i][j] = 'O';
+                }
+            }
+        }
+    }
+
+    private void dfs(char[][] board, int i, int j) {
+        int m = board.length;
+        int n = board[0].length;
+        board[i][j] = 'A';
+        for (int[] dir : DIRECTIONS) {
+            int x = i + dir[0], y = j + dir[1];
+            if (x &lt; 0 || x &gt;= m || y &lt; 0 || y &gt;= n || board[x][y] == 'X' || board[x][y] == 'A') continue;
+            dfs(board, x, y);
+        }
+    }   
+}
+</code></pre>
+<hr>
+<h2 id="问题">问题</h2>
+<p>这个题目是说有一个棋盘board，上面是'X'和'O'。将所有'O'翻转成'X'。规则是边界处的‘O'不可以翻转，连接着不能反转的’O'的‘O'也不能翻转。</p>
+<h2 id="算法">算法</h2>
+<p>这个题目比较直观的做法就是先将边界的格子dfs一遍， 找到与其连接的格子，都标记为visited。之后在将非边界的格子遍历并执行dfs，这时边界的以及与其相连的格子都是visited，剩余的还能dfs到的且是'O'的都可以翻转。我的代码1就是这个思路。时间和空间复杂度都是O(m*n)。</p>
+<p>代码2是之前的提交，应该是参考了标准答案。有两个巧思。第一个是通过定义DIRECTIONS数组，减少一些重复代码在寻找节点邻居的时候；另一个更好的巧思是，他没有额外定义一个visited数组去储存遍历过的信息，而是直接inplace的修改了棋盘。</p>
+<p>在遍历边界的时候，直接将边界以及连接边界的格子置为'A'。后续那么棋盘上剩下的'O'肯定是可以翻转的。此时直接遍历棋盘即可，将剩下的'O'翻转为'X'，之后再将遍历过程中的'A'置为'O'即可。</p>
+<h2 id="代码1">代码1</h2>
+<p>略</p>
+<h2 id="代码2">代码2</h2>
+<p>略</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#question">Question</a></li>
+<li><a href="#algorithm">Algorithm</a></li>
+<li><a href="#code1">Code1</a></li>
+<li><a href="#code2">Code2</a></li>
+<li><a href="#%E9%97%AE%E9%A2%98">问题</a></li>
+<li><a href="#%E7%AE%97%E6%B3%95">算法</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%811">代码1</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%812">代码2</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/286-walls-and-gates/">
+              <h3 class="post-title">
+                286. Walls and Gates
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

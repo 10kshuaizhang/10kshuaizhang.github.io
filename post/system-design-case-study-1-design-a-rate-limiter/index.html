@@ -1,0 +1,631 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>System Design Case Study - 1 Design A Rate Limiter | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="System Design Case Study - 1 Design A Rate Limiter | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="
+What is rate limiter: it's used to control the rate of traffic sent by client or a service.
+In the HTTP world, it limit..." />
+    <meta name="keywords" content="System Design" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              System Design Case Study - 1 Design A Rate Limiter
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-03-17
+              </span>
+              <span>
+                9 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/h_IFyWw8r/" class="post-tag">
+                  # System Design
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <ol>
+<li>What is rate limiter: it's used to control the rate of traffic sent by client or a service.</li>
+<li>In the HTTP world, it limits the number of request allowed to be sent in a specific period. If the request count exceeds the limit, the request will be blocked.</li>
+<li>The benefits:
+<ul>
+<li>Prevent servers from being overloaded.  &amp; Prevent resource starvation caused by DDoS(intended or unintended).</li>
+<li>Reduce cost. You do not need to proceed too many request in certain time period.</li>
+</ul>
+</li>
+</ol>
+<h3 id="step1-understand-the-requirement-and-establish-design-scope">Step1 - Understand the requirement and establish design scope</h3>
+<ol>
+<li>
+<p>Type: client vs server?  -  server side</p>
+</li>
+<li>
+<p>Based on what? API ? IP? Or some properties? - flexible</p>
+</li>
+<li>
+<p>Scale? Large vs startup? - large number</p>
+</li>
+<li>
+<p>Distributed system? - Yes</p>
+</li>
+<li>
+<p>Separate service or in application code? - you could decide</p>
+</li>
+<li>
+<p>Should users be informed? - Yes</p>
+</li>
+<li>
+<p>Requirements</p>
+<ol>
+<li>
+<p>Accurately limit excessive requests.</p>
+</li>
+<li>
+<p>Low latency？</p>
+<blockquote>
+<p>Is this a requirement proposed by interviewer or it's come up with by the interviewee?</p>
+</blockquote>
+</li>
+<li>
+<p>Use as little memory as possible ?</p>
+<blockquote>
+<p>Same question like the above.</p>
+</blockquote>
+</li>
+<li>
+<p>Distributed. Could be sharded across multiple servers.</p>
+</li>
+<li>
+<p>Exception handling. When user's requests were throttled, drop it silently? Put the into queue? Or return a HTTP code 429 to the client?</p>
+</li>
+<li>
+<p>Fault tolerance. If the rate limiter down, it should not affect normal business logic working.</p>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="step2-propose-high-level-design-and-get-buy-in">Step2 - Propose high-level design and get buy-in</h3>
+<ol>
+<li>Keep things simple at first and user a client-server model.</li>
+</ol>
+<h4 id="where-to-put-it">Where to put it?</h4>
+<ol>
+<li>
+<p>Client side. Can be forged by malicious users. We do not have control over client implementation.</p>
+</li>
+<li>
+<p>Server side.</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303121307833.png" alt="image-20230312130756700" style="zoom:50%;" />
+</li>
+<li>
+<p>Implement it as a middleware.</p>
+<blockquote>
+<p><a href="https://en.wikipedia.org/wiki/Middleware">What is a middleware?</a> A software that provides services between applications. &quot;Software glue&quot;.</p>
+</blockquote>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303121309714.png" alt="image-20230312130904674" style="zoom:50%;" />
+</li>
+<li>
+<p>It can be put into the API gateway.</p>
+<ul>
+<li>microservice: <a href="https://www.ibm.com/cloud/learn/microservices">What is microservice</a></li>
+<li>API gateway: <a href="https://www.redhat.com/en/topics/api/what-does-an-api-gateway-do">What is API gateway</a>, it can be used to support rate limiting, SSL termination, authentication, IP whitelisting...</li>
+</ul>
+</li>
+<li>
+<p>How to decide?</p>
+<ol>
+<li>Tech stack in the company</li>
+<li>Algorithms the meet you needs.</li>
+<li>If you have had a microservice and include API gateway, you may add rate limiter to it.</li>
+<li>Build your own take times. If you don't have too much people or time, a third party service is good.</li>
+</ol>
+</li>
+</ol>
+<h4 id="algorithms-for-rate-limiting">Algorithms for rate limiting</h4>
+<h5 id="token-bucket-algorithm">Token bucket algorithm</h5>
+<p>The token bucket algorithm work as follows:</p>
+<ul>
+<li>
+<p>A token bucket is a container that has pre-defined <strong><u>capacity</u></strong>. Tokens are put in the bucket at preset <strong><u>rates</u></strong> periodically. Once the bucket is full, no more tokens are added. As shown in Figure 4, the token bucket capacity is 4. The refiller puts 2 tokens into the bucket every second. Once the bucket is full, extra tokens will overflow.</p>
+  <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303121413664.png" alt="image-20230312141313624" style="zoom:50%;" />
+</li>
+<li>
+<p>How it works</p>
+  <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303121414448.png" alt="image-20230312141409421" style="zoom:33%;" />
+</li>
+<li>
+<p>How many buckets do we need?</p>
+<ul>
+<li>
+<p>It depends.</p>
+</li>
+<li>
+<p>Usually different buckeys for different api endpoints</p>
+</li>
+<li>
+<p>If you are using IP based, each IP should have one bucket</p>
+</li>
+<li>
+<p>If you allow 10000 request per sec, you could have a shared big bucket.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>How many tokens（bucket size) do we need? What should be the refilling rate?</p>
+<ul>
+<li>Maximum rate requests can be processed</li>
+<li>Desired burstiness you could allow</li>
+<li>Traffic patterns. If you are expriencing a spike occasionally, you may want to use a larger size.</li>
+<li>Consequence of exceed the limit.</li>
+<li>Performance impact. Larger size and refill rate may require more server resources.</li>
+</ul>
+</li>
+<li>
+<p>Pros:</p>
+<ul>
+<li>Easy to implement ;</li>
+<li>Memory efficient;</li>
+<li>Token bucket allows <strong>a burst of traffic</strong> for short periods. A request can go through as long as there are tokens left
+<ul>
+<li>The bucket could be not full so the token can be accumulated. So when a client send data, the token is more than the fixed rate of refill. The reqeust can consume the token and may cause the burst, hwoever, if the request comes too fast and the token was run out, it will be throttled until next refilling.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Cons:</p>
+<ul>
+<li>Challenge on tune the parameters.</li>
+</ul>
+</li>
+</ul>
+<h5 id="leaking-bucket-algorithm">Leaking bucket algorithm</h5>
+<p>It is similar to token bucket, except that the bucket turns out to be a queue, with a stable consumer(out rate). It also has two parameters: bucket(queue) <strong>size</strong> and <strong>outflow rate</strong>.</p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303131512867.png" alt="image-20230313151226709" style="zoom:50%;" />
+<p>Pros:</p>
+<ul>
+<li>Memory efficient given the limited queue size;</li>
+<li>Suitable for use cases that a stable outflow rate is needed. (Flow and traffic control)</li>
+</ul>
+<p>Cons:</p>
+<ul>
+<li>Two parameters, not easy to tune them properly</li>
+<li>A burst of traffic fills up queue with old request and if they are not processed in time, recent request are rate limited. While token bucket allow a burst.</li>
+</ul>
+<h5 id="fixed-window-counter">Fixed window counter</h5>
+<ol>
+<li>
+<p>Fixed window counter algorithm works as follows:</p>
+<ul>
+<li>
+<p>The algorithm divides the timeline into fix-sized time windows and assign a counter for each window.</p>
+</li>
+<li>
+<p>Each request increments the counter by one.</p>
+</li>
+<li>
+<p>Once the counter reaches the pre-defined threshold, new requests are dropped until a new time window starts.</p>
+  <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303171013957.png" alt="image-20230317101317817" style="zoom:33%;" />
+</li>
+</ul>
+</li>
+<li>
+<p>The problem is that</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303171014712.png" alt="image-20230317101402679" style="zoom:33%;" />
+</li>
+<li>
+<p>Pros:</p>
+<ul>
+<li>Memory efficient</li>
+<li>Easy to understand</li>
+<li>Resetting available quota at the end of a unit time window fits certain use cases.</li>
+</ul>
+</li>
+<li>
+<p>Cons</p>
+<ul>
+<li>Spike in traffic at the edges of a window could cause more request than quota.</li>
+</ul>
+</li>
+</ol>
+<h5 id="sliding-window-log">Sliding window log</h5>
+<ol>
+<li>
+<p>As discussed previously, the fixed window counter algorithm has a major issue: it allows more requests to go through at the edges of a window. The sliding window log algorithm fixes the issue. It works as follows:</p>
+<ul>
+<li>
+<p>The algorithm keeps track of request timestamps. Timestamp data is usually kept in cache, such as sorted sets of Redis [8].</p>
+</li>
+<li>
+<p>When a new request comes in, remove all the outdated timestamps. Outdated timestamps are defined as those older than the start of the current time window.</p>
+</li>
+<li>
+<p>Add timestamp of the new request to the log.</p>
+</li>
+<li>
+<p>If the log size is the same or lower than the allowed count, a request is accepted. Otherwise, it is rejected.</p>
+</li>
+</ul>
+</li>
+</ol>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303171025297.png" alt="image-20230317102516259" style="zoom:33%;" />
+<ol start="2">
+<li>Pros
+<ul>
+<li>Very accurate, in any rolling window, the request will not exceeds quota.</li>
+</ul>
+</li>
+<li>Cons
+<ul>
+<li>Consumes lots of memory because rejected request timestamp is also logged.</li>
+</ul>
+</li>
+</ol>
+<h5 id="sliding-window-counter">Sliding window counter</h5>
+<ol>
+<li>
+<p>Hybrid of fixed window counter and sliding window log.</p>
+</li>
+<li>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303171031785.png" alt="image-20230317103141745" style="zoom:50%;" />
+</li>
+<li>
+<p>Assume the rate limiter allows a maximum of 7 requests per minute, and there are 5 requests in the previous minute and 3 in the current minute. For a new request that arrives at a 30% position in the current minute, the number of requests in the rolling window is calculated using the following formula:</p>
+<ul>
+<li>Requests in current window <strong>+</strong> requests in the previous window ***** overlap percentage of the rolling window and previous window</li>
+<li>Using this formula, we get 3 + 5 * 0.7% = 6.5 request. Depending on the use case, the number can either be rounded up or down. In our example, it is rounded down to 6.</li>
+</ul>
+<p>Since the rate limiter allows a maximum of 7 requests per minute, the current request can go through. However, the limit will be reached after receiving one more request.</p>
+</li>
+<li>
+<p>pros</p>
+<ul>
+<li>
+<p>Smoot spike issue of fixed window counter</p>
+</li>
+<li>
+<p>Memory efficient</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Cons</p>
+<ul>
+<li>Proportion will cause an approximation. So it works for not-so-strict look back window. However experiment indicates that the error rate is very slow.</li>
+</ul>
+</li>
+</ol>
+<h4 id="high-level-architecture">High-level architecture</h4>
+<ol start="0">
+<li>
+<p>We need a counter for rate limiter in high level.</p>
+</li>
+<li>
+<p>Store counters in disk is slow so we may choose in-memory cache. 1. Fast 2. Support time-based expiration strategy. (e.g. Redis)</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303121336791.png" alt="image-20230312133632765" style="zoom:50%;" />
+</li>
+</ol>
+<h3 id="step-3-design-deep-dive">Step 3 - Design deep dive</h3>
+<ol>
+<li>
+<p>How the rate limiting rules created?  Where are they stored?</p>
+<p>An example:</p>
+<pre><code>domain: messaging
+descriptors:
+  - key: message_type
+    value: marketing
+    rate_limit:
+      unit: day
+      requests_per_unit: 5
+</code></pre>
+<p>In the above example, the system is configured to allow a maximum of 5 marketing messages per day.</p>
+</li>
+<li>
+<p>How to handle limited requests?</p>
+<ol>
+<li>Stored in queue and process later</li>
+<li>Drop</li>
+</ol>
+</li>
+</ol>
+<h4 id="detailed-design">Detailed Design</h4>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303121341987.png" alt="image-20230312134105948" style="zoom:33%;" />
+<ol start="3">
+<li>
+<p>Rate limiter in distributed environment</p>
+<ol>
+<li>Challenges: Race condition and Synchronization issue(consistency)</li>
+<li>Race confidtion
+<ol>
+<li>Ways to solve
+<ol>
+<li>Lock(impact performance and not recommended)</li>
+<li>Lua script</li>
+<li>Sorted sets data structure</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>Ways to solve synchronization issue:
+<ol>
+<li>Send to same rate limiter (not scalable and fault tolerance)</li>
+<li>Store date in a centralized data center.</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p>Performance</p>
+<ol>
+<li>
+<p>multi-datacenter set up around all the world.</p>
+</li>
+<li>
+<p>Synchronize data with <a href="">eventually consistency model</a></p>
+</li>
+</ol>
+</li>
+<li>
+<p>Monitoring</p>
+<ol>
+<li>Drop count/rate to adjust threshold/or be aware of traffic jam.</li>
+</ol>
+</li>
+</ol>
+<h3 id="step-4-wrap-up">Step 4 - Wrap up</h3>
+<ol>
+<li>
+<p>Algrithoms</p>
+<ul>
+<li>Token bucket</li>
+<li>Leading bucket</li>
+<li>Fix window</li>
+<li>Sliding window log</li>
+<li>Sliding window counter</li>
+</ul>
+</li>
+<li>
+<p>System architecture, rate limit in distributed system, performance, monitoring</p>
+</li>
+<li>
+<p>Additional quetsions</p>
+<ol>
+<li>Hard vs soft rate limiting</li>
+<li>Rate limiting if different levels(Application vs IP vs others)</li>
+<li>Ways to avoid rate limited
+<ol>
+<li>Use cache to avoid frequent calls</li>
+<li>Understand the limit</li>
+<li>Exception and response to customer so they know what happened and how to recover.</li>
+<li>Retry logic.</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304151050253.png" alt="image-20230415105002171" loading="lazy"></figure>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#step1-understand-the-requirement-and-establish-design-scope">Step1 - Understand the requirement and establish design scope</a></li>
+<li><a href="#step2-propose-high-level-design-and-get-buy-in">Step2 - Propose high-level design and get buy-in</a>
+<ul>
+<li><a href="#where-to-put-it">Where to put it?</a></li>
+<li><a href="#algorithms-for-rate-limiting">Algorithms for rate limiting</a>
+<ul>
+<li><a href="#token-bucket-algorithm">Token bucket algorithm</a></li>
+<li><a href="#leaking-bucket-algorithm">Leaking bucket algorithm</a></li>
+<li><a href="#fixed-window-counter">Fixed window counter</a></li>
+<li><a href="#sliding-window-log">Sliding window log</a></li>
+<li><a href="#sliding-window-counter">Sliding window counter</a></li>
+</ul>
+</li>
+<li><a href="#high-level-architecture">High-level architecture</a></li>
+</ul>
+</li>
+<li><a href="#step-3-design-deep-dive">Step 3 - Design deep dive</a>
+<ul>
+<li><a href="#detailed-design">Detailed Design</a></li>
+</ul>
+</li>
+<li><a href="#step-4-wrap-up">Step 4 - Wrap up</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/348-design-tic-tac-toe/">
+              <h3 class="post-title">
+                348. Design Tic-Tac-Toe
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

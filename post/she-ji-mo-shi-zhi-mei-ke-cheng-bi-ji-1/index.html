@@ -1,0 +1,576 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>设计模式之美-课程笔记1 | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="设计模式之美-课程笔记1 | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="理论一： 当谈论面向对象的时候， 我们在谈论什么（概念们）
+什么是面向对象和面向对象语言
+
+面向对象编程是一种编程范式或者编程风格。它以类或对象作为基本单元，并将封装、抽象、基础、多态四个特性作为代码设计的视线和基石。
+面向对象编程语言是支..." />
+    <meta name="keywords" content="OOD,Design Pattern" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              设计模式之美-课程笔记1
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-05-21
+              </span>
+              <span>
+                11 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/sSLhqMzY-/" class="post-tag">
+                  # OOD
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/d2JaGqwpzA/" class="post-tag">
+                  # Design Pattern
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="理论一-当谈论面向对象的时候-我们在谈论什么概念们">理论一： 当谈论面向对象的时候， 我们在谈论什么（概念们）</h2>
+<h3 id="什么是面向对象和面向对象语言">什么是面向对象和面向对象语言</h3>
+<ol>
+<li>面向对象编程是一种编程范式或者编程风格。它以类或对象作为基本单元，并将封装、抽象、基础、多态四个特性作为代码设计的视线和基石。</li>
+<li>面向对象编程语言是支持类或对象的语法机制，方便实现四大特性。</li>
+</ol>
+<h3 id="如何判断某语言是面向对象编程语言">如何判断某语言是面向对象编程语言</h3>
+<ol>
+<li>这个语言支持类和对象的语法概念，并以此为组织代码的基本单元，就可以被粗略的认为是OOPL。</li>
+</ol>
+<h3 id="什么是面向对象分析ooa和面向对象设计ood">什么是面向对象分析（OOA)和面向对象设计（OOD)</h3>
+<ol>
+<li>面向对象分析、设计、编程实现，正好就是面向对象软件开发要经历的三个阶段。</li>
+<li>“面向对象”XX是说我们所做的事情是围绕对象来做的。程序被拆解为哪些类，每个类有什么方法，有哪些属性，类之间如何交互。解决的是做什么(OOA)，以及怎么做(OOD)的问题。</li>
+<li>他们比其他的分析和设计更加具体，更能顺利过渡到面向对象编程环节。</li>
+</ol>
+<h3 id="uml是什么">UML是什么？</h3>
+<ol>
+<li>UML：unified model language, 统一建模语言。</li>
+</ol>
+<blockquote>
+<p>实际上，UML 是一种非常复杂的东西。它不仅仅包含我们常提到类图，还有用例图、顺序图、活动图、状态图、组件图等。在我看来，即便仅仅使用类图，学习成本也是很高的。就单说类之间的关系，UML 就定义了很多种，比如泛化、实现、关联、聚合、组合、依赖等。</p>
+</blockquote>
+<ol start="2">
+<li>作者更建议日常开发用简单的图代替UML沟通。也许专业的工程师之间表达和沟通用他做一些正式的文档更清晰。</li>
+</ol>
+<h2 id="理论二封装-继承-多态-抽象分别可以解决哪些编程问题">理论二：封装、继承、多态、抽象分别可以解决哪些编程问题？</h2>
+<h3 id="封装">封装</h3>
+<h4 id="定义">定义</h4>
+<ol>
+<li>
+<p>信息隐藏或数据访问保护。类通过暴露有限的访问接口，授权外部仅能通过类提供的方式（函数）来访问内部信息或数据。</p>
+</li>
+<li>
+<p>结合一个例子说明(虚拟钱包)</p>
+<pre><code class="language-java">public class Wallet {
+  private String id;
+  private long createTime;
+  private BigDecimal balance;
+  private long balanceLastModifiedTime;
+  // ...省略其他属性...
+
+  public Wallet() {
+     this.id = IdGenerator.getInstance().generate();
+     this.createTime = System.currentTimeMillis();
+     this.balance = BigDecimal.ZERO;
+     this.balanceLastModifiedTime = System.currentTimeMillis();
+  }
+
+  // 注意：下面对get方法做了代码折叠，是为了减少代码所占文章的篇幅
+  public String getId() { return this.id; }
+  public long getCreateTime() { return this.createTime; }
+  public BigDecimal getBalance() { return this.balance; }
+  public long getBalanceLastModifiedTime() { return this.balanceLastModifiedTime;  }
+
+  public void increaseBalance(BigDecimal increasedAmount) {
+    if (increasedAmount.compareTo(BigDecimal.ZERO) &lt; 0) {
+      throw new InvalidAmountException(&quot;...&quot;);
+    }
+    this.balance.add(increasedAmount);
+    this.balanceLastModifiedTime = System.currentTimeMillis();
+  }
+
+  public void decreaseBalance(BigDecimal decreasedAmount) {
+    if (decreasedAmount.compareTo(BigDecimal.ZERO) &lt; 0) {
+      throw new InvalidAmountException(&quot;...&quot;);
+    }
+    if (decreasedAmount.compareTo(this.balance) &gt; 0) {
+      throw new InsufficientAmountException(&quot;...&quot;);
+    }
+    this.balance.subtract(decreasedAmount);
+    this.balanceLastModifiedTime = System.currentTimeMillis();
+  }
+}
+</code></pre>
+<p>钱包有四个属性（成员变量），封装思想指导我们创建了6个方法来访问他们。</p>
+<pre><code>String getId()
+long getCreateTime()
+BigDecimal getBalance()
+long getBalanceLastModifiedTime()
+void increaseBalance(BigDecimal increasedAmount)
+void decreaseBalance(BigDecimal decreasedAmount)
+</code></pre>
+<p>从业务角度来说，id和创建时间在创建钱包对象的时候就确定了，只能访问不能改，所以我们这暴露的只有他们的get方法。</p>
+<p>对于余额balance，他只能增减，不能被重置，所以这里也没有暴露set方法而是有<code>void increaseBalance(BigDecimal increasedAmount)</code>和<code>void decreaseBalance(BigDecimal decreasedAmount)。    </code>而<code>balanceLastModifiedTime</code>是跟balance的修改绑定的，所以他的更改操作也写在了前文的两个方法中。</p>
+</li>
+<li>
+<p>对于这个特性，需要编程语言提供<strong>访问权限控制</strong>这个语法机制。比如Java中的<code>public, private</code>这些。如果没有这个机制，所有的外部代码都可以更改任何属性，无法达到保护数据隐藏信息的目的。</p>
+</li>
+</ol>
+<h4 id="意义-解决的问题">意义、解决的问题</h4>
+<ol>
+<li>可维护性，可读性。不做限制，看起来更加灵活，但是过度灵活也意味不可控。所有的属性可以在任何地方被修改，导致代码难以维护，可读性也很低（修改属性的代码散落各地）；</li>
+<li>易用性。暴露太多不必要的方法对于用户是负担，他们不知道怎么用或者正确的用，或者不知道用哪个才是合适的。</li>
+</ol>
+<h3 id="抽象">抽象</h3>
+<h4 id="定义-2">定义</h4>
+<ol>
+<li>
+<p>隐藏方法的实现，让调用者只需关心方法提供了什么功能。</p>
+</li>
+<li>
+<p>在面向对象编程中，借用抽象和接口类这两种语法机制。</p>
+</li>
+<li>
+<p>借助例子（图片存储）</p>
+<pre><code class="language-java">public interface IPictureStorage {
+  void savePicture(Picture picture);
+  Image getPicture(String pictureId);
+  void deletePicture(String pictureId);
+  void modifyMetaInfo(String pictureId, PictureMetaInfo metaInfo);
+}
+
+public class PictureStorage implements IPictureStorage {
+  // ...省略其他属性...
+  @Override
+  public void savePicture(Picture picture) { ... }
+  @Override
+  public Image getPicture(String pictureId) { ... }
+  @Override
+  public void deletePicture(String pictureId) { ... }
+  @Override
+  public void modifyMetaInfo(String pictureId, PictureMetaInfo metaInfo) { ... }
+}
+</code></pre>
+<p>用户只需知道对于图的操作可以有存储，获取，删除和修改即可，至于如何与内存还是硬盘连接与交互，图片如何被处理压缩一改不需要理会。</p>
+</li>
+<li>
+<p>它这个概念很通用，也很宽泛，有时候并不会被看做面向对象编程的特性。</p>
+</li>
+</ol>
+<h4 id="意义-解决的问题-2">意义、解决的问题</h4>
+<ol>
+<li>
+<p>让调用者只关注定义（功能点）而不需要关注实现。</p>
+</li>
+<li>
+<p>在设计代码的时候，通过抽象，可以在后续更改实现的时候不需要修改定义和功能点。</p>
+</li>
+</ol>
+<h3 id="继承">继承</h3>
+<h4 id="定义-3">定义</h4>
+<ol>
+<li>
+<p>表示类之间的is-a关系。（即这个东西是一类什么东西）</p>
+</li>
+<li>
+<p>有单继承和多继承。多继承即继承多个父类，一个学生即是人类又是QQ黄钻会员。</p>
+</li>
+<li>
+<p>实现这个特性也需要语法的支持。例如Java中的<code>extend</code>关键字。不过有的语言支持多继承，有的不支持。</p>
+<blockquote>
+<p>菱形继承问题。 即两个派生类继承同一个基类，同时两个派生类又作为基本继承给同一个派生类。这种继承形如菱形，故又称为菱形继承。</p>
+<p><strong>菱形继承产生的问题</strong>：菱形继承主要有数据冗余和二义性的问题。由于最底层的派生类继承了两个基类，同时这两个基类有继承的是一个基类，故而会造成最顶部基类的两次调用，会造成数据冗余及二义性问题。</p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202305220855550.png" alt="img" loading="lazy"></figure>
+</blockquote>
+</li>
+</ol>
+<h4 id="意义-解决的问题-3">意义、解决的问题</h4>
+<ol>
+<li>代码复用。假如两个类有一些相同的属性和方法，我们就可以将这些相同的部分，抽取到父类中，让两个子类继承父类。这样，两个子类就可以重用父类中的代码，避免代码重复写多遍。不过，这一点也并不是继承所独有的，我们也可以通过其他方式来解决这个代码复用的问题，比如利用组合关系而不是继承关系。</li>
+<li>但是过渡使用继承会导致继承层次过深过复杂，导致代码的可读性和可维护性变差。所以很多人推荐组合。</li>
+</ol>
+<h3 id="多态">多态</h3>
+<h4 id="定义-4">定义</h4>
+<ol>
+<li>
+<p>子类可以替换父类，在实际的允许过程中调用子类的方法实现。</p>
+</li>
+<li>
+<p>结合例子</p>
+<pre><code class="language-java">public class DynamicArray {
+  private static final int DEFAULT_CAPACITY = 10;
+  protected int size = 0;
+  protected int capacity = DEFAULT_CAPACITY;
+  protected Integer[] elements = new Integer[DEFAULT_CAPACITY];
+  
+  public int size() { return this.size; }
+  public Integer get(int index) { return elements[index];}
+  //...省略n多方法...
+  
+  public void add(Integer e) {
+    ensureCapacity();
+    elements[size++] = e;
+  }
+  
+  protected void ensureCapacity() {
+    //...如果数组满了就扩容...代码省略...
+  }
+}
+
+public class SortedDynamicArray extends DynamicArray {
+  @Override
+  public void add(Integer e) {
+    ensureCapacity();
+    int i;
+    for (i = size-1; i&gt;=0; --i) { //保证数组中的数据有序
+      if (elements[i] &gt; e) {
+        elements[i+1] = elements[i];
+      } else {
+        break;
+      }
+    }
+    elements[i+1] = e;
+    ++size;
+  }
+}
+
+public class Example {
+  public static void test(DynamicArray dynamicArray) {
+    dynamicArray.add(5);
+    dynamicArray.add(1);
+    dynamicArray.add(3);
+    for (int i = 0; i &lt; dynamicArray.size(); ++i) {
+      System.out.println(dynamicArray.get(i));
+    }
+  }
+  
+  public static void main(String args[]) {
+    DynamicArray dynamicArray = new SortedDynamicArray();
+    test(dynamicArray); // 打印结果：1、3、5
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>多态需要特殊的语法机制来实现。上述例子中用到了3个。</p>
+<ul>
+<li>语言要支持父类对象可以引用子类对象。<code>DynamicArray dynamicArray = new SortedDynamicArray();</code></li>
+<li>第二个是语言要支持继承，SortedDynamicArray要继承了DynamicArray才可以支持SortedDynamicArray传给DynamicArray</li>
+<li>第三个语法机制是语言要支持子类可以重写（override）父类的方法。SortedDynamicArray的add方法。</li>
+</ul>
+</li>
+<li>
+<p>对于多态的实现，除了利用“继承+方法重写”实现，还有另外两种，一种是利用接口类语法，另一个是duck-typing语法，不过并不是所有语言都支持这些。duck-typing只有一些动态语言支持。</p>
+<ol>
+<li>
+<p>利用接口</p>
+<pre><code class="language-java">public interface Iterator {
+  boolean hasNext();
+  String next();
+  String remove();
+}
+
+public class Array implements Iterator {
+  private String[] data;
+  
+  public boolean hasNext() { ... }
+  public String next() { ... }
+  public String remove() { ... }
+  //...省略其他方法...
+}
+
+public class LinkedList implements Iterator {
+  private LinkedListNode head;
+  
+  public boolean hasNext() { ... }
+  public String next() { ... }
+  public String remove() { ... }
+  //...省略其他方法... 
+}
+
+public class Demo {
+  private static void print(Iterator iterator) {
+    while (iterator.hasNext()) {
+      System.out.println(iterator.next());
+    }
+  }
+  
+  public static void main(String[] args) {
+    Iterator arrayIterator = new Array();
+    print(arrayIterator);
+    
+    Iterator linkedListIterator = new LinkedList();
+    print(linkedListIterator);
+  }
+}
+</code></pre>
+<p>Array和LinkedList都实现了Iterator，所以在主方法在，通过传递不同的实现类到print方法中，会调用对应的hasNext和next方法。</p>
+</li>
+<li>
+<p>duck-typing</p>
+<pre><code class="language-python">class Logger:
+    def record(self):
+        print(“I write a log into file.”)
+        
+class DB:
+    def record(self):
+        print(“I insert data into db. ”)
+        
+def test(recorder):
+    recorder.record()
+
+def demo():
+    logger = Logger()
+    db = DB()
+    test(logger)
+    test(db)
+</code></pre>
+<p>从这段代码中，我们发现，duck-typing 实现多态的方式非常灵活。Logger 和 DB 两个类没有任何关系，既不是继承关系，也不是接口和实现的关系，但是只要它们都有定义了 record() 方法，就可以被传递到 test() 方法中，在实际运行的时候，执行对应的 record() 方法。</p>
+<p>也就是说，只要两个类具有相同的方法，就可以实现多态，并不要求两个类之间有任何关系，这就是所谓的 duck-typing，是一些动态语言所特有的语法机制。而像 Java 这样的静态语言，通过继承实现多态特性，必须要求两个类之间有继承关系，通过接口实现多态特性，类必须实现对应的接口。</p>
+</li>
+</ol>
+</li>
+</ol>
+<h4 id="意义-解决的问题-4">意义、解决的问题</h4>
+<ol>
+<li>提高了可扩展性和复用性。第二个接口实现多态的例子，我们只需要一个print函数就能打印不同类型的集合。当我们再需要增加一个Hashmap的时候，只需让他实现Iterator接口重写next和hasNext方法即可， 不需要改print。</li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E7%90%86%E8%AE%BA%E4%B8%80-%E5%BD%93%E8%B0%88%E8%AE%BA%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%97%B6%E5%80%99-%E6%88%91%E4%BB%AC%E5%9C%A8%E8%B0%88%E8%AE%BA%E4%BB%80%E4%B9%88%E6%A6%82%E5%BF%B5%E4%BB%AC">理论一： 当谈论面向对象的时候， 我们在谈论什么（概念们）</a>
+<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%92%8C%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AF%AD%E8%A8%80">什么是面向对象和面向对象语言</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E6%9F%90%E8%AF%AD%E8%A8%80%E6%98%AF%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80">如何判断某语言是面向对象编程语言</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%88%86%E6%9E%90ooa%E5%92%8C%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1ood">什么是面向对象分析（OOA)和面向对象设计（OOD)</a></li>
+<li><a href="#uml%E6%98%AF%E4%BB%80%E4%B9%88">UML是什么？</a></li>
+</ul>
+</li>
+<li><a href="#%E7%90%86%E8%AE%BA%E4%BA%8C%E5%B0%81%E8%A3%85-%E7%BB%A7%E6%89%BF-%E5%A4%9A%E6%80%81-%E6%8A%BD%E8%B1%A1%E5%88%86%E5%88%AB%E5%8F%AF%E4%BB%A5%E8%A7%A3%E5%86%B3%E5%93%AA%E4%BA%9B%E7%BC%96%E7%A8%8B%E9%97%AE%E9%A2%98">理论二：封装、继承、多态、抽象分别可以解决哪些编程问题？</a>
+<ul>
+<li><a href="#%E5%B0%81%E8%A3%85">封装</a>
+<ul>
+<li><a href="#%E5%AE%9A%E4%B9%89">定义</a></li>
+<li><a href="#%E6%84%8F%E4%B9%89-%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98">意义、解决的问题</a></li>
+</ul>
+</li>
+<li><a href="#%E6%8A%BD%E8%B1%A1">抽象</a>
+<ul>
+<li><a href="#%E5%AE%9A%E4%B9%89-2">定义</a></li>
+<li><a href="#%E6%84%8F%E4%B9%89-%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98-2">意义、解决的问题</a></li>
+</ul>
+</li>
+<li><a href="#%E7%BB%A7%E6%89%BF">继承</a>
+<ul>
+<li><a href="#%E5%AE%9A%E4%B9%89-3">定义</a></li>
+<li><a href="#%E6%84%8F%E4%B9%89-%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98-3">意义、解决的问题</a></li>
+</ul>
+</li>
+<li><a href="#%E5%A4%9A%E6%80%81">多态</a>
+<ul>
+<li><a href="#%E5%AE%9A%E4%B9%89-4">定义</a></li>
+<li><a href="#%E6%84%8F%E4%B9%89-%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98-4">意义、解决的问题</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/lesslesschu-shi-jian-chuan-greatergreater-du-hou/">
+              <h3 class="post-title">
+                《褚时健传》读后
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

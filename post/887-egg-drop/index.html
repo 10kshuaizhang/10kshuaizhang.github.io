@@ -1,0 +1,293 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>887. Egg Drop | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="887. Egg Drop | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="问题
+我们有k个鸡蛋，有n层楼需要测试，鸡蛋会刚好在某一层楼扔下摔碎。需要设计一个算法，用有限的鸡蛋找到测试n层楼至少需要的实验次数。鸡蛋在实验过程中没摔碎就可以继续用，碎了就碎了，总可用的鸡蛋数量减少一个。
+解析
+首先声明，这道题没想明白..." />
+    <meta name="keywords" content="Dynamic Programming,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              887. Egg Drop
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-02-18
+              </span>
+              <span>
+                7 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/8XHIFnHCE/" class="post-tag">
+                  # Dynamic Programming
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="问题">问题</h2>
+<p>我们有k个鸡蛋，有n层楼需要测试，鸡蛋会刚好在某一层楼扔下摔碎。需要设计一个算法，用有限的鸡蛋找到测试n层楼<strong>至少</strong>需要的实验次数。鸡蛋在实验过程中没摔碎就可以继续用，碎了就碎了，总可用的鸡蛋数量减少一个。</p>
+<h2 id="解析">解析</h2>
+<p>首先声明，这道题没想明白，看答案动态规划算法也没他明白。最后看到一个解法也没看明白。</p>
+<p>最开始想的是我们先抛开鸡蛋的数量限制，有n层楼，找到刚好让鸡蛋摔碎的楼层。那最naive 的方法就是从下到上一层层尝试直到鸡蛋第一次摔碎。这时需要的实验次数是n。</p>
+<p>那么我们可以想到用二分。最终的实验次数就会变成logN。那么logN就会比N要好一些。这个就是题目中至少的含义。</p>
+<p>但是，鸡蛋数量有限制。所以上述方法可能需要一些修改。</p>
+<p><strong>子问题</strong>。这个地方没办法说如何联想到的。可以去看某一层的与前面的一层的结果的关系。那么根据题意，我们可以得出当前层做实验，鸡蛋碎了，可用鸡蛋减一，但是我们确定当前层的答案可以基于楼下的某个答案。如果鸡蛋没碎，那么我们确定当前层的答案可以基于楼上的某个答案。</p>
+<p>那我们定义一个dp数组，第一个参数可以是需要测试的楼层数量（而非定义成测到第几层），二维是鸡蛋数量的限制。结果即dp[n][k]。</p>
+<p>又因为题目中说确定（WIth certainty），那么我们考虑的是最坏情况。就是肯定能测出的情况。那么在碎与没碎的情况中选出测试次数较多的那一个选项。根据再去取这个值与dp当前的位置的最小值。</p>
+<p>**初始化。**当鸡蛋为0的时候，结果都是0初始值。因为没有鸡蛋可以用于测试。当鸡蛋为1的时候，也只能测一次。当层数为1的时候，不管鸡蛋有几个，也只需要测试一次。</p>
+<h2 id="代码">代码</h2>
+<p>自己写的代码没写出来，总是有错。更没用到大家后续的二分优化的一些思路。但是在网上看到一个答案但是也没看太明白怎么想的。</p>
+<pre><code class="language-java">class Solution {
+    public int superEggDrop(int K, int N) {
+        int[][] dp = new int[K + 1][N + 1];
+        int m = 0;
+        while (dp[K][m] &lt; N) {
+            m++;
+            for (int k = 1; k &lt;= K; k++) {
+                dp[k][m] = 1 + dp[k][m - 1] + dp[k - 1][m - 1];
+            }
+        }
+        return m;
+    }
+}
+</code></pre>
+<p>留个债吧。</p>
+<hr>
+<h2 id="problem">Problem</h2>
+<p>We have k eggs with n floors to test, and the eggs will happen to be dropped and broken on one floor. An algorithm needs to be designed to find the number of experiments needed to test n floors <strong>at least</strong> with a finite number of eggs. If the egg does not break during the experiment, it can continue to be used, and if it breaks, it breaks and the total number of available eggs is reduced by one.</p>
+<h2 id="solution">Solution</h2>
+<p>First of all, I don't understand this question, and I don't understand the dynamic programming algorithm. The last thing I saw was a solution that I didn't understand either.</p>
+<p>The first thing I thought was that we should put aside the limit on the number of eggs and find the floor that just allows the eggs to break. Then the most naive way is to try from bottom to top layer by layer until the egg breaks for the first time. The number of experiments required at this point is n.</p>
+<p>Then we can think of dichotomizing. The final number of experiments will be logN, and logN will be better than N. This is what is meant by at least in the title.</p>
+<p>However, there is a limit to the number of eggs. So the above method may need some modification.</p>
+<p><strong>Subproblem</strong>. There is no way to say how to associate this place. One can go to the relationship of a certain layer with the result of the previous layer. Then according to the question, we can conclude that the current layer does the experiment and the egg is broken and the available egg minus one, but we determine that the answer for the current layer can be based on one of the answers downstairs. If the egg is not broken, then we are sure that the answer of the current layer can be based on some answer from upstairs.</p>
+<p>Then we define a dp array, the first parameter can be the number of floors to be tested (not defined as the number of floors to be tested), and the second dimension is the limit on the number of eggs. The result is that dp[n][k].</p>
+<p>Again, since the question says certainty (WIth certainty), then we are considering the worst case. It is the case that can be measured for sure. Then choose the one with more tests among the broken and unbroken cases as the option. According to then go to take the minimum value of this value with the current position of dp.</p>
+<p>**Initialization. **When the egg is 0, the result are 0 initial value. Because there are no eggs available for testing. When the egg is 1, it can also be measured only once. When the number of layers is 1, it also only needs to be tested once, regardless of how many eggs there are.</p>
+<h2 id="code">Code</h2>
+<p>The code that I wrote myself didn't work out and always had errors. More useless to everyone's subsequent dichotomous optimization of some ideas. But I saw an answer online but didn't see too much how to think about it.</p>
+<pre><code class="language-java">class Solution {
+    public int superEggDrop(int K, int N) {
+        int[][] dp = new int[K + 1][N + 1];
+        int m = 0;
+        while (dp[K][m] &lt; N) {
+            m++;
+            for (int k = 1; k &lt;= K; k++) {
+                dp[k][m] = 1 + dp[k][m - 1] + dp[k - 1][m - 1];
+            }
+        }
+        return m;
+    }
+}
+</code></pre>
+<p>Leave a debt.</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E9%97%AE%E9%A2%98">问题</a></li>
+<li><a href="#%E8%A7%A3%E6%9E%90">解析</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+<li><a href="#problem">Problem</a></li>
+<li><a href="#solution">Solution</a></li>
+<li><a href="#code">Code</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/10-regular-expression-matching/">
+              <h3 class="post-title">
+                10. Regular Expression Matching
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

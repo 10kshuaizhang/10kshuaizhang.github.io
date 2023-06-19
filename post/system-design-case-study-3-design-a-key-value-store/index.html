@@ -1,0 +1,594 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>System Design Case Study 3 - Design A Key Value Store | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="System Design Case Study 3 - Design A Key Value Store | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="System Design Case Study 3 - Design A Key Value Store
+
+This question or case is too broad at first, to design this probl..." />
+    <meta name="keywords" content="System Design" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              System Design Case Study 3 - Design A Key Value Store
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-03-25
+              </span>
+              <span>
+                11 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/h_IFyWw8r/" class="post-tag">
+                  # System Design
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="system-design-case-study-3-design-a-key-value-store">System Design Case Study 3 - Design A Key Value Store</h2>
+<blockquote>
+<p>This question or case is too broad at first, to design this problem, we must have a basic overview of distributed system and know what counts and what the trade offs are... Or you even do not know what to ask and which aspects to think about...</p>
+<p>What's more, this case study is trying discuss every thing it could while in reality, we could specify the problem. However, as I said before, you need to know all the options(basic knowledge) then you can choose.</p>
+</blockquote>
+<h3 id="understand-the-problem-and-establish-design-scope">Understand the problem and establish design scope</h3>
+<h4 id="functionality-requirements">Functionality requirements</h4>
+<ol>
+<li>Key value pairs store</li>
+<li>Support get(key)-returns value; and put(key, value) to store new pair.</li>
+</ol>
+<h4 id="non-functional-requirements">Non-functional requirements</h4>
+<ul>
+<li>The size of the pari is small: less than 10KB</li>
+<li>Store big data(I don't understand what big data is, large volume data or something else)</li>
+<li>High availability: the system can response quickly even during failures;</li>
+<li>High Scalability: the system can be scaled to support large data set;</li>
+<li>Automatic scaling: the addition/deletion of servers should be based on traffic;</li>
+<li>Tunable consistency.</li>
+<li>Low latency.</li>
+</ul>
+<h4 id="key-components">Key Components</h4>
+<ul>
+<li>Data partition: for scalability</li>
+<li>Data replication: for scalibility</li>
+<li>Inconsistency handling: for consistency</li>
+<li>Failure handling</li>
+<li>Write path</li>
+<li>Read path</li>
+</ul>
+<h3 id="high-level-design">High Level Design</h3>
+<h4 id="single-server-k-v-store">Single server k-v store</h4>
+<ol>
+<li>We could start from single server first.</li>
+<li>To support fast R/W, we store things in the memory</li>
+<li>Although memory has a limit
+<ol>
+<li>Data compression</li>
+<li>Store some infrequently used data in disk</li>
+</ol>
+</li>
+<li>This also has a limit, and doesn't meet many requirements list above.(failover, scale...)</li>
+</ol>
+<h4 id="distributed-k-v-store">Distributed k-v store</h4>
+<h5 id="cap-theorem">CAP theorem</h5>
+<ol>
+<li>
+<p>In distributed system, only tow of CAP could be satisfied.</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303251411181.png" alt="undefined" style="zoom:30%;" />
+</li>
+<li>
+<p>C: consistency. All clients see the same data at the same time.</p>
+</li>
+<li>
+<p>A: availability. Any client which requests data get a response event if some nodes are down.</p>
+</li>
+<li>
+<p>P: partition tolerance. System continue to operate despite network partitions.</p>
+</li>
+<li>
+<p>Key-val store are classified to two kinds based on CAP:</p>
+<ul>
+<li>CP: can sacrifice availability. If inconsistency occurs, we must block the service until all the data is consistent.</li>
+<li>AP: can sacrifice consistency for availability. Can tolerate inconsistency and achieve the eventual consistency.</li>
+<li>CA: since network is unavoidable, a distributed system must tolerate network partition. Thus CA key-val store doesn't exists in real world.</li>
+</ul>
+</li>
+</ol>
+<p>Discuss with interviewer which on you guys want to further design.</p>
+<h3 id="detailed-discussion-or-component-level-design">Detailed discussion or component level design</h3>
+<h4 id="data-partition">Data partition</h4>
+<ol>
+<li>For large applications, it's not feasible to fit the complete date in a single server;</li>
+<li>To distributed the data evenly and minimize data movement when adding or removing servers, we use consistent hashing.
+<ol>
+<li><strong>Auto scaling</strong>: servers could be added and removed automatically depending on the load.</li>
+<li><strong>Heterogeneity:</strong> the number of virtual nodes for a server is proportional to the server capacity. For example, servers with higher capacity are assigned with more virtual nodes.</li>
+</ol>
+</li>
+</ol>
+<h4 id="data-replication">Data Replication</h4>
+<ol>
+<li>Data must be replicated to N(configureable) servers asynchronously to achieve availability.</li>
+<li>For higher availability, data replication can be spread to multi-datacenter.</li>
+</ol>
+<h4 id="consistency">Consistency</h4>
+<ol>
+<li>
+<p>Quorum consensus can guarantee consistency for both read and write,</p>
+<p>**N ** = the number of replicas</p>
+<p><strong>W</strong> = A write quorum of size W</p>
+<p><strong>R</strong> = A read quorum of size R</p>
+</li>
+<li>
+<p>Quorum means W pr R operation must receive at least W/R acknowledgement before the operation is considered successful.</p>
+</li>
+<li>
+<p>A coordinator acts as a proxy between clients and servers.</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303251511767.png" alt="image-20230325151157730" style="zoom:50%;" />
+</li>
+<li>
+<p>The configuration of <em>W, R</em> and <em>N</em> is a typical <strong>tradeoff</strong> between <strong>latency and consistency</strong>.</p>
+<ol>
+<li>If <em>W = 1</em> or <em>R = 1</em>, an operation is returned quickly because a coordinator only needs to wait for a response from any of the replicas.</li>
+<li>If <em>W</em> or <em>R &gt; 1</em>, the system offers better consistency; however, the query will be slower because the coordinator must wait for the response from the slowest replica.</li>
+<li><u>If <em>W + R &gt; N</em>, strong consistency is guaranteed because there must be at least one overlapping node that has the latest data to ensure consistency.</u></li>
+</ol>
+</li>
+<li>
+<p>How to configure <em>N, W</em>, and <em>R</em> to fit our use cases? Here are some of the possible setups:</p>
+<ol>
+<li>If <em>R = 1</em> and <em>W = N</em>, the system is optimized for a fast read.</li>
+<li>If <em>W = 1 and R = N</em>, the system is optimized for fast write.</li>
+<li>If <em>W + R &gt; N</em>, strong consistency is guaranteed (Usually <em>N = 3, W = R = 2</em>).</li>
+<li>If <em>W + R &lt;= N</em>, strong consistency is not guaranteed.</li>
+</ol>
+</li>
+</ol>
+<p>Depending on the requirement, we can tune the values of <em>W, R, N</em> to achieve the desired level of consistency.</p>
+<h5 id="consistency-models">Consistency models</h5>
+<ol>
+<li>Strong consistency: any read returns the latest data. Not ideal for high availability.</li>
+<li>Weak consistency: subsequent read operations may not see the most updated value.</li>
+<li>Eventual consistency: special weak consistency. <strong>Given enough time</strong>, all the updates are propagated and all replicas are consistent.</li>
+</ol>
+<h5 id="inconsistency-resolution-versioning">Inconsistency resolution： versioning</h5>
+<ol>
+<li>How inconsistency happen: concurrent writes</li>
+</ol>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303251516357.png" alt="image-20230325151626332" style="zoom:50%;" />
+<ol start="2">
+<li>
+<p>How to resolve: versioning -&gt; vector clock.</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303251517369.png" alt="image-20230325151732331" style="zoom:67%;" />
+<ol>
+<li>A client writes a data item <em>D1</em> to the system, and the write is handled by server <em>Sx</em>, which now has the vector clock <em>D1[(Sx, 1)]</em>.</li>
+<li>Another client reads the latest <em>D1</em>, updates it to <em>D2</em>, and writes it back. <em>D2</em> descends from <em>D1</em> so it overwrites <em>D1</em>. Assume the write is handled by the same server <em>Sx</em>, which now has vector clock <em>D2([Sx, 2])</em>.</li>
+<li>Another client reads the latest <em>D2</em>, updates it to <em>D3</em>, and writes it back. Assume the write is handled by server <em>Sy</em>, which now has vector clock <em>D3([Sx, 2], [Sy, 1]))</em>.</li>
+<li>Another client reads the latest <em>D2</em>, updates it to <em>D4</em>, and writes it back. Assume the write is handled by server <em>Sz</em>, which now has <em>D4([Sx, 2], [Sz, 1]))</em>.</li>
+<li>When another client reads <em>D3</em> and <em>D4</em>, it discovers a conflict, which is caused by data item <em>D2</em> being modified by both <em>Sy</em> and <em>Sz</em>. The conflict is resolved by the client and updated data is sent to the server. Assume the write is handled by <em>Sx</em>, which now has <em>D5([Sx, 3], [Sy, 1], [Sz, 1])</em>. We will explain how to detect conflict shortly.</li>
+</ol>
+</li>
+<li>
+<p>Downside of this method:</p>
+<ol>
+<li>Add complexity：it needs to implement conflict resolution logic.</li>
+<li>Grows rapidly(but this is ok in real  implementation: DynamoDB)</li>
+</ol>
+</li>
+</ol>
+<h4 id="handling-failures">Handling failures</h4>
+<h5 id="failure-detection">Failure detection</h5>
+<ol>
+<li>
+<p>it's not enough when one server says another is down.</p>
+</li>
+<li>
+<p>We may use all to all multicasting</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303251521210.png" alt="image-20230325152131175" style="zoom:50%;" />
+<ol>
+<li>straightforward but not efficient if there are many servers.</li>
+</ol>
+</li>
+<li>
+<p>Gossip protocol.</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303251521467.png" alt="image-20230325152144425" style="zoom:50%;" />
+<ol>
+<li>Each node maintains a node membership list, which contains member IDs and heartbeat counters.</li>
+<li>Each node periodically increments its heartbeat counter.</li>
+<li>Each node periodically sends heartbeats to a set of random nodes, which in turn propagate to another set of nodes.</li>
+<li>Once nodes receive heartbeats, membership list is updated to the latest info.</li>
+</ol>
+</li>
+</ol>
+<h5 id="failure-handling">Failure handling</h5>
+<h6 id="temporary-down">Temporary down</h6>
+<ol>
+<li>
+<p>availability: sloppy quorum. We accept write even one of the nodes if not the original quorum.(this is why called sloppy)</p>
+</li>
+<li>
+<p>If a server s2 is down, s3 can be there for a while until s2 is back;</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303251523177.png" alt="image-20230325152306140" style="zoom:50%;" />
+</li>
+</ol>
+<h6 id="permanent-down">Permanent down</h6>
+<ol>
+<li>
+<p>**Hinted handoff: **comparing each piece of data on replicas and updating each replica to the newest version. A <strong>Merkle tree</strong> is used for inconsistency detection and minimizing the amount of data transferred.</p>
+<blockquote>
+<p>Transfer data back to the recovered node</p>
+</blockquote>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303251526594.png" alt="image-20230325152612547" style="zoom:80%;" />
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303251526676.png" alt="image-20230325152636647" style="zoom:80%;" />
+</li>
+</ol>
+<h6 id="data-center-outrage">Data center outrage</h6>
+<p>Multi data center replication</p>
+<h4 id="write-path">Write Path</h4>
+<ol>
+<li>The write request in persisted on a commit log file;</li>
+<li>Data saved in memory cache</li>
+<li>When the cache is full, data is flushed to SSTable on disk</li>
+</ol>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303251503341.png" alt="image-20230325150317308" style="zoom:50%;" />
+<h4 id="read-path">Read Path</h4>
+<ol>
+<li>
+<p>If memory cache has the data, the data would be returned.</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303251459788.png" alt="image-20230325145943746" style="zoom:50%;" />
+</li>
+<li>
+<p>If the data is not in cache, we it will be retrieved from disk. Bloom filter is an efficient way to find which SSTable the key is in.</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303251501382.png" alt="image-20230325150141349" style="zoom:50%;" />
+<ul>
+<li>
+<p>Sorted string table: SSTable, good for fast query and range query;</p>
+  <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303291541033.png" alt="img" style="zoom:80%;" />
+</li>
+<li>
+<p>Why Bloom filter: due to the SSTable. If you need to read something, you need go to the memory first, and then disk where check from newest to oldest.  It can tells you if a key is not here and saves time.</p>
+</li>
+<li>
+<p>SSTable pros: (compared with B-tree):</p>
+<ul>
+<li>Better Write amplification</li>
+<li>Less space needed because of compression</li>
+</ul>
+</li>
+<li>
+<p>Cons:</p>
+<ul>
+<li>Compression may effect write and read</li>
+<li>Write is too fast and compression is slower, disk become full very soon.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="architecture">Architecture</h3>
+<p>You must wonder why I put the high level design after the component design.</p>
+<p>If you check the previous article and notes, you will find you can't do high level design first cause you need to specify each component requirements thus combine to an system here.</p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303251442784.png" alt="image-20230325144225729" style="zoom:50%;" />
+<p>Main features</p>
+<ul>
+<li>Clients communicate withe the storage through simple APIs: get and put;</li>
+<li>A coordinator that acts as a proxy between client and k-v store;</li>
+<li>Nodes are distributed on a ring using consistent hashing;</li>
+<li>Decentralized so adding and removing can be automatic；</li>
+<li>Data is replicated at multiple nodes;</li>
+<li>No single point failure since all the nodes share same responsibility</li>
+</ul>
+<p>each node performs many tasks:</p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303251448969.png" alt="image-20230325144834933" style="zoom:50%;" />
+<h3 id="wrap-up">Wrap up</h3>
+<table>
+<thead>
+<tr>
+<th><strong>Goal/Problems</strong></th>
+<th><strong>Technique</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Store big data</td>
+<td>Use consistent hashing to spread load across servers</td>
+</tr>
+<tr>
+<td>High availability reads</td>
+<td>Data replication, multi-datacenter setup</td>
+</tr>
+<tr>
+<td>High availability writes</td>
+<td>Versioning and conflict resolution with vector clocks</td>
+</tr>
+<tr>
+<td>Dataset partition</td>
+<td>Consistent hashing</td>
+</tr>
+<tr>
+<td>Incremental scalability</td>
+<td>Consistent hashing(add or remove server would affect less)</td>
+</tr>
+<tr>
+<td><em>Heterogeneity</em></td>
+<td><em>Consistent hashing</em>(do not understand to much)</td>
+</tr>
+<tr>
+<td>Tunable consistency</td>
+<td>Quorum consensus</td>
+</tr>
+<tr>
+<td>Handling temporary failures</td>
+<td>sloppy quorum and hinted handoff</td>
+</tr>
+<tr>
+<td>Handling permanent failures</td>
+<td>Merkle tree</td>
+</tr>
+<tr>
+<td>Handling data center outage</td>
+<td>Cross-datacenter replication</td>
+</tr>
+</tbody>
+</table>
+<h3 id="reference">Reference</h3>
+<p>[1] Amazon DynamoDB: https://aws.amazon.com/dynamodb/</p>
+<p>[2] memcached: https://memcached.org/</p>
+<p>[3] Redis: https://redis.io/</p>
+<p>[4] Dynamo: Amazon’s Highly Available Key-value Store:<br>
+https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf</p>
+<p>[5] Cassandra: https://cassandra.apache.org/</p>
+<p>[6] Bigtable: A Distributed Storage System for Structured Data:<br>
+https://static.googleusercontent.com/media/research.google.com/en//archive/bigtable-osdi06.pdf</p>
+<p>[7] Merkle tree: https://en.wikipedia.org/wiki/Merkle_tree</p>
+<p>[8] Cassandra architecture: https://cassandra.apache.org/doc/latest/architecture/</p>
+<p>[9] SStable: https://www.igvita.com/2012/02/06/sstable-and-log-structured-storage-leveldb/</p>
+<p>[10] Bloom filter https://en.wikipedia.org/wiki/Bloom_filter</p>
+<p>[11] <a href="https://www.youtube.com/watch?v=iuqZvajTOyA&amp;t=94s">Design Distributed Cache</a></p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#system-design-case-study-3-design-a-key-value-store">System Design Case Study 3 - Design A Key Value Store</a>
+<ul>
+<li><a href="#understand-the-problem-and-establish-design-scope">Understand the problem and establish design scope</a>
+<ul>
+<li><a href="#functionality-requirements">Functionality requirements</a></li>
+<li><a href="#non-functional-requirements">Non-functional requirements</a></li>
+<li><a href="#key-components">Key Components</a></li>
+</ul>
+</li>
+<li><a href="#high-level-design">High Level Design</a>
+<ul>
+<li><a href="#single-server-k-v-store">Single server k-v store</a></li>
+<li><a href="#distributed-k-v-store">Distributed k-v store</a>
+<ul>
+<li><a href="#cap-theorem">CAP theorem</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#detailed-discussion-or-component-level-design">Detailed discussion or component level design</a>
+<ul>
+<li><a href="#data-partition">Data partition</a></li>
+<li><a href="#data-replication">Data Replication</a></li>
+<li><a href="#consistency">Consistency</a>
+<ul>
+<li><a href="#consistency-models">Consistency models</a></li>
+<li><a href="#inconsistency-resolution-versioning">Inconsistency resolution： versioning</a></li>
+</ul>
+</li>
+<li><a href="#handling-failures">Handling failures</a>
+<ul>
+<li><a href="#failure-detection">Failure detection</a></li>
+<li><a href="#failure-handling">Failure handling</a>
+<ul>
+<li><a href="#temporary-down">Temporary down</a></li>
+<li><a href="#permanent-down">Permanent down</a></li>
+<li><a href="#data-center-outrage">Data center outrage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#write-path">Write Path</a></li>
+<li><a href="#read-path">Read Path</a></li>
+</ul>
+</li>
+<li><a href="#architecture">Architecture</a></li>
+<li><a href="#wrap-up">Wrap up</a></li>
+<li><a href="#reference">Reference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/a-quick-note-of-binary-index-tree/">
+              <h3 class="post-title">
+                A Quick Note of Binary Index Tree
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

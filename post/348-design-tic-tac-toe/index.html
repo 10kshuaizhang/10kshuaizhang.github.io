@@ -1,0 +1,563 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>348. Design Tic-Tac-Toe | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="348. Design Tic-Tac-Toe | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Question
+This topic is about implementing a TicTacToe, which I didn't know what it was at first. It's actually a game si..." />
+    <meta name="keywords" content="Design,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              348. Design Tic-Tac-Toe
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-03-17
+              </span>
+              <span>
+                15 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/gqDyHl5kO/" class="post-tag">
+                  # Design
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="question">Question</h2>
+<p>This topic is about implementing a TicTacToe, which I didn't know what it was at first. It's actually a game similar to backgammon. Two people take turns until their pieces are connected in a row or a column or a diagonal. You can look at the example: (Realization of the problem do advance detailed understanding of the example is quite important).</p>
+<blockquote>
+<pre><code class="language-java">Input
+[&quot;TicTacToe&quot;, &quot;move&quot;, &quot;move&quot;, &quot;move&quot;, &quot;move&quot;, &quot;move&quot;, &quot;move&quot;, &quot;move&quot;]
+[[3], [0, 0, 1], [0, 2, 2], [2, 2, 1], [1, 1, 2], [2, 0, 1], [1, 0, 2], [2, 1, 1, 1]]
+Output
+[null, 0, 0, 0, 0, 0, 0, 0, 1]
+
+Explanation
+TicTacToe ticTacToe = new TicTacToe(3);
+Assume that player 1 is &quot;X&quot; and player 2 is &quot;O&quot; in the board.
+ticTacToe.move(0, 0, 1); // return 0 (no one wins)
+|X| | | | // Player 2 is &quot;O&quot; in the board.
+| | | | | // Player 1 makes a move at (0, 0).
+| | | | | | // Player 1 makes a move at (0, 0).
+
+ticTacToe.move(0, 2, 2); // return 0 (no one wins)
+| |X| |O|
+| | | | // Player 2 makes a move at (0, 2).
+| | | | | | // Player 2 makes a move at (0, 2).
+
+ticTacToe.move(2, 2, 1); // return 0 (no one wins)
+| |X| |O|
+| | | | // Player 1 makes a move at (2, 2).
+| |X|
+
+ticTacToe.move(1, 1, 2); // return 0 (no one wins)
+|X| |O|
+| |O| | // Player 2 makes a move at (1, 1).
+| |X|
+
+ticTacToe.move(2, 0, 1); // return 0 (no one wins)
+|X| |O|
+| |O| | // Player 1 makes a move at (2, 0).
+|X| |X|
+
+ticTacToe.move(1, 0, 2); // return 0 (no one wins)
+|X| |O|
+|O|O| | // Player 2 makes a move at (1, 0).
+|X| |X|
+
+ticTacToe.move(2, 1, 1); // return 1 (player 1 wins)
+|X| |O|
+|O|O| | // Player 1 makes a move at (2, 1).
+|X|X|X|
+</code></pre>
+</blockquote>
+<p>Then implement a move method. The input is the coordinates of the board and the current user who made the move, then it returns 0 if no one is currently winning, 1 if player 1 is winning, and 2 if player 2 is winning.</p>
+<p>The problem has some restrictions and prerequisites, such as we guarantee that each move is valid (no more pieces will be placed where they were played) and that no more moves will be made after someone wins.</p>
+<p>Also note that we should not take for granted that the board is 3*3. The board size is initialized by an n between 2 and 100.</p>
+<h2 id="algorithm">Algorithm</h2>
+<p>Just follow the requirements of the problem. The hard part of this problem is to determine if the current player has won after a move.</p>
+<h2 id="code-1">Code 1</h2>
+<pre><code class="language-java">class TicTacToe {
+
+    int[][] board;
+    
+    public TicTacToe(int n) {
+        board = new int[n][n];
+    }
+    
+    public int move(int row, int col, int player) {
+        board[row][col] = player;
+        if (win(row, col, player)) {
+            return player;
+        }
+        return 0;
+    }
+    
+    private boolean win(int row, int col, int player) {
+        boolean win = true;
+        // row
+        for (int i = 0; i &lt; board.length; i++) {
+            win &amp;= (board[row][i] == player);
+        } 
+        if (win) {
+            return win;
+        } else {
+            win = true;
+        }
+        // col
+        for (int i = 0; i &lt; board.length; i++) {
+            win &amp;= (board[i][col] == player);
+        } 
+        if (win) {
+            return win;
+        } else {
+            win = true;
+        }
+        
+ 		// principal diagonal
+        for (int i = 0; i &lt; board.length; i++) {
+            win &amp;= (board[i][i] == player);
+        } 
+        if (win) {
+            return win;
+        } else {
+            win = true;
+        }
+        
+        //auxiliary diagonal
+        for (int i = 0; i &lt; board.length; i++) {
+            win &amp;= (board[i][board.length-i-1] == player);
+        }
+        
+        return win;
+    }
+}
+
+/**
+ * Your TicTacToe object will be instantiated and called as such:
+ * TicTacToe obj = new TicTacToe(n);
+ * int param_1 = obj.move(row,col,player);
+ */
+</code></pre>
+<p>Time complexity: O(n), traverse every row and every column and every diagonal.</p>
+<p>Space complexity: O(n*n), board size.</p>
+<h2 id="code-2">Code 2</h2>
+<p>Optimize time and space. The code is well understood and simple, focusing on thinking about how the answer is optimized step by step to that position and how he associates it to the next step.</p>
+<p>The first place to start is with the space, and whether it is possible to find O(n) methods. Because we need to use the board to save the previous two players' game information during the chess game to help us decide whether to win or not at the current move.</p>
+<p>So we don't need to save a line 1 or 2, we just need to save the number of times a player played 1 or 2 in a line, i.e. two arrays (row information) and two constants (primary and secondary diagonals) for each player (because the title guarantees that each move is VALID). After each move, we need to update the corresponding row and column, and if in the primary and secondary diagonals we also need to update the diagonal values.</p>
+<p>This way we use linear space O(8n) i.e. O(n) to decide whether to win or not. Since an array is used, each update is a constant time O(1).</p>
+<p>A further optimization is whether two users can be put together for storage since they have the same data structure for storage. But the count information will affect each other. Since they affect each other, it is possible to agree on the value of each, and just distinguish between not using the same value to determine if a player wins at the end.</p>
+<p>To make the code even more concise, we can increase 1 when user 1 plays in a certain line, and decrease 1 when user 2 plays in that line, so that we can judge whether a player wins by the absolute value at the end. (Contrast this with the fact that if user 1 increases by 1 once and user 2 increases by 2 once, then we need to judge two values at the end, but by using the absolute value in the same way as before).</p>
+<p>This algorithm is quite clever. It is optimized in both time and space. First of all, the board is kept with only one row and one column, with the main and secondary diagonals. How is it possible to record the moves of two players in this way? This brings us to another brilliant feature of his, setting the player's mark or id to 1 and -1. In this way, if a row, column and diagonal are full of a player's pieces, the absolute value of the diagonal value of the row and column is n. When there are two players' pieces in a row, column and diagonal, the values of their pieces will &quot;cancel out&quot; each other, so that the final value cannot be &quot;, resulting in the final value of n not being reached.</p>
+<pre><code class="language-java">class TicTacToe {
+    int[] cols;
+    int[] rows;
+    int diagonal;
+    int antiDiagonal;
+
+    public TicTacToe(int n) {
+        rows = new int[n];
+        cols = new int[n];
+    }
+    
+    public int move(int row, int col, int player) {
+        int curPlayer = player == 1 ? 1 : -1;
+        rows[row] += curPlayer;
+        cols[col] += curPlayer;
+        
+        if (row == col) {
+            diagonal += curPlayer;
+        }
+        
+        if (col == cols.length - row - 1) {
+            antiDiagonal += curPlayer;
+        }
+        int n = rows.length;
+        if (Math.abs(rows[row]) == n || Math.abs(cols[col]) == n || Math.abs(diagonal) == n || Math.abs(antiDiagonal) == n) {
+            return player;
+        }
+        return 0;
+    }
+}
+
+/**
+ * Your TicTacToe object will be instantiated and called as such:
+ * TicTacToe obj = new TicTacToe(n);
+ * int param_1 = obj.move(row,col,player);
+ */
+</code></pre>
+<hr>
+<h2 id="题目">题目</h2>
+<p>这个题目就是实现一个TicTacToe，一开始我不知道是什么。 其实就是类似五子棋的一个游戏。两个人轮流下，直到他的子连接成一行或者一列或者一个对角线。可以看例子：（实现题做提前详细了解例题挺重要的）：</p>
+<blockquote>
+<pre><code class="language-java">Input
+[&quot;TicTacToe&quot;, &quot;move&quot;, &quot;move&quot;, &quot;move&quot;, &quot;move&quot;, &quot;move&quot;, &quot;move&quot;, &quot;move&quot;]
+[[3], [0, 0, 1], [0, 2, 2], [2, 2, 1], [1, 1, 2], [2, 0, 1], [1, 0, 2], [2, 1, 1]]
+Output
+[null, 0, 0, 0, 0, 0, 0, 1]
+
+Explanation
+TicTacToe ticTacToe = new TicTacToe(3);
+Assume that player 1 is &quot;X&quot; and player 2 is &quot;O&quot; in the board.
+ticTacToe.move(0, 0, 1); // return 0 (no one wins)
+|X| | |
+| | | |    // Player 1 makes a move at (0, 0).
+| | | |
+
+ticTacToe.move(0, 2, 2); // return 0 (no one wins)
+|X| |O|
+| | | |    // Player 2 makes a move at (0, 2).
+| | | |
+
+ticTacToe.move(2, 2, 1); // return 0 (no one wins)
+|X| |O|
+| | | |    // Player 1 makes a move at (2, 2).
+| | |X|
+
+ticTacToe.move(1, 1, 2); // return 0 (no one wins)
+|X| |O|
+| |O| |    // Player 2 makes a move at (1, 1).
+| | |X|
+
+ticTacToe.move(2, 0, 1); // return 0 (no one wins)
+|X| |O|
+| |O| |    // Player 1 makes a move at (2, 0).
+|X| |X|
+
+ticTacToe.move(1, 0, 2); // return 0 (no one wins)
+|X| |O|
+|O|O| |    // Player 2 makes a move at (1, 0).
+|X| |X|
+
+ticTacToe.move(2, 1, 1); // return 1 (player 1 wins)
+|X| |O|
+|O|O| |    // Player 1 makes a move at (2, 1).
+|X|X|X|
+</code></pre>
+</blockquote>
+<p>然后实现1个move 方法。输入是棋盘的坐标以及当前落子的用户，然后返回0是当前没人胜出；返回1是player1赢了；返回2是player2赢了。</p>
+<p>题目还有一些限制和前提，比如我们保证每次落子都是valid（原来下过的地方就不会再放棋子了）；有人胜出后就不再继续下棋了。</p>
+<p>另外要注意的是不要想当然以为棋盘是3*3。棋盘大小是通过一个2-100之间的n初始化。</p>
+<h2 id="算法">算法</h2>
+<p>按照题目要求实现即可。这个题的难点就是落子后判断是否当前玩家胜出。</p>
+<h2 id="代码1">代码1</h2>
+<pre><code class="language-java">class TicTacToe {
+
+    int[][] board;
+    
+    public TicTacToe(int n) {
+        board = new int[n][n];
+    }
+    
+    public int move(int row, int col, int player) {
+        board[row][col] = player;
+        if (win(row, col, player)) {
+            return player;
+        }
+        return 0;
+    }
+    
+    private boolean win(int row, int col, int player) {
+        boolean win = true;
+        // row
+        for (int i = 0; i &lt; board.length; i++) {
+            win &amp;= (board[row][i] == player);
+        } 
+        if (win) {
+            return win;
+        } else {
+            win = true;
+        }
+        // col
+        for (int i = 0; i &lt; board.length; i++) {
+            win &amp;= (board[i][col] == player);
+        } 
+        if (win) {
+            return win;
+        } else {
+            win = true;
+        }
+        
+ 		// principal diagonal
+        for (int i = 0; i &lt; board.length; i++) {
+            win &amp;= (board[i][i] == player);
+        } 
+        if (win) {
+            return win;
+        } else {
+            win = true;
+        }
+        
+        //auxiliary diagonal
+        for (int i = 0; i &lt; board.length; i++) {
+            win &amp;= (board[i][board.length-i-1] == player);
+        }
+        
+        return win;
+    }
+}
+
+/**
+ * Your TicTacToe object will be instantiated and called as such:
+ * TicTacToe obj = new TicTacToe(n);
+ * int param_1 = obj.move(row,col,player);
+ */
+</code></pre>
+<p>时间复杂度：O(n)，每一行每一列每个对角线都要遍历。</p>
+<p>空间复杂度：O(n*n)，棋盘大小。</p>
+<h2 id="代码2">代码2</h2>
+<p>优化时间和空间。代码很好理解也简单，着重思考答案是如何一步步优化到那个位置的，以及他是如何联想到下一步的。</p>
+<p>首先从空间入手，是否可以找到O(n)的方法。因为我们在下棋过程中是需要用棋盘保存之前的两位棋手的对弈信息，以帮助我们在当前落子的时候，决策是否胜出。</p>
+<p>那么我们不需要保存一行1或者2，我们只需要保存某个玩家在某一行是下了几次1或者2。即对每个玩家存两个数组（行列信息），两个常量（主副对角线）（因为题目保证每次下棋的落点都是valid的）。在每次move之后，我们需要更新对应的一行一列，如果在主副对角线还需要更新对角线的值。</p>
+<p>这样我们使用线性空间O(8n)即O(n)就可以决策是否胜出了。因为是使用数组，所以每次更新都是常量时间O(1).</p>
+<p>再进一步的优化就是，既然两个用户的存储的数据结构一样，是否可以放到一起存储。但是计数信息就会互相影响。既然互相影响，其实可以约定好每个的值，只要区别开不使用同样的值即可在最后判断是否某个玩家胜出。</p>
+<p>为了更进一步方写出简明的代码，我们可以在用户1在某行落子的时候增加1，在用户2在这一行落子的时候减少1，这样就可以通过最后的绝对值来判断是否胜出即可。（对比如果用户1落子一次增加1，用户2落子一次增加2，那么最后需要判断两个值，而通过之前的方式，巧妙利用一下绝对值即可）。</p>
+<p>这个算法比较巧。他在时间和空间上都做了优化。首先是棋盘，只保留了一行一列，主副对角线。为什么可以这样就能记录两个玩家的下棋呢？这就涉及到了他的另一个高明的地方，将玩家的mark或者id设置为1和-1。这样的话如果一行一列一对角线全是某个玩家的棋子，那么这个行列对角线的值的绝对值就是n；而当一行一列一对角线中出现两个玩家的棋子，他们的棋子的值会互相“抵消”，导致最后的值无法达到n。</p>
+<pre><code class="language-java">class TicTacToe {
+    int[] cols;
+    int[] rows;
+    int diagonal;
+    int antiDiagonal;
+
+    public TicTacToe(int n) {
+        rows = new int[n];
+        cols = new int[n];
+    }
+    
+    public int move(int row, int col, int player) {
+        int curPlayer = player == 1 ? 1 : -1;
+        rows[row] += curPlayer;
+        cols[col] += curPlayer;
+        
+        if (row == col) {
+            diagonal += curPlayer;
+        }
+        
+        if (col == cols.length - row - 1) {
+            antiDiagonal += curPlayer;
+        }
+        int n = rows.length;
+        if (Math.abs(rows[row]) == n || Math.abs(cols[col]) == n || Math.abs(diagonal) == n || Math.abs(antiDiagonal) == n) {
+            return player;
+        }
+        return 0;
+    }
+}
+
+/**
+ * Your TicTacToe object will be instantiated and called as such:
+ * TicTacToe obj = new TicTacToe(n);
+ * int param_1 = obj.move(row,col,player);
+ */
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#question">Question</a></li>
+<li><a href="#algorithm">Algorithm</a></li>
+<li><a href="#code-1">Code 1</a></li>
+<li><a href="#code-2">Code 2</a></li>
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E7%AE%97%E6%B3%95">算法</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%811">代码1</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%812">代码2</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/288-unique-word-abbreviation/">
+              <h3 class="post-title">
+                288. Unique Word Abbreviation
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

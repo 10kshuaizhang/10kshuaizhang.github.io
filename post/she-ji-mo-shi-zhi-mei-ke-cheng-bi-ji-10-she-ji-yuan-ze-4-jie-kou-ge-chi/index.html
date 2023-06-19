@@ -1,0 +1,586 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>设计模式之美-课程笔记10-设计原则4-接口隔离 | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="设计模式之美-课程笔记10-设计原则4-接口隔离 | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="理论四：接口隔离原则有哪三种应用？原则中的“接口”该如何理解？
+如何理解”接口隔离原则“
+
+Interface Segregation Principle: ISP. Clients should not be force to depen..." />
+    <meta name="keywords" content="OOD,Design Pattern" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              设计模式之美-课程笔记10-设计原则4-接口隔离
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-06-19
+              </span>
+              <span>
+                11 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/sSLhqMzY-/" class="post-tag">
+                  # OOD
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/d2JaGqwpzA/" class="post-tag">
+                  # Design Pattern
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="理论四接口隔离原则有哪三种应用原则中的接口该如何理解">理论四：接口隔离原则有哪三种应用？原则中的“接口”该如何理解？</h2>
+<h3 id="如何理解接口隔离原则">如何理解”接口隔离原则“</h3>
+<ol>
+<li>Interface Segregation Principle: ISP. Clients should not be force to depend upon interfaces that they not use. 客户端（调用者、使用者）应该被强迫依赖他不需要的接口。</li>
+<li>关键在于如何理解接口
+<ul>
+<li>一组API接口集合</li>
+<li>单个API接口或函数</li>
+<li>OOP中的接口概念</li>
+</ul>
+</li>
+</ol>
+<h3 id="把接口理解为一组api接口集合">把接口理解为一组API接口集合</h3>
+<ol>
+<li>
+<p>举个例子，微服务用户系统提供了一组跟用户相关的 API 给其他系统使用，比如：注册、登录、获取用户信息等。</p>
+<pre><code class="language-java">public interface UserService {
+  boolean register(String cellphone, String password);
+  boolean login(String cellphone, String password);
+  UserInfo getUserInfoById(long id);
+  UserInfo getUserInfoByCellphone(String cellphone);
+}
+
+public class UserServiceImpl implements UserService {
+  //...
+}
+</code></pre>
+</li>
+<li>
+<p>如果现在要实现删除用户的功能，我们可能会想到的是在接口中增加一个方法<code>deleteUserById</code>.</p>
+<ol>
+<li>
+<p>问题在于，删除用户的权限最好是后台管理系统执行。如果放进去UserService，那所有实现这个接口的类都可以使用这个接口。<u>不加限制的被其他业务系统调用，有可能导致误删用户。</u></p>
+</li>
+<li>
+<p>最好的设计是从架构层面，增加鉴权系统来限制接口的调用。但是目前没有支持的话，我们也可从代码层面去做。</p>
+</li>
+<li>
+<p>参照接口隔离原则，调用者不应该强迫依赖他不需要的接口。我们可以将删除接口单独放到另一个接口<code>RestrictedUserService</code>中，然后将这个Service只打包给后台管理系统使用：</p>
+<pre><code class="language-java">public interface UserService {
+  boolean register(String cellphone, String password);
+  boolean login(String cellphone, String password);
+  UserInfo getUserInfoById(long id);
+  UserInfo getUserInfoByCellphone(String cellphone);
+}
+
+public interface RestrictedUserService {
+  boolean deleteUserByCellphone(String cellphone);
+  boolean deleteUserById(long id);
+}
+
+public class UserServiceImpl implements UserService, RestrictedUserService {
+  // ...省略实现代码...
+}
+</code></pre>
+</li>
+</ol>
+</li>
+<li>
+<p>接口在这里被理解为一组接口集合。在设计微服务或者类库接口的时候，如果部分接口只被部分调用者使用，那我们就需要将这部分接口隔离出来，单独给对应的调用者使用，而不是强迫其他调用者也依赖这部分不会被用到的接口。</p>
+</li>
+</ol>
+<h3 id="把接口理解为单个api接口或函数">把接口理解为单个API接口或函数</h3>
+<ol>
+<li>
+<p>如果将接口理解为一个接口，或者函数。那我们这个原则的理解就是： 函数的设计要功能单一，不要讲多个不同的功能逻辑在一个函数中实现。</p>
+</li>
+<li>
+<p>看个例子：</p>
+<pre><code class="language-java">public class Statistics {
+  private Long max;
+  private Long min;
+  private Long average;
+  private Long sum;
+  private Long percentile99;
+  private Long percentile999;
+  //...省略constructor/getter/setter等方法...
+}
+
+public Statistics count(Collection&lt;Long&gt; dataSet) {
+  Statistics statistics = new Statistics();
+  //...省略计算逻辑...
+  return statistics;
+}
+</code></pre>
+<p>这个例子中，count做的事情不仅是count，还算了min max等，可以拆成更细的粒度。</p>
+<pre><code class="language-java">public Long max(Collection&lt;Long&gt; dataSet) { //... }
+public Long min(Collection&lt;Long&gt; dataSet) { //... } 
+public Long average(Colletion&lt;Long&gt; dataSet) { //... }
+// ...省略其他统计函数...
+</code></pre>
+</li>
+<li>
+<p>是否功能单一，还是要参照业务场景。</p>
+<p>如果在项目中，对每个统计需求，Statistics 定义的那几个统计信息都有涉及，那 count() 函数的设计就是合理的。相反，如果每个统计需求只涉及 Statistics 罗列的统计信息中一部分，比如，有的只需要用到 max、min、average 这三类统计信息，有的只需要用到 average、sum。而 count() 函数每次都会把所有的统计信息计算一遍，就会做很多无用功，势必影响代码的性能，特别是在需要统计的数据量很大的时候。所以，在这个应用场景下，count() 函数的设计就有点不合理了，我们应该按照第二种设计思路，将其拆分成粒度更细的多个统计函数。</p>
+</li>
+<li>
+<p>ISP和SRP有点区别的： SPR针对的是类和模块的设计，而ISP更侧重于接口的设计。它提供了一种判断接口是否职责单一的标准：通过调用者如何使用接口来间接的判定。（是否是部分使用）。</p>
+</li>
+</ol>
+<h3 id="把接口理解为oop中的接口">把接口理解为OOP中的接口</h3>
+<ol>
+<li>
+<p>举个例子：假设我们的项目中用到了三个外部系统：Redis、MySQL、Kafka。每个系统都对应一系列配置信息，比如地址、端口、访问超时时间等。为了在内存中存储这些配置信息，供项目中的其他模块来使用，我们分别设计实现了三个 Configuration 类：RedisConfig、MysqlConfig、KafkaConfig。具体的代码实现如下所示。这里只给出了 RedisConfig 的代码实现：</p>
+<pre><code class="language-java">public class RedisConfig {
+    private ConfigSource configSource; //配置中心（比如zookeeper）
+    private String address;
+    private int timeout;
+    private int maxTotal;
+    //省略其他配置: maxWaitMillis,maxIdle,minIdle...
+
+    public RedisConfig(ConfigSource configSource) {
+        this.configSource = configSource;
+    }
+
+    public String getAddress() {
+        return this.address;
+    }
+    //...省略其他get()、init()方法...
+
+    public void update() {
+      //从configSource加载配置到address/timeout/maxTotal...
+    }
+}
+
+public class KafkaConfig { //...省略... }
+public class MysqlConfig { //...省略... }
+</code></pre>
+</li>
+<li>
+<p>现在，我们有一个新的功能需求，希望支持 Redis 和 Kafka 配置信息的热更新。所谓“热更新（hot update）”就是，如果在配置中心中更改了配置信息，我们希望在不用重启系统的情况下，能将最新的配置信息加载到内存中（也就是 RedisConfig、KafkaConfig 类中）。但是，因为某些原因，我们并不希望对 MySQL 的配置信息进行热更新。</p>
+</li>
+<li>
+<p>为了实现这样一个功能需求，我们设计实现了一个 ScheduledUpdater 类，以固定时间频率（periodInSeconds）来调用 RedisConfig、KafkaConfig 的 update() 方法更新配置信息。具体的代码实现如下所示：</p>
+<pre><code class="language-java">public interface Updater {
+  void update();
+}
+
+public class RedisConfig implements Updater {
+  //...省略其他属性和方法...
+  @Override
+  public void update() { //... }
+}
+
+public class KafkaConfig implements Updater {
+  //...省略其他属性和方法...
+  @Override
+  public void update() { //... }
+}
+
+public class MysqlConfig { //...省略其他属性和方法... }
+
+public class ScheduledUpdater {
+    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();;
+    private long initialDelayInSeconds;
+    private long periodInSeconds;
+    private Updater updater;
+
+    public ScheduleUpdater(Updater updater, long initialDelayInSeconds, long periodInSeconds) {
+        this.updater = updater;
+        this.initialDelayInSeconds = initialDelayInSeconds;
+        this.periodInSeconds = periodInSeconds;
+    }
+
+    public void run() {
+        executor.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                updater.update();
+            }
+        }, this.initialDelayInSeconds, this.periodInSeconds, TimeUnit.SECONDS);
+    }
+}
+
+public class Application {
+  ConfigSource configSource = new ZookeeperConfigSource(/*省略参数*/);
+  public static final RedisConfig redisConfig = new RedisConfig(configSource);
+  public static final KafkaConfig kafkaConfig = new KakfaConfig(configSource);
+  public static final MySqlConfig mysqlConfig = new MysqlConfig(configSource);
+
+  public static void main(String[] args) {
+    ScheduledUpdater redisConfigUpdater = new ScheduledUpdater(redisConfig, 300, 300);
+    redisConfigUpdater.run();
+    
+    ScheduledUpdater kafkaConfigUpdater = new ScheduledUpdater(kafkaConfig, 60, 60);
+    kafkaConfigUpdater.run();
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>刚刚的热更新的需求我们已经搞定了。现在，我们又有了一个新的监控功能需求。通过命令行来查看 Zookeeper 中的配置信息是比较麻烦的。所以，我们希望能有一种更加方便的配置信息查看方式。我们可以在项目中开发一个内嵌的 SimpleHttpServer，输出项目的配置信息到一个固定的 HTTP 地址，比如：http://127.0.0.1:2389/config 。我们只需要在浏览器中输入这个地址，就可以显示出系统的配置信息。不过，出于某些原因，我们只想暴露 MySQL 和 Redis 的配置信息，不想暴露 Kafka 的配置信息。</p>
+</li>
+<li>
+<p>我们还需要对上面的代码做进一步改造:</p>
+<pre><code class="language-java">public interface Updater {
+  void update();
+}
+
+public interface Viewer {
+  String outputInPlainText();
+  Map&lt;String, String&gt; output();
+}
+
+public class RedisConfig implemets Updater, Viewer {
+  //...省略其他属性和方法...
+  @Override
+  public void update() { //... }
+  @Override
+  public String outputInPlainText() { //... }
+  @Override
+  public Map&lt;String, String&gt; output() { //...}
+}
+
+public class KafkaConfig implements Updater {
+  //...省略其他属性和方法...
+  @Override
+  public void update() { //... }
+}
+
+public class MysqlConfig implements Viewer {
+  //...省略其他属性和方法...
+  @Override
+  public String outputInPlainText() { //... }
+  @Override
+  public Map&lt;String, String&gt; output() { //...}
+}
+
+public class SimpleHttpServer {
+  private String host;
+  private int port;
+  private Map&lt;String, List&lt;Viewer&gt;&gt; viewers = new HashMap&lt;&gt;();
+  
+  public SimpleHttpServer(String host, int port) {//...}
+  
+  public void addViewers(String urlDirectory, Viewer viewer) {
+    if (!viewers.containsKey(urlDirectory)) {
+      viewers.put(urlDirectory, new ArrayList&lt;Viewer&gt;());
+    }
+    this.viewers.get(urlDirectory).add(viewer);
+  }
+  
+  public void run() { //... }
+}
+
+public class Application {
+    ConfigSource configSource = new ZookeeperConfigSource();
+    public static final RedisConfig redisConfig = new RedisConfig(configSource);
+    public static final KafkaConfig kafkaConfig = new KakfaConfig(configSource);
+    public static final MySqlConfig mysqlConfig = new MySqlConfig(configSource);
+    
+    public static void main(String[] args) {
+        ScheduledUpdater redisConfigUpdater =
+            new ScheduledUpdater(redisConfig, 300, 300);
+        redisConfigUpdater.run();
+        
+        ScheduledUpdater kafkaConfigUpdater =
+            new ScheduledUpdater(kafkaConfig, 60, 60);
+        redisConfigUpdater.run();
+        
+        SimpleHttpServer simpleHttpServer = new SimpleHttpServer(“127.0.0.1”, 2389);
+        simpleHttpServer.addViewer(&quot;/config&quot;, redisConfig);
+        simpleHttpServer.addViewer(&quot;/config&quot;, mysqlConfig);
+        simpleHttpServer.run();
+    }
+}
+</code></pre>
+</li>
+<li>
+<p>在viewer和updater这两个例子中，ScheduledUpdater只依赖Updater，不需要被强迫去依赖viewer。满足接口隔离原则。</p>
+</li>
+<li>
+<p>如果不遵循ISP，设计出来的代码可能是：一个大的config接口包含所有方法，所有实现他的类都必须实现所有方法：</p>
+<pre><code class="language-java">public interface Config {
+  void update();
+  String outputInPlainText();
+  Map&lt;String, String&gt; output();
+}
+
+public class RedisConfig implements Config {
+  //...需要实现Config的三个接口update/outputIn.../output
+}
+
+public class KafkaConfig implements Config {
+  //...需要实现Config的三个接口update/outputIn.../output
+}
+
+public class MysqlConfig implements Config {
+  //...需要实现Config的三个接口update/outputIn.../output
+}
+
+public class ScheduledUpdater {
+  //...省略其他属性和方法..
+  private Config config;
+
+  public ScheduleUpdater(Config config, long initialDelayInSeconds, long periodInSeconds) {
+      this.config = config;
+      //...
+  }
+  //...
+}
+
+public class SimpleHttpServer {
+  private String host;
+  private int port;
+  private Map&lt;String, List&lt;Config&gt;&gt; viewers = new HashMap&lt;&gt;();
+ 
+  public SimpleHttpServer(String host, int port) {//...}
+  
+  public void addViewer(String urlDirectory, Config config) {
+    if (!viewers.containsKey(urlDirectory)) {
+      viewers.put(urlDirectory, new ArrayList&lt;Config&gt;());
+    }
+    viewers.get(urlDirectory).add(config);
+  }
+  
+  public void run() { //... }
+}
+</code></pre>
+</li>
+<li>
+<p>也能实现，但是对比之前的设计，明显遵循了ISP的代码**<u>扩展性更好，更灵活。</u>**因为Updater和Viewer职责更单一，单一意味着通用、复用性好。比如我们又上了一个Metrics性能统计模块，并希望Metrics也通过SimpleHttpServer显示，此时他就可以使用Viewer接口:</p>
+<pre><code class="language-java">public class ApiMetrics implements Viewer {//...}
+public class DbMetrics implements Viewer {//...}
+
+public class Application {
+    ConfigSource configSource = new ZookeeperConfigSource();
+    public static final RedisConfig redisConfig = new RedisConfig(configSource);
+    public static final KafkaConfig kafkaConfig = new KakfaConfig(configSource);
+    public static final MySqlConfig mySqlConfig = new MySqlConfig(configSource);
+    public static final ApiMetrics apiMetrics = new ApiMetrics();
+    public static final DbMetrics dbMetrics = new DbMetrics();
+    
+    public static void main(String[] args) {
+        SimpleHttpServer simpleHttpServer = new SimpleHttpServer(“127.0.0.1”, 2389);
+        simpleHttpServer.addViewer(&quot;/config&quot;, redisConfig);
+        simpleHttpServer.addViewer(&quot;/config&quot;, mySqlConfig);
+        simpleHttpServer.addViewer(&quot;/metrics&quot;, apiMetrics);
+        simpleHttpServer.addViewer(&quot;/metrics&quot;, dbMetrics);
+        simpleHttpServer.run();
+    }
+}
+</code></pre>
+</li>
+<li>
+<p>第二种设计也有一些无用功，正如我前面说的， 必须要实现所有方法（尽管他不需要用）。</p>
+</li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E7%90%86%E8%AE%BA%E5%9B%9B%E6%8E%A5%E5%8F%A3%E9%9A%94%E7%A6%BB%E5%8E%9F%E5%88%99%E6%9C%89%E5%93%AA%E4%B8%89%E7%A7%8D%E5%BA%94%E7%94%A8%E5%8E%9F%E5%88%99%E4%B8%AD%E7%9A%84%E6%8E%A5%E5%8F%A3%E8%AF%A5%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3">理论四：接口隔离原则有哪三种应用？原则中的“接口”该如何理解？</a>
+<ul>
+<li><a href="#%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3%E6%8E%A5%E5%8F%A3%E9%9A%94%E7%A6%BB%E5%8E%9F%E5%88%99">如何理解”接口隔离原则“</a></li>
+<li><a href="#%E6%8A%8A%E6%8E%A5%E5%8F%A3%E7%90%86%E8%A7%A3%E4%B8%BA%E4%B8%80%E7%BB%84api%E6%8E%A5%E5%8F%A3%E9%9B%86%E5%90%88">把接口理解为一组API接口集合</a></li>
+<li><a href="#%E6%8A%8A%E6%8E%A5%E5%8F%A3%E7%90%86%E8%A7%A3%E4%B8%BA%E5%8D%95%E4%B8%AAapi%E6%8E%A5%E5%8F%A3%E6%88%96%E5%87%BD%E6%95%B0">把接口理解为单个API接口或函数</a></li>
+<li><a href="#%E6%8A%8A%E6%8E%A5%E5%8F%A3%E7%90%86%E8%A7%A3%E4%B8%BAoop%E4%B8%AD%E7%9A%84%E6%8E%A5%E5%8F%A3">把接口理解为OOP中的接口</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/she-ji-mo-shi-zhi-mei-ke-cheng-bi-ji-7-she-ji-yuan-ze-3-li-shi-ti-huan-lsp/">
+              <h3 class="post-title">
+                设计模式之美-课程笔记7-设计原则3-里氏替换（LSP)
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1012 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spring实战(第四版)- part3(后端部分) | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Spring实战(第四版)- part3(后端部分) | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="第三部分　后端中的 Spring
+第十章介绍使用Spring的JDBC的抽象来查询关系型数据库。第十一章通过对象-关系映射持久化数据，与orm框架集成。十二章使用会介绍一些非关系型数据库。第十三章是介绍Spring Security在后端中..." />
+    <meta name="keywords" content="Spring,Java" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Spring实战(第四版)- part3(后端部分)
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-09-11
+              </span>
+              <span>
+                21 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/2LjrGhsYzm/" class="post-tag">
+                  # Spring
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/YyW64XHFs/" class="post-tag">
+                  # Java
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="第三部分-后端中的-spring">第三部分　后端中的 Spring</h1>
+<p>第十章介绍使用Spring的JDBC的抽象来查询关系型数据库。第十一章通过对象-关系映射持久化数据，与orm框架集成。十二章使用会介绍一些非关系型数据库。第十三章是介绍Spring Security在后端中的应用。</p>
+<h2 id="第10章-通过spring和jdbc征服数据库">第10章 通过Spring和JDBC征服数据库</h2>
+<ul>
+<li>定义Spring对数据访问的支持</li>
+<li>配置数据库资源</li>
+<li>使用Spring的JDBC模板</li>
+</ul>
+<h3 id="101-spring的数据访问哲学">10.1 Spring的数据访问哲学</h3>
+<ol>
+<li>
+<p>Spring的数据访问也是遵循面向对象的**<u>针对接口编程</u>**。</p>
+</li>
+<li>
+<p><strong><u>DAO</u></strong>：data access object或**<u>repository</u>**。为了避免持久化的逻辑分散在业务的各个组件，将数据访问的功能放在一个或者多个专注于此项任务的组件中。</p>
+</li>
+<li>
+<p>服务对象本身不处理数据访问，将这部分工作委托给Repository-&gt; 松耦合。</p>
+ <img src="https://702021806-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-LmcjU5gG__lBrRbUxBO%2F-LnKze_dLwCSbPMNjaM-%2F-LnKzyP3es1W1UgxvxVm%2F10.1%20repository%20%E6%8E%A5%E5%8F%A3.jpg?alt=media&token=c6492068-7376-4541-b47f-e8f5279f7921" alt="img" style="zoom:50%;" />
+</li>
+<li>
+<p>优点</p>
+<ul>
+<li>易于测试。当服务对象和数据处理组件解绑，测试服务对象时候可以直接提供一个mock数据库对象，不需要进行数据库连接。</li>
+<li>灵活。数据访问层和持久化技术无关，切换持久化框架对于整体应用影响小。</li>
+</ul>
+</li>
+<li>
+<p>使用了统一的异常处理体系（同时也存在于它支持的持久化框架中）。</p>
+</li>
+</ol>
+<h4 id="1011-了解spring数据访问的异常体系">10.1.1 了解Spring数据访问的异常体系</h4>
+<ol>
+<li>捕获SQLException对于问题排查和定位很重要。</li>
+<li>JDBC的异常体系过于简单，Hibernate的异常又是它独有的。我们希望可以获得**<u>具有描述性的、平台和持久化框架无关的异常</u>**输出。</li>
+</ol>
+<p><strong>Spring提供的与平台无关的持久化异常</strong></p>
+<p>对比JDBC，它的异常类型丰富许多。</p>
+<table>
+<thead>
+<tr>
+<th>JDBC的异常</th>
+<th>Spring的数据访问异常</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BatchUpdateException <br />DataTruncation <br />SQLException <br />SQLWarning</td>
+<td>BadSqlGrammarException<br /> CannotAcquireLockException <br />CannotSerializeTransactionException <br />CannotGetJdbcConnectionException CleanupFailureDataAccessException<br /> ConcurrencyFailureException DataAccessException <br />DataAccessResourceFailureException<br /> DataIntegrityViolationException<br /> DataRetrievalFailureException<br /> DataSourceLookupApiUsageException<br /> DeadlockLoserDataAccessException</td>
+</tr>
+<tr>
+<td>BatchUpdateException <br />DataTruncation <br />SQLException <br />SQLWarning</td>
+<td>DuplicateKeyException EmptyResultDataAccessException IncorrectResultSizeDataAccessException IncorrectUpdateSemanticsDataAccessException InvalidDataAccessApiUsageException InvalidDataAccessResourceUsageException InvalidResultSetAccessException JdbcUpdateAffectedIncorrectNumberOfRowsException LbRetrievalFailureExceptionNonTransientDataAccessResourceException <br />OptimisticLockingFailureException <br />PermissionDeniedDataAccessException <br />PessimisticLockingFailureException <br />QueryTimeoutException<br /> RecoverableDataAccessException <br />SQLWarningException <br />SqlXmlFeatureNotImplementedException <br />TransientDataAccessException <br />TransientDataAccessResourceException <br />TypeMismatchDataAccessException <br />UncategorizedDataAccessException <br />UncategorizedSQLException</td>
+</tr>
+</tbody>
+</table>
+<p>除此之外，它还与持久化框架无关。</p>
+<p><strong>不用写Catch！</strong></p>
+<p>Spring的异常都继承自DataAccessException，它是一个**<a href="https://blog.csdn.net/u013630349/article/details/50850880">非检查型异常</a>**，不需要捕获。</p>
+<p>Spring将异常处理捕获交给开发者来决定。</p>
+<h4 id="1012-数据访问模板化">10.1.2 数据访问模板化</h4>
+<ol>
+<li>
+<p>Spring将数据访问过程中固定的和可变的部分明确划分为两个不同的类：模板和回调。模板管理过程中固定的部分，而回调处理自定义的数据访问代码。</p>
+ <img src="https://702021806-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-LmcjU5gG__lBrRbUxBO%2F-LnL3IMGj512QTOXdnDm%2F-LnL3r4DDDoyJCebHXTD%2F10.2%20%E6%A8%A1%E6%9D%BF%E4%B8%8E%E5%9B%9E%E8%B0%83.jpg?alt=media&token=ae5de4e8-3734-46aa-9e62-7166459e9f40" alt="img" style="zoom:50%;" />
+</li>
+<li>
+<p>针对不同的持久化平台，Spring提供了多个可选模板。</p>
+</li>
+</ol>
+<h3 id="102-配置数据源">10.2 配置数据源</h3>
+<h4 id="1021-使用jndi数据源">10.2.1 使用JNDI数据源</h4>
+<ol>
+<li>
+<p>JNDI: <a href="https://docs.oracle.com/javase/jndi/tutorial/getStarted/overview/index.html">java naming and directory interface</a></p>
+</li>
+<li>
+<p>可以像使用bean一样将jndi数据源的引用配置并装配到需要的类</p>
+<pre><code class="language-xml">&lt;jee:jndi-lookup id=&quot;dataSource&quot; jndi-name=&quot;/jdbc/SpitterDS&quot; resource-ref=&quot;true&quot; /&gt;
+</code></pre>
+<pre><code class="language-java">@Bean
+public JndiObjectFactoryBean dataSource() {
+  JndiObjectFactoryBean jndiObjectFB = new JndiObjectFactoryBean();
+  jndiObjectFB.setJndiName(&quot;jdbc/SpittrDS&quot;);
+  jndiObjectFB.setResourceRef(true);
+  jndiObjectFB.setProxyInterface(javax.sql.DataSource.class);
+  return jndiObjectFB;
+}
+</code></pre>
+</li>
+</ol>
+<h4 id="1022-使用数据源连接池">10.2.2 使用数据源连接池</h4>
+<ol>
+<li>
+<p>Spring没有提供，但是有诸如Apache Commons DBCP，c3p0，boneCP开源实现。</p>
+</li>
+<li>
+<p>DBCP：</p>
+<pre><code class="language-xml">&lt;bean id=&quot;dataSource&quot; class=&quot;org.apache.commons.dbcp.BasicDataSource&quot;
+      p:driverClassName=&quot;org.h2.Driver&quot;
+      p:url=&quot;jdbc:h2:tcp://localhost/~/spitter&quot;
+      p:username=&quot;sa&quot;
+      p:password=&quot;&quot;
+      p:initialSize=&quot;5&quot;
+      p:maxActive=&quot;10&quot; /&gt;
+</code></pre>
+<p>Java 配置</p>
+<pre><code class="language-java">@Bean
+public BasicDataSource dataSource() {
+  BasicDataSource ds = new BasicDataSource();
+  ds.setDriverClassName(&quot;org.h2.Driver&quot;);
+  ds.setUrl(&quot;jdbc:h2:tcp://localhost/~/spitter&quot;);
+  ds.setUsername(&quot;sa&quot;);
+  ds.setPassword(&quot;&quot;);
+  ds.setInitialSize(5);
+  ds.setMaxActive(10);
+  return ds;
+}
+</code></pre>
+<blockquote>
+<p><strong>什么是数据源</strong>？</p>
+<p>JDBC2.0提供了javax.sql.DataSource接口，它负责建立与数据库的连接，当在应用程序中访问数据库时，不必编写连接数据库的代码，直接引用DataSource获取数据库的连接对象即可。用于获取操作数据的Connection对象。</p>
+</blockquote>
+<blockquote>
+<p><strong>什么是数据库连接池</strong>？</p>
+<p>数据库连接池的思想就是为数据库连接建立一个“缓冲池”。预先在缓冲池中放入一定数量的连接，当需要建立数据库连接时，只需从“缓冲池”中取出一个，使用完毕之后再放回去。可通过设定连接池的最大连接数来防止系统无尽的与数据库连接。更重要的是我们可以通过连接池的管理机制监视数据库的连接的数量、使用情况，为系统开发、测试以及性能调整提供依据。</p>
+<p><strong>数据源和数据库连接池的关系</strong>？</p>
+<p>数据源建立多个数据库连接，这些数据库连接将会保存在数据库连接池中，当需要访问数据库时，只需要从数据库连接池中获取空闲的数据库连接，当程序访问数据库结束时，数据库连接会放回数据库连接池中。</p>
+<p><strong>为什么要使用数据库连接池</strong>？</p>
+<p>传统的JDBC访问数据库技术，每次访问数据库都需要通过数据库驱动器Driver和数据库名称以及密码等等资源建立数据库连接。</p>
+<p>如此就会存在两大问题：</p>
+<ol>
+<li>频繁的建立与断开数据库连接，会降低执行效率，增加系统资源的开销。</li>
+<li>数据库的连接需要用户名和密码等资源，这些也需要一定的内存和CPU的开销。</li>
+</ol>
+<p>而数据库连接池很好地解决了这些问题。</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="1023-基于jdbc驱动的数据源">10.2.3 基于JDBC驱动的数据源</h4>
+<ol>
+<li>
+<p>Spring提供了三个JDBC驱动的数据源类：</p>
+<ul>
+<li>DriverManagerDataSource：在每个连接请求时都会返回一个新建的连接。没有池化管理。</li>
+<li>SimpleDriveDataSource： 与前者工作方式类似。</li>
+<li>SingleConnectionDataSource：每个连接请求都会返回同一个连接。</li>
+</ul>
+<p>它们的配置与数据源连接池的配置类似。</p>
+<pre><code class="language-java">@Bean
+public DataSource dataSource() {
+  DriverManagerDataSource ds = new DriverManagerDataSource();
+  ds.setDriverClassName(&quot;org.h2.Driver&quot;);
+  ds.setUrl(&quot;jdbc:h2:tcp://localhost/~/spitter&quot;);
+  ds.setUsername(&quot;sa&quot;);
+  ds.setPassword(&quot;&quot;);
+  return ds;
+}
+</code></pre>
+</li>
+<li>
+<p>都没有提供池化功能。不适宜大应用，SingleConnectionDataSource不支持多线程，其它两个虽然支持但是对每个请求都会创建一个连接，开销很大。</p>
+</li>
+</ol>
+<h4 id="1024-使用嵌入式的数据源">10.2.4 使用嵌入式的数据源</h4>
+<ol>
+<li>适用于开发和测试。每次启动都会重新填充数据。</li>
+</ol>
+<h4 id="1025-使用profile选择数据源">10.2.5 使用profile选择数据源</h4>
+<ol>
+<li>Spring的bean profile允许我们配置在不同环境下使用不同数据源。</li>
+</ol>
+<h3 id="103-在spring使用jdbc">10.3 在Spring使用JDBC</h3>
+<ol>
+<li>使用JDBC能够较好的对数据访问的性能进行调优。</li>
+<li>JDBC让我们在更低层次处理数据，进行一些定制化的访问。</li>
+</ol>
+<h4 id="1031-应对失控的jdbc代码">10.3.1 应对失控的JDBC代码</h4>
+<ol>
+<li>
+<p>插入一条数据，真正在做插入操作的只有几句，其他的都是在处理数据访问。</p>
+<pre><code class="language-java">private static final String SQL_INSERT_SPITTBR =
+  &quot;insert into spitter (username, password, fullname) values (?, ?, ?)&quot;;
+private DataSource dataSource; 
+public void addSpitter(Spitter spitter) {
+  Connection conn = null;
+  PreparedStatement stmt = null; 
+  try {
+    conn = dataSource.getConnection();
+    stmt = conn.prepareStatement(SQL_INSERT_SPITTER);
+    stmc.setstring(1, spicter.getUsername());
+    stmt.setstring(2, spitter.getPassword());
+    stmt.setstring(3, spitter .getFullName());
+    stmt.execute();
+  } catch (SQLException e) {
+    // do something...not sure what, though
+  } finally {
+    try {
+      if (stmt != null) {
+        stmt.close();
+      }
+      
+      if (conn != null) {
+        conn.close();
+      }
+    } catch (SQLException e) {
+      // I'm even less sure about what to do here
+    }
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>查询数据</p>
+<pre><code class="language-java">private static final String SQL_SELECT_SPITTER =
+  &quot;select id, username, fullname from spitter where id = ?&quot;;
+public void findOne(long id) {
+  Connection conn = null;
+  PreparedStatement stmt = null;
+  ResultSet rs = null;
+  try {
+    conn = dataSource.getConnection();
+    stmt = conn.prepareStatement(SQL_SELECT_SPITTER);
+    stmt.setLong(1, id);
+    rs = stmt.executeQuery();
+    Spitter spitter = null;
+    if (rs.next()) {
+      spitter = new Spitter();
+      spitter.setId(rs.getLong(&quot;id&quot;));
+      spitter.setUsername(rs.getString(&quot;username&quot;));
+      spitter.setFullName(rs.getString(&quot;fullname&quot;));
+    }
+    return spitter;
+  } catch (SQLException e) {
+    // Still not sure what I
+  } finally {
+    if (rs != null) {
+      try {
+        rs.close();
+      } catch (SQLException e) {
+      }
+    }
+    
+    if (stmt != null) {
+      try {
+        stmt.close();
+      } catch (SQLException e) {
+      }
+    }
+    
+    if (conn ! = null) {
+      try {
+        conn.close();
+      } catch (SQLException e) {
+      }
+    }
+  }
+}
+</code></pre>
+</li>
+</ol>
+<h4 id="1032-使用jdbc模板">10.3.2 使用JDBC模板</h4>
+<ol>
+<li>
+<p>Spring将数据访问的样板代码抽象到模板类之中。</p>
+<ul>
+<li>JdbcTemplate： 最基本的模板，支持简单的JDBC数据库访问以及基于索引参数的查询。</li>
+<li>NamedParameterJdbcTemplate：可以将值以命名参数的形式绑定到SQL。</li>
+<li><s>SimpleJdbcTemplate：利用Java5的一些特性如自动装箱、泛型、可变参数列表来简化JDBC模板的使用。</s> （Spring 3.1 废弃）</li>
+</ul>
+</li>
+<li>
+<p>使用JdbcTemplate来插入数据</p>
+<p>只需为它设置DataSource</p>
+<pre><code class="language-java">@Bean
+public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+  return new JdbcTemplate(dataSource);
+}
+</code></pre>
+<p>极大简化addSpitter方法</p>
+<pre><code class="language-java">private void insertSpitter(Spitter spitter) {
+  jdbcTemplate.update(INSERT_SPITTER,
+    spitter.getUsername(),
+    spitter.getPassword(),
+    spitter.getFullName(),
+    spitter.getEmail(),
+    spitter.isUpdateByEmail());
+}
+</code></pre>
+</li>
+<li>
+<p>读取</p>
+<pre><code class="language-java">public Spitter findOne(long id) {
+  return jdbcTemplate.queryForObject(
+    SELECT_SPITTER + &quot; where id=?&quot;, new SpitterRowMapper(), id);
+}
+
+...
+
+private static final class SpitterRowMapper implements RowMapper&lt;Spitter&gt; {
+  public Spitter mapRow(ResultSet rs, int rowNum) throws SQLException {
+	return new Spitter(
+	  rs.getLong(&quot;id&quot;),
+	  rs.getString(&quot;username&quot;),
+	  rs.getString(&quot;password&quot;),
+	  rs.getString(&quot;fullname&quot;),
+	  rs.getString(&quot;email&quot;),
+	  rs.getBoolean(&quot;updateByEmail&quot;));
+  }		
+}
+</code></pre>
+<p>SpitterRowMapper 对象实现了 RowMapper 接口。对于查询返回的每一行数据，JdbcTemplate 将会调用 RowMapper 的 mapRow() 方法，并传入一个 ResultSet 和包含行号的整数。在 SpitterRowMapper 的 mapRow() 方法中，我们创建了 Spitter 对象并将 ResultSet 中的值填充进去。</p>
+</li>
+</ol>
+<p><strong>使用命名参数</strong></p>
+<pre><code class="language-java">private static final Spitter SQL_INSERT_SPITTER = 
+  &quot;insert into spitter (username, password, fullname) &quot; +
+  &quot;values (:username, :password, :fullname)&quot;;
+</code></pre>
+<p>则需要定义另外一个模板，此时sql中参数的顺序不重要：</p>
+<pre><code class="language-java">@Bean
+public NamedParameterJdbcTemplate jdbcTemplate(DataSource dataSource) {
+  return new NamedParameterJdbcTemplate(dataSource);
+}
+</code></pre>
+<p>addSpitter()</p>
+<pre><code class="language-java">private static final String INSERT_SPITTER =
+  &quot;insert into Spitter &quot; +
+  &quot;  (username, password, fullname, email, updateByEmail) &quot; +
+  &quot;values &quot; +
+  &quot;  (:username, :password, :fullname, :email, :updateByEmail)&quot;;
+
+private void addSpitter(Spitter spitter) {
+  Map&lt;String, Object&gt; paramMap = new HashMap&lt;String, Object&gt;();
+  paramMap.put(&quot;username&quot;, spitter.getUsername());
+  paramMap.put(&quot;password&quot;, spitter.getPassword());
+  paramMap.put(&quot;fullname&quot;, spitter.getFullName());
+  paramMap.put(&quot;email&quot;, spitter.getEmail());
+  paramMap.put(&quot;updateByEmail&quot;, spitter.isUpdateByEmail());
+  jdbcOperations.update(INSERT_SPITTER, paramMap);
+}
+</code></pre>
+<h3 id="104-小结">10.4 小结</h3>
+<h2 id="第11章-使用对象-关系映射持久化数据">第11章 使用对象-关系映射持久化数据</h2>
+<ul>
+<li>使用Spring和HIbernate</li>
+<li>借助上下文Session，编写不依赖于Spring的Repository</li>
+<li>通过Spring使用JPA</li>
+<li>借助Spring Data实现自动化的JPA Repository</li>
+</ul>
+<p>使用持久化数据关系映射，我们可以从查询字符串中解放，因为框架会帮我们映射对象。不但如此，我们还可以使用更复杂的特性：</p>
+<ul>
+<li>延迟加载：只在需要的时候获取数据。假设我们在查询一组 PurchaseOrder 对象，而每个对象中都包含一个 LineItem 对象集合。如果我们只关心 PurchaseOrder 的属性，那查询出 LineItem 的数据就毫无意义。而且这可能是开销很大的操作</li>
+<li>预先抓取：使用一个查询获取完整的关联对象。如果我们需要 PurchaseOrder 及其关联的 LineItem 对象，预先抓取的功能可以在一个操作中将它们全部从数据库中取出来，节省了多次查询的成本。</li>
+<li>级联：更改数据库同时修改其他表（因为其之间存在诸如外键的关系）。</li>
+</ul>
+<h4 id="111-在spring中集成hibernate">11.1 在Spring中集成Hibernate</h4>
+<p><a href="https://hibernate.org/">Hibernate</a></p>
+<h5 id="1111-声明hibernate的session工厂">11.1.1 声明Hibernate的Session工厂</h5>
+<ol>
+<li>
+<p>使用Hibernate所需要的主要接口是org.hibernate.Session。session接口提供了基本的数据访问功能。</p>
+</li>
+<li>
+<p>Hibernate Session的打开、关闭及管理有Session Factory负责。</p>
+</li>
+<li>
+<p>Spring中提供了三个Session工厂bean给我们用以获取Session</p>
+<ul>
+<li>org.springframework.orm.hibernate3.LocalSessionFactoryBean</li>
+<li>org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean</li>
+<li>org.springframework.orm.hibernate4.LocalSessionFactoryBean</li>
+</ul>
+</li>
+<li>
+<p>Session工厂的选择</p>
+<ol>
+<li>
+<p>Hibernate3.2~Hibernate4.0（不包括），并且使用XML定义映射, 你需要使用Spring 的 org.springframework.orm.hibernate3 包中的  LocalSessionFactoryBean：</p>
+<pre><code class="language-java">@Bean
+public LocalSessionFactoryBean seesionFactory(DataSource dataSource) {
+    LocalSessionFactoryBean sfb = new LocalSessionFactoryBean();
+    sfb.setDataSource(dataSource);
+    sfb.setMappingResource(new String[] {&quot;Spitter.hbm.xml&quot;});
+    Properties props = new Properties();
+    props.setProperty(&quot;dialect&quot;, &quot;org.hibernate.dialect.H2Dialect&quot;);
+    sfb.setHibernateProperties(props);
+    return sfb;
+}
+</code></pre>
+</li>
+<li>
+<p>如果倾向于使用注解方式定义持久化，且没有使用Hibernate4的话，需要用AnnotationSessionFactoryBean代替：</p>
+<pre><code class="language-java">@Bean
+public AnnotationSessionFactoryBean sessionFactory(DataSource ds) {
+  AnnotationSessionFactoryBean sfb = new AnnotationSessionFactoryBean();
+  sfb.setDataSource(ds);
+  sfb.setMappingResource(new String[] { &quot;Spitter.hbm.xml&quot; });
+  Properties props = new Properties();
+  props.setProperty(&quot;dialect&quot;, &quot;org.hibernate.dialect.H2Dialect&quot;);
+  sfb.setHebernateProperties(props);
+  return sfb;
+}
+</code></pre>
+</li>
+<li>
+<p>如果你使用HIbernate4， 那可以使用org.springframework.orm. hibernate4 中的 LocalSessionFactoryBean。他可以算是前两者的结合体。</p>
+<pre><code class="language-java">@Bean
+public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
+  LocalSessionFactoryBean sfb = new LocalSessionFactoryBean();
+  sfb.setDataSource(dataSource);
+  sfb.setMappingResource(new String[] { &quot;com.habuma.spittr.domain&quot; });
+  Properties props = new Properties();
+  props.setProperty(&quot;dialect&quot;, &quot;org.hibernate.dialect.H2Dialect&quot;);
+  sfb.setHebernateProperties(props);
+  return sfb;
+}
+</code></pre>
+</li>
+<li>
+<p>他不再使用配置xml文件而是告诉Spring去查找一个域。里面的类可以使用JPA 的 @Entity 或 @MappedSuperclass 以及 Hibernate 的 @Entity。</p>
+</li>
+<li>
+<p>甚至可以用全限定名的方式明确列出：</p>
+<pre><code class="language-java">sfb.setAnnotationClasses(
+	new Class&lt;?&gt;[] {Spitter.class, Spittle.class}
+);
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+<h5 id="1112-构建不依赖spring的hibernate代码">11.1.2 构建不依赖Spring的Hibernate代码</h5>
+<ol>
+<li>使用上下文Session会直接将Hibernate SessionFactory装配到Repository中，并使用它来获取Session。</li>
+</ol>
+<pre><code class="language-java">@Repository
+public class HibernateSpitterRepository implements SpitterRepository {
+    private SessionFactory sessionFactory;
+    @Inject
+    public HibernateSpitterRepository(SessionFatory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
+    private Session currentSession() {
+        return sessionFactory.getCurrentSession();
+    }
+
+    public long count() {
+        return findAll().size();
+    }
+
+    public Spitter save(Spitter spitter) {
+        Serializable id = currentSession().save(spitter);
+        return new Spitter((Long) id,
+                spitetr.getUsername(),
+                spitter.getPassword(),
+                spitter.getFullname(),
+                spitter.getEmail(),
+                spitter.isUpdateByEmail());
+    }
+
+    public Spitter findOne(long id) {
+        return (Spitter) currentSession().get(Spitter.class, id);
+    }
+
+    public Spitter findByUsername(String username) {
+        return (Spitter) currentSession()
+            .createCretirai(Spitter.class)
+            .add(Retrictions.eq(&quot;username&quot;, username))
+            .list().get(0);
+    }
+
+    public List&lt;Spitter&gt; findAll() {
+        return (List&lt;Spitter&gt;) currentSession()
+            .createCriteria(Spitter.class).list;
+    }
+}
+</code></pre>
+<ol start="2">
+<li>
+<p>一些代码注解</p>
+<ul>
+<li>
+<p>@Inject注解让Spring自动将一个SessionFactory注入到HibernateSpitterRepository的sessionFactory中。</p>
+</li>
+<li>
+<p>类上使用了@Repository注解，一是为了让他被Spring组件扫描扫描到，而不用明确声明这个HibernateSpitterRepository bean，只要他在组件扫描所涵盖的包中；另外一个作用是，为不使用Hibernate 模板而使用Session的Repository添加异常转换功能。我们需要在Spring context中添加一个PersistenceExceptionTranslationPostProcessor bean：</p>
+<pre><code class="language-java">@Bean
+public BeanPostProcessor persistenceTranslation() {
+  return new PersistenceExceptionTranslationPostProcessor();
+}
+</code></pre>
+<p>他会在拥有@Repository注解的类上添加一个通知器，这样就会捕获平台相关的异常并以Spring非检查型数据访问异常重新抛出。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="112-spring与java持久化api">11.2 Spring与Java持久化API</h4>
+<h5 id="1121-配置实体管理工厂">11.2.1 配置实体管理工厂</h5>
+<ol>
+<li>基于JPA的应用程序需要使用EntityManagerFactory的实例来获取EntityManager实例。</li>
+<li>JPA定义了两种
+<ol>
+<li>应用程序管理类型：程序负责打开关闭实体管理器并在事务中对其进行控制。</li>
+<li>容器管理类型：实体管理器由JavaEE创建和管理。</li>
+</ol>
+</li>
+<li>区别：配置和管理方式
+<ul>
+<li>通过应用程序控制：配置在persistence.xml中，避免了应用程序每次使用都需要定义，直接从配置文件获取。
+<ul>
+<li>persistence.xml 的作用在于定义一个或多个<strong>持久化单元</strong>。持久化单元是同一个数据源下的一个或多个持久化类。</li>
+</ul>
+</li>
+<li>通过容器</li>
+</ul>
+</li>
+</ol>
+<h5 id="1122-编写基于jpa的repository">11.2.2 编写基于JPA的Repository</h5>
+<ol>
+<li>
+<p>不依赖Spring构建JPA Repository</p>
+<pre><code class="language-java">package com.habuma.spittr.persistence;
+
+import java.util.List;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
+import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import com.habuma.spittr.domain.Spitter;
+import com.habuma.spittr.domain.Spittle;
+
+@Repository
+@Transactional
+public class JpsSpitterRepository implements SpitterRepository {
+    @PersistenceUnit
+    private EntityManagerFactory emf;
+    
+    pubic void addSpitter(Spitter spitter) {
+        emf.createEntityManager().persist(spitter);
+    }
+    
+    public Spitter getSpitterById(long id) {
+        return emf.createEntityManager().find(Spitter.class, id);
+    }
+    
+    public void saveSpitter(Spitter spitter) {
+        emf.createEntityManager().merge(spitter);
+    }
+    
+    
+    ...
+}
+</code></pre>
+<ol>
+<li>EntityManagerFactory使用了@PersistenceUnit注解，Spring会将它注入到Repository中以用来创建EntityManager。</li>
+<li>EntityManager每次使用都需要创建，但是有不是线程安全的，所以也不适合注入为一个单例bean。</li>
+</ol>
+</li>
+<li>
+<p>利用@PersistenceContext注解</p>
+<pre><code class="language-java">package com.habuma.spittr.persistence;
+
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import com.habuma.spittr.domain.Spitter;
+import com.habuma.spittr.domain.Spittle;
+
+
+@Repository
+@Transactional
+public class JpsSpitterRepository implements SpitterRepository {
+    @PersistenceContext
+    private EntityManager em;
+    
+    public void addSpitter(Spitter spitter) {
+        em.persist(spitter);
+    }
+    
+    public Spitter getSpitterById(long id) {
+        return em.find(Spitter.class, id);
+    }
+    
+    public void saveSpitter(Spitter spitter) {
+        em.merge(spitter);
+    }
+    
+    ...
+}
+</code></pre>
+<ol>
+<li>@PersistenceContext并不会真正注入EntityManager，他没有给Repository一个EntityManager，而是给了一个EntityManager的代理。真正的EntityManager是和当前事务关联的那一个。这样就实现了线程安全。</li>
+</ol>
+</li>
+<li>
+<p>@PersistenceUnit 和 @PersistenceContext 并不是 Spring 的注解，它们是由 JPA 规范提供的.</p>
+</li>
+<li>
+<p>Transactional注解表明这个Repository中的持久化方法是在事务上下文中执行。</p>
+</li>
+</ol>
+<h4 id="113-借助spring-data实现自动化的jparepository">11.3 借助Spring Data实现自动化的JPARepository</h4>
+<ol>
+<li>
+<p>像addSpitter这种方法，其中除了操作的对象不同，重复的操作和方法CRUD都需要重写很多遍在一些规模大点的程序中。</p>
+</li>
+<li>
+<p>借助Spring Data，以接口定义的方式创建Repository</p>
+<pre><code class="language-java">public interface SpitterRepository extends JpsRepository&lt;Spitter, Long&gt; {
+}
+</code></pre>
+</li>
+<li>
+<p>通过配置xml，会自动实现这个Repository接口。在Spring的应用上下文创建的时候生成的。包含了继承自 JpaRepository、PagingAndSortingRepository 和 CrudRepository 的 18 个方法。</p>
+</li>
+</ol>
+<h5 id="1131-定义查询方法">11.3.1 定义查询方法</h5>
+<ol>
+<li>
+<p>通过方法签名，让Spring Data解析。</p>
+<p>方法名 findByUsername 确定该方法需要根据 username 属性相匹配来查找 Spitter，而 username 是作为参数传递到方法中来的。另外，因为在方法签名中定义了该方法要返回一个 Spitter 对象，而不是一个集合，因此它只会查找一个 username 属性匹配的 Spitter。</p>
+<p>Repository 方法是由一个动词、一个可选的主题（Subject）、关键词 <em>By</em> 以及一个断言所组成。在 findByUsername() 这个样例中，动词是 find，断言是 <em>Username</em>，主题并没有指定，暗含的主题是 Spitter。</p>
+<figure data-type="image" tabindex="1"><img src="https://702021806-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-LmcjU5gG__lBrRbUxBO%2F-LnMWbXigjNP-2gasHPm%2F-LnMYIG8SstGu6NGX-fm%2F11.1%20repository%20%E6%96%B9%E6%B3%95.jpg?alt=media&amp;token=0f7ad0fc-e579-4a8f-b983-5a5daa669ceb" alt="img" loading="lazy"></figure>
+</li>
+<li>
+<p>大部分场景，主题会被省略。要查询的对象类型是通过如何参数化JpaRepository接口来确定。</p>
+<p>在省略主题的时候，有一种例外情况。如果主题的名称以 Distinct 开头的话，那么在生成查询的时候会确保所返回结果集中不包含重复记录。</p>
+</li>
+<li>
+<p>断言限制了结果集的属性</p>
+<ul>
+<li>IsAfter、After、IsGreaterThan、GreaterThan</li>
+<li>IsGreaterThanEqual、GreaterThanEqual</li>
+<li>IsBefore、Before、IsLessThan、LessThan</li>
+<li>IsLessThanEqual、LessThanEqual</li>
+<li>IsBetween、Between</li>
+<li>IsNull、Null IsNotNull、NotNull</li>
+<li>IsIn、In IsNotIn、NotIn</li>
+<li>IsStartingWith、StartingWith、StartsWith</li>
+<li>IsEndingWith、EndingWith、EndsWith</li>
+<li>IsContaining、Containing、Contains</li>
+<li>IsLike、Like</li>
+<li>IsNotLike、NotLike</li>
+<li>IsTrue、True</li>
+<li>IsFalse、False</li>
+<li>Is、Equals</li>
+<li>IsNot、Not</li>
+</ul>
+</li>
+<li>
+<p>要处理 String 类型的属性时，条件中可能还会包含 IgnoringCase 或 IgnoresCase，这样在执行对比的时候就会不再考虑字符是大写还是小写</p>
+<pre><code class="language-java">List&lt;Spitter&gt; readByFirstnameOrLastname(String first, String last);
+</code></pre>
+<pre><code class="language-java">List&lt;Spitter&gt; readByFirstnameIgnoringCaseOrLastnameIgnoringCase(String first, String last);
+</code></pre>
+<pre><code class="language-java">List&lt;Spitter&gt; readByFirstnameOrLastnameAllIgnoresCase(String first, String last);
+</code></pre>
+</li>
+<li>
+<p>我们还可以在方法名称的结尾处添加 OrderBy实现排序结果。</p>
+<pre><code class="language-java">List&lt;Spitter&gt; readByFirstnameOrLastnameOrderByLastnameAsc(String first, String last);
+</code></pre>
+</li>
+</ol>
+<h5 id="1132-声明自定义查询">11.3.2 声明自定义查询</h5>
+<ol>
+<li>
+<p>有时这个语义解析集合还是不能满足需求，我们就会通过@Query自定义查询。</p>
+</li>
+<li>
+<p>例如想找全部gmail邮箱，我们按照原来的DSL可以使用 findByEmailLike()然后传入“%gmail.com” .</p>
+</li>
+<li>
+<p>如果能够定义一个更加便利的方法：<code>List&lt;Spitter&gt; findAllGmailSpitters();</code>，但是DSL不能解析会抛出异常。</p>
+</li>
+<li>
+<p>自定义：</p>
+<pre><code class="language-java">@Query(&quot;select s from Spitter s where s.email like '%gmail.com'&quot;)
+List&lt;Spitter&gt; findAllGmailSpitters();
+</code></pre>
+</li>
+<li>
+<p>或者当方法名因为需要满足语义解析而特别长的时候，也最好使用一个短名字，并定义query。</p>
+</li>
+</ol>
+<h5 id="1133-混合自定义的功能">11.3.3 混合自定义的功能</h5>
+<ol>
+<li>
+<p>如果你需要做的事情无法通过 Spring Data JPA 来实现，那就必须要在一个比 Spring Data JPA 更低的层级上使用 JPA.</p>
+</li>
+<li>
+<p>假设我们需要在 SpitterRepository 中添加一个方法，发表 Spittle 数量在 10,000 及以上的 Spitter 将会更新为 Elite 状态。使用 Spring Data JPA 的方法命名约定或使用 @Query 均没有办法声明这样的方法。最为可行的方案是使用如下的 eliteSweep() 方法。</p>
+<pre><code class="language-java">public class SpitterRepositoryImpl implements SpitterSweeper {
+    @PersistenceContext
+    private ENtityManager em;
+    
+    public int eliteSweep() {
+        STring update = 
+            &quot;UPDATE Spitter spitter &quot; +
+      		&quot;SET spitter.status = 'Elite' &quot; +
+      		&quot;WHERE spitter.status = 'Newbie' &quot; +
+      		&quot;AND spitter.id IN (&quot; +
+      		&quot;SELECT s FROM Spitter s WHERE (&quot; +
+      		&quot;  SELECT COUNT(spittles) FROM s.spittles spittles) &gt; 10000&quot; +
+      		&quot;)&quot;;
+        return em.createQuery(update).executeUpdate();
+    }
+}
+</code></pre>
+</li>
+<li>
+<p>SpitterRepositoryImpl 并没有实现 SpitterRepository 接口。Spring Data JPA 负责实现这个接口。SpitterRepositoryImpl（将它与 Spring Data 的 Repository 关联起来的是它的名字）实现了 SpitterSweeper 接口.(当 Spring Data JPA 为 Repository 接口生成实现的时候，它还会查找名字与接口相同，并且添加了 Impl 后缀的一个类)</p>
+</li>
+<li>
+<p>我们还需要确保 eliteSweep() 方法会被声明在 SpitterRepository 接口中。要实现这一点，避免代码重复的简单方式就是修改 SpitterRepository，让它扩展 SpitterSweeper。</p>
+</li>
+</ol>
+<h4 id="114-小结">11.4 小结</h4>
+<h2 id="第12章-使用nosql数据库">第12章 使用NoSQL数据库</h2>
+<p>略</p>
+<h2 id="第13章-缓存数据">第13章 缓存数据</h2>
+<p>略</p>
+<h2 id="第14章-保护方法应用">第14章 保护方法应用</h2>
+<p>略</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E7%AC%AC%E4%B8%89%E9%83%A8%E5%88%86-%E5%90%8E%E7%AB%AF%E4%B8%AD%E7%9A%84-spring">第三部分　后端中的 Spring</a>
+<ul>
+<li><a href="#%E7%AC%AC10%E7%AB%A0-%E9%80%9A%E8%BF%87spring%E5%92%8Cjdbc%E5%BE%81%E6%9C%8D%E6%95%B0%E6%8D%AE%E5%BA%93">第10章 通过Spring和JDBC征服数据库</a>
+<ul>
+<li><a href="#101-spring%E7%9A%84%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE%E5%93%B2%E5%AD%A6">10.1 Spring的数据访问哲学</a>
+<ul>
+<li><a href="#1011-%E4%BA%86%E8%A7%A3spring%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE%E7%9A%84%E5%BC%82%E5%B8%B8%E4%BD%93%E7%B3%BB">10.1.1 了解Spring数据访问的异常体系</a></li>
+<li><a href="#1012-%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE%E6%A8%A1%E6%9D%BF%E5%8C%96">10.1.2 数据访问模板化</a></li>
+</ul>
+</li>
+<li><a href="#102-%E9%85%8D%E7%BD%AE%E6%95%B0%E6%8D%AE%E6%BA%90">10.2 配置数据源</a>
+<ul>
+<li><a href="#1021-%E4%BD%BF%E7%94%A8jndi%E6%95%B0%E6%8D%AE%E6%BA%90">10.2.1 使用JNDI数据源</a></li>
+<li><a href="#1022-%E4%BD%BF%E7%94%A8%E6%95%B0%E6%8D%AE%E6%BA%90%E8%BF%9E%E6%8E%A5%E6%B1%A0">10.2.2 使用数据源连接池</a></li>
+<li><a href="#1023-%E5%9F%BA%E4%BA%8Ejdbc%E9%A9%B1%E5%8A%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E6%BA%90">10.2.3 基于JDBC驱动的数据源</a></li>
+<li><a href="#1024-%E4%BD%BF%E7%94%A8%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%9A%84%E6%95%B0%E6%8D%AE%E6%BA%90">10.2.4 使用嵌入式的数据源</a></li>
+<li><a href="#1025-%E4%BD%BF%E7%94%A8profile%E9%80%89%E6%8B%A9%E6%95%B0%E6%8D%AE%E6%BA%90">10.2.5 使用profile选择数据源</a></li>
+</ul>
+</li>
+<li><a href="#103-%E5%9C%A8spring%E4%BD%BF%E7%94%A8jdbc">10.3 在Spring使用JDBC</a>
+<ul>
+<li><a href="#1031-%E5%BA%94%E5%AF%B9%E5%A4%B1%E6%8E%A7%E7%9A%84jdbc%E4%BB%A3%E7%A0%81">10.3.1 应对失控的JDBC代码</a></li>
+<li><a href="#1032-%E4%BD%BF%E7%94%A8jdbc%E6%A8%A1%E6%9D%BF">10.3.2 使用JDBC模板</a></li>
+</ul>
+</li>
+<li><a href="#104-%E5%B0%8F%E7%BB%93">10.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC11%E7%AB%A0-%E4%BD%BF%E7%94%A8%E5%AF%B9%E8%B1%A1-%E5%85%B3%E7%B3%BB%E6%98%A0%E5%B0%84%E6%8C%81%E4%B9%85%E5%8C%96%E6%95%B0%E6%8D%AE">第11章 使用对象-关系映射持久化数据</a><br>
+*
+<ul>
+<li><a href="#111-%E5%9C%A8spring%E4%B8%AD%E9%9B%86%E6%88%90hibernate">11.1 在Spring中集成Hibernate</a>
+<ul>
+<li><a href="#1111-%E5%A3%B0%E6%98%8Ehibernate%E7%9A%84session%E5%B7%A5%E5%8E%82">11.1.1 声明Hibernate的Session工厂</a></li>
+<li><a href="#1112-%E6%9E%84%E5%BB%BA%E4%B8%8D%E4%BE%9D%E8%B5%96spring%E7%9A%84hibernate%E4%BB%A3%E7%A0%81">11.1.2 构建不依赖Spring的Hibernate代码</a></li>
+</ul>
+</li>
+<li><a href="#112-spring%E4%B8%8Ejava%E6%8C%81%E4%B9%85%E5%8C%96api">11.2 Spring与Java持久化API</a>
+<ul>
+<li><a href="#1121-%E9%85%8D%E7%BD%AE%E5%AE%9E%E4%BD%93%E7%AE%A1%E7%90%86%E5%B7%A5%E5%8E%82">11.2.1 配置实体管理工厂</a></li>
+<li><a href="#1122-%E7%BC%96%E5%86%99%E5%9F%BA%E4%BA%8Ejpa%E7%9A%84repository">11.2.2 编写基于JPA的Repository</a></li>
+</ul>
+</li>
+<li><a href="#113-%E5%80%9F%E5%8A%A9spring-data%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84jparepository">11.3 借助Spring Data实现自动化的JPARepository</a>
+<ul>
+<li><a href="#1131-%E5%AE%9A%E4%B9%89%E6%9F%A5%E8%AF%A2%E6%96%B9%E6%B3%95">11.3.1 定义查询方法</a></li>
+<li><a href="#1132-%E5%A3%B0%E6%98%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E6%9F%A5%E8%AF%A2">11.3.2 声明自定义查询</a></li>
+<li><a href="#1133-%E6%B7%B7%E5%90%88%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E5%8A%9F%E8%83%BD">11.3.3 混合自定义的功能</a></li>
+</ul>
+</li>
+<li><a href="#114-%E5%B0%8F%E7%BB%93">11.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC12%E7%AB%A0-%E4%BD%BF%E7%94%A8nosql%E6%95%B0%E6%8D%AE%E5%BA%93">第12章 使用NoSQL数据库</a></li>
+<li><a href="#%E7%AC%AC13%E7%AB%A0-%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE">第13章 缓存数据</a></li>
+<li><a href="#%E7%AC%AC14%E7%AB%A0-%E4%BF%9D%E6%8A%A4%E6%96%B9%E6%B3%95%E5%BA%94%E7%94%A8">第14章 保护方法应用</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/Spring实战-第四版-part2-SpringMVC构建Web应用实例/">
+              <h3 class="post-title">
+                Spring实战(第四版)- part2(SpringMVC构建Web应用实例)
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

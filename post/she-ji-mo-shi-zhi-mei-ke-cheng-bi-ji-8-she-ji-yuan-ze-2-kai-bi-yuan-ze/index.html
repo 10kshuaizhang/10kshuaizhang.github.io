@@ -1,0 +1,560 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>设计模式之美-课程笔记8-设计原则2-开闭原则(OCP) | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="设计模式之美-课程笔记8-设计原则2-开闭原则(OCP) | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="理论二：如何做到“对扩展开放、修改关闭”？扩展和修改各指什么？
+开闭原则比较难理解，因为关于扩展、修改的定义比较难定义。什么样算遵守，什么样算违背了开闭原则。
+这条原则是关于扩展性，而扩展性是衡量代码质量很重要的标准。23种经典设计模式中，..." />
+    <meta name="keywords" content="OOD,Design Pattern" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              设计模式之美-课程笔记8-设计原则2-开闭原则(OCP)
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-06-18
+              </span>
+              <span>
+                13 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/sSLhqMzY-/" class="post-tag">
+                  # OOD
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/d2JaGqwpzA/" class="post-tag">
+                  # Design Pattern
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="理论二如何做到对扩展开放-修改关闭扩展和修改各指什么">理论二：如何做到“对扩展开放、修改关闭”？扩展和修改各指什么？</h2>
+<p>开闭原则比较难理解，因为关于扩展、修改的定义比较难定义。什么样算遵守，什么样算违背了开闭原则。</p>
+<p>这条原则是关于扩展性，而扩展性是衡量代码质量很重要的标准。23种经典设计模式中，大部分设计模式都是为了解决代码的扩展性问题存在的。</p>
+<h3 id="如何理解对扩展开放-修改关闭">如何理解“对扩展开放、修改关闭”？</h3>
+<ol>
+<li>
+<p>开闭原则的英文全称是Open Closed Principle，OCP。他的英文描述是software entities(modules, classes, functions, etc.) should be open for extension, but closed for modification. 软件实体（模块、类、方法）应该对扩展开放，对修改关闭。</p>
+<ol>
+<li>说得明白点就是：添加一个新的功能应该是在已有代码的基础上扩展代码（新增模块、类、方法），而非修改已有代码（修改模块、类、方法）。</li>
+</ol>
+</li>
+<li>
+<p>举个例子🌰</p>
+<ol>
+<li>
+<p>作者给了一段API接口监控告警的代码。其中AlterRule存储警告规则，可以自由设置。Notification 是告警通知类，支持邮件、短信、微信、手机等多种通知渠道。NotificationEmergencyLevel 表示通知的紧急程度，包括 SEVERE（严重）、URGENCY（紧急）、NORMAL（普通）、TRIVIAL（无关紧要），不同的紧急程度对应不同的发送渠道。</p>
+<pre><code class="language-java">public class Alert {
+  private AlertRule rule;
+  private Notification notification;
+
+  public Alert(AlertRule rule, Notification notification) {
+    this.rule = rule;
+    this.notification = notification;
+  }
+
+  public void check(String api, long requestCount, long errorCount, long durationOfSeconds) {
+    long tps = requestCount / durationOfSeconds;
+    if (tps &gt; rule.getMatchedRule(api).getMaxTps()) {
+      notification.notify(NotificationEmergencyLevel.URGENCY, &quot;...&quot;);
+    }
+    if (errorCount &gt; rule.getMatchedRule(api).getMaxErrorCount()) {
+      notification.notify(NotificationEmergencyLevel.SEVERE, &quot;...&quot;);
+    }
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>现在我们要增加一个功能，当每秒钟接口<u>超时请求个数超过最大阈值</u>，也要触发报警。修改点在于：</p>
+<ol>
+<li>check的入参要增加超时请求个数；</li>
+<li>check中新增相应的判断逻辑。</li>
+</ol>
+<pre><code class="language-java">public class Alert {
+  // ...省略AlertRule/Notification属性和构造函数...
+  
+  // 改动一：添加参数timeoutCount
+  public void check(String api, long requestCount, long errorCount, long timeoutCount, long durationOfSeconds) {
+    long tps = requestCount / durationOfSeconds;
+    if (tps &gt; rule.getMatchedRule(api).getMaxTps()) {
+      notification.notify(NotificationEmergencyLevel.URGENCY, &quot;...&quot;);
+    }
+    if (errorCount &gt; rule.getMatchedRule(api).getMaxErrorCount()) {
+      notification.notify(NotificationEmergencyLevel.SEVERE, &quot;...&quot;);
+    }
+    // 改动二：添加接口超时处理逻辑
+    long timeoutTps = timeoutCount / durationOfSeconds;
+    if (timeoutTps &gt; rule.getMatchedRule(api).getMaxTimeoutTps()) {
+      notification.notify(NotificationEmergencyLevel.URGENCY, &quot;...&quot;);
+    }
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>这样的设计和修改的问题在于<u>所有使用到这个方法的地方都要修改。所有的单测也需要相应的修改。</u></p>
+</li>
+<li>
+<p>这样的改动是基于“修改”来实现的。我们将遵循开闭原则，以易扩展的方式设计和实现修改。</p>
+</li>
+<li>
+<p>首先重构一下之前的Alert代码</p>
+<ol>
+<li>将check的多个入参等装成ApiStateInfo类；</li>
+<li>引入handler的概念，将if判断逻辑分散在各个handler中。</li>
+</ol>
+<pre><code class="language-java">public class Alert {
+  private List&lt;AlertHandler&gt; alertHandlers = new ArrayList&lt;&gt;();
+  
+  public void addAlertHandler(AlertHandler alertHandler) {
+    this.alertHandlers.add(alertHandler);
+  }
+
+  public void check(ApiStatInfo apiStatInfo) {
+    for (AlertHandler handler : alertHandlers) {
+      handler.check(apiStatInfo);
+    }
+  }
+}
+
+public class ApiStatInfo {//省略constructor/getter/setter方法
+  private String api;
+  private long requestCount;
+  private long errorCount;
+  private long durationOfSeconds;
+}
+
+public abstract class AlertHandler {
+  protected AlertRule rule;
+  protected Notification notification;
+  public AlertHandler(AlertRule rule, Notification notification) {
+    this.rule = rule;
+    this.notification = notification;
+  }
+  public abstract void check(ApiStatInfo apiStatInfo);
+}
+
+public class TpsAlertHandler extends AlertHandler {
+  public TpsAlertHandler(AlertRule rule, Notification notification) {
+    super(rule, notification);
+  }
+
+  @Override
+  public void check(ApiStatInfo apiStatInfo) {
+    long tps = apiStatInfo.getRequestCount()/ apiStatInfo.getDurationOfSeconds();
+    if (tps &gt; rule.getMatchedRule(apiStatInfo.getApi()).getMaxTps()) {
+      notification.notify(NotificationEmergencyLevel.URGENCY, &quot;...&quot;);
+    }
+  }
+}
+
+public class ErrorAlertHandler extends AlertHandler {
+  public ErrorAlertHandler(AlertRule rule, Notification notification){
+    super(rule, notification);
+  }
+
+  @Override
+  public void check(ApiStatInfo apiStatInfo) {
+    if (apiStatInfo.getErrorCount() &gt; rule.getMatchedRule(apiStatInfo.getApi()).getMaxErrorCount()) {
+      notification.notify(NotificationEmergencyLevel.SEVERE, &quot;...&quot;);
+    }
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>使用Alert。ApplicationContext 是一个单例类，负责 Alert 的创建、组装（alertRule 和 notification 的依赖注入）、初始化（添加 handlers）工作。单例相当于给Alert feature的调用提供一个抓手、入口。</p>
+<pre><code class="language-java">public class ApplicationContext {
+  private AlertRule alertRule;
+  private Notification notification;
+  private Alert alert;
+  
+  public void initializeBeans() {
+    alertRule = new AlertRule(/*.省略参数.*/); //省略一些初始化代码
+    notification = new Notification(/*.省略参数.*/); //省略一些初始化代码
+    alert = new Alert();
+    alert.addAlertHandler(new TpsAlertHandler(alertRule, notification));
+    alert.addAlertHandler(new ErrorAlertHandler(alertRule, notification));
+  }
+  public Alert getAlert() { return alert; }
+
+  // 饿汉式单例
+  private static final ApplicationContext instance = new ApplicationContext();
+  private ApplicationContext() {
+    initializeBeans();
+  }
+  public static ApplicationContext getInstance() {
+    return instance;
+  }
+}
+
+public class Demo {
+  public static void main(String[] args) {
+    ApiStatInfo apiStatInfo = new ApiStatInfo();
+    // ...省略设置apiStatInfo数据值的代码
+    ApplicationContext.getInstance().getAlert().check(apiStatInfo);
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>再进行之前说的改动，对于每秒钟接口超时请求个数超过某个最大阈值就告警。</p>
+<ol>
+<li>给ApiStatInfo类增加一个属性：超时请求个数timeOutCount;</li>
+<li>增加一个handler，在这个handler中的check方法实现这个告警规则；</li>
+<li>再initializebean（application context)的时候给单例的alter添加上这个handler。</li>
+<li>使用alter的时候，给check函数的入参apiStatInfo对象设置相应的timeOutCount值。</li>
+</ol>
+<p>这样基于扩展增加了新的handler，不需要改动原来的check逻辑，也只需要为新的handler增加单测，以前的不会失效。</p>
+<pre><code class="language-java">public class Alert { // 代码未改动... }
+public class ApiStatInfo {//省略constructor/getter/setter方法
+  private String api;
+  private long requestCount;
+  private long errorCount;
+  private long durationOfSeconds;
+  private long timeoutCount; // 改动一：添加新字段
+}
+public abstract class AlertHandler { //代码未改动... }
+public class TpsAlertHandler extends AlertHandler {//代码未改动...}
+public class ErrorAlertHandler extends AlertHandler {//代码未改动...}
+// 改动二：添加新的handler
+public class TimeoutAlertHandler extends AlertHandler {//省略代码...}
+
+public class ApplicationContext {
+  private AlertRule alertRule;
+  private Notification notification;
+  private Alert alert;
+  
+  public void initializeBeans() {
+    alertRule = new AlertRule(/*.省略参数.*/); //省略一些初始化代码
+    notification = new Notification(/*.省略参数.*/); //省略一些初始化代码
+    alert = new Alert();
+    alert.addAlertHandler(new TpsAlertHandler(alertRule, notification));
+    alert.addAlertHandler(new ErrorAlertHandler(alertRule, notification));
+    // 改动三：注册handler
+    alert.addAlertHandler(new TimeoutAlertHandler(alertRule, notification));
+  }
+  //...省略其他未改动代码...
+}
+
+public class Demo {
+  public static void main(String[] args) {
+    ApiStatInfo apiStatInfo = new ApiStatInfo();
+    // ...省略apiStatInfo的set字段代码
+    apiStatInfo.setTimeoutCount(289); // 改动四：设置tiemoutCount值
+    ApplicationContext.getInstance().getAlert().check(apiStatInfo);
+}
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="修改代码意味着违反开闭原则吗">修改代码意味着违反开闭原则吗</h3>
+<p>上述修改的1/3/4不都是在修改了原来的代码吗？让我们一个个分析：</p>
+<ol>
+<li>
+<p>往ApiStateInfo中增加新的属性timeOutCount</p>
+<ul>
+<li>
+<p>我们不仅增加了新的属性，还增加了getter、Setter。</p>
+</li>
+<li>
+<p>在”类“的粒度上我们是在修改类，增加了新的属性；但是在”方法“的粒度上，我们没有改变现有的其他方法，所以这个增加又可以是拓扩展</p>
+</li>
+<li>
+<p>我们不需要纠结（我认同，不需要纠结概念）他是修改还是扩展。回到这个原则的设计初衷就是**<u>没有破坏原有代码的运行，没有破坏单测。</u>**</p>
+</li>
+</ul>
+</li>
+<li>
+<p>改动3、4。虽然在各个层面都是修改，但是他们是不可避免的，<u>是可以接受的。</u></p>
+<ul>
+<li>
+<p>我们要认识到，添加一个新功能，不可能任何模块、类、方法的代码都不“修改”，这个是做不到的。类需要创建、组装、并且做一些初始化操作，才能构建成可运行的的程序，这部分代码的修改是在所难免的。我们要做的是尽量让修改操作更集中、更少、更上层，尽量让最核心、最复杂的那部分逻辑代码满足开闭原则。</p>
+<blockquote>
+<p>细枝末节因为java的语法和代码设计肯定需要增强和修改，但是原来的核心逻辑是没有动的，就是增加了一个handler处理新的逻辑。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="如何做到对扩展开放-修改关闭">如何做到”对扩展开放、修改关闭“</h3>
+<ol>
+<li>
+<p>我一开始确实想不到设计handler。笔者也说了慢慢积累经验。</p>
+</li>
+<li>
+<p><strong>时刻具备扩展意识，抽象意识，封装意识</strong></p>
+</li>
+<li>
+<p>在写代码的时候，要花时间多往后思考这段代码可能会有哪些需求变更、如何设计代码结构，事先留好扩展点，以便在未来需求变更时候不需要改动代码整体结构。做到最小代码设计改动情况下，新代码很灵活的插入到扩展点。</p>
+</li>
+<li>
+<p>在识别代码的可变部分和不可变部分后，我们要将可变部分封装起来，隔离变化，提供抽象化的不可变接口给上层使用。</p>
+</li>
+<li>
+<p>在众多设计原则，思想，模式中，最常用来提高代码扩展性的方法有：多态、依赖注入、基于接口而非实现编程，以及大部分设计模式（后面详细说）。</p>
+<ol>
+<li>
+<p>多态、依赖注入、基于接口而非实现编程都是同一个哲学（或者说思路），只是从不同角度阐述。</p>
+</li>
+<li>
+<p>来个例子：我们通过Kafka发送异步消息。我们在这个功能的开发中我们要学会将其抽象成一组跟具体消息队列无关的异步消息接口。以便我们在以后用RabbitMQ替换Kafka的时候很方便。</p>
+<pre><code class="language-java">// 这一部分体现了抽象意识
+public interface MessageQueue { //... }
+public class KafkaMessageQueue implements MessageQueue { //... }
+public class RocketMQMessageQueue implements MessageQueue {//...}
+
+public interface MessageFromatter { //... }
+public class JsonMessageFromatter implements MessageFromatter {//...}
+public class ProtoBufMessageFromatter implements MessageFromatter {//...}
+
+public class Demo {
+  private MessageQueue msgQueue; // 基于接口而非实现编程
+  public Demo(MessageQueue msgQueue) { // 依赖注入
+    this.msgQueue = msgQueue;
+  }
+  
+  // msgFormatter：多态、依赖注入
+  public void sendNotification(Notification notification, MessageFormatter msgFormatter) {
+    //...    
+  }
+}
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="如何在项目中灵活应用这个原则">如何在项目中灵活应用这个原则？</h3>
+<ol>
+<li><strong><u>如何识别扩展点</u></strong>：
+<ol>
+<li>如果是业务导向的系统，我们需要尽可能了解业务，能够知道当下未来可能需要支持的业务需求。</li>
+<li>如果是跟业务无关的偏底层的需求，比如框架组件类库等，你需要了解他们可能会如何被使用，打算添加什么功能，使用者未来可能会有什么需求？</li>
+</ol>
+</li>
+<li>不过还是要适度，避免过度设计。</li>
+<li>所以对于一些比较确定的、短期能可能扩展，或者需求改动对代码结构影响比较大的情况，或者是实现成本不高的扩展点，在写代码的时候可以是先做扩展性设计。</li>
+<li>但是对于不确定未来要支持的需求，扩展比较复杂的扩展点，可以等需求驱动再去做通过重构的方式来支持扩展。</li>
+<li>扩展可能会和可读性冲突。Alert代码在考虑过扩展性之后的重构设计和理解上都增加了一些难度。我们需要做一些权衡。</li>
+</ol>
+<p>我之前对于一些好代码的理解单纯是DRY，也就是不重复的代码。这个思路没错但是现在看来有点初阶或者是浅显了。之前一个需求就是对于多个Object增加一个新的unique id，然后要对他们的格式和唯一性做校验。最开始的设计和实现是在每个Object的manager的save方法中去实现了这个validator，其实每个validator的视线逻辑大概有80%相似，但是操作的Object不同，校验逻辑大概有一些细微的差别。</p>
+<p>后面就在一到两周后有了点时间，在做这个function的test的时候做了重构，这次重构是针对的重复代码，把这些validation的逻辑从每个Object的manager中抽离出来，做了一个validator类，其中只有一个静态的validation方法，针对传进来的参数类型确定使用不同的校验细节的增减，这样一下子将代码集中，变得更好维护，而且也减少了代码量，提升了可读性。</p>
+<p>但当时review代码的同事就提出了一个建议就是说如果考虑到整个代码的可扩展性，以后如果还要给其他的object增加这个unique id以及类似的校验逻辑，还是会回来改这个validator。这样其实是违反了OCP。</p>
+<p>我当时其实想到了将所有的东西放进去一个validator的”弊端“：集中了修改。但是考虑到这个需求以后可能对于我们现有的object已经足够，以后增加其他的object（未知）。</p>
+<p>经过他的介绍，再加上又看了这个文章，比较清晰的意识到问题所在。</p>
+<p>如果要对那个代码重构，使其更加具有可扩展性，我之前同事说的是：”splitting it into a base class along with a set of different subclasses“。我理解或者说现在可以想到的：</p>
+<ol>
+<li>做一个抽象类包含通用的部分；</li>
+<li>每个不同的object去继承这个类，针对自己的逻辑增加特定方法；</li>
+<li>然后再在使用的地方调用这些方法即可；</li>
+</ol>
+<p>这样在增加其他的object需要使用类似的同样可以继承通用的部分，然后依靠多态在自己的xxxObjectValidator类中去实现自己的逻辑。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E7%90%86%E8%AE%BA%E4%BA%8C%E5%A6%82%E4%BD%95%E5%81%9A%E5%88%B0%E5%AF%B9%E6%89%A9%E5%B1%95%E5%BC%80%E6%94%BE-%E4%BF%AE%E6%94%B9%E5%85%B3%E9%97%AD%E6%89%A9%E5%B1%95%E5%92%8C%E4%BF%AE%E6%94%B9%E5%90%84%E6%8C%87%E4%BB%80%E4%B9%88">理论二：如何做到“对扩展开放、修改关闭”？扩展和修改各指什么？</a>
+<ul>
+<li><a href="#%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3%E5%AF%B9%E6%89%A9%E5%B1%95%E5%BC%80%E6%94%BE-%E4%BF%AE%E6%94%B9%E5%85%B3%E9%97%AD">如何理解“对扩展开放、修改关闭”？</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9%E4%BB%A3%E7%A0%81%E6%84%8F%E5%91%B3%E7%9D%80%E8%BF%9D%E5%8F%8D%E5%BC%80%E9%97%AD%E5%8E%9F%E5%88%99%E5%90%97">修改代码意味着违反开闭原则吗</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E5%81%9A%E5%88%B0%E5%AF%B9%E6%89%A9%E5%B1%95%E5%BC%80%E6%94%BE-%E4%BF%AE%E6%94%B9%E5%85%B3%E9%97%AD">如何做到”对扩展开放、修改关闭“</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%81%B5%E6%B4%BB%E5%BA%94%E7%94%A8%E8%BF%99%E4%B8%AA%E5%8E%9F%E5%88%99">如何在项目中灵活应用这个原则？</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/she-ji-mo-shi-zhi-mei-ke-cheng-bi-ji-7-she-ji-yuan-ze-1-solid/">
+              <h3 class="post-title">
+                设计模式之美-课程笔记7-设计原则1-单一职责(SRP)
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

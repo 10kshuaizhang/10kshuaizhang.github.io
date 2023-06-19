@@ -1,0 +1,396 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>265. Paint House II &amp;&amp; 256. Paint House | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="265. Paint House II &amp;&amp; 256. Paint House | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="问题
+256题是说，有一排房子，每个房子可以染三种颜色， 每个房子染每种颜色都有一个价格，问最少需要花多少钱
+限制是两个相同的颜色不能连着。
+解析
+这个题目一开始想的简单了，单纯没看到限制，以为是每个房子的染色最低价格相加即可。
+之后发现限..." />
+    <meta name="keywords" content="Dynamic Programming,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              265. Paint House II &amp;&amp; 256. Paint House
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-03-05
+              </span>
+              <span>
+                8 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/8XHIFnHCE/" class="post-tag">
+                  # Dynamic Programming
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="问题">问题</h2>
+<p>256题是说，有一排房子，每个房子可以染三种颜色， 每个房子染每种颜色都有一个价格，问最少需要花多少钱</p>
+<p>限制是两个相同的颜色不能连着。</p>
+<h2 id="解析">解析</h2>
+<p>这个题目一开始想的简单了，单纯没看到限制，以为是每个房子的染色最低价格相加即可。</p>
+<p>之后发现限制后，想了一下每个你在染完所有房子之前没办法知道他的最便宜的价格，来源于哪种组合（每个房子染什么颜色）。所以只能是从第一栋开始，染所有色的价格依次累加，到第二栋，你只有把所有可以刷的颜色的价格都算一遍，才能知道刷到当前这个房子，最便宜的是哪种方法。</p>
+<p>看到这里，又是当前的结果来源于前面的问题。动态规划走起。（现在联系一下，这个题目被一些解析归纳为网格问题确实是。网格是向右向下走，再加上向斜下方走）这个每次走其实也是有2种选择， 除了当前颜色的另外两种颜色。</p>
+<p>这个地方状态的定义来源于结果，即当前房子的最低价格，<code>dp[n]</code>，但是没法看到截止到之前房子刷某种颜色后总共要花多少钱，所以还要再加一个状态就是当前的房子刷了什么颜色。<code>dp[n][k]</code>。在256题里这个k是3，在第265题中其实就是将这个数字一般化了。两个题代码是一样的套路。</p>
+<p>初始化依然是所有数值先置为最大值，第一栋房子不需要考虑前面的，所以截止到他，染每种颜色的价格就是他本身的价格。</p>
+<p>状态转移公式可以根据上文的解析，得出:</p>
+<pre><code class="language-java">if (x != j) {
+    sums[i][j] = Math.min(sums[i][j], sums[i-1][x] + costs[i][j]);
+}
+</code></pre>
+<p>在当前的颜色不等于前一个的颜色的情况下，都可以<strong>选择</strong>。遍历所有的可能。</p>
+<h2 id="代码">代码</h2>
+<h3 id="265">265</h3>
+<pre><code class="language-java">class Solution {
+    public int minCostII(int[][] costs) {
+        int n = costs.length;
+        int k = costs[0].length;
+        
+        int[][] sums = new int[n][k];
+        for (int[] sum : sums) {
+            Arrays.fill(sum, Integer.MAX_VALUE);
+        }
+        
+        
+        for (int i = 0; i &lt; k; i++) {
+            sums[0][i] = costs[0][i];
+        }
+        
+        for (int i = 1; i &lt; n; i++) {
+            for (int j = 0; j &lt; k; j++) {
+                for (int x = 0; x &lt; k; x++) {
+                    if (x != j) {
+                        sums[i][j] = Math.min(sums[i][j], sums[i-1][x] + costs[i][j]);
+                    }
+                }
+            }
+        }
+        
+        int res = Integer.MAX_VALUE;
+        for (int i = 0; i &lt; k; i++) {
+            res = Math.min(res, sums[n-1][i]);
+        }
+        return res;
+    }
+}
+</code></pre>
+<h2 id="256">256</h2>
+<p>这个题目因为k=3， 直接展开也可以，我就展开写了。</p>
+<pre><code class="language-java">class Solution {
+    public int minCost(int[][] costs) {
+        if (costs == null || costs.length == 0 || costs[0] == null || costs[0].length == 0) return Integer.MAX_VALUE;
+        int m = costs.length;
+        int[][] sums = new int[m][3];
+        
+        sums[0][0] = costs[0][0];
+        sums[0][1] = costs[0][1];
+        sums[0][2] = costs[0][2];
+        
+        for (int i = 1; i &lt; m; i++) {
+            sums[i][0] = Math.min(sums[i-1][1], sums[i-1][2]) + costs[i][0];
+            sums[i][1] = Math.min(sums[i-1][0], sums[i-1][2]) + costs[i][1];
+            sums[i][2] = Math.min(sums[i-1][1], sums[i-1][0]) + costs[i][2];
+        }
+        
+        return Math.min(sums[m-1][0], Math.min(sums[m-1][1], sums[m-1][2]));
+    }
+}
+</code></pre>
+<hr>
+<ol start="265">
+<li>Paint House II &amp;&amp; 256.</li>
+</ol>
+<h2 id="question">Question</h2>
+<p>Question 256 says that there is a row of houses, each house can be painted in three colors, each house has a price for each color, and asks how much it costs at least</p>
+<p>The restriction is that two of the same color cannot be in a row.</p>
+<h2 id="analysis">Analysis</h2>
+<p>At first, I thought it was a simple question, because I didn't see the limit and thought that the minimum price for each house could be added up.</p>
+<p>After I found the limit, I thought about how there is no way to know the cheapest price of each house before you dye all of them, from which combination (what color each house is dyed). So you can only start from the first house, dyeing all the colors in order to add up the price, to the second house, you can only count the price of all the colors that can be painted once, to know to paint to the current house, the cheapest is which method.</p>
+<p>See here, again, the current result comes from the previous question. Dynamic planning goes on. (Now connect the dots, this topic is summarized by some parsing as a grid problem is indeed. The grid is to the right and down, plus to the bottom of the slope.) This walk is actually 2 choices each time, in addition to the current color of the other two colors.</p>
+<p>The definition of the state of this place comes from the result, that is, the lowest price of the current house, <code>dp[n]</code>, but there is no way to see how much the house will cost in total after painting a certain color up to the previous one, so there is another state that is what color the current house is painted. <code>dp[n][k]</code>. In question 256 this k is 3, in question 265 it is actually a generalization of this number. The code is the same routine for both questions.</p>
+<p>The initialization is still all values first set to the maximum, the first house does not need to consider the previous, so as of him, the price of dyeing each color is his own price.</p>
+<p>The state transfer formula can be derived from the parsing above :</p>
+<pre><code class="language-java">if (x ! = j) {
+    sums[i][j] = Math.min(sums[i][j], sums[i-1][x] + costs[i][j]);
+}
+</code></pre>
+<p>In all cases where the current color is not equal to the color of the previous one, <strong>selection</strong> is possible. Iterate through all possibilities.</p>
+<h2 id="code">Code</h2>
+<h3 id="265-2">265</h3>
+<pre><code class="language-java">class Solution {
+    public int minCostII(int[][] costs) {
+        int n = costs.length;
+        int k = costs[0].length;
+        
+        int[][] sums = new int[n][k];
+        for (int[] sum : sums) {
+            Arrays.fill(sum, Integer.MAX_VALUE);
+        }
+        
+        
+        for (int i = 0; i &lt; k; i++) {
+            sums[0][i] = costs[0][i];
+        }
+        
+        for (int i = 1; i &lt; n; i++) {
+            for (int j = 0; j &lt; k; j++) {
+                for (int x = 0; x &lt; k; x++) {
+                    if (x ! = j) {
+                        sums[i][j] = Math.min(sums[i][j], sums[i-1][x] + costs[i][j]);
+                    }
+                }
+            }
+        }
+        
+        int res = Integer.MAX_VALUE;
+        for (int i = 0; i &lt; k; i++) {
+            res = Math.min(res, sums[n-1][i]);
+        }
+        return res;
+    }
+}
+</code></pre>
+<h2 id="256-2">256</h2>
+<p>I expanded this topic because k=3, so it's fine to expand it directly.</p>
+<pre><code class="language-java">class Solution {
+    public int minCost(int[][] costs) {
+        if (costs == null || costs.length == 0 || costs[0] == null || costs[0].length == 0) return Integer.MAX_VALUE;
+        int m = costs.length;
+        int[][] sums = new int[m][3];
+        
+        sums[0][0] = costs[0][0];
+        sums[0][1] = costs[0][1];
+        sums[0][2] = costs[0][2];
+        
+        for (int i = 1; i &lt; m; i++) {
+            sums[i][0] = Math.min(sums[i-1][1], sums[i-1][2]) + costs[i][0];
+            sums[i][1] = Math.min(sums[i-1][0], sums[i-1][2]) + costs[i][1];
+            sums[i][2] = Math.min(sums[i-1][1], sums[i-1][0]) + costs[i][2];
+        }
+        
+        return Math.min(sums[m-1][0], Math.min(sums[m-1][1], sums[m-1][2]));
+    }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E9%97%AE%E9%A2%98">问题</a></li>
+<li><a href="#%E8%A7%A3%E6%9E%90">解析</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a>
+<ul>
+<li><a href="#265">265</a></li>
+</ul>
+</li>
+<li><a href="#256">256</a></li>
+<li><a href="#question">Question</a></li>
+<li><a href="#analysis">Analysis</a></li>
+<li><a href="#code">Code</a>
+<ul>
+<li><a href="#265-2">265</a></li>
+</ul>
+</li>
+<li><a href="#256-2">256</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/322-coin-change/">
+              <h3 class="post-title">
+                322. Coin Change
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

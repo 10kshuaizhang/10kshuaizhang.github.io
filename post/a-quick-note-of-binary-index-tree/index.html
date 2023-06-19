@@ -1,0 +1,515 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A Quick Note of Binary Index Tree | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="A Quick Note of Binary Index Tree | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="What is it
+
+A binary index tree, also known as a tree array, also known as Fenwick Tree, is still essentially an array t..." />
+    <meta name="keywords" content="Tree,Data Structure" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              A Quick Note of Binary Index Tree
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-03-22
+              </span>
+              <span>
+                11 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/J4nuEydwD/" class="post-tag">
+                  # Tree
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/PAMWmLjBw/" class="post-tag">
+                  # Data Structure
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="what-is-it">What is it</h2>
+<ul>
+<li>A binary index tree, also known as a tree array, also known as <a href="https://en.wikipedia.org/wiki/Fenwick_tree">Fenwick Tree</a>, is still essentially an array that implements O(logn) time complex range queries and updates. It can be interpreted as better than segment tree in specific cases.</li>
+</ul>
+<h2 id="what-problem-is-solved-application-scenario">What problem is solved (application scenario)</h2>
+<ul>
+<li>
+<p>Just like the emergence of the segment tree, a data structure emerged to solve <strong><u>recurring range queries and updates</u></strong>. There is a certain efficiency gain compared to using prefix sums (O(n) updates and queries).</p>
+</li>
+<li>
+<p>The advantage is that it's faster in time, the disadvantage is that it's a little hard to understand.</p>
+</li>
+</ul>
+<h2 id="key-points">Key points</h2>
+<h3 id="lowbit">lowbit</h3>
+<p>Define a function lowbit that finds the number of bits that a number goes through when it starts counting from the far right until it meets 1. This can be achieved in the code by bitwise operations</p>
+<pre><code class="language-java">public int lowbit(int val) {
+    return val*(-val);
+}
+</code></pre>
+<ul>
+<li>
+<p>The bull's-eye is coming.</p>
+<pre><code>                                 lowbit
+
+                o                ├ 1000 = 8
+        ┌───────┴───────┐        │
+        o               o        ├ 100  = 4
+    ┌───┴───┐       ┌───┴───┐    │
+    o       o       o       o    ├ 10   = 2
+  ┌─┴─┐   ┌─┴─┐   ┌─┴─┐   ┌─┴─┐  │
+  o   o   o   o   o   o   o   o  ├ 1    = 1
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5  │
+
+</code></pre>
+</li>
+</ul>
+<p>We can see patterns here, same level nodes have same ending.</p>
+<ul>
+<li>And when a node n is a right child, n - lowbit(n) is its parent: for example <code>12</code>, <code>12 - lowbit(12) = 12 - 4 = 8</code> is exactly the parent <code>8</code> of <code>12</code>. And when a node is a left child, n - lowbit(n) is its grandfather: e.g. node <code>10</code>, <code>10 - lowbit(10) = 10 - 2 = 8</code>, is the left grandfather of 10.</li>
+<li>When a node n is a right child, n + lowbit(n) is its grandfather node: for example, <code>6 + lowbit(6) = 6 + 2 = 8</code> corresponds to the right grandfather node of 6; when a node n is a left child, n + lowbit(n) is its parent, for example, node <code>4</code>, <code>4 + lowbit(4) = 4 + 4 = 8</code> is the parent node of <code>4</code>. is the parent node of <code>4</code>.</li>
+<li>You can also see that <code>n - lowbit(n) + 1</code> corresponds to a node on a complete bifurcation, starting from the node corresponding to the number n and taking the left child of the node up to the node at the first level. For example, the node where <code>12</code> is located, keep taking the left child of the node, and you end up with <code>9</code>, and <code>9 = 12 - 4 + 1 = 12 - lowbit(12) + 1</code>.</li>
+<li>With lowbit we can quickly locate in a complete binary tree.</li>
+</ul>
+<h3 id="build-the-index">Build the index</h3>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303221654922.png" alt="image-20230322163817560" style=" zoom:50%;" />
+<pre><code>                o
+        ┌───────┴───────┐
+        o               x
+    ┌───┴───┐       ┌───┴───┐
+    o       o       x       o
+  ┌─┴─┐   ┌─┴─┐   ┌─┴─┐   ┌─┴─┐
+  o   o   o   o   x   x   o   o
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5
+A:                2 1 3 1
+BIT:                   (7)
+</code></pre>
+<p>You can see that <code>12 - lowbit(12) + 1 = 12-4+1=9</code>, so <code>BIT[12] = A[9] + A[10] + A[11] + A[12]</code>. Similarly, to calculate <code>BIT[8]</code>, we need to calculate <code>A[1] + ... + A[8]</code>, since <code>8 - lowbit(8) + 1 = 1</code>.</p>
+<h2 id="principle-and-implementation">Principle and implementation</h2>
+<h3 id="summation">Summation</h3>
+<ul>
+<li>With BIT, if we solve for sum(k), we just need to sum k and the left grandfather/parent node of k. The complexity is O(logn).</li>
+<li>Let's take <code>6</code> for example, <code>BIT[6]</code> is equivalent to <code>A[5] + A[6]</code>, but we have to compute <code>A[1] + ... + A[6]</code>, so also <code>A[1] + ... + A[4]</code>, which in BIT corresponds exactly to <code>BIT[4]</code>. Taking <code>14</code> as another example, <code>BIT[14] = A[13] + a[14]</code>, which is still short of <code>A[1] + ... + A[12]</code>, so we find <code>14 - lowbit(14) = 14 - 2 = 12</code>, and since <code>BIT[12] = BIT[9] + ... + BIT[12]</code>, so it is still short of <code>A[1] + ... + A[8]</code>, which exactly corresponds to <code>BIT[8]</code>, and we have <code>12 - lowbit(12) = 12 - 4 = 8</code>.</li>
+</ul>
+<p>So the <code>sum(k)</code> operation is to find the sum of node <code>k</code> and its parent node.</p>
+<h3 id="update-nodes">Update nodes</h3>
+<ul>
+<li>From BIT's node-defining formula you can until that a certain value of the original array is updated, it affects all its right grandfather/parent nodes</li>
+<li>This can be obtained by <code>k + lowbit(k)</code>. For example <code>A[9]</code> has changed, and by definition we need to update <code>BIT[9], BIT[10], BIT[12]</code>. This update can be implemented by lowbit(n)+n with a time complexity of O(nlogn).</li>
+</ul>
+<h3 id="initialization">Initialization</h3>
+<ul>
+<li>With the help of the update operation, the update function is called to update each value. The complexity is O(nlogn).</li>
+</ul>
+<pre><code class="language-java">import static org.junit.Assert.assertEquals;
+
+/**
+ * Created by szhang on 2023/3/20
+ */
+public class BinaryIndexedTree {
+    int[] nums;
+    int[] tree;
+
+    public BinaryIndexedTree(int[] nums) {
+        this.nums = nums;
+        this.tree = new int[nums.length + 1];
+        for (int i = 0; i &lt; nums.length; i++) {
+            update(i, nums[i]);
+        }
+    }
+
+    public void update(int i, int val) {
+        int diff = val - nums[i];
+        nums[i] = val;
+        for (int j = i + 1; j &lt;= nums.length; j += j&amp;(-j)) {
+            tree[j] += diff;
+        }
+    }
+
+    public int sumRange(int i, int j) {
+        return sum(j+1) - sum(i);
+    }
+
+    private int sum(int k) {
+        int sum = 0;
+        for (int i = k; i &gt; 0; i -= i*(-i)) { // i*(-i) is the lowbit function
+            sum += tree[i];
+        }
+        return sum;
+    }
+
+    public static void main(String[] args) {
+        int[] nums = {1, 3, 2, 4, 5, 6};
+        BinaryIndexedTree bit = new BinaryIndexedTree(nums);
+        assertEquals(10, bit.sumRange(0, 2));
+        assertEquals(18, bit.sumRange(1, 4));
+        assertEquals(21, bit.sumRange(0, 5));
+        bit.update(2, 7);
+        assertEquals(15, bit.sumRange(0, 2));
+        assertEquals(24, bit.sumRange(1, 4));
+        assertEquals(28, bit.sumRange(0, 5));
+    }
+}
+
+</code></pre>
+<h2 id="reference">Reference</h2>
+<p><a href="https://lotabout.me/2018/binary-indexed-tree/">binary index tree</a></p>
+<hr>
+<h2 id="是什么">是什么</h2>
+<ul>
+<li>二叉索引树，也称树状数组，又称<a href="https://en.wikipedia.org/wiki/Fenwick_tree">Fenwick Tree</a>，本质上还是一个数组，实现了O(logn)时间复杂的的范围查询和更新。可以理解为特定情况下比segment tree好用。</li>
+</ul>
+<h2 id="解决了什么问题应用场景">解决了什么问题（应用场景）</h2>
+<ul>
+<li>
+<p>正如segment tree的出现类似，为了解决**<u>经常性的范围查询和更新</u>**，而出现的一种数据结构。相比于使用前缀和（O(n)的更新和查询），会有一定的效率提升。</p>
+</li>
+<li>
+<p>优点在于时间上更快了，缺点就是有一点点难以理解。</p>
+</li>
+</ul>
+<h2 id="关键点">关键点</h2>
+<h3 id="lowbit-2">lowbit</h3>
+<p>定义一个函数lowbit，他求的一个数是从最右边开始数直到遇到1时候走过的位数。在代码中可以通过位运算来实现</p>
+<pre><code class="language-java">public int lowbit(int val) {
+    return val*(-val);
+}
+</code></pre>
+<ul>
+<li>
+<p>牛逼的东西要来了：</p>
+<pre><code>                                 lowbit
+
+                o                ├ 1000 = 8
+        ┌───────┴───────┐        │
+        o               o        ├ 100  = 4
+    ┌───┴───┐       ┌───┴───┐    │
+    o       o       o       o    ├ 10   = 2
+  ┌─┴─┐   ┌─┴─┐   ┌─┴─┐   ┌─┴─┐  │
+  o   o   o   o   o   o   o   o  ├ 1    = 1
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5  │
+</code></pre>
+<p>我们可以看到这个不同层数的二叉结尾是有规律的。</p>
+<ul>
+<li>而且当一个节点n是右孩子的时候，n - lowbit(n)是他的父节点： 例如 <code>12</code>，<code>12 - lowbit(12) = 12 - 4 = 8</code> 正好是 <code>12</code> 的父节点 <code>8</code>。而当一个节点是左孩子的时候，n - lowbit(n)是他的祖父节点: 例如节点 <code>10</code>，<code>10 - lowbit(10) = 10 - 2 = 8</code>，是 10 的左祖父节点。</li>
+<li>当一个节点n是右孩子的时候，n + lowbit(n)是他的祖父节点：例如 <code>6 + lowbit(6) = 6 + 2 = 8</code> 则对应于 6 的右祖父节点；当一个节点n是左孩子的时候， n+lowbit(n)是他的父节点，例如节点<code>4</code>，<code>4 + lowbit(4) = 4 + 4 = 8</code> 是 <code>4</code> 的父节点。</li>
+<li>同时可以看到 <code>n - lowbit(n) + 1</code> 在完全二叉数上对应的节点，就是从数字 n 对应的节点开始，不断取节点的左子节点直到第一层的那个节点。例如 <code>12</code> 所在的结点，不断取左子节点，最终得到的是 <code>9</code>，而 <code>9 = 12 - 4 + 1 = 12 - lowbit(12) + 1</code>。</li>
+<li>有了lowbit我们就可以在完全二叉树中快速定位。</li>
+</ul>
+</li>
+</ul>
+<h3 id="建立索引">建立索引</h3>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303221638657.png" alt="image-20230322163817560" style="zoom:50%;" />
+<pre><code>                o
+        ┌───────┴───────┐
+        o               x
+    ┌───┴───┐       ┌───┴───┐
+    o       o       x       o
+  ┌─┴─┐   ┌─┴─┐   ┌─┴─┐   ┌─┴─┐
+  o   o   o   o   x   x   o   o
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5
+A:                2 1 3 1
+BIT:                   (7)
+</code></pre>
+<p>可以看到 <code>12 - lowbit(12) + 1 = 12-4+1=9</code>，因此 <code>BIT[12] = A[9] + A[10] + A[11] + A[12]</code>。同理，如果要计算 <code>BIT[8]</code>，则需要计算 <code>A[1] + ... + A[8]</code>，因为 <code>8 - lowbit(8) + 1 = 1</code>。</p>
+<h2 id="原理和实现">原理和实现</h2>
+<h3 id="求和">求和</h3>
+<ul>
+<li>有了BIT之后，如果求sum(k)，我们只需要将k和k的左祖父/父节点相加即可。复杂度是O(logn)。</li>
+<li>我们以 <code>6</code> 为例，<code>BIT[6]</code> 相当于 <code>A[5] + A[6]</code>，但我们要计算 <code>A[1] + ... + A[6]</code>，因此还要计算 <code>A[1] + ... + A[4]</code>，而在 BIT 中，这正好对应于 <code>BIT[4]</code>。再以 <code>14</code> 为例，<code>BIT[14] = A[13] + a[14]</code>，还差 <code>A[1] + ... + A[12]</code>，于是找到 <code>14 - lowbit(14) = 14 - 2 = 12</code>，而由于 <code>BIT[12] = BIT[9] + ... + BIT[12]</code>，因此还差 <code>A[1] + ... + A[8]</code>，正好对应于 <code>BIT[8]</code>，而又有 <code>12 - lowbit(12) = 12 - 4 = 8</code> 。</li>
+</ul>
+<p>所以说 <code>sum(k)</code> 操作就是求节点 <code>k</code> 及它的父节点的和。</p>
+<h3 id="更新节点">更新节点</h3>
+<ul>
+<li>从BIT的节点定义公式可以直到，原数组某个数值更新，会影响其所有的右祖父/父节点</li>
+<li>这可以通过 <code>k + lowbit(k)</code> 来得到。例如 <code>A[9]</code> 发生了变化，根据定义，我们需要更新 <code>BIT[9], BIT[10], BIT[12]</code>。这个更新的过程可以通过lowbit(n)+n来实现，时间复杂度为O(nlogn)。</li>
+</ul>
+<h3 id="初始化">初始化</h3>
+<ul>
+<li>借助update操作，调用update函数更新每个数值。复杂度为 O(nlogn)。</li>
+</ul>
+<pre><code class="language-java">import static org.junit.Assert.assertEquals;
+
+/**
+ * Created by szhang on 2023/3/20
+ */
+public class BinaryIndexedTree {
+    int[] nums;
+    int[] tree;
+
+    public BinaryIndexedTree(int[] nums) {
+        this.nums = nums;
+        this.tree = new int[nums.length + 1];
+        for (int i = 0; i &lt; nums.length; i++) {
+            update(i, nums[i]);
+        }
+    }
+
+    public void update(int i, int val) {
+        int diff = val - nums[i];
+        nums[i] = val;
+        for (int j = i + 1; j &lt;= nums.length; j += j&amp;(-j)) {
+            tree[j] += diff;
+        }
+    }
+
+    public int sumRange(int i, int j) {
+        return sum(j+1) - sum(i);
+    }
+
+    private int sum(int k) {
+        int sum = 0;
+        for (int i = k; i &gt; 0; i -= i*(-i)) { // i*(-i) is the lowbit function
+            sum += tree[i];
+        }
+        return sum;
+    }
+
+    public static void main(String[] args) {
+        int[] nums = {1, 3, 2, 4, 5, 6};
+        BinaryIndexedTree bit = new BinaryIndexedTree(nums);
+        assertEquals(10, bit.sumRange(0, 2));
+        assertEquals(18, bit.sumRange(1, 4));
+        assertEquals(21, bit.sumRange(0, 5));
+        bit.update(2, 7);
+        assertEquals(15, bit.sumRange(0, 2));
+        assertEquals(24, bit.sumRange(1, 4));
+        assertEquals(28, bit.sumRange(0, 5));
+    }
+}
+
+</code></pre>
+<h2 id="参考">参考</h2>
+<p><a href="https://lotabout.me/2018/binary-indexed-tree/">二叉索引树</a></p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#what-is-it">What is it</a></li>
+<li><a href="#what-problem-is-solved-application-scenario">What problem is solved (application scenario)</a></li>
+<li><a href="#key-points">Key points</a>
+<ul>
+<li><a href="#lowbit">lowbit</a></li>
+<li><a href="#build-the-index">Build the index</a></li>
+</ul>
+</li>
+<li><a href="#principle-and-implementation">Principle and implementation</a>
+<ul>
+<li><a href="#summation">Summation</a></li>
+<li><a href="#update-nodes">Update nodes</a></li>
+<li><a href="#initialization">Initialization</a></li>
+</ul>
+</li>
+<li><a href="#reference">Reference</a></li>
+<li><a href="#%E6%98%AF%E4%BB%80%E4%B9%88">是什么</a></li>
+<li><a href="#%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF">解决了什么问题（应用场景）</a></li>
+<li><a href="#%E5%85%B3%E9%94%AE%E7%82%B9">关键点</a>
+<ul>
+<li><a href="#lowbit-2">lowbit</a></li>
+<li><a href="#%E5%BB%BA%E7%AB%8B%E7%B4%A2%E5%BC%95">建立索引</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E7%8E%B0">原理和实现</a>
+<ul>
+<li><a href="#%E6%B1%82%E5%92%8C">求和</a></li>
+<li><a href="#%E6%9B%B4%E6%96%B0%E8%8A%82%E7%82%B9">更新节点</a></li>
+<li><a href="#%E5%88%9D%E5%A7%8B%E5%8C%96">初始化</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/a-quick-note-of-dynamic-programming-and-greedy-algorithm/">
+              <h3 class="post-title">
+                A Quick Note of Dynamic Programming and Greedy Algorithm
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

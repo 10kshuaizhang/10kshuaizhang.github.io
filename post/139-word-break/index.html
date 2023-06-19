@@ -1,0 +1,310 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>139. Word Break | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="139. Word Break | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="问题
+这个问题描述的是我们有一个字符串s，和一个字符数组wordDict，让确定下是否这个字符串由数组中的字符串组成，一个数组中的字符串可以多次出现在s中。
+解析
+这个题目比较简短，也比较清晰。问题是怎么去想这个问题。
+我的思路一开始也没有..." />
+    <meta name="keywords" content="String,Dynamic Programming,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              139. Word Break
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-02-26
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/K4daBAF4L/" class="post-tag">
+                  # String
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/8XHIFnHCE/" class="post-tag">
+                  # Dynamic Programming
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="问题">问题</h2>
+<p>这个问题描述的是我们有一个字符串s，和一个字符数组wordDict，让确定下是否这个字符串由数组中的字符串组成，一个数组中的字符串可以多次出现在s中。</p>
+<h2 id="解析">解析</h2>
+<p>这个题目比较简短，也比较清晰。问题是怎么去想这个问题。</p>
+<p>我的思路一开始也没有说马上想出来一个方法，就先去跑了一个case：</p>
+<blockquote>
+<pre><code>Input: s = &quot;leetcode&quot;, wordDict = [&quot;leet&quot;,&quot;code&quot;]
+Output: true
+Explanation: Return true because &quot;leetcode&quot; can be segmented as &quot;leet code&quot;.
+</code></pre>
+</blockquote>
+<p>跑case的过程是这样的，我们应该先从一个字符看是否存在于wordDict，然后看两个字符，三个，四个，这时leet存在于wordDict了，那我们就会看剩下的部分是否也存在于字符串数组中。</p>
+<p>这个地方体现了一个与的关系，当我们遍历数组到index 为i的时候，那么我们需要看的是前i个字符是否是满足条件的（即截止到i是否为true），以及i之后的字符是否存在于数组中。</p>
+<p>这个题到这，差不多应该可以看出我们是自底向上从子问题去一步步推到到整个字符串。先解决长度为1 的<strong>子字符串</strong>的问题，然后长度依次增加，直到最后的s。</p>
+<p>所以这个题你一开始想着想着甚至把代码写出来了才发现他很契合动态规划题目的模式。子问题，状态转移等等。</p>
+<h2 id="代码">代码</h2>
+<pre><code class="language-java">class Solution {
+    public boolean wordBreak(String s, List&lt;String&gt; wordDict) {
+        int m = s.length();
+        int n = wordDict.size();
+        boolean[] dp = new boolean[m + 1];
+        dp[0] = true;
+        for (int i = 0; i &lt;= m; i++) {
+            for (int j = 0; j &lt; i; j++) {
+                if (dp[j] &amp;&amp; wordDict.contains(s.substring(j, i))) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[m];
+    }
+}
+</code></pre>
+<hr>
+<h2 id="problem">Problem</h2>
+<p>This problem describes that we have a string s, and an array of characters wordDict, let determine if the string consists of strings in the array, and a string in the array can appear multiple times in s.</p>
+<h2 id="parsing">Parsing</h2>
+<p>This topic is relatively short and clear. The question is how to think about it.</p>
+<p>I didn't start my thought process by saying I'd come up with a method right away, so I went ahead and ran a case of.</p>
+<blockquote>
+<pre><code>Input: s = &quot;leetcode&quot;, wordDict = [&quot;leet&quot;, &quot;code&quot;]
+Output: true
+Explanation: Return true because &quot;leetcode&quot; can be segmented as &quot;leet code&quot;.
+</code></pre>
+</blockquote>
+<p>The process of running the case is like this, we should start with one character to see if it exists in wordDict, then look at two characters, three, four, when leet exists in wordDict, then we will see if the rest of it also exists in the string array.</p>
+<p>This place reflects a relationship with, when we traverse the array to the index of i, then we need to see whether the first i characters are to meet the conditions (that is, whether the cutoff to i is true), and whether the characters after i exist in the array.</p>
+<p>By this point in the problem, it should be almost obvious that we are pushing from the bottom up from the subproblem to the whole string step by step. First, we solve the <strong>substring</strong> of length 1, and then the length increases sequentially until the final s.</p>
+<p>So this is a problem that you start to think about and even write out the code before you realize that it fits the pattern of dynamic programming topics. Subproblems, state shifting, etc.</p>
+<h2 id="code">Code</h2>
+<pre><code class="language-java">class Solution {
+    public boolean wordBreak(String s, List&lt;String&gt; wordDict) {
+        int m = s.length();
+        int n = wordDict.size();
+        boolean[] dp = new boolean[m + 1];
+        dp[0] = true;
+        for (int i = 0; i &lt;= m; i++) {
+            for (int j = 0; j &lt; i; j++) {
+                if (dp[j] &amp;&amp; wordDict.contains(s.substring(j, i))) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[m];
+    }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E9%97%AE%E9%A2%98">问题</a></li>
+<li><a href="#%E8%A7%A3%E6%9E%90">解析</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+<li><a href="#problem">Problem</a></li>
+<li><a href="#parsing">Parsing</a></li>
+<li><a href="#code">Code</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/Best Time to Buy and Sell Stock Series/">
+              <h3 class="post-title">
+                Best Time to Buy and Sell Stock
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

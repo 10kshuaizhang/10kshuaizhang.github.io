@@ -1,0 +1,479 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>52. N-Queens II &amp; 51. N-Queens | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="52. N-Queens II &amp; 51. N-Queens | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Problems
+Given a board of length n, construct a board on which queen pieces are placed so that they do not attack each o..." />
+    <meta name="keywords" content="Depth First Search&Bread First Search,Backtracking,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              52. N-Queens II &amp; 51. N-Queens
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-14
+              </span>
+              <span>
+                9 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/SQ7QEvjYu/" class="post-tag">
+                  # Depth First Search&amp;Bread First Search
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/KQ57awumk/" class="post-tag">
+                  # Backtracking
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="problems">Problems</h2>
+<p>Given a board of length n, construct a board on which queen pieces are placed so that they do not attack each other.</p>
+<p>A queen can attack him on the same row, the same column or on the same diagonal.</p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304140842640.jpg" alt="img" style="zoom:50%;" />
+<p>This example is given n is 4 and there are two answers.</p>
+<p>Question 51 asks how many solutions there are, and question 52 asks which solutions are.</p>
+<h2 id="algorithm">Algorithm</h2>
+<p>This question answers question 51 first, which is a more typical backtracking question. Because you need to place queens one by one on the board to see if it is OK to place them in that position. (Ignoring the code, we humans play the game in the same way)</p>
+<p>First of all, we have to construct a board, which we have to do ourselves. Secondly, only one queen is placed at the beginning of each line, and if the position is reasonable, we continue to place it recursively, and if it is not reasonable, we go back to the previous step (backtracking here); then in the process, we record the layout of the board that can be placed at the end that is the answer.</p>
+<p>In the marching process, it is necessary to judge whether this position can be put after each time a new queen is put, and this also needs to be realized.</p>
+<p>The 52 questions is to put back the results of the 51 questions to calculatesize is the simplest method, or better directly each time you encounter a feasible answer plus one can, without recording the actual results.</p>
+<p>The time complexity of the backtracking method is O(N!), because a huge decision tree is generated, the space complexity is O(N*N), we need to construct a chessboard.</p>
+<p>Code1 and code2 is the code for question 51 and code3 is for question 52.</p>
+<p>The main difference is the implementation if <code>isValid()</code>, in code1 I used a very naive implementation, however, there is a smarter way. I don't need to check the row below and column after the current row since we are doing this row by row, col by col. For the <strong>anti-diagonal</strong>  and <strong>diagonal</strong> directions, the standard answer utilized <strong>slope</strong>, since the board is square, the dots on diagnose share same slope. So there would be a equation<code>abs(x-i) = abs(y-j)</code>, from this we get</p>
+<pre><code>x - i = y - j;
+x - i = j - y;
+i - x = y - j;
+i - x = j - y
+</code></pre>
+<p>and finally which is</p>
+<pre><code>x - y = i - j;
+x + y = i + j;
+</code></pre>
+<p>Besides, we do it row by row so we don't have to care about the row before. And for column, if they are on the same column, j  == y.</p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304140850433.png" alt="image-20230414085038364" style="zoom:67%;" /> 
+<h2 id="code-1">Code 1</h2>
+<pre><code class="language-java">class Solution {
+    List&lt;List&lt;String&gt;&gt; res = new ArrayList&lt;&gt;();
+    public List&lt;List&lt;String&gt;&gt; solveNQueens(int n) {
+        if (n == 0) return res;
+        char[][] board = constructBoard(n);
+        helper(board, 0);
+        return res;
+    }
+    
+    private void helper(char[][] board, int row) {
+        int n = board.length;
+        if (row == n) {
+            List&lt;String&gt; list = new ArrayList&lt;&gt;();
+            for (char[] r : board) {
+                String s = new String(r);
+                list.add(s);
+            }
+            res.add(list);
+            return;
+        }
+        for (int i = 0; i &lt; n; i++) {
+            board[row][i] = 'Q';
+            if (isValid(board)) {
+                helper(board, row + 1);
+            }
+            board[row][i] = '.';
+        }
+        
+    }
+    
+    private boolean isValid(char[][] board) {
+        int n = board.length;
+        for (int i = 0; i &lt; n; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                if (board[i][j] == 'Q') {
+                    for (int x = 0; x &lt; n; x++) {
+                        if (board[x][j] == 'Q' &amp;&amp; x != i) {
+                            return false;
+                        }
+                    }
+                    
+                    for (int x = 0; x &lt; n; x++) {
+                        if (board[i][x] == 'Q' &amp;&amp; x != j) {
+                            return false;
+                        }
+                    }
+                    
+                    for (int x = 1; i-x &gt;= 0 &amp;&amp; j+x &lt; n; x++) {
+                        if (board[i-x][j+x] == 'Q') {
+                            return false;
+                        }
+                    }
+                    
+                    for (int x = 1; j-x &gt;= 0 &amp;&amp; i+x &lt; n; x++) {
+                        if (board[i+x][j-x] == 'Q') {
+                            return false;
+                        }
+                    }
+                    
+                    for (int x = 1; j+x &lt; n &amp;&amp; i+x &lt; n; x++) {
+                        if (board[i+x][j+x] == 'Q') {
+                            return false;
+                        }
+                    }
+                    
+                    for (int x = 1; j-x &gt;= 0 &amp;&amp; i-x &gt;= 0; x++) {
+                        if (board[i-x][j-x] == 'Q') {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+    
+    private char[][] constructBoard(int n) {
+        char[][] board = new char[n][n];
+        for (char[] row : board) {
+            Arrays.fill(row, '.');
+        }
+        return board;
+    }
+}
+</code></pre>
+<h2 id="code-2">Code 2</h2>
+<pre><code class="language-java">class Solution {
+    List&lt;List&lt;String&gt;&gt; res = new ArrayList&lt;&gt;();
+    public List&lt;List&lt;String&gt;&gt; solveNQueens(int n) {
+        if (n == 0) return res;
+        char[][] board = constructBoard(n);
+        helper(board, 0);
+        return res;
+    }
+    
+    private void helper(char[][] board, int row) {
+        int n = board.length;
+        if (row == n) {
+            List&lt;String&gt; list = new ArrayList&lt;&gt;();
+            for (char[] r : board) {
+                String s = new String(r);
+                list.add(s);
+            }
+            res.add(list);
+            return;
+        }
+        for (int i = 0; i &lt; n; i++) {
+            if (board[row][i] == '.') {
+                board[row][i] = 'Q';
+                if (isValid(board, row, i)) {
+                    helper(board, row + 1);
+                }
+                board[row][i] = '.';
+            }
+        }
+        
+    }
+    
+    private boolean isValid(char[][] board, int x, int y) {
+        int n = board.length;
+        for(int i = 0; i &lt; x; i++) {
+            for(int j = 0; j &lt; n; j++) {
+                if(board[i][j] == 'Q' &amp;&amp; (x + j == y + i || x + y == i + j || j == y))
+                    return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    private char[][] constructBoard(int n) {
+        char[][] board = new char[n][n];
+        for (char[] row : board) {
+            Arrays.fill(row, '.');
+        }
+        return board;
+    }
+}
+</code></pre>
+<h2 id="code-3">Code 3</h2>
+<pre><code class="language-java">class Solution {
+    int res = 0;
+    public int totalNQueens(int n) {
+        if (n == 0) return res;
+        char[][] board = constructBoard(n);
+        helper(board, 0);
+        return res;
+    }
+    
+    private void helper(char[][] board, int row) {
+        int n = board.length;
+        if (row == n) {
+            res++;
+            return;
+        }
+        for (int i = 0; i &lt; n; i++) {
+            if (board[row][i] == '.') {
+                board[row][i] = 'Q';
+                if (isValid(board, row, i)) {
+                    helper(board, row + 1);
+                }
+                board[row][i] = '.';
+            }
+        }
+        
+    }
+    
+    private boolean isValid(char[][] board, int x, int y) {
+        int n = board.length;
+        for(int i = 0; i &lt; x; i++) {
+            for(int j = 0; j &lt; n; j++) {
+                if (board[i][j] == 'Q' &amp;&amp; (x-y == i-j || x+y == i+j || y == j)) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+    
+    private char[][] constructBoard(int n) {
+        char[][] board = new char[n][n];
+        for (char[] row : board) {
+            Arrays.fill(row, '.');
+        }
+        return board;
+    }
+}
+</code></pre>
+<hr>
+<h2 id="问题">问题</h2>
+<p>给一个棋盘的长度n，构造一个棋盘在上放皇后棋子，使他们不会相互攻击到对方。</p>
+<p>皇后可以攻击到他的同一行，同一列或者在同一个斜线上。</p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304140834475.jpg" alt="img" style="zoom:50%;" />
+<p>这个例子是给定n为4，有两个答案。</p>
+<p>51题问的是有多少个解，52题问的是解是哪些。</p>
+<h2 id="算法">算法</h2>
+<p>这个题目先解答51题，是比较典型的回溯题目。因为你需要在棋盘上一个个放置皇后来看放在这个位置是否可以。（不考虑写代码， 我们人类玩游戏也是这个思路）</p>
+<p>首先要构筑一个棋盘，需要我们自己完成。其次每行开始只放一个，如果位置合理就递归的继续往下放，不合理就退回到上一步（这里是回溯）；然后在这个过程中，记录可以放到最后的棋盘布局即为答案。</p>
+<p>在行进过程中，需要在每一次放一个新的皇后之后判断这个位置是否可以放，这个也需要实现。</p>
+<p>52题就是将51题的放回结果计算size是最简单的方法，或者好一点直接每次遇到可行答案加一即可，不记录实际结果。</p>
+<p>回溯方法的时间复杂度是O(N!)，因为产生了一个巨大的决策树，空间复杂度是O(N*N),我们需要构造一个棋盘。</p>
+<p>代码1和代码2是问题51的代码，代码3是问题52的代码。</p>
+<p>主要的区别是如果<code>isValid()</code>的实现，在代码1中我使用了一个非常幼稚的实现，然而，有一个更聪明的方法。我不需要检查当前行下面的行和后面的列，因为我们是逐行、逐列地进行的。对于<strong>反对角线</strong>和<strong>对角线</strong>方向，标准答案是利用<strong>斜率</strong>，因为棋盘是方形的，诊断上的点有相同的斜率。所以会有一个方程式<code>abs(x-i)=abs(y-j)</code>，由此我们可以得到</p>
+<pre><code>x - i = y - j；
+x - i = j - y；
+i - x = y - j；
+i - x = j - y
+</code></pre>
+<p>最后是</p>
+<pre><code>x - y = i - j；
+x + y = i + j；
+</code></pre>
+<p>此外，我们逐行进行，所以我们不必关心之前的行。而对于列来说，如果它们在同一列，j == y。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#problems">Problems</a></li>
+<li><a href="#algorithm">Algorithm</a></li>
+<li><a href="#code-1">Code 1</a></li>
+<li><a href="#code-2">Code 2</a></li>
+<li><a href="#code-3">Code 3</a></li>
+<li><a href="#%E9%97%AE%E9%A2%98">问题</a></li>
+<li><a href="#%E7%AE%97%E6%B3%95">算法</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/pmd-violation-chained-append-vs-calling-consecutively/">
+              <h3 class="post-title">
+                PMD Violation: Chained Append vs Calling Consecutively
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

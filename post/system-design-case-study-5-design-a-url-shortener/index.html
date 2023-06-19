@@ -1,0 +1,438 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>System Design Case Study 5 - Design A URL shortener | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="System Design Case Study 5 - Design A URL shortener | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="1. Understand the problem and establish design scope
+
+Ask questions and clarifications
+
+
+
+An example?
+You have a url htt..." />
+    <meta name="keywords" content="System Design" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              System Design Case Study 5 - Design A URL shortener
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-08
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/h_IFyWw8r/" class="post-tag">
+                  # System Design
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h3 id="1-understand-the-problem-and-establish-design-scope">1. Understand the problem and establish design scope</h3>
+<blockquote>
+<p>Ask questions and clarifications</p>
+</blockquote>
+<ol>
+<li>
+<p>An example?</p>
+<p>You have a url <code>https://www.systeminterview.com/q=chatsystem&amp;c=loggedin&amp;v=v3&amp;l=long</code>，and your service create a short url: <code>https://tinyurl.com/y7keocwj</code>， when you click the url, it redirect you to the original url.</p>
+</li>
+<li>
+<p>What is the traffic volume?-&gt; 100 million per day</p>
+</li>
+<li>
+<p>How long is the shorten url? -&gt; as short as possible</p>
+</li>
+<li>
+<p>What characters are allowed in the shorten url? -&gt; a-z, A-z, 0-9</p>
+</li>
+<li>
+<p>Are we allowed to update and delete the short urls? -&gt; no</p>
+</li>
+</ol>
+<p>Basic use case:</p>
+<ol>
+<li>URL shortening: given the long url, return the short one</li>
+<li>URL redirecting: click the short url, redirect to the original url</li>
+<li>Availability, scalability, fault tolerance</li>
+</ol>
+<h4 id="estimation">Estimation</h4>
+<p>Write per day: 100 million requests  per day</p>
+<p>Write per second: 10*8 / 24/3600~= 1160</p>
+<p>Assume read/write is 10:1, we got read per sec is 11600</p>
+<p>Assume this service will run for 10 year, the record number would be 100 million*365*10=365 billion records</p>
+<p>Assume average Len of url us 100 byte, storage over 10 years = 365 billion*100Byte = 36.5 billon KB = 36.5 million MB = 36500 GB = 36.5 TB</p>
+<h3 id="2-high-level-design">2. High level design</h3>
+<h4 id="api-endpoint">API Endpoint</h4>
+<ol>
+<li>Use restful API
+<ol>
+<li><code>POST api/v1/shorten</code>, parameter would be <code>{url: &lt;longURL&gt;}</code>, return short url</li>
+<li><code>GET api/v1/&lt;shortURL&gt;</code>, redirect to corresponding long url.</li>
+</ol>
+</li>
+</ol>
+<h4 id="url-redirecting">URL redirecting</h4>
+<p>Figure 1 shows what happens when you enter a tinyurl onto the browser. Once the server receives a tinyurl request, it changes the short URL to the long URL with 301 redirect.</p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304080953784.svg" alt="Figure 1" loading="lazy"></figure>
+<p>The detailed communication between clients and servers is shown in Figure 2.</p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304080953289.png" alt="Figure 2" style="zoom:50%;" />
+<h5 id="301-redirect-the-requests-permanently-moved-to-the-long-url">301 redirect - the requests permanently moved to the long url</h5>
+<p>The browser caches the long url in the first response (301), and later will request the long url directly</p>
+<h5 id="302-redirect-the-requests-temporarily-moved-to-the-long-url">302 redirect -the requests temporarily moved to the long url</h5>
+<p>Each time the browser send a request, it will go to the short url first and them get 301, and then request the long url.</p>
+<p>Use 301 redirect makes sense for there would be too many unnecessary requests to the tiny url server, however, if analytics is important, 302 redirect is a better choice as it can track click rate and source of the click more easily.</p>
+<h4 id="url-shortening">URL shortening</h4>
+<p>Hash table is a good choice for storing such thing: {shortUrl, longUrl}. And for the function we could implement a hash function.</p>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304081000510.svg" alt="Figure 3" loading="lazy"></figure>
+<h3 id="3-deep-dive">3. Deep dive</h3>
+<h4 id="data-model">Data Model</h4>
+<p>We could store the data in a hash table in memory, but the resource is limited and it's hard to scale.</p>
+<p>We could store the data in a relational database</p>
+<figure data-type="image" tabindex="3"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304081008367.svg" alt="Figure 4" loading="lazy"></figure>
+<h4 id="hash-function">Hash function</h4>
+<h5 id="hash-value-length">Hash value length</h5>
+<p>We are going to fun this service for 10 year, 365 billion records generated. We have a-z,A-Z, 0-9 62 characters available in total. To support 365 billion records, 65^n &gt;= 36 billion. After calculation it's 7.</p>
+<h5 id="hash-function-and-collision">Hash function and collision</h5>
+<ol>
+<li>
+<p>Some well known hash functions: CRC32, MD5, or SHA-1.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Hash function</strong></th>
+<th><strong>Hash value (Hexadecimal)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CRC32</td>
+<td>5cb54054</td>
+</tr>
+<tr>
+<td>MD5</td>
+<td>5a62509a84df9ee03fe1230b9df8b84e</td>
+</tr>
+<tr>
+<td>SHA-1</td>
+<td>0eeae7916c06853901d9ccbefbfcaf4de57ed85b</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>No of them are suitable. CRC has 8 digits which is greater than 7. Remember, we need to keep the short url as short as possible.</p>
+<ol>
+<li>
+<p>If we use CRC32 8 digits and remove the last digits, that would be 7 but we got more chances of collision.</p>
+</li>
+<li>
+<p>We could append some predefined strings to the url and rehash until we got a non-repeated key.</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304081014561.svg" alt="Figure 5" style="zoom:80%;" />
+</li>
+<li>
+<p>It's expensive to check if a key exists in database, so we can use bloom filter which is a effective technique to check is an element is a member of a set,</p>
+</li>
+</ol>
+</li>
+</ol>
+<h5 id="base62-conversion">Base62 conversion</h5>
+<ol>
+<li>
+<p>Base conversion is also commonly used for shorten url.</p>
+</li>
+<li>
+<p>For unitizing this base conversion technique, we need to introduce unique ID for each records.</p>
+</li>
+<li>
+<p>This is how it works:</p>
+<p>convert 1115710 to base 62 representation (1115710 represents 11157 in a base 10 system).</p>
+<ul>
+<li>From its name, base 62 is a way of using 62 characters for encoding. The mappings are: <em>0-0, ..., 9-9, 10-a, 11-b, ..., 35-z, 36-A, ..., 61-Z, where</em> ‘a’ stands for 10, ‘Z’ stands for 61, etc.</li>
+<li>1115710 = 2 x 622 + 55 x 621 + 59 x 620 = [2, 55, 59] -&gt; [2, T, X] in base 62 representation. Figure 6 shows the conversation process.</li>
+</ul>
+<figure data-type="image" tabindex="4"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304081018867.svg" alt="Figure 6" loading="lazy"></figure>
+<ul>
+<li>Thus, the short URL is <code>https://tinyurl.com/2TX</code></li>
+</ul>
+</li>
+</ol>
+<h5 id="comparison">Comparison</h5>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"><strong>Hash + collision resolution</strong></th>
+<th style="text-align:left"><strong>Base 62 conversion</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Fixed length</td>
+<td style="text-align:left">Not fixed, goes up with ID</td>
+</tr>
+<tr>
+<td style="text-align:left">No need of UUID</td>
+<td style="text-align:left">Depends on unique ID(I think it's because of the conversion is number things and original long url contains characters)</td>
+</tr>
+<tr>
+<td style="text-align:left">Collision exists and needs to be handled</td>
+<td style="text-align:left">No collision because of unique ID</td>
+</tr>
+<tr>
+<td style="text-align:left">No order</td>
+<td style="text-align:left">Can be guessed next feasible url if ID increate be 1 for a new entry-&gt; security</td>
+</tr>
+</tbody>
+</table>
+<h4 id="url-shorten-deep-dive">URL shorten deep dive</h4>
+<figure data-type="image" tabindex="5"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304081023128.svg" alt="Figure 7" loading="lazy"></figure>
+<h4 id="url-redirecting-deep-dive">URL redirecting deep dive</h4>
+<figure data-type="image" tabindex="6"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304081023343.png" alt="Figure 8" loading="lazy"></figure>
+<p>(My original design)</p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304081025016.svg" alt="无标题绘图" style="zoom:50%;" />
+<h3 id="4-wrap-up">4. Wrap up</h3>
+<p>If there are extra time:</p>
+<ul>
+<li>Rate limiter for the service</li>
+<li>Server Scaling</li>
+<li>DB scaling</li>
+<li>Analitics</li>
+<li>Availability, consistency and reliability.</li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1-understand-the-problem-and-establish-design-scope">1. Understand the problem and establish design scope</a>
+<ul>
+<li><a href="#estimation">Estimation</a></li>
+</ul>
+</li>
+<li><a href="#2-high-level-design">2. High level design</a>
+<ul>
+<li><a href="#api-endpoint">API Endpoint</a></li>
+<li><a href="#url-redirecting">URL redirecting</a>
+<ul>
+<li><a href="#301-redirect-the-requests-permanently-moved-to-the-long-url">301 redirect - the requests permanently moved to the long url</a></li>
+<li><a href="#302-redirect-the-requests-temporarily-moved-to-the-long-url">302 redirect -the requests temporarily moved to the long url</a></li>
+</ul>
+</li>
+<li><a href="#url-shortening">URL shortening</a></li>
+</ul>
+</li>
+<li><a href="#3-deep-dive">3. Deep dive</a>
+<ul>
+<li><a href="#data-model">Data Model</a></li>
+<li><a href="#hash-function">Hash function</a>
+<ul>
+<li><a href="#hash-value-length">Hash value length</a></li>
+<li><a href="#hash-function-and-collision">Hash function and collision</a></li>
+<li><a href="#base62-conversion">Base62 conversion</a></li>
+<li><a href="#comparison">Comparison</a></li>
+</ul>
+</li>
+<li><a href="#url-shorten-deep-dive">URL shorten deep dive</a></li>
+<li><a href="#url-redirecting-deep-dive">URL redirecting deep dive</a></li>
+</ul>
+</li>
+<li><a href="#4-wrap-up">4. Wrap up</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/130-surrounded-regions/">
+              <h3 class="post-title">
+                130. Surrounded Regions
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

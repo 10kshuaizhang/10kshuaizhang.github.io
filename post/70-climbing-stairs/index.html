@@ -1,0 +1,324 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>70. Climbing Stairs | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="70. Climbing Stairs | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="问题
+这个问题是说，我们在爬台阶，一次只能上一阶或者2阶，设计一个算法，求爬n阶台阶有多少种方式。n&gt;= 1 &amp;&amp; n &lt;= 45。
+解析
+这个题的思路在于，walk through一个在某一阶的例子，就会明白很..." />
+    <meta name="keywords" content="Dynamic Programming,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              70. Climbing Stairs
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-02-19
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/8XHIFnHCE/" class="post-tag">
+                  # Dynamic Programming
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="问题">问题</h2>
+<p>这个问题是说，我们在爬台阶，一次只能上一阶或者2阶，设计一个算法，求爬n阶台阶有多少种方式。n&gt;= 1 &amp;&amp; n &lt;= 45。</p>
+<h2 id="解析">解析</h2>
+<p>这个题的思路在于，walk through一个在某一阶的例子，就会明白很多。</p>
+<p>比如你在第i阶，达到这阶的方法要么是第i-1阶上了1阶，要么是i-2阶上了2阶上到这里的。那么我们就出现子问题了，<code>dp[i] = dp[i - 1] + dp[i - 2]</code>，这里<code>dp[i]</code>的含义就是能够上到第i阶有多少种方式（结果、状态）就这样，你已经把动态规划的状态转移公式写出来了。</p>
+<p>初始化。当有1阶的时候，<code>dp[1] = 1</code>，当有0阶的时候，这里的想法是，没有台阶，那么上到0阶的方式就是1种，<code>dp[0] = 1</code>（不是0）。</p>
+<blockquote>
+<p>这里如果dp[0]不好理解的话，因为n的取值是1-45，可以将初始化设置dp[1]和dp[2]。</p>
+</blockquote>
+<h2 id="代码">代码</h2>
+<pre><code class="language-java">class Solution {
+    public int climbStairs(int n) {
+        int[] dp = new int[n + 1];
+        dp[1] = 1;
+        dp[0] = 1;
+        for (int i = 2; i &lt;= n; i++) {
+            dp[i] = dp[i - 2] + dp[i - 1];
+        }
+        return dp[n];
+    }
+}
+</code></pre>
+<h2 id="代码2优化">代码2（优化）</h2>
+<p>我们发现当前的状态只与他之前的两个状态（结果）有关，那么我们可以不设置一个dp数组而只利用三个变量即可不断更新状态。如下图所示，在下一次迭代的时候，所有的指向都向前走了一位。原来的dp_0被丢弃，原来的dp_1成为现在的dp_0，原来的dp_i成为现在的dp_1, 原来的dp_(i + 1)成了现在的dp_i。</p>
+<p>|dp_0|dp_1|res|     |</p>
+<p>|<s>dp_0</s>|dp_0|res = (dp_0 + dp_1) -&gt; dp_1|res|</p>
+<pre><code class="language-java">class Solution {
+    public int climbStairs(int n) {
+        int dp_0 = 1;
+        int dp_1 = 1;
+        if (n &lt; 2) return 1;
+        int res = 0;
+        for (int i = 2; i &lt;= n; i++) {
+            res = dp_0 + dp_1;
+            dp_0 = dp_1;
+            dp_1 = res;
+        }
+        return res;
+    }
+}
+</code></pre>
+<hr>
+<ol start="70">
+<li>Climbing Stairs</li>
+</ol>
+<h2 id="problem">Problem</h2>
+<p>This problem says that we are climbing steps, one or two at a time. Design an algorithm to find how many ways to climb n steps. n&gt;= 1 &amp;&amp; n &lt;= 45.</p>
+<h2 id="solution">Solution</h2>
+<p>The idea of this problem is that walking through an example at a particular step makes a lot more sense.</p>
+<p>For example, if you are at order i, the way to reach this order is either order i-1 up to order 1, or order i-2 up to order 2 up to here. Then we have the subproblem, <code>dp[i] = dp[i - 1] + dp[i - 2]</code>, where the meaning of <code>dp[i]</code> is how many ways (results, states) to be able to go up to order i. That's it, you've written out the state transfer formula for dynamic programming.</p>
+<p>Initialization. When there is a 1st order, <code>dp[1] = 1</code>, when there is a 0th order, the idea here is that there is no step, then there is 1 way to go up to the 0th order, <code>dp[0] = 1</code> (not 0).</p>
+<blockquote>
+<p>Here if dp[0] is not well understood, because n takes values from 1-45, you can set initialization to dp[1] and dp[2].</p>
+</blockquote>
+<h2 id="code">Code</h2>
+<pre><code class="language-java">class Solution {
+    public int climbStairs(int n) {
+        int[] dp = new int[n + 1];
+        dp[1] = 1;
+        dp[0] = 1;
+        for (int i = 2; i &lt;= n; i++) {
+            dp[i] = dp[i - 2] + dp[i - 1];
+        }
+        return dp[n];
+    }
+}
+</code></pre>
+<h2 id="code-2-optimization">Code 2 (optimization)</h2>
+<p>We find that the current state is related to only two of his previous states (results), so instead of setting up a dp array we can just use three variables to keep the state updated. As shown in the figure below, on the next iteration, all the pointers are moved forward by one bit. The original dp_0 is discarded, the original dp_1 becomes the current dp_0, the original dp_i becomes the current dp_1, and the original dp_(i + 1) becomes the current dp_i.</p>
+<p>|dp_0|dp_1|res| |</p>
+<p>|<s>dp_0</s>|dp_0|res = (dp_0 + dp_1) -&gt; dp_1|res|</p>
+<pre><code class="language-java">class Solution {
+    public int climbStairs(int n) {
+        int dp_0 = 1;
+        int dp_1 = 1;
+        if (n &lt; 2) return 1;
+        int res = 0;
+        for (int i = 2; i &lt;= n; i++) {
+            res = dp_0 + dp_1;
+            dp_0 = dp_1;
+            dp_1 = res;
+        }
+        return res;
+    }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E9%97%AE%E9%A2%98">问题</a></li>
+<li><a href="#%E8%A7%A3%E6%9E%90">解析</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%812%E4%BC%98%E5%8C%96">代码2（优化）</a></li>
+<li><a href="#problem">Problem</a></li>
+<li><a href="#solution">Solution</a></li>
+<li><a href="#code">Code</a></li>
+<li><a href="#code-2-optimization">Code 2 (optimization)</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/198-house-robbery-and-213-house-robbery-ii-and-337-house-robbery-iii/">
+              <h3 class="post-title">
+                198. House Robbery &amp; 213. House Robbery II &amp; 337. House Robbery III
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

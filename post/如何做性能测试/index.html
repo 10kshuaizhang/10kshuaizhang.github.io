@@ -1,0 +1,307 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>如何做性能测试 | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="如何做性能测试 | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="上周参与了一个项目其中的性能测试的部分，发现了一些问题，也在做的过程中学到了一些知识。
+
+起因是整个epic是在做整体的优化，需要在测试环境（旧版本）做一个baseline的测试，再将测试环境刷到最新版本再做一次测试进行比对数据结果。
+1 ..." />
+    <meta name="keywords" content="Performance" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              如何做性能测试
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-07-05
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/C3xXdu38Q/" class="post-tag">
+                  # Performance
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <p>上周参与了一个项目其中的性能测试的部分，发现了一些问题，也在做的过程中学到了一些知识。</p>
+<!--more-->
+<p>起因是整个epic是在做整体的优化，需要在测试环境（旧版本）做一个baseline的测试，再将测试环境刷到最新版本再做一次测试进行比对数据结果。</p>
+<h2 id="1-待优化的地方">1 待优化的地方</h2>
+<p>整个执行过程虽然有同事的帮助，但也是自己要遇到一些麻烦：</p>
+<ul>
+<li>测试过程中没有记录跳板机的机器性能，即CPU内存占用等数据，是事后根据测试的时间去翻了一些日志大概捞回了一些数据。缺少这个数据的话其实是对整个系统的性能缺少一定的描述。只有latency这种数据并不足以支撑描述。比如我的系统可以处理10000个请求或者tps非常高，但是系统资源却被用爆了，这样的情况也是相对不可取的。</li>
+<li>对于测试脚本的数据定义没有很精确，没有研究线上的用户数据来确定实际的操作步骤，有点倾向于“拍脑门”。</li>
+</ul>
+<h2 id="2-比较好的地方">2 比较好的地方</h2>
+<p>做的比较好的点是在于：</p>
+<ul>
+<li>测试结果并不是只有average的数据，通过<code>awk</code>这个工具，我们获取到了P50，P75，P90，P99的数据，以及MAX和MIN。举个例子来说，一个地方平均收入并不低但是可能贫富差距大，大部分财富集中在少数人手里，依然是穷人多。同理，平均的latency可能不是很立体的展示性能数据。P50就是说50%的request落在了某个时间之内。要看大多数的latency时间才相对有意义。</li>
+<li>通过脚本自动执行模拟了用户操作。通过写进lua脚本或者shell脚本，模拟了用户的常见操作，减少了出错的概率。当然此处也提到了，模拟操作的次数和复杂度并没有完全调研线上比较真实的操作。</li>
+<li>脚本还输出了每一条测试用例的成功率。这点很好理解，如果case都失败了，很多超时的请求，那测试的数据其实不置信。</li>
+</ul>
+<h2 id="3-如何严谨地做性能测试">3 如何严谨地做性能测试</h2>
+<p>此文也是收到了陈皓老师的影响，所以想直接参考他对于性能测试的理解和指导：</p>
+<blockquote>
+<p>一般来说，性能测试要统一考虑这么几个因素：<strong>Thoughput吞吐量</strong>，<strong>Latency响应时间</strong>，<strong>资源利用</strong>（CPU/MEM/IO/Bandwidth…），<strong>成功率</strong>，<strong>系统稳定性</strong>。</p>
+<p>下面的这些性能测试的方式基本上来源自我的老老东家汤森路透，一家做real-time的金融数据系统的公司。</p>
+<p><strong>一，你得定义一个系统的响应时间latency，建议是TP99，以及成功率</strong>。比如路透的定义：99.9%的响应时间必需在1ms之内，平均响应时间在1ms以内，100%的请求成功。<br>
+如何定义这个latency？<br>
+<strong>二，在这个响应时间的限制下，找到最高的吞吐量</strong>。测试用的数据，需要有大中小各种尺寸的数据，并可以混合。最好使用生产线上的测试数据。</p>
+<p><strong>三，在这个吞吐量做Soak Test，比如：使用第二步测试得到的吞吐量连续7天的不间断的压测系统</strong>。然后收集CPU，内存，硬盘/网络IO，等指标，查看系统是否稳定，比如，CPU是平稳的，内存使用也是平稳的。那么，这个值就是系统的性能</p>
+<p><strong>四，找到系统的极限值。比如：在成功率100%的情况下（不考虑响应时间的长短），系统能坚持10分钟的吞吐量。</strong></p>
+<p><strong>五，做Burst Test。用第二步得到的吞吐量执行5分钟，然后在第四步得到的极限值执行1分钟，再回到第二步的吞吐量执行5钟，再到第四步的权限值执行1分钟，如此往复个一段时间，比如2天</strong>。收集系统数据：CPU、内存、硬盘/网络IO等，观察他们的曲线，以及相应的响应时间，确保系统是稳定的。</p>
+<p><strong>六、低吞吐量和网络小包的测试</strong>。有时候，在低吞吐量的时候，可能会导致latency上升，比如TCP_NODELAY的参数没有开启会导致latency上升（详见<a href="https://coolshell.cn/articles/11564.html">TCP的那些事</a>），而网络小包会导致带宽用不满也会导致性能上不去，所以，性能测试还需要根据实际情况有选择的测试一下这两咱场景。</p>
+<p>（注：在路透会用第二步得到的吞吐量乘以66.7%来做为系统的软报警线，80%做为系统的硬报警线，而极限值仅仅用来扛突发的peak）</p>
+</blockquote>
+<h2 id="4-瓶颈排查思路与qps的计算">4 瓶颈排查思路与QPS的计算</h2>
+<ul>
+<li>
+<p>QPS 如何计算？</p>
+</li>
+<li>
+<ul>
+<li>
+<p>QPS = 并发/RT(response time), 也即并发=QPS*RT。</p>
+<ul>
+<li>
+<ul>
+<li>
+<p>压测找瓶颈就是加并发然后看哪个节点RT增加多，就是哪里有瓶颈。</p>
+<ul>
+<li>
+<p>如何算最大QPS</p>
+  <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304042153169.jpeg" alt="img" style="zoom:67%;" />
+</li>
+<li>
+<p>如何获取cpu time 和 wait time</p>
+<p>Tomcat 调用 MySQL，发去SQL到接收到查询结果这个时间对Tomcat就是wait time。Tomcat处理一个请求需要100ms，其中调用MySQL 需要10ms，那么cpu time 90ms, wait time 10ms。</p>
+</li>
+<li>
+<p>如何获取最佳线程数（最好的并发数）。</p>
+<p>最佳线程数量=（（线程等待时间+线程cpu时间）/线程cpu时间）* cpu数量。刚好消耗完服务器瓶颈资源的临界线程数。当最大QPS的时候， 增加并发也会增加RT。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>一个机器如果需要消耗10ms，其中9ms是CPU调用查DB，那么这个请求需要消耗CPU 1ms，那实际QPS=1000, 8核机器理论支持最大QPS为8000。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>压测前先用一个并发压，一个并发的假设是没有任何锁、竞争，跑出来的rt就是最佳rt，手机RT，QPS，CPU数据；计算得到总QPS、最佳并发线程数；然后加并发，CPU跑满前rt不应该增加太多（理想状况下）。这期间加并发哪里rt增加快瓶颈就在哪里。</li>
+</ul>
+<h2 id="5-参考">5 参考</h2>
+<p><a href="https://coolshell.cn/articles/17381.html">如何做性能测试</a><br>
+<a href="http://blog.itpub.net/69942496/viewspace-2665766/">一文搞懂高并发性能指标：QPS、TPS、RT、吞吐量</a><br>
+<a href="https://plantegg.github.io/2020/11/23/%E4%B8%80%E6%AC%A1%E6%98%A5%E8%8A%82%E5%A4%A7%E4%BF%83%E6%80%A7%E8%83%BD%E5%8E%8B%E6%B5%8B%E4%B8%8D%E8%BE%BE%E6%A0%87%E7%9A%84%E7%93%B6%E9%A2%88%E6%8E%A8%E6%BC%94/">一次春节大促性能压测不达标的瓶颈推演</a></p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E5%BE%85%E4%BC%98%E5%8C%96%E7%9A%84%E5%9C%B0%E6%96%B9">1 待优化的地方</a></li>
+<li><a href="#2-%E6%AF%94%E8%BE%83%E5%A5%BD%E7%9A%84%E5%9C%B0%E6%96%B9">2 比较好的地方</a></li>
+<li><a href="#3-%E5%A6%82%E4%BD%95%E4%B8%A5%E8%B0%A8%E5%9C%B0%E5%81%9A%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95">3 如何严谨地做性能测试</a></li>
+<li><a href="#4-%E7%93%B6%E9%A2%88%E6%8E%92%E6%9F%A5%E6%80%9D%E8%B7%AF%E4%B8%8Eqps%E7%9A%84%E8%AE%A1%E7%AE%97">4 瓶颈排查思路与QPS的计算</a></li>
+<li><a href="#5-%E5%8F%82%E8%80%83">5 参考</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/思考/">
+              <h3 class="post-title">
+                思考
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

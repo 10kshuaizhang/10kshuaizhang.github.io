@@ -1,0 +1,2205 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spring实战(第四版)- part1(基础部分) | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Spring实战(第四版)- part1(基础部分) | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Spring的核心
+第一章简介Spring的框架包括DI和AOP的概况，以及它们是如何帮助解耦应用组件的；
+第二章讨论如何将组件拼装在一起，其中包含Spring提供的自动配置、基于Java的配置以及基于XML的配置；
+第三章介绍了条件化装配..." />
+    <meta name="keywords" content="Spring,Java" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Spring实战(第四版)- part1(基础部分)
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-07-29
+              </span>
+              <span>
+                61 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/2LjrGhsYzm/" class="post-tag">
+                  # Spring
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/YyW64XHFs/" class="post-tag">
+                  # Java
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="spring的核心">Spring的核心</h2>
+<p>第一章简介Spring的框架包括DI和AOP的概况，以及它们是如何帮助解耦应用组件的；</p>
+<p>第二章讨论如何将组件拼装在一起，其中包含Spring提供的自动配置、基于Java的配置以及基于XML的配置；</p>
+<p>第三章介绍了条件化装配、处理自动装配时的歧义、作用域以及Spring表达式语言；</p>
+<p>第四章展示了使用AOP将系统级服务从应用（系统级服务服务的对象）解耦出来。</p>
+<h3 id="第一章-spring之旅">第一章 Spring之旅</h3>
+<ul>
+<li>Spring的bean容器</li>
+<li>核心模块</li>
+<li>生态系统</li>
+<li>Spring新功能</li>
+</ul>
+<p>Spring诞生就是为了<strong>简化</strong>企业级<strong>Java开发</strong>。</p>
+<h4 id="11-简化java开发">1.1 简化Java开发</h4>
+<ol>
+<li>
+<p>bean：应用组件</p>
+</li>
+<li>
+<p>关键策略</p>
+<ul>
+<li>基于POJO的轻量级和最小侵入性编程</li>
+<li>通过依赖注入和面向接口实现松耦合</li>
+<li>通过切面和惯例进行声明式编程</li>
+<li>通过切面和模板减少样板式代码</li>
+</ul>
+</li>
+</ol>
+<h5 id="111-pojo">1.1.1 POJO</h5>
+<ol>
+<li>
+<p>Spring 避免侵入式编程，强迫实现Spring规范的接口和继承它规范的类。</p>
+<pre><code class="language-java">// 一个简单的bean，Spring不对其做任何侵入式改变
+public class HelloWorldBean {
+    public String sayHello() {
+        return &quot;Hello World&quot;;
+    }
+}
+</code></pre>
+</li>
+<li>
+<p>POJO具有的魔力原因之一就是DI来装配。</p>
+</li>
+</ol>
+<h5 id="112-di">1.1.2 DI</h5>
+<ol>
+<li>
+<p>任何一个有实际意义的应用都会由两个或者更多类组成，它们相互协作完成特定业务逻辑。</p>
+</li>
+<li>
+<p>传统的逻辑是每个对象负责管理与自己相互协作的对象（即它所依赖的对象）-&gt; 高耦合，难以测试。</p>
+<pre><code class="language-java">public class DamselRescuingKnight implements Knight {
+    private RescuDamselQuest quest;
+
+    public DamselRescuingKnight() {
+        this.quest = new RescuDamselQuest();
+    }
+
+    public void embarkOnQuest() {
+        quest.embark();
+    }
+}
+</code></pre>
+<p>这段代码中，DamselRescuingKnight构造函数自行创建quest， 这种耦合限制了骑士的能力，它只能救援（不能杀恶龙，喝啤酒……）；另外，在测试的时候需要保证embarkOnQuest()调用的时候embark()也被调用，但是没有简单的方法可以实现。</p>
+</li>
+<li>
+<p>但是完全没有耦合代码什么也做不了，对象需要交互。</p>
+</li>
+<li>
+<p>对象的依赖关系由系统中负责协调各对象的第三方组件在创建对象的时候进行设定。</p>
+<pre><code class="language-java">public class BraveKnight implements Knight {
+    private Quest quest;
+
+    public BraveKnight(Quest quest) {
+        this.quest = quest;
+    }
+
+    public void embarkOnQuest() {
+        quest.embark();
+    }
+}
+// BraveKnight可以灵活处理各种请求
+</code></pre>
+<p>不同于之前的 DamselRescuingKnight，BraveKnight 没有自行创建探险任务，而是在构造的时候把探险任务作为构造器参数传入。这是依赖注入的方式之一，即**<u>构造器注入（constructor injection）</u>**。传入的探险类型是 Quest，也就是所有探险任务都必须实现的一个接口。所以，BraveKnight 能够响应 RescueDamselQuest、SlayDragonQuest、DrinkBeerQuest 等任意的 Quest 实现。</p>
+</li>
+<li>
+<p><strong>一个对象只通过接口（而不是具体实现或初始化过程）来表明依赖关系，那么这种依赖就能够在对象本身毫不知情的情况下，用不同的具体实现进行替换。</strong></p>
+</li>
+<li>
+<p>对依赖进行替换的一个最常用方法就是在测试的时候使用 mock 实现。我们无法充分地测试 DamselRescuingKnight，因为它是紧耦合的；但是可以轻松地测试 BraveKnight，只需给它一个 Quest 的 mock 实现即可，如程序清单 1.4 所示。</p>
+<pre><code class="language-java">package sia.knights;
+import static org.mockito.Mockito.*;
+
+import org.junit.Test;
+
+import sia.knights.BraveKnight;
+import sia.knights.Quest;
+
+public class BraveKnightTest {
+
+  	@Test
+    public void knightShouldEmbarkOnQuest() {
+      	Quest mockQuest = mock(Quest.class);
+      	BraveKnight knight = new BraveKnight(mockQuest);
+      	knight.embarkOnQuest();
+      	verify(mockQuest, times(1)).embark();
+    }
+
+}
+</code></pre>
+</li>
+<li>
+<p>BraveKnight 类可以接受你传递给它的任意一种 Quest 的实现</p>
+<pre><code class="language-java">package sia.knights;
+
+import java.io.PrintStream;
+
+public class SlayDragonQuest implements Quest {
+
+  	private PrintStream stream;
+
+  	public SlayDragonQuest(PrintStream stream) {
+    	this.stream = stream;
+  	}	
+
+  	public void embark() {
+    	stream.println(&quot;Embarking on quest to slay the dragon!&quot;);
+  	}
+}
+// 实现了Quest，就可以注入到BraveKnight中了！
+</code></pre>
+</li>
+<li>
+<p>创建组件之间协作的行为称为<u><strong>装配(wiring)</strong></u>。可以采用XML的方式，如下：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+  xsi:schemaLocation=&quot;
+    http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+
+  &lt;bean id=&quot;knight&quot; class=&quot;sia.knights.BraveKnight&quot;&gt;
+    &lt;constructor-arg ref=&quot;quest&quot; /&gt;
+  &lt;/bean&gt;
+
+  &lt;bean id=&quot;quest&quot; class=&quot;sia.knights.SlayDragonQuest&quot;&gt;
+    &lt;constructor-arg value=&quot;#{T(System).out}&quot; /&gt;
+  &lt;/bean&gt;
+
+&lt;/beans&gt;
+</code></pre>
+<p>在这里，BraveKnight 和 SlayDragonQuest 被声明为 Spring 中的 bean。就 BraveKnight bean 来讲，它在构造时传入了对 SlayDragonQuest bean 的引用，将其作为构造器参数。同时， SlayDragonQuest bean 的声明使用了 Spring 表达式语言（Spring Expression Language），将 System.out（这是一个 PrintStream）传入到了 SlayDragonQuest 的构造器中。</p>
+</li>
+<li>
+<p>或者你更喜欢基于Java的配置</p>
+<pre><code class="language-java">package sia.knights.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import sia.knights.BraveKnight;
+import sia.knights.Knight;
+import sia.knights.Quest;
+import sia.knights.SlayDragonQuest;
+
+@Configuration
+public class KnightConfig {
+
+  @Bean
+  public Knight knight() {
+    return new BraveKnight(quest());
+  }
+  
+  @Bean
+  public Quest quest() {
+    return new SlayDragonQuest(System.out);
+  }
+
+}
+</code></pre>
+</li>
+<li>
+<p>Spring通过**应用上下文（Application Context）**装载bean的定义把它们组装起来。</p>
+</li>
+</ol>
+<h5 id="113-应用切面">1.1.3 应用切面</h5>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209110019547.png" alt="image-20220727091047042" style="zoom: 25%;" />
+<ol>
+<li>
+<p>系统功能代码会重复出现在多个组件中。组件会因为与自身核心业务无关的代码而变得混乱。</p>
+</li>
+<li>
+<p>面向切面编程允许你将分散的功能提取出为可重用的组件。借助 AOP<u><strong>可以使用各种功能层去包裹核心业务层</strong></u>。这些层以声明的方式灵活地应用到系统中，你的核心应用甚至根本不知道它们的存在。这是一个非常强大的理念，可以将安全、事务和日志关注点与核心业务逻辑相分离。</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209110019565.png" alt="image-20220727091350165" style="zoom:25%;" />
+<h6 id="aop应用">AOP应用</h6>
+<p>每一个人都熟知骑士所做的任何事情，这是因为吟游诗人用诗歌记载了骑士的事迹并将其进行传唱。假设我们需要使用吟游诗人这个服务类来记载骑士的所有事迹。程序清单 1.9 展示了我们会使用的 Minstrel 类。</p>
+<pre><code class="language-java">package sia.knights;
+
+import java.io.PrintStream;
+
+public class Minstrel {
+
+  private PrintStream stream;
+  
+  public Minstrel(PrintStream stream) {
+    this.stream = stream;
+  }
+
+  public void singBeforeQuest() {
+    stream.println(&quot;Fa la la, the knight is so brave!&quot;);
+  }
+
+  public void singAfterQuest() {
+    stream.println(&quot;Tee hee hee, the brave knight &quot; +
+    		&quot;did embark on a quest!&quot;);
+  }
+
+}
+</code></pre>
+<pre><code class="language-java">package com.springinaction.knights;
+
+public class BraveKnight implements Knight {
+
+  private Quest quest;
+  private Minstrel minstrel;
+  
+  public BraveKnight(Quest quest, Minstrel minstrel) {
+    this.quest = quest;
+    this.minstrel = minstrel;
+  }
+  
+  public void embarkOnQuest() throws QuestException {
+    minstrel.singBeforeQuest();
+    quest.embark();
+    minstrl.singAfterQuest();
+  }
+  
+} 
+</code></pre>
+<p>然后将Minstrel配置到XML中的bean，并将其注入在BraveKnight的构造器……但是，<strong>管理诗人并不是骑士的工作</strong>。而且如果后面想要一个**<u>不需要传唱的骑士</u>**该怎么办？（将Minstrel置为null然后加一个判断条件？）</p>
+</li>
+<li>
+<p>将Minstrel声明为一个<strong>切面</strong>：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+  xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;
+  xsi:schemaLocation=&quot;http://www.springframework.org/schema/aop 
+  http://www.springframework.org/schema/aop/spring-aop.xsd
+  http://www.springframework.org/schema/beans 
+  http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+
+  &lt;bean id=&quot;knight&quot; class=&quot;sia.knights.BraveKnight&quot;&gt;
+    &lt;constructor-arg ref=&quot;quest&quot; /&gt;
+  &lt;/bean&gt;
+
+  &lt;bean id=&quot;quest&quot; class=&quot;sia.knights.SlayDragonQuest&quot;&gt;
+    &lt;constructor-arg value=&quot;#{T(System).out}&quot; /&gt;
+  &lt;/bean&gt;
+
+  &lt;bean id=&quot;minstrel&quot; class=&quot;sia.knights.Minstrel&quot;&gt;
+    &lt;constructor-arg value=&quot;#{T(System).out}&quot; /&gt;
+  &lt;/bean&gt;
+
+  &lt;aop:config&gt;
+    &lt;aop:aspect ref=&quot;minstrel&quot;&gt;
+      &lt;aop:pointcut id=&quot;embark&quot;
+          expression=&quot;execution(* *.embarkOnQuest(..))&quot;/&gt;
+        
+      &lt;aop:before pointcut-ref=&quot;embark&quot; 
+          method=&quot;singBeforeQuest&quot;/&gt;
+
+      &lt;aop:after pointcut-ref=&quot;embark&quot; 
+          method=&quot;singAfterQuest&quot;/&gt;
+    &lt;/aop:aspect&gt;
+  &lt;/aop:config&gt;
+  
+&lt;/beans&gt;
+</code></pre>
+<p>这里使用了 Spring 的 aop 配置命名空间把 Minstrel bean 声明为一个切面。首先，需要把 Minstrel 声明为一个 bean，然后在元素中引用该 bean。为了进一步定义切面，声明 （使用）在 embarkOnQuest() 方法执行前调用 Minstrel 的 singBeforeQuest() 方法。这种方式被称为前置通知（before advice）。同时声明（使用）在 embarkOnQuest() 方法执行后调用 singAfterQuest() 方法。这种方式被称为后置通知（after advice）。</p>
+<p>在这两种方式中，pointcut-ref 属性都引用了名字为 embark 的切入点。该切入点是在前边的元素中定义的，并配置 expression 属性来选择所应用的通知。表达式的语法采用的是 AspectJ 的切点表达式语言。</p>
+</li>
+<li>
+<p>这样做的好处就是，MInstrel仍然是一个POJO， 我们只需在配置文件配置后它就变成了一个切面。BraveKnight不需要显式调用它。</p>
+</li>
+</ol>
+<h5 id="114-使用模板消除样式代码">1.1.4 使用模板消除样式代码</h5>
+<ol>
+<li>使用 Java API 而导致的样板式代码，例如使用 JDBC 访问数据库查询数据。</li>
+</ol>
+<pre><code class="language-java">public Employee getEmployeeById(long id) {
+  
+  Connection conn = null;
+  PreparedStatement stmt = null;
+  Result rs = null;
+  
+  try {
+    conn = dataSource.getConnection();
+    stmt = conn.prepareStatment(
+      &quot;select id, firstname, lastname, salary from &quot; +
+      &quot;employee where id=?&quot;);
+    stmt.setLong(1, id);
+    rs = stmt.executeQuery();
+    Employee employee = null;
+    if (rs.next()) {
+      employee = new Employee();
+      employee.setId(rs.getLong(&quot;id&quot;));
+      employee.setFirstName(rs.getString(&quot;firstname&quot;));
+      employee.setLastName(rs.getString(&quot;lastname&quot;));
+      employee.setSalary(rs.getBigDecimal(&quot;salary&quot;));
+    }
+    return employee;
+  } catch (SQLException e) {
+  } finally {
+    if (rs != null) {
+      try {
+        rs.close();
+      } catch (SQLException e) {
+      }
+    }
+    
+    if (stmt != null) {
+      try {
+        stmt.close();
+      } catch (SQLException e) {
+      }
+    }
+    
+    if (conn != null) {
+      try {
+        conn.close();
+      } catch (SQLException e) {
+      }
+    }    
+  }
+  return null;
+}
+</code></pre>
+<ol start="2">
+<li>
+<p>Spring希望通过模板封装消除样板代码。Spring的JdbcTemplate 使得执行数据库操作时，避免传统的 JDBC 样板代码成为了可能。使用 Spring 的 JdbcTemplate（利用了 Java 5 特性的 JdbcTemplate 实现）重写的 getEmployeeById() 方法仅仅关注于获取员工数据的核心逻辑，而不需要迎合 JDBC API 的需求。</p>
+<pre><code class="language-java">public Employee getEmployeeById(long id) {
+  return jdbcTemplate.queryForObject(
+    &quot;select id, firstname, lastname, salary &quot; +
+    &quot;from employee where id=?&quot;,
+    new RowMapper&lt;Employee&gt;() {
+      public Employee mapRow(ResultSet rs, int rowNum) throws SQLException {
+        Employee employee = new Employee();
+        employee.setId(rs.getLong(&quot;id&quot;));
+        employee.setFirstName(rs.getString(&quot;firstname&quot;));
+        employee.setLastName(rs.getString(&quot;lastname&quot;));
+        employee.setSalary(rs.getBigDecimal(&quot;salary&quot;));
+        return employee;
+      }
+    }, 
+    id);
+} // 让你更关注业务逻辑
+</code></pre>
+</li>
+</ol>
+<h4 id="12-容纳bean">1.2 容纳bean</h4>
+<h5 id="121-使用应用上下文">1.2.1 使用应用上下文</h5>
+<ol>
+<li>
+<p>常见的应用上下文</p>
+<ul>
+<li><code>AnnotationConfigApplicationContext</code>：从一个或者多个基于Java的配置类中加载Spring应用上下文；</li>
+<li><code>AnnotationConfigWebApplicationContext</code>：从一个或者多个基于Java的配置类中加载Spring Web应用上下文；</li>
+<li><code>ClassPathXmlApplicationContext</code>：从类路径下一个或者多个XML配置文件中加载上下文定义，把应用上下文的定义文件作为类资源；</li>
+<li><code>FileSystemApplicationContext</code>：从文件系统下的一 个或多个 XML 配置文件中加载上下文定义；</li>
+<li><code>XmlWebApplicationContext</code>：从 Web 应用下的一个或多个 XML 配置文件中加载上下文定义。</li>
+</ul>
+</li>
+<li>
+<p>将bean加载到bean工厂</p>
+<pre><code class="language-java">ApplicationContext context = new ClassPathXmlApplicationContext(&quot;knight.xml&quot;);
+</code></pre>
+<p>之后就可以调用上下文的getBean()方法从Spring容器中获取bean。</p>
+</li>
+</ol>
+<h5 id="122-bean的生命周期">1.2.2 bean的生命周期</h5>
+<ol>
+<li>
+<p>传统Java应用，bean被new实例化就可以使用，不使用后JVM会在GC回收。</p>
+</li>
+<li>
+<p>Spring容器中的bean的生命周期就相对复杂</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209110019875.png" alt="image-20220728084604520" style="zoom:40%;" />
+<ol>
+<li>
+<p>Spring对bean进行实例化；</p>
+</li>
+<li>
+<p>Spring将值和bean的引用注入到bean对应的属性中；</p>
+</li>
+<li>
+<p>如果bean实现了BeanNameAware接口，Spring将bean的ID传递给setBeanName()方法；</p>
+</li>
+<li>
+<p>如果 bean 实现了BeanFactoryAware接口，Spring 将调用setBeanFactory() 方法，将 BeanFactory 容器实例传入；</p>
+</li>
+<li>
+<p>如果 bean 实现了 ApplicationContextAware接口，Spring将调用 setApplicationContext() 方法，将 bean 所在的应用上下文的引用传入进来；</p>
+</li>
+<li>
+<p>如果 bean 实现了 BeanPostProcessor接口，Spring将调用它们的 postProcessBefore-Initialization() 方法；</p>
+</li>
+<li>
+<p>如果 bean 实现了 InitializingBean 接口，Spring 将调用它们的 afterPropertiesSet() 方法。类似地，如果 bean 使用 initmethod 声明了初始化方法，该方法也会被调用；</p>
+</li>
+<li>
+<p>如果 bean 实现了 BeanPostProcessor 接口，Spring 将调用它们的 postProcessAfter-Initialization() 方法；</p>
+</li>
+<li>
+<p>此时，bean 已经准备就绪，可以被应用程序使用了，它们将一直驻留在应用上下文中，直到该应用上下文被销毁；</p>
+</li>
+<li>
+<p>如果 bean 实现了 DisposableBean 接口，Spring 将调用它的 destroy() 接口方法。</p>
+</li>
+</ol>
+</li>
+</ol>
+<h4 id="13-spring风景线生态系统">1.3 Spring风景线（生态系统）</h4>
+<h5 id="131-spring模块">1.3.1 Spring模块</h5>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209111437825.jpeg" alt="1.7 spring 框架模块" style="zoom:50%;" />
+<p><strong>核心容器</strong></p>
+<p>管理Spring应用的bean的创建、配置和管理。它包括了bean工厂提供了DI的功能；基于bean工厂还会有多种应用上下文的实现。该模块还提供许多企业服务例如Email、JNDI 访问、EJB 集成和调度。</p>
+<p><strong>AOP模块</strong></p>
+<p>帮助应用对象解耦。</p>
+<p><strong>数据访问与集成</strong></p>
+<p>Spring 的 JDBC 和 DAO（Data Access Object）模块抽象了数据库连接关闭处理等操作的样板式代码，简化代码同时还可以避免因为关闭数据库资源失败而引发的问题。该模块在多种数据库服务的错误信息之上构建了一个语义丰富的异常层，以后我们再也不需要解释那些隐晦专有的 SQL 错误信息了！</p>
+<p>提供了ORM模块，集成Hibernate、Java Persisternce API、Java Data Object 和 iBATIS SQL Maps。</p>
+<p><strong>Web与远程调用</strong></p>
+<p>MVC帮助用户将界面逻辑与应用逻辑分离。</p>
+<p>Spring 远程调用功能集成了  RMI（Remote Method Invocation）、Hessian、Burlap、JAX-WS，同时 Spring 还自带了一个 远程调用框架：HTTP invoker。Spring 还提供了暴露和使用 REST API 的良好支持。</p>
+<p><strong>Instrumentation</strong></p>
+<p>Spring 的 Instrumentation 模块提供了为 JVM 添加代理（agent）的功能。 具体来讲，它为 Tomcat 提供了一个织入代理，能够为 Tomcat 传递类文件，就像这些文件是被类加载器加载的一样。</p>
+<p><strong>测试</strong></p>
+<p>鉴于开发者自测的重要性，Spring 提供了测试模块以致力于 Spring 应用的测试。</p>
+<p>通过该模块，你会发现 Spring 为使用 JNDI、Servlet 和 Portlet 编写单元测试提供了一系列的 mock 对象实现。对于集成测试，该模块为加载 Spring 应用上下文中的 bean 集合以及与 Spring 上下文中的 bean 进行交互提供了支持。</p>
+<h5 id="132-spring-portfolio">1.3.2 Spring Portfolio</h5>
+<p>Spring Portfolio 包括多个构建于核心 Spring 框架之上的框架和类库。</p>
+<p><strong>Spring Web Flow</strong></p>
+<p>Spring Web Flow 建立于 Spring MVC 框架之上，它为基于流程的会话式 Web 应用（可以想一下购物车或者向导功能）提供了支持。</p>
+<p><strong>Spring Web Service</strong></p>
+<p>虽然核心的 Spring 框架提供了将 Spring bean 以声明的方式发布为 Web Service 的功能，但是这些服务是基于一个具有争议性的架构（拙劣的契约后置模型）之上而构建的。这些服务的契约由 bean 的接口来决定。Spring Web Service 提供了契约优先的 Web Service 模型，服务的实现都是为了满足服务的契约而编写的。</p>
+<p><strong>Spring Security</strong></p>
+<p>利用 Spring AOP，Spring Security 为 Spring 应用提供了声明式的安全机制。</p>
+<p><strong>Spring Integration</strong></p>
+<p>Spring Integration 提供了多种通用应用集成模式的 Spring 声明式风格实现。</p>
+<p><strong>Spring Batch</strong></p>
+<p>如果需要开发一个批处理应用，你可以通过 Spring Batch，使用 Spring 强大的面向 POJO 的编程模型。</p>
+<p><strong>Spring Data</strong></p>
+<p>不管你使用文档数据库，如 MongoDB，图数据库，如 Neo4j，还是传统的关系型数据库，Spring Data 都为持久化提供了一种简单的编程模型。这包括为多种数据库类型提供了一种自动化的 Repository 机制， 它负责为你创建 Repository 的实现。</p>
+<p><strong>Spring Social</strong></p>
+<p>社交网络是互联网领域中新兴的一种潮流，越来越多的应用正在融入社交网络网站，例如 Facebook 或者 Twitter。如果对此感兴趣，你可以了解一下 Spring Social，这是 Spring 的一个社交网络扩展模块。</p>
+<p><strong>Spring Mobile</strong></p>
+<p>Spring Mobile 是 Spring MVC 新的扩展模块，用于支持移动 Web 应用开发。</p>
+<p><strong>Spring for Android</strong></p>
+<p>与 Spring Mobile 相关的是 Spring Android 项目。这个新项目，旨在通过 Spring 框架为开发基于 Android 设备的本地应用提供某些简单的支持。</p>
+<p><strong>Spring Boot</strong></p>
+<p>Spring Boot大量依赖于自动配置技术，它能够消除大部分（在很多场 景中，甚至是全部）Spring 配置。</p>
+<h4 id="14-spring新功能">1.4 Spring新功能</h4>
+<p>略。</p>
+<h4 id="15-小结">1.5 小结</h4>
+<h3 id="第二章-装配bean">第二章 装配Bean</h3>
+<ul>
+<li>声明bean</li>
+<li>构造器注入和Setter方法注入</li>
+<li>装配bean</li>
+<li>控制bean的创建和销毁</li>
+</ul>
+<h4 id="21-spring配置的可选方案">2.1 Spring配置的可选方案</h4>
+<p>方案没有优劣，只有选择你觉得最合适的即可。</p>
+<ul>
+<li>在 XML 中进行显式配置。</li>
+<li>在 Java 中进行显式配置。</li>
+<li>隐式的 bean 发现机制和自动装配。</li>
+</ul>
+<blockquote>
+<p>即便如此，作者的建议是尽可能地使用自动配置的机制。显式配置越少越好。当你必须要显式配置 bean 的时候（比如，有些源码不是由你来维护的，而当你需要为这些代码配置 bean 的时候），推荐使用类型安全并且比 XML 更加强大的 JavaConfig。最后，只有当你想要使用便利的 XML 命名空间，并且在 JavaConfig 中没有同样的实现时，才应该使用 XML。</p>
+</blockquote>
+<h4 id="22-自动化装配bean">2.2 自动化装配bean</h4>
+<ul>
+<li>组件扫描（component scanning）：Spring会自动发现应用上下文中所创建的bean。</li>
+<li>自动装配（autowiring）：Spring自动满足bean之间的依赖。</li>
+</ul>
+<p>下面会看到一个例子：我们会创建 CompactDisc 类，Spring 会发现它并将其创建为一个 bean。然后，再创建一个 CDPlayer 类，让 Spring 发现它，并将 CompactDiscbean 注入进来。</p>
+<h5 id="221-创建可被发现的bean">2.2.1 创建可被发现的bean</h5>
+<pre><code class="language-java">package soundsystem;
+
+public interface CompactDisc {
+  void play();
+}
+</code></pre>
+<p>定义一个CompactDisc接口，定义了一个播放器对一盘CD所能进行的操作，通过这种方式降低耦合。</p>
+<pre><code class="language-java">package soundsystem;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class SgtPeppers implements CompactDisc {
+
+  private String title = &quot;Sgt. Pepper's Lonely Hearts Club Band&quot;;  
+  private String artist = &quot;The Beatles&quot;;
+  
+  public void play() {
+    System.out.println(&quot;Playing &quot; + title + &quot; by &quot; + artist);
+  }
+  
+}
+</code></pre>
+<p>**@Component注解表明该类会作为组件类，告诉Spring要为这个类创建bean。**所以就不需要在其它地方显式配置SgtPepperbean了。</p>
+<p>但是我们要显式配置Spring从而启动组件扫描。</p>
+<pre><code class="language-java">package soundsystem;
+
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ComponentScan
+public class CDPlayerConfig { 
+}
+</code></pre>
+<p><strong>@ComponentScan</strong>会扫描与config类相同的包及其子包，找到带有@Component注解的类，并为其创建一个bean。为了验证我们的组件自动扫描，我们可以创建一个测试。</p>
+<pre><code class="language-java">package soundsystem;
+
+import static org.junit.Assert.*;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes=CDPlayerConfig.class)
+public class CDPlayerTest {
+
+  @Autowired
+  private CompactDisc cd;
+  
+  @Test
+  public void cdShouldNotBeNull() {
+    assertNotNull(cd);
+  }
+  
+}
+</code></pre>
+<h5 id="222-为组件扫描的bean命名">2.2.2 为组件扫描的bean命名</h5>
+<ol>
+<li>
+<p>Spring应用上下文中所有的bean都会有一个id。</p>
+</li>
+<li>
+<p>一般来说这个id就是将bean的类名首字母小写得到，如果你想使用不同的id，可以将值传递给@Component注解。</p>
+<pre><code class="language-java">@Componet(&quot;lonelyHeartsClub&quot;)
+public class SgtPeppers implements CompactDisc {
+  ......
+}
+</code></pre>
+<p>还有另一种方法为bean命名，即使用Java依赖注入规范中提供的@Named注解：</p>
+<pre><code class="language-java">package soundsystem;
+
+import javax.inject.Named;
+
+@Named(&quot;lonelyHeartsClub&quot;)
+public class SgtPeppers implements CompactDisc {
+  ......
+}
+</code></pre>
+</li>
+<li>
+<p>Spring支持将@Named作为@Component的替代，它们会有些差异但是大部分场景可以互换。</p>
+</li>
+</ol>
+<h5 id="223-设置组件扫描的基础包">2.2.3 设置组件扫描的基础包</h5>
+<ol>
+<li>
+<p>如果我们将配置类单独放在一个包中，那么我们就需要配置组件扫描的基础包。</p>
+</li>
+<li>
+<p>在@ComponentScan的value属性中指明包的名称：</p>
+<pre><code class="language-java">@Configuration
+@ComponentScan(&quot;soundsystem&quot;)
+public class CDPlayerConfig { }
+</code></pre>
+</li>
+<li>
+<p>还可以更清晰的设置基础包：</p>
+<pre><code class="language-java">@Configuration
+@ComponentScan(basePackages={&quot;soundsystem&quot;, &quot;video&quot;})
+public class CDPlayerConfig { }
+</code></pre>
+<p>多个基础包可以传一个数组。</p>
+</li>
+<li>
+<p>设置基础包使用String类型是类型不安全的。所以还可以设置成指定包中所包含的类或者接口。</p>
+<pre><code class="language-java">@Configuration
+@ComponentScan(basePackageClasses={CDPlayer.class, DVDPlayer.clas})
+public class CDPlayerConfig { }
+</code></pre>
+</li>
+<li>
+<p><strong>空标记接口</strong>：可以在包中建立一个用来扫描的空标记接口（一个存在于某个目标包中的接口，没有实际意义，只作为定位查找的依据），这样避免了引用实际的应用程序代码，对重构友好。</p>
+</li>
+</ol>
+<h5 id="224-通过为bean添加注解实现自动装配">2.2.4 通过为bean添加注解实现自动装配</h5>
+<ol>
+<li>
+<p><strong>自动装配</strong>： 自动在Spring上下文寻找匹配某个bean需求的其它bean。可以借用**@Autowired**。</p>
+<pre><code class="language-java">package soundsystem;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class CDPlayer implements MediaPlayer {
+  private CompactDisc cd;
+
+  @Autowired
+  public CDPlayer(CompactDisc cd) {
+    this.cd = cd;
+  }
+
+  public void play() {
+    cd.play();
+  }
+
+}
+
+// 当Spring创建CDPlayerbean的时候，会通过构造器实例化并且会传入一个可设置给CompactDisc类型的bean，将其注入到CDPlayer中。
+</code></pre>
+</li>
+<li>
+<p>@Autowired注解还能用在属性的Setter方法上。如果CDPlayer有一个setCompactDisc()方法，可以采用如下方式进行自动装配：</p>
+<pre><code class="language-java">@Autowired
+public void setCompactDisc(CompactDisc cd){
+  this.cd = cd;
+}
+</code></pre>
+</li>
+<li>
+<p>其实@Autowired注解可以应用在任何方法上发挥作用。<u>Spring会尝试满足方法参数声明的依赖。</u>-&gt; 如何指导我要的是DrPepper实例还是Coke实例？</p>
+</li>
+<li>
+<p>如果没有匹配的bean，Spring会抛出异常，@Autowired的required属性设置为false可以避免异常抛出。这时这个bean处于未装配的状态。所以这种时候如果缺少空值检查可能会报空指针异常。</p>
+</li>
+<li>
+<p>多个bean满足依赖关系的话，Spring也会抛出异常（自动装配的歧义性）。</p>
+</li>
+<li>
+<p>Java注入依赖提供了@Inject，它和@Autowired也是在大多数情况下可以互换。</p>
+</li>
+</ol>
+<h5 id="225-验证自动装配">2.2.5 验证自动装配</h5>
+<ol>
+<li>
+<p>我们可以通过修改之前的Test来验证自动装配的bean是我们想要的：</p>
+<pre><code class="language-java">package soundsystem;
+
+import static org.junit.Assert.*;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes=CDPlayerConfig.class)
+public class CDPlayerTest {
+
+  @Rule
+  public final StandardOutputStreamLog log = new StandardOutputStreamLog();
+
+  @Autowired
+  private MediaPlayer player;
+  
+  @Autowired
+  private CompactDisc cd;
+  
+  @Test
+  public void cdShouldNotBeNull() {
+    assertNotNull(cd);
+  }
+
+  @Test
+  public void play() {
+    player.play();
+    assertEquals(
+        &quot;Playing Sgt. Pepper's Lonely Hearts Club Band by The Beatles\n&quot;, 
+        log.getLog());
+  }
+
+}
+</code></pre>
+</li>
+<li>
+<p>在测试代码中使用 System.out.println() 是稍微有点棘手的事情。因此，该样例中使用了 StandardOutputStreamLog，这是来源于 <a href="http://stefanbirkner.github.io/systemrules/index.html">System Rules 库</a> 的一个 JUnit 规则，该规则能够基于控制台的输出编写断言。在这里，我们断言 SgtPeppers.play() 方法的输出被发送到了控制台上。</p>
+</li>
+</ol>
+<h4 id="23-通过java代码装配">2.3 通过Java代码装配</h4>
+<ol>
+<li>有时候使用第三方库中的组件，没办法在它的类添加@Component和@Autowired，这时就不能使用自动化装配。</li>
+<li>一般会将Config代码放进单独的包，config类不应出现在业务代码的逻辑，config代码也不应该包含业务代码。</li>
+</ol>
+<h5 id="231-创建配置类">2.3.1 创建配置类</h5>
+<pre><code class="language-java">package soundsystem;
+
+import org.spingframework.context.annotation.Configuration;
+
+@Configuration
+public class CDPlayerConfig {
+}
+</code></pre>
+<p><strong>@Configureation表明这个类是一个配置类</strong>。去掉了 CDPlayerConfig的 @ComponentScan 注解，因为这里要做显示配置。</p>
+<h5 id="232-声明简单的bean">2.3.2 声明简单的bean</h5>
+<ol>
+<li>要在 JavaConfig 中声明 bean，我们需要编写一个方法，这个方法会创建所需类型的实例，然后给这个方法添加 @Bean 注解。比方说，下面的代码声明了 CompactDisc bean：</li>
+</ol>
+<pre><code class="language-java">@Bean
+public CompactDisc sgtPeppers() {
+  return new SgtPeppers();
+}
+</code></pre>
+<p>@Bean 注解会告诉 Spring 这个方法将会返回一个对象，该对象要注册为 Spring 应用上下文中的 bean。方法体中包含了最终产生 bean 实例的逻辑。</p>
+<ol start="2">
+<li>bean的id和带有@Bean注解的方法名是一样的。也可以用name属性指定名称<code>@Bean(name=&quot;lonelyHeartsClubBand&quot;)</code></li>
+</ol>
+<h5 id="233-借助javaconfig实现注入">2.3.3 借助JavaConfig实现注入</h5>
+<ol>
+<li>
+<p>最简单的方法就是引用创建bean的方法。</p>
+<pre><code class="language-java">@Bean
+public CDPlayer cdPlayer() {
+  return new CDPlayer(sgtPeppers());
+}
+</code></pre>
+</li>
+<li>
+<p>sgtPepper()方法添加了@Bean注解，Spring会对其调用进行拦截，所以并非每次调用这个方法都会实际调用。</p>
+</li>
+<li>
+<pre><code class="language-java"> @Bean
+ public CDPlayer cdPlayer() {
+   return new CDPlayer(sgtPeppers());
+ }
+ 
+ @Bean
+ public CDPlayer anotherCDPlayer() {
+   return new CDPlayer(sgtPeppers());
+ }
+</code></pre>
+<p>上述两个CDPlayer会取到同一个CD，这是不符合逻辑的， 没有一个CD可以同时放在两个机子里。但是在软件领域，Spring中的bean都是单例。</p>
+</li>
+<li>
+<p>另外一种调用方法：</p>
+<pre><code class="language-java">@Bean
+public CDPlayer cdPlayer(CompactDisc compactDisc) {
+  return new CDPlayer(compactDisc);
+}
+</code></pre>
+<p>cdPlayer() 方法请求一个 CompactDisc 作为参数。当 Spring 调用 cdPlayer() 创建 CDPlayerbean 的时候，它会自动装配一个 CompactDisc 到配置方法之中。然后，方法体就可以按照合适的方式来使用它。</p>
+</li>
+<li>
+<p>第二种方法比较好是因为它不会要求将CompactDisc声明在同一个JavaConfig类中，也不一定需要声明在JavaConfig中，它可以通过组件自动扫描或者XML配置。只要最终功能健全即可。</p>
+</li>
+</ol>
+<h4 id="24-通过xml装配bean">2.4 通过XML装配bean</h4>
+<h5 id="241-创建xml配置规范">2.4.1 创建XML配置规范</h5>
+<p>一个简单的例子：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context&quot; &gt;
+  &lt;!-- configuration details go here /&gt;
+&lt;/beans&gt;
+</code></pre>
+<h5 id="242-声明一个简单的bean">2.4.2 声明一个简单的&lt;bean&gt;</h5>
+<ol>
+<li>
+<p>类似JavaConfig中的@Bean: <code>&lt;bean class=&quot;soundsystem.SgtPeppers&quot; /&gt;</code></p>
+</li>
+<li>
+<p>后需要引用的话最好制定一个ID，不然默认生成的是例如“soundsystem.SgtPeppers#0”。所以最好在声明的时候也设置ID<code>&lt;bean id=&quot;compactDisc&quot; class=&quot;soundsystem.SgtPeppers&quot; /&gt;</code></p>
+<blockquote>
+<p>减少繁琐为了减少 XML 中繁琐的配置，只对那些需要按名字引用的 bean（比如，你需要将对它的引用注入到另外一个 bean中）进行明确地命名。</p>
+</blockquote>
+</li>
+<li>
+<p><em>注意1</em>：不需要直接创建SgtPeppers的实例，Spring在发现它的时候会调用其构造器创建bean。</p>
+</li>
+<li>
+<p><em>注意2</em>：给bean设置的类型class无法保证其是真正的类，可以借助IDE检查其合法性。</p>
+</li>
+</ol>
+<h5 id="243-借助构造器注入初始化bean">2.4.3 借助构造器注入初始化bean</h5>
+<p>在 XML 中声明 DI 时，会有多种可选的配置方案和风格。具体到构造器注入，有两种基本的配置方案可供选择：</p>
+<ul>
+<li><code>&lt;constructor-arg&gt;</code> 元素</li>
+<li>使用 Spring 3.0 所引入的 <code>c-</code> 命名空间</li>
+</ul>
+<p><strong>构造器注入bean引用</strong></p>
+<p>现在已经声明了 SgtPeppers bean，并且 SgtPeppers 类实现了 CompactDisc 接口，所以实际上我们已经有了一个可以注入到 CDPlayer bean 中的 bean。我们所需要做的就是在 XML 中声明 CDPlayer 并通过 ID 引用 SgtPeppers：</p>
+<pre><code class="language-xml">&lt;bean id=&quot;cdPlayer&quot; class=&quot;soundsystem.CDPlayer&quot;&gt;
+  &lt;constructor-arg ref=&quot;compactDisc&quot;&gt;
+&lt;/bean&gt;
+</code></pre>
+<p>作为替代的方案，你也可以使用 Spring 的 <code>c-</code> 命名空间:</p>
+<pre><code class="language-xml">&lt;bean id=&quot;cdPlayer&quot; class=&quot;soundsystem.CDPlayer&quot; c:cd-ref=&quot;compactDisc&quot; /&gt;
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209111447747.jpeg" alt="c 标签组成" loading="lazy"></figure>
+<p><strong>将字面量注入到构造器</strong></p>
+<ol>
+<li>
+<p>有时候，我们需要做的只是用一个字面量值来配置对象。</p>
+<pre><code class="language-java">package soundsystem;
+
+import java.util.List;
+
+public class BlankDisc implements CompactDisc {
+
+  private String title;
+  private String artist;
+
+  public BlankDisc(String title, String artist) {
+    this.title = title;
+    this.artist = artist;
+  }
+
+  public void play() {
+    System.out.println(&quot;Playing &quot; + title + &quot; by &quot; + artist);
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>使用了 value 属性，通过该属性表明给定的值要以字面量的形式注入到构造器之中</p>
+<pre><code class="language-xml">&lt;bean id=&quot;compactDisc&quot; class=&quot;soundsystem.BlankDisc&quot;&gt;
+    &lt;constructor-arg value=&quot;Sgt. Pepper's Lonely Hearts Club Band&quot; /&gt;
+    &lt;constructor-arg value=&quot;The Beatles&quot; /&gt;
+&lt;/bean&gt;
+</code></pre>
+</li>
+</ol>
+<p><strong>装配集合</strong></p>
+<pre><code class="language-java">package soundsystem;
+
+import java.util.List;
+
+public class BlankDisc implements CompactDisc {
+
+  private String title;
+  private String artist;
+  private List&lt;String&gt; tracks;
+
+  public BlankDisc(String title, String artist, List&lt;String&gt; tracks) {
+    this.title = title;
+    this.artist = artist;
+    this.tracks = tracks;
+  }
+
+  public void play() {
+    System.out.println(&quot;Playing &quot; + title + &quot; by &quot; + artist);
+    for (String track : tracks) {
+      System.out.println(&quot;-Track: &quot; + track);
+    }
+  }
+
+}
+</code></pre>
+<ol>
+<li>
+<p>这个变更会对 Spring 如何配置 bean 产生影响，在声明 bean 的时候，我们必须要提供一个磁道列表。</p>
+</li>
+<li>
+<p>声明列表</p>
+<pre><code class="language-java">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+  xmlns:c=&quot;http://www.springframework.org/schema/c&quot;
+  xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+
+  &lt;bean id=&quot;compactDisc&quot;
+        class=&quot;soundsystem.BlankDisc&quot;
+        c:_0=&quot;Sgt. Pepper's Lonely Hearts Club Band&quot;
+        c:_1=&quot;The Beatles&quot;&gt;
+    &lt;constructor-arg&gt;
+      &lt;list&gt;
+        &lt;value&gt;Sgt. Pepper's Lonely Hearts Club Band&lt;/value&gt;
+        &lt;value&gt;With a Little Help from My Friends&lt;/value&gt;
+        &lt;value&gt;Lucy in the Sky with Diamonds&lt;/value&gt;
+        &lt;value&gt;Getting Better&lt;/value&gt;
+        &lt;value&gt;Fixing a Hole&lt;/value&gt;
+        &lt;!-- ...other tracks omitted for brevity... --&gt;
+      &lt;/list&gt;
+    &lt;/constructor-arg&gt;
+  &lt;/bean&gt;
+
+&lt;/beans&gt;
+</code></pre>
+<p>其中，<code>&lt;list&gt;</code> 元素是 <code>&lt;constructor-arg&gt;</code> 的子元素，这表明一个包含值的列表将会传递到构造器中。其中，<code>&lt;value&gt;</code> 元素用来指定列表中的每个元素。</p>
+</li>
+</ol>
+<h5 id="244-设置属性">2.4.4 设置属性</h5>
+<ol>
+<li>
+<pre><code class="language-java"> package soundsystem;
+ import org.springframework.beans.factory.annotation.Autowired;
+ 
+ public class CDPlayer implements MediaPlayer {
+   private CompactDisc cd;
+ 
+   @Autowired
+   public CDPlayer(CompactDisc cd) {
+     this.cd = cd;
+   }
+ 
+   public void play() {
+     cd.play();
+   }
+ 
+ }
+</code></pre>
+</li>
+<li>
+<p>对强依赖使用构造器注入，而对可选性的依赖使用属性注入。对于 BlankDisc 来讲，唱片名称、艺术家以及磁道列表是强依赖</p>
+</li>
+</ol>
+<h4 id="25-导入和混合配置">2.5 导入和混合配置</h4>
+<h5 id="251-在javaconfig中引用xml配置">2.5.1 在JavaConfig中引用XML配置</h5>
+<p>假设 BlankDisc 定义在名为 cdconfig. xml 的文件中，该文件位于根类路径下，那么可以修改 SoundSystemConfig，让它使用 @ImportResource 注解，如 下所示</p>
+<pre><code class="language-java">package soundsystem;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ImportResource;
+
+@Configuration
+@Import(CDPlayerConfig.class)
+@ImportResource(&quot;classpath:&quot;)
+public class SoundSystemConfig {
+
+}
+</code></pre>
+<h5 id="252-在xml中引用javaconfig">2.5.2 在XML中引用JavaConfig</h5>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+xmlns:c=&quot;http://www.springframework.org/schema/c&quot;
+xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+  &lt;bean class=&quot;soundsystem.CDConfig&quot; /&gt;
+  &lt;bean id=&quot;cdPlayer&quot; class=&quot;soundsystem.CDPlayer&quot;
+        c:cd-ref=&quot;compactDisc&quot; /&gt;    
+&lt;/beans&gt;
+</code></pre>
+<p>不管使用 JavaConfig 还是使用 XML 进行装配，我通常都会创建一个根配置（root configuration），也就是这里展现的这样，这个配置会将两个或更多的装配类或 XML 文件组合起来。</p>
+<h4 id="26-小结">2.6 小结</h4>
+<h3 id="第三章-高级装配">第三章 高级装配</h3>
+<ul>
+<li>Spring profile</li>
+<li>条件化的bean声明</li>
+<li>自动装配与歧义性</li>
+<li>bean的作用域</li>
+<li>Spring表达式语言</li>
+</ul>
+<h4 id="31-环境与profile">3.1 环境与profile</h4>
+<ol>
+<li>
+<p>在开发和测试以及生产环境的配置不尽相同。开发环境使用嵌入式数据库：</p>
+<pre><code class="language-java">@Bean(destroyMethod = &quot;shutdown&quot;)
+public DataSource dataSource() {
+  return new EmbeddedDatabaseBuilder()
+        .addScript(&quot;classpath:schema.sql&quot;)
+        .addScript(&quot;classpath:test-data.sql&quot;)
+        .build();
+}
+</code></pre>
+<p>EmbeddedDatabaseBuilder 会搭建一个嵌入式的 Hypersonic 数据库，它的模式（schema）定义在 schema.sql 中，测试数据则是通过 test-data.sql 加载的。</p>
+<p>在生产环境来说，这种方法就比较糟糕（我猜是因为不够满足业务的需要的灵活性），所以采用如下的方式创建bean：</p>
+<pre><code class="language-java">@Bean
+public DataSource dataSource() {
+  JndiObjectFactoryBean jndiObjectFactoryBean = new JndiObjectFactoryBean();
+  jndiObjectFactoryBean.setJndiName(&quot;jdbc/myDS&quot;);
+  jndiObjectFactoryBean.setResourceRef(true);
+  jndiObjectFactoryBean.setProxyInterface(javax.sql.DataSource.class);
+  return (DataSource) jndiObjectFactoryBean.getObject();
+}
+</code></pre>
+<p>通过 JNDI 获取 DataSource 能够让容器决定该如何创建这个 DataSource，甚至包括切换为容器管理的连接池。即便如此，JNDI 管理的 DataSource 更加适合于生产环境，对于简单的集成和开发测试环境来说，这会带来不必要的复杂性。在测试环境，可能是如下：</p>
+<pre><code class="language-java">@Bean(destroyMethod = &quot;close&quot;)
+public DataSource dataSource() {
+  BasicDataSource dataSource = new BasicDataSource();
+  dataSource.setUrl(&quot;jdbc:h2:tcp://dbserver/~/test&quot;);
+  dataSource.setDriverClassName(&quot;org.h2.Driver&quot;);
+  dataSource.setUsername(&quot;sa&quot;);
+  dataSource.setPassword(&quot;password&quot;);
+  dataSource.setInitialSize(20);
+  dataSource.setMaxActive(30);
+  
+  return dataSource;
+}
+</code></pre>
+</li>
+<li>
+<p>为不同的环境在不同的配置文件配置不同的bean，在构建阶段选择构建然后部署到应用。但是这种方法会让从QA阶段迁移到生产阶段时，重新构建可能引入新的bug。</p>
+</li>
+</ol>
+<h5 id="311-配置profile-bean">3.1.1 配置profile bean</h5>
+<ol>
+<li>
+<p>Spring的方案也是类似上文，不过判断的阶段是在运行时。</p>
+</li>
+<li>
+<p>将不同的bean定义在不同的profile，在运行时确保对应的profile处于active</p>
+<pre><code class="language-java">package com.myapp;
+
+import javax.sql.DataSource;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.jndi.JndiObjectFactoryBean;
+
+@Configuration
+public class DataSourceConfig {
+  
+  @Bean(destroyMethod = &quot;shutdown&quot;)
+  @Profile(&quot;dev&quot;)
+  public DataSource embeddedDataSource() {
+    return new EmbeddedDatabaseBuilder()
+        .setType(EmbeddedDatabaseType.H2)
+        .addScript(&quot;classpath:schema.sql&quot;)
+        .addScript(&quot;classpath:test-data.sql&quot;)
+        .build();
+  }
+
+  @Bean
+  @Profile(&quot;prod&quot;)
+  public DataSource jndiDataSource() {
+    JndiObjectFactoryBean jndiObjectFactoryBean = new JndiObjectFactoryBean();
+    jndiObjectFactoryBean.setJndiName(&quot;jdbc/myDS&quot;);
+    jndiObjectFactoryBean.setResourceRef(true);
+    jndiObjectFactoryBean.setProxyInterface(javax.sql.DataSource.class);
+    return (DataSource) jndiObjectFactoryBean.getObject();
+  }
+
+}
+</code></pre>
+</li>
+<li>
+<p>也可以在XML中配置profile</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:jdbc=&quot;http://www.springframework.org/schema/jdbc&quot;
+  xmlns:jee=&quot;http://www.springframework.org/schema/jee&quot; xmlns:p=&quot;http://www.springframework.org/schema/p&quot;
+  xsi:schemaLocation=&quot;
+    http://www.springframework.org/schema/jee
+    http://www.springframework.org/schema/jee/spring-jee.xsd
+    http://www.springframework.org/schema/jdbc
+    http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+
+  &lt;beans profile=&quot;dev&quot;&gt;
+    &lt;jdbc:embedded-database id=&quot;dataSource&quot; type=&quot;H2&quot;&gt;
+      &lt;jdbc:script location=&quot;classpath:schema.sql&quot; /&gt;
+      &lt;jdbc:script location=&quot;classpath:test-data.sql&quot; /&gt;
+    &lt;/jdbc:embedded-database&gt;
+  &lt;/beans&gt;
+  
+  &lt;beans profile=&quot;prod&quot;&gt;
+    &lt;jee:jndi-lookup id=&quot;dataSource&quot;
+      lazy-init=&quot;true&quot;
+      jndi-name=&quot;jdbc/myDatabase&quot;
+      resource-ref=&quot;true&quot;
+      proxy-interface=&quot;javax.sql.DataSource&quot; /&gt;
+  &lt;/beans&gt;
+&lt;/beans&gt;
+</code></pre>
+</li>
+</ol>
+<h5 id="312-激活profile">3.1.2 激活profile</h5>
+<ol>
+<li>
+<p>Spring 在确定哪个 profile 处于激活状态时，需要依赖两个独立的属性：<code>spring.profiles.active</code>  和 <code>spring.profiles.default</code>。</p>
+<ul>
+<li>如果设置了 <code>spring.profiles.active</code> 属性的话，那么它的值就会用来确定哪个 profile 是激活的。</li>
+<li>但如果没有设置 <code>spring.profiles.active</code> 属性的话，那 Spring 将会查找 <code>spring.profiles.default</code> 的值。</li>
+<li>如果 <code>spring.profiles.active</code> 和 <code>pring.profiles.default</code> 均没有设置的话，那就没有激活的 profile，因此只会创建那些没有定义在 profile 中的 bean。</li>
+</ul>
+</li>
+<li>
+<p>设置这俩个属性的方式：</p>
+<ul>
+<li>作为 DispatcherServlet 的初始化参数；</li>
+<li>作为 Web 应用的上下文参数；</li>
+<li>作为 JNDI 条目；</li>
+<li>作为环境变量；</li>
+<li>作为 JVM 的系统属性；</li>
+<li>在集成测试类上，使用 @ActiveProfiles 注解设置。</li>
+</ul>
+</li>
+<li>
+<p>作者惯用的一种方式，在Servlet上下文中将default设为dev。方便于开发人员从版本控制软件获得源码直接使用。如果部署到QA或者生产环境，只需更改相关配置。</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app version=&quot;2.5&quot;
+         xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee
+           http://xmlns.jcp.org/xml/ns/javaee/web-app_2_5.xsd&quot; &gt;
+  
+  &lt;context-param&gt;
+    &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+    &lt;param-value&gt;/WEB-INF/spring/root-context.xml&lt;/param-value&gt;
+  &lt;/context-param&gt;
+  
+  &lt;context-param&gt;
+    &lt;param-name&gt;spring.profiles.default&lt;/param-name&gt;
+    &lt;param-name&gt;dev&lt;/param-name&gt;
+  &lt;/context-param&gt;
+  
+  &lt;listener&gt;
+    &lt;listener-class&gt;
+      org.springframework.web.context.ContextLoaderListener
+    &lt;/listener-class&gt;
+  &lt;/listener&gt;
+  
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;appServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;
+      org.springframework.web.servlet.DispatcherServlet
+    &lt;/servlet-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;spring.profile.default&lt;/param-name&gt;
+      &lt;param-value&gt;dev&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+  &lt;/servlet&gt;
+  
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;appServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+
+&lt;/web-app&gt;
+</code></pre>
+</li>
+<li>
+<p>在进行测试的时候，我们希望加载与生产或者开发环境相同的配置，可以使用**@ActiveProfiles**。</p>
+<pre><code class="language-java">@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes={PersistenceTestConfig.class})
+@ActiveProfile(&quot;dev&quot;)
+public class PersistenceTest {
+  ...
+}
+</code></pre>
+</li>
+</ol>
+<h4 id="32-条件化的bean">3.2 条件化的bean</h4>
+<ol>
+<li>
+<p>你希望一个或多个 bean 只有在应用的类路径下包含特定的库时才创建。或者我们希望某个 bean 只有当另外某个特定的 bean 也声明了之后才会创建。我们还可能要求只有某个特定的环境变量设置之后，才会创建某个bean。</p>
+</li>
+<li>
+<p>使用**@Conditional**注解可以做到。例如，假设有一个名为 MagicBean 的类，我们希望只有设置了 magic 环境属性的时候，Spring 才会实例化这个类。如果环境中没有这个属性，那么 MagicBean 将会被忽略。</p>
+<pre><code class="language-java">@Bean
+@Conditional(MagicExistsCondition.class)
+public MagicBean magicBean() {
+  return new MagicBean();
+}
+</code></pre>
+<p>@Conditional会通过Condition接口进行条件对比</p>
+<pre><code class="language-java">public interface Condition {
+  boolean matches(ConditionContext ctxt, AnnotatedTypeMetadata metadata);
+}
+</code></pre>
+<p>设置给@Conditional的类需要实现Condition接口</p>
+<pre><code class="language-java">package com.habuma.restfun;
+
+import org.springframework.context.annotation.Condition;
+import org.springframework.context.annotation.ConditionContext;
+import org.springframework.core.env.Environment;
+import org.springframework.core.type.AnnotatedTypeMetadata;
+
+public class MagicExistsCondition implements Condition {
+
+  @Override
+  public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+    Environment env = context.getEnvironment();
+    return env.containsProperty(&quot;magic&quot;);
+  }
+  
+}
+</code></pre>
+</li>
+<li>
+<p>ConditionContext是一个接口，大致如下所示：</p>
+<pre><code class="language-java">public interface ConditionContext {
+  BeandefinitionRegistry getRegistry(); // 借助 getRegistry() 返回的 BeanDefinitionRegistry 检查 bean 定义；
+  ConfigurationListableBeanFactory getBeanFactory(); // 借助 getBeanFactory() 返回的 ConfigurableListableBeanFactory 检查 bean 是否存在，甚至探查 bean 的属性；
+  Environment getEnvironment(); // 借助 getEnvironment() 返回的 Environment 检查环境变量是否存在以及它的值是什么；
+  ResourceLoader getResourceLoader(); // 读取并探查 getResourceLoader() 返回的 ResourceLoader 所加载的资源；
+  ClassLoader getClassLoader(); // 借助 getClassLoader() 返回的 ClassLoader 加载并检查类是否存在。
+}
+</code></pre>
+</li>
+<li>
+<p>AnnotatedTypeMetadata 能够让我们检查带有 @Bean 注解的方法上还有什么其它的注解。它也是一个接口。它如下所示：</p>
+<pre><code class="language-java">public interface AnnotatedTypeMetadata {
+	boolean isAnnotated(String annotationType);
+	Map&lt;String, Object&gt; getAnnotationAttributes(String annotationType);
+	Map&lt;String, Object&gt; getAnnotationAttributes(String annotationType, boolean classValuesAsString);
+	MultiValueMap&lt;String, Object&gt; getAllAnnotationAttributes(String annotationType);
+	MultiValueMap&lt;String, Object&gt; getAllAnnotationAttributes(String annotationType, boolean classValuesAsString);
+}
+</code></pre>
+</li>
+<li>
+<p>@Profile 注解进行了重构，基于 @Conditional 和 Condition 实现。</p>
+<pre><code class="language-java">@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Documented
+@Conditional({ProfileCondition.class})
+public @interface Profile {
+    String[] value();
+}
+</code></pre>
+<p>@Profile 本身也使用了 @Conditional 注解，并且引用 ProfileCondition 作为 Condition 实现。如下所示，ProfileCondition 实现了 Condition 接口，并且在做出决策的过程中，ProfileCondition 通过 AnnotatedTypeMetadata 得到了用于 @Profile 注解的所有属性。借助该信息，它会明确地检查 value 属性，该属性包含了 bean 的 profile 名称。然后它根据通过 ConditionContext 得到的  Environment 来检查（借助 acceptsProfiles() 方法）该 profile 是否处于激活状态。</p>
+<pre><code class="language-java">class ProfileCondition implements Condition {
+
+	@Override
+	public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+		if (context.getEnvironment() != null) {
+			MultiValueMap&lt;String, Object&gt; attrs = metadata.getAllAnnotationAttributes(Profile.class.getName());
+			if (attrs != null) {
+				for (Object value : attrs.get(&quot;value&quot;)) {
+					if (context.getEnvironment().acceptsProfiles(((String[]) value))) {
+						return true;
+					}
+				}
+				return false;
+			}
+		}
+		return true;
+	}
+
+}
+</code></pre>
+</li>
+</ol>
+<h4 id="33-处理自动装配的歧义性">3.3 处理自动装配的歧义性</h4>
+<p>如何处理如下情况(不处理Spring会报错NoUniqueBeanDefinitionException)</p>
+<pre><code class="language-java">@Component
+public class Cake implements Dessert { ... }
+@Component
+public class Cookies implements Dessert { ... }
+@Component
+public class IceCream implements Dessert { ... }
+</code></pre>
+<h5 id="331-标识首选的bean">3.3.1 标识首选的bean</h5>
+<ol>
+<li>
+<p>使用**@Primary**，配合@Component将bean设置为首选。也可以设置在JavaConfig或则XML中。</p>
+<pre><code class="language-java">@Component
+@Primary
+public class IceCream implements Dessert { ... }
+</code></pre>
+</li>
+<li>
+<p>但是如果另一个也设置了首选，那就又成了没有首选了。那就需要使用<strong>限定符</strong>。</p>
+</li>
+</ol>
+<h5 id="332-限定自动装配的bean">3.3.2 限定自动装配的bean</h5>
+<ol>
+<li>
+<p><strong>@Qualifier 注解是使用限定符的主要方式</strong>。</p>
+<pre><code class="language-java">@Autowired
+@Qualifier(&quot;iceCream&quot;)
+public void setDessert(Dessert dessert) {
+  this.dessert = dessert;
+}
+</code></pre>
+</li>
+<li>
+<p>没有指定限定符的类都会被设定一个每人限定符，与bean的ID一样。</p>
+</li>
+<li>
+<p>存在一个问题：限定符和bean的名称紧耦合，改动类名会导致限定符失效。</p>
+</li>
+</ol>
+<p><strong>创建自定义限定符</strong></p>
+<ol>
+<li>
+<p>使用自定义限定符，与类名解耦。在bean声明的地方添加限定符：</p>
+<pre><code class="language-java">@Component
+@Qualifier(&quot;cold&quot;)
+public class IceCream implements Dessert { ... }
+</code></pre>
+<p>然后后在注入的地方引用：</p>
+<pre><code class="language-java">@Autowired
+@Qualifier(&quot;cold&quot;)
+public void setDessert(Dessert dessert) {
+  this.dessert = dessert;
+}
+</code></pre>
+</li>
+<li>
+<p>当使用自定义的 @Qualifier 值时，<strong>最佳实践</strong>是为 bean 选择**<u>特征性或描述性</u>**的术语，而不是使用随意的名字。在本例中，我将 IceCream bean 描述为“cold”bean。在注入的时候，可以将这个需求理解为“给我一个凉的甜点”，这其实就是描述的 IceCream。类似地，我可以将 Cake 描述为“soft”，将 Cookie 描述为“crispy”。</p>
+</li>
+</ol>
+<p><strong>使用自定义的限定符注解</strong></p>
+<ol>
+<li>
+<p>新的问题是，多个bean具有相同属性，都加入了@Qualifier(&quot;cold&quot;)。当我们再加一个@Qualifier()的时候Java 不允许在同一个条目上重复出现相同类型的多个注解。</p>
+<pre><code class="language-java">@Autowired
+@Qualifier(&quot;cold&quot;)
+@Qualifier(&quot;creamy&quot;) // 这种方式会报错
+public class IceCream implements Dessert { ... }
+</code></pre>
+</li>
+<li>
+<p>方法：自定义新的注解，将旧注解带进去：</p>
+<pre><code class="language-java">@Target({ElementType.CONSTRUCTOR, ElementType.FIELD,
+         ElementType.METHOD, ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Qualifier
+public @interface Cold { }
+</code></pre>
+</li>
+</ol>
+<h4 id="34-bean的作用域">3.4 bean的作用域</h4>
+<ol>
+<li>默认情况下bean是单例。初始化可GC成本比较小。</li>
+<li>Spring 定义了多种作用域，可以基于这些作用域创建 bean，包括：
+<ul>
+<li>单例（Singleton）：在整个应用中，只创建 bean 的一个实例。</li>
+<li>原型（Prototype）：每次注入或者通过 Spring 应用上下文获取的时候，都会创建一个新的 bean 实例。</li>
+<li>会话（Session）：在 Web 应用中，为每个会话创建一个 bean 实例。</li>
+<li>请求（Rquest）：在 Web 应用中，为每个请求创建一个 bean 实例。</li>
+</ul>
+</li>
+<li>使用**@Scope**注解选择作用域。</li>
+</ol>
+<h5 id="341-使用会话和请求作用域">3.4.1 使用会话和请求作用域</h5>
+<p>例如，在典型的电子商务应用中，可能会有一个 bean 代表用户的购物车。如果购物车是单例的话，那么将会导致所有的用户都会向同一个购物车中添加商品。另一方面，如果购物车是原型作用域的，那么在应用中某一个地方往购物车中添加商品，在应用的另外一个地方可能就不可用了，因为在这里注入的是另外一个原型作用域的购物车。就购物车 bean 来说，会话作用域是最为合适的，因为它与给定的用户关联性最大。</p>
+<pre><code class="language-java">@Component
+@Scope(value=WebApplicationContext.SCOPE_SESSION,
+       proxyMode=ScopedProxyMode.INTERFACES) // ScopedProxyMode.INTERFACES，这表明这个代理要实现 ShoppingCart 接口，并将调用委托给实现 bean。
+public ShoppingCart cart() { ... }
+</code></pre>
+<ol>
+<li>
+<p>proxyMode这个属性解决了将会话或请求作用域的 bean注入到单例 bean 中所遇到的问题。假设我们要将 ShoppingCart bean 注入到单例 StoreService bean 的 Setter 方法中，如下所示：</p>
+<pre><code class="language-java">@Component
+public class StoreService {
+  @Autowired
+  public void setShoppingCart(ShoppingCart shoppingCart) {
+    this.shoppingCart = shoppingCart;
+  }
+}
+</code></pre>
+<p>StoreService 是一个单例的 bean，会在 Spring 应用上下文加载的时候创建。当它创建的时候，Spring 会试图将 ShoppingCart bean 注入到 setShoppingCart() 方法中。但是 <strong>ShoppingCart bean 是会话作用域的，此时并不存在</strong>。直到某个用户进入系统，创建了会话之后，才会出现 ShoppingCart 实例。</p>
+<p>Spring 并不会将实际的 ShoppingCart bean 注入到 StoreService 中， Spring 会注入一个到 ShoppingCart bean 的代理，如图 3.1 所示。这个代理会暴露与 ShoppingCart 相同的方法，所以 StoreService 会认为它就是一个购物车。但是，<strong>当 StoreService 调用 ShoppingCart 的方法时，代理会对其进行懒解析并将调用委托给会话作用域内真正的 ShoppingCart bean。</strong></p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209111454477.jpeg" alt="3.1 会话作用域" style="zoom: 50%;" />
+</li>
+<li>
+<p>shoppingCart 是一个具体的类的话， 也是可以的。但是Spring 就没有办法创建基于接口的代理了。此时，它必须使用 CGLib 来生成基于类的代理。所以，如果 bean 类型是具体类的话，我们必须要将 proxyMode 属性设置ScopedProxyMode.TARGET_CLASS，以此来表明要以生成目标类扩展的方式创建代理。</p>
+</li>
+</ol>
+<h5 id="342-在xml中声明作用域代理">3.4.2 在XML中声明作用域代理</h5>
+<p>在XML中需要使用Spring aop中的scoped-proxy</p>
+<pre><code class="language-xml">&lt;bean id=&quot;cart&quot; class=&quot;com.myapp.ShoppingCart&quot; scope=&quot;session&quot;&gt;
+  &lt;aop:scoped-proxy /&gt;
+&lt;/bean&gt;
+</code></pre>
+<h4 id="35-运行时值注入">3.5 运行时值注入</h4>
+<ol>
+<li>bean装配另一面是将一个值注入到bean的属性或者构造器。有时候硬编码是可以的，有的时候我们可能会希望避免硬编码值，而是想让这些值在运行时再确定。</li>
+<li>Spring提供两种方式：属性占位符（Property placeholder）和Spring 表达式语言（SpEL）。</li>
+</ol>
+<h5 id="351-注入外部的值">3.5.1 注入外部的值</h5>
+<ol>
+<li>
+<p>在 Spring 中，处理外部值的最简单方式就是声明属性源并通过 Spring 的 Environment 来检索属性。</p>
+<pre><code class="language-java">package com.soundsystem;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
+
+@Configuration
+@PropertySource(&quot;classpath:/com/soundsystem/app.properties&quot;)
+public class ExpressiveConfig {
+  
+  @Autowired
+  Environment env;
+  
+  @Bean
+  public BlankDisc disc() {
+    return new BlankDisc(
+      env.getProperty(&quot;disc.title&quot;),
+      env.getProperty(&quot;disc.artist&quot;)
+    );
+  }
+}
+</code></pre>
+<p>在本例中，@PropertySource 引用了类路径中一个名为 app.properties 的文件。它大致会如下所示。这个属性文件会加载到 Spring 的 Environment 中，稍后可以从这里检索属性。同时，在 disc() 方法中，会创建一个新的 BlankDisc，它的构造器参数是从属性文件中获取的，而这是通过调用 getProperty() 实现的。</p>
+<pre><code class="language-properties">disc.title=Sgt. Peppers Lonely Hearts Club
+disc.artisc=The Beatles
+</code></pre>
+</li>
+<li>
+<p>深入学习 Spring 的 Environment 当我们去了解 Environment 的时候会发现，上述程序所示的 getProperty() 方法并不是获取属性值的唯一方 法，getProperty() 方法有四个重载的变种形式：</p>
+<ul>
+<li><code>String getProperty(String key)</code></li>
+<li><code>String getProperty(String key, String defualtValue)</code></li>
+<li><code>T getProperty(String key, Class&lt;T&gt;  type)</code></li>
+<li><code>T getProperty(String key, Class&lt;T&gt; type, T defaultValue)</code></li>
+</ul>
+<p>前两个方法返回String类型，第二个方法可以带一个默认值在get不到属性的时候。</p>
+</li>
+<li>
+<p>后两种方法，例如，假设你想要获取的值所代表的含义是连接池中所维持的连接数量。如果我们从属性文件中得到 的是一个 String 类型的值，那么在使用之前还需要将其转换为 Integer 类型。但是，如果使用重载形式的 getProperty() 的话，就能非常便利地解决这个问题：</p>
+<pre><code class="language-java">int connectionCount = env.getProperty(&quot;db.connection.count&quot;, Integer.class, 30);
+</code></pre>
+</li>
+<li>
+<p>除了属性相关的功能以外，Environment 还提供了一些方法来检查哪些 profile 处于激活状态：</p>
+<ul>
+<li>String[] getActiveProfiles()：返回激活 profile 名称的数组；</li>
+<li>String[] getDefaultProfiles()：返回默认 profile 名称的数组；</li>
+<li>boolean acceptsProfiles(String... profiles)：如果 environment 支持给定 profile 的话，就返回true。</li>
+</ul>
+</li>
+</ol>
+<p><strong>解析属性占位符</strong></p>
+<p>在 Spring 装配中，占位符的形式为使用 <code>${ ... }</code> 包装的属性名称。</p>
+<h5 id="352-使用spring表达式语言进行装配">3.5.2 使用Spring表达式语言进行装配</h5>
+<p>SpEL 表达式要放到 <code>#{ ... }</code> 之中, 它拥有很多特性，包括：</p>
+<ul>
+<li>使用 bean 的 ID 来引用 bean；</li>
+<li>调用方法和访问对象的属性；</li>
+<li>对值进行算术、关系和逻辑运算；</li>
+<li>正则表达式匹配；</li>
+<li>集合操作。</li>
+</ul>
+<h4 id="36-小结">3.6 小结</h4>
+<ol>
+<li>Spring profile解决了跨环境部署问题。</li>
+<li>profile bean是在运行时条件化创建bean的方式。</li>
+<li>自动装配歧义性解决方法：首选bean和限定符。</li>
+<li>Spring 能够让 bean 以单例、原型、请求作用域或会话作用域的方式来创建以应对不同情况。在声明请求作用域或会话作用域的 bean 的时候，我们还学习了如何创建作用域代理，它分为基于类的代理和基于接口的代理的两种方式。</li>
+<li>Spring 表达式语言，它能够在运行时计算要注入到 bean 属性中的值</li>
+</ol>
+<h3 id="第四章-面向切面的spring">第四章 面向切面的Spring</h3>
+<p>本章内容：</p>
+<ul>
+<li>面向切面编程的基本原理</li>
+<li>通过 POJO 创建切面</li>
+<li>使用 @AspectJ 注解</li>
+<li>为 AspectJ 切面注入依赖</li>
+</ul>
+<p>散布于应用中多处的功能被称为横切关注点（crosscutting concern）。它们从概念上应该是与业务逻辑分离的，这也是AOP要解决的问题。</p>
+<h4 id="41-什么是面向切面编程">4.1 什么是面向切面编程</h4>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209111457656.png" alt="Screenshot 2022-09-11_14-56-57-861" style="zoom:67%;" />
+<ol>
+<li>重用通用功能一般利用继承和委托。但是继承会导致脆弱的对象体系；委托可能需要对委托对象进行复杂的调用。</li>
+<li>面向切面可以通过声明的方式定义这个功能何时何地应用。</li>
+</ol>
+<h5 id="411-定义aop术语">4.1.1 定义AOP术语</h5>
+<p>在一个或多个连接点上，可以把切面的功能（通知）织入到程序的执行过程中</p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209111458549.png" alt="1" style="zoom:67%;" />
+<ol>
+<li>
+<p><strong>通知</strong>： 定义了切面的工作是什么以及何时使用。</p>
+<p>Spring 切面可以应用 5 种类型的通知：</p>
+<ul>
+<li>前置通知（Before）：在目标方法被调用之前调用通知功能；</li>
+<li>后置通知（After）：在目标方法完成之后调用通知，此时不会关心方法的输出是什么；</li>
+<li>返回通知（After-returning）：在目标方法成功执行之后调用通知；</li>
+<li>异常通知（After-throwing）：在目标方法抛出异常后调用通知；</li>
+<li>环绕通知（Around）：通知包裹了被通知的方法，在被通知的方法调用之前和调用之后执行自定义的行为。</li>
+</ul>
+</li>
+<li>
+<p><strong>连接点</strong>：应用切面的时机。</p>
+</li>
+<li>
+<p><strong>切点</strong>：切点的定义会匹配通知所要织入（wave)的一个或多个连接点。（何处应用切面）</p>
+</li>
+<li>
+<p><strong>切面</strong>：通知和切点的组合。</p>
+</li>
+<li>
+<p><strong>引入</strong>：向现有的类添加新方法和属性。</p>
+</li>
+<li>
+<p><strong>织入（WeaVing）</strong>：将切面应用到目标对象并创建新的代理对象的过程。</p>
+<ul>
+<li>编译期：切面在目标类编译时被织入。这种方式需要特殊的编译器。AspectJ 的织入编译器就是以这种方式织入切面的。</li>
+<li>类加载期：切面在目标类加载到 JVM 时被织入。这种方式需要特殊的类加载器（ClassLoader），它可以在目标类被引入应用之前增强该目标类的字节码。AspectJ 5 的加载时织入（load-time weaving，LTW）就支持以这种方式织入切面。</li>
+<li>运行期：切面在应用运行的某个时刻被织入。一般情况下，在织入切面时，AOP 容器会为目标对象动态地创建一个代理对象。Spring AOP 就是以这种方式织入切面的</li>
+</ul>
+</li>
+</ol>
+<h5 id="412-spring对aop的支持">4.1.2 Spring对AOP的支持</h5>
+<ol>
+<li>
+<p>Spring 通知是 Java 编写的，Spring在运行时通知对象</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209111500618.png" alt="Screenshot 2022-09-11_14-59-48-536" style="zoom: 67%;" />
+</li>
+<li>
+<p>Spring 只支持方法级别的连接点</p>
+</li>
+</ol>
+<h4 id="42-通过切点来选择连接点">4.2 通过切点来选择连接点</h4>
+<h5 id="421-编写切点">4.2.1 编写切点</h5>
+<ol>
+<li>
+<p>先定义一个主题</p>
+<pre><code class="language-java">package concert;
+
+public interface Performance {
+  public void perform();
+}
+</code></pre>
+</li>
+<li>
+<p>假设我们想编写 Performance 的 perform() 方法触发的通知</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209111501448.png" alt="22" style="zoom:67%;" />
+</li>
+<li>
+<p>现在假设我们需要配置的切点仅匹配 concert 包。在此场景下，可以使用 within() 指示器来限制匹配</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209111501857.png" alt="33" style="zoom:67%;" />
+</li>
+</ol>
+<h5 id="422-在切点中选择bean">4.2.2 在切点中选择bean</h5>
+<p>Spring 还引入了一个新的 bean() 指示器，它允许我们在切点表达式中使用 bean 的 ID 来标识 bean。bean() 使用 bean ID 或 bean 名称作为参数来限制切点只匹配特定的 bean。</p>
+<pre><code class="language-java">execution(* concert.Performance.perform()) and bean('woodstock')
+</code></pre>
+<h4 id="43-使用注解创建切面">4.3 使用注解创建切面</h4>
+<h5 id="431-定义切面">4.3.1 定义切面</h5>
+<ol>
+<li>
+<p>将观众定义为一个切面</p>
+<pre><code class="language-java">package concert;
+
+import org.aspect.lang.annotation.AfterReturning;
+import org.aspect.lang.annotation.AfterThrowing;
+import org.aspect.lang.annotation.Aspect;
+import org.aspect.lang.annotation.Before;
+
+@Aspect
+public class Audience {
+
+  @Before(&quot;execution(** concert.Performance.perform(..))&quot;)
+  public void silenceCellPhones() {
+    System.out.println(&quot;Silencing cell phones&quot;);
+  }
+  
+  @Before(&quot;execution(** concert.Performance.perform(..))&quot;)
+  public void takeSeats() {
+    System.out.println(&quot;Taking seats&quot;);
+  }
+  
+  @AfterReturning(&quot;execution(** concert.Performance.perform(..))&quot;)
+  public void applause() {
+    System.out.println(&quot;CLAP CLAP CLAP!!!&quot;);
+  }
+  
+  @AfterThrowing(&quot;execution(** concert.Performance.perform(..))&quot;)
+  public void demandRefund() {
+    System.out.println(&quot;Demanding a refund&quot;);
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>可以进一步将切点简化，<strong>@Pointcut</strong> 注解能够在一个 @AspectJ 切面内定义可重用的切点。</p>
+<pre><code class="language-java">package concert;
+
+import org.aspect.lang.annotation.AfterReturning;
+import org.aspect.lang.annotation.AfterThrowing;
+import org.aspect.lang.annotation.Aspect;
+import org.aspect.lang.annotation.Before;
+import org.aspect.lang.annotation.Pointcut;
+
+@Aspect
+public class Audience {
+
+  @Pointcut(&quot;execution(** concert.Performance.perform(..))&quot;)
+  public void performce() { }
+
+  @Before(&quot;performce()&quot;)
+  public void silenceCellPhones() {
+    System.out.println(&quot;Silencing cell phones&quot;);
+  }
+  
+  @Before(&quot;performce()&quot;)
+  public void takeSeats() {
+    System.out.println(&quot;Taking seats&quot;);
+  }
+  
+  @AfterReturning(&quot;performce()&quot;)
+  public void applause() {
+    System.out.println(&quot;CLAP CLAP CLAP!!!&quot;);
+  }
+  
+  @AfterThrowing(&quot;performce()&quot;)
+  public void demandRefund() {
+    System.out.println(&quot;Demanding a refund&quot;);
+  }
+}
+</code></pre>
+<p>Performance()本身只是一个标识，供 @Pointcut 注解依附。</p>
+</li>
+<li>
+<p>AspectJ 自动代理都会为使用 @Aspect 注解的 bean 创建一个代理，这个代理会围绕着所有该切面的切点所匹配的 bean。</p>
+</li>
+</ol>
+<h5 id="432-创建环绕通知">4.3.2 创建环绕通知</h5>
+<ol>
+<li>
+<pre><code class="language-java"> package concert;
+ 
+ import org.aspect.lang.annotation.ProceedingJoinPoint;
+ import org.aspect.lang.annotation.Around;
+ import org.aspect.lang.annotation.Aspect;
+ import org.aspect.lang.annotation.Pointcut;
+ 
+ @Aspect
+ public class Audience {
+ 
+   @Pointcut(&quot;execution(** concert.Performance.perform(..))&quot;)
+   public void performce() { }
+ 
+   @Around(&quot;performce()&quot;)
+   public void watchPerformance(ProceedingJoinPoint jp) {
+     try {
+       System.out.println(&quot;Silencing cell phones&quot;);
+       System.out.println(&quot;Taking seats&quot;);
+       jp.procee();
+       System.out.println(&quot;CLAP CLAP CLAP!!!&quot;);
+     } catch (Throwable e) {
+       System.out.println(&quot;Demanding a refund&quot;);
+     }
+   }
+ }
+</code></pre>
+<p>它接受 <strong>ProceedingJoinPoint</strong> 作为参数。这个对象是必须要有的，因为你要在通知中通过它来调用被通知的方法。通知方法中可以做任何的事情，当要将<strong>控制权交给被通知</strong>的方法时，它需要调用 ProceedingJoinPoint 的 proceed() 方法。</p>
+</li>
+<li>
+<p>忘记调用proceed方法会阻塞服务，一般不是我们想要的。</p>
+</li>
+<li>
+<p>你也可以在通知中对它进行多次调用。要这样做的一个场景就是实现重试逻辑，也就是在被通知方法失败后，进行重复尝试。</p>
+</li>
+</ol>
+<h5 id="433-处理通知中的参数">4.3.3 处理通知中的参数</h5>
+<ol>
+<li>
+<p>假设你想记录每个磁道被播放的次数。</p>
+<ol>
+<li>
+<p>一种方法就是修改 playTrack() 方法，直接在每次调用的时候记录这个数量。但是，记录磁道的播放次数与播放本身是不同的关注点，因此不应该属于 playTrack() 方法。看起来，这应该是切面要完成的任务。</p>
+</li>
+<li>
+<p>另外的方法就是我们创建了 TrackCounter 类，它是通知 playTrack() 方法的一个切面。</p>
+<pre><code class="language-java">package soundsystem;
+
+import java.util.HashMap;
+import java.util.Map;
+import org.aspect.lang.annotation.Aspect;
+import org.aspect.lang.annotation.Before;
+import org.aspect.lang.annotation.Pointcut;
+
+@Aspect
+public class TrackCounter {
+
+  private Map&lt;Integer, Integer&gt; trackCounts = new HashMap&lt;&gt;();
+  
+  @Pointcut(&quot;execution(* soundsystem.CompactDisc.playTrack(int) &quot; +
+            &quot;&amp;&amp; args(trackNumber)&quot;)
+  public void trackPlayed(int trackNumber) { }
+
+  @Before(&quot;trackPlayed(trackNumber)&quot;)
+  public void countTrack(int trackNumber) {
+    int currentCount = getPlayCount(trackNumber);
+    trackCounts.put(trackNumber, currentCount + 1);
+  }
+  
+  public int getPlayCount(int trackNumber) {
+    return trackCounts.containsKey(trackNumber) ? trackCounts.get(trackNumber) : 0;
+  }
+}
+</code></pre>
+</li>
+</ol>
+</li>
+<li>
+<p>在Spring配置中将BlancDisc和TrackCounter定义为bean</p>
+<pre><code class="language-java">package soundsystem;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+
+@Configuration
+@EnableAspectJAutoProxy
+public class TrackCounterConfig {
+
+  @Bean
+  public CompactDisc sgtPeppers() {
+    BlankDisc cd = new BlankDisc();
+    cd.setTitle(&quot;Sgt. Pepper's Lonely Hearts Club Band&quot;);
+    cd.setArtist(&quot;The Beatles&quot;);
+    List&lt;String&gt; tracks = new ArrayList&lt;&gt;();
+    tracks.add(&quot;Sgt. Pepper's Lonely Hearts Club Band&quot;);
+    tracks.add(&quot;With a Little Help from My Friends&quot;);
+    tracks.add(&quot;Lucy in the Sky with Diamonds&quot;);
+    tracks.add(&quot;Getting Better&quot;);
+    tracks.add(&quot;Fixing a Hole&quot;);
+    
+    // ...other tracks omitted for brevity...
+    cd.setTracks(tracks);
+    return cd
+  }
+  
+  @Bean
+  public TrackCounter trackCounter() {
+    return new TrackCounter();
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>最后，为了证明它能正常工作，你可以编写如下的简单测试。</p>
+<pre><code class="language-java">package soundsystem;
+
+import static org.junit.Assert.*;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
+import org.junit.runner.RunWith;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes=TrackCounterConfig.class)
+public class TrackCounterTest {
+
+  @Rule
+  public final StandardOutputStreamLog log = new StandardOutputStreamLog();
+
+  @Autowired
+  private CompactDisc cd;
+  
+  @Autowired
+  private TrackCounter counter;
+
+  @Test
+  public void testTrackCounter() {
+    cd.playTrack(1);
+    cd.playTrack(2);
+    cd.playTrack(3);
+    cd.playTrack(3);
+    cd.playTrack(3);
+    cd.playTrack(3);
+    cd.playTrack(7);
+    cd.playTrack(7);
+    
+    assertEquals(1, counter.getPlayCount(1));
+    assertEquals(1, counter.getPlayCount(2));
+    assertEquals(4, counter.getPlayCount(3));
+    assertEquals(0, counter.getPlayCount(4));
+    
+    assertEquals(0, counter.getPlayCount(5));
+    assertEquals(0, counter.getPlayCount(6));
+    assertEquals(2, counter.getPlayCount(7));
+  }
+}
+</code></pre>
+</li>
+</ol>
+<h5 id="434-通过注解引入新功能">4.3.4 通过注解引入新功能</h5>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209111503129.png" alt="44" style="zoom:50%;" />
+<ol>
+<li>
+<p>我们为示例中的所有的 Performance 实现引入下面的 Encoreable 接口：</p>
+<pre><code class="language-java">package concert;
+
+public interface Encoreable {
+  void performEncore();
+}
+</code></pre>
+</li>
+<li>
+<p>我们现在假设你能够访问 Performance 的所有实现，并对其进行修改，让它们都实现 Encoreable 接口。但是，从设计的角度来看，这并不是最好的做法，<u>并不是所有的 Performance 都是具有 Encoreable 特性的</u>。另外一方面，有可能无法修改所有的 Performance 实现，当使用第三方实现并且没有源码的时候更是如此。</p>
+</li>
+<li>
+<p>借助AOP可以实现非侵入性的改变。</p>
+<pre><code class="language-java">package concert;
+
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.DeclareParents;
+
+@Aspect
+public class EncodeableIntroducer {
+
+  @DeclareParents(value=&quot;concert.Performce+&quot;,
+                  defaultImpl=DefaultEncoreable.class)
+  public static Encoreable encoreable;
+}
+</code></pre>
+<p>@DeclareParents 注解由三部分组成：</p>
+<ul>
+<li>value 属性指定了哪种类型的 bean 要引入该接口。在本例中，也就是所有实现 Performance 的类型。（标记符后面的加号表示是 Performance 的所有子类型，而不是 Performance 本身。）</li>
+<li>defaultImpl 属性指定了为引入功能提供实现的类。在这里，我们指定的是 DefaultEncoreable 提供实现。</li>
+<li>@DeclareParents 注解所标注的静态属性指明了要引入了接口。在这里，我们所引入的是 Encoreable 接口。</li>
+</ul>
+</li>
+<li>
+<p>在 Spring 应用中将 EncoreableIntroducer 声明为一个 bean：<code>&lt;bean class=&quot;concert.EncoreableIntroducer&quot; /&gt;</code></p>
+</li>
+</ol>
+<h4 id="44-在xml中声明切面">4.4 在XML中声明切面</h4>
+<p>面向注解的切面声明有一个明显的劣势：你必须能够为通知类添加注解。为了做到这一点，必须要有源码。如果你没有源码的话，或者不想将 AspectJ 注解放到你的代码之中，可以使用XML配置。</p>
+<h4 id="45-注入aspectj切面">4.5 注入AspectJ切面</h4>
+<p>当 Spring AOP 不能满足需求时，我们必须转向更为强大的 AspectJ。</p>
+<h4 id="46-小结">4.6 小结</h4>
+<p>略。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#spring%E7%9A%84%E6%A0%B8%E5%BF%83">Spring的核心</a>
+<ul>
+<li><a href="#%E7%AC%AC%E4%B8%80%E7%AB%A0-spring%E4%B9%8B%E6%97%85">第一章 Spring之旅</a>
+<ul>
+<li><a href="#11-%E7%AE%80%E5%8C%96java%E5%BC%80%E5%8F%91">1.1 简化Java开发</a>
+<ul>
+<li><a href="#111-pojo">1.1.1 POJO</a></li>
+<li><a href="#112-di">1.1.2 DI</a></li>
+<li><a href="#113-%E5%BA%94%E7%94%A8%E5%88%87%E9%9D%A2">1.1.3 应用切面</a>
+<ul>
+<li><a href="#aop%E5%BA%94%E7%94%A8">AOP应用</a></li>
+</ul>
+</li>
+<li><a href="#114-%E4%BD%BF%E7%94%A8%E6%A8%A1%E6%9D%BF%E6%B6%88%E9%99%A4%E6%A0%B7%E5%BC%8F%E4%BB%A3%E7%A0%81">1.1.4 使用模板消除样式代码</a></li>
+</ul>
+</li>
+<li><a href="#12-%E5%AE%B9%E7%BA%B3bean">1.2 容纳bean</a>
+<ul>
+<li><a href="#121-%E4%BD%BF%E7%94%A8%E5%BA%94%E7%94%A8%E4%B8%8A%E4%B8%8B%E6%96%87">1.2.1 使用应用上下文</a></li>
+<li><a href="#122-bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">1.2.2 bean的生命周期</a></li>
+</ul>
+</li>
+<li><a href="#13-spring%E9%A3%8E%E6%99%AF%E7%BA%BF%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F">1.3 Spring风景线（生态系统）</a>
+<ul>
+<li><a href="#131-spring%E6%A8%A1%E5%9D%97">1.3.1 Spring模块</a></li>
+<li><a href="#132-spring-portfolio">1.3.2 Spring Portfolio</a></li>
+</ul>
+</li>
+<li><a href="#14-spring%E6%96%B0%E5%8A%9F%E8%83%BD">1.4 Spring新功能</a></li>
+<li><a href="#15-%E5%B0%8F%E7%BB%93">1.5 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E8%A3%85%E9%85%8Dbean">第二章 装配Bean</a>
+<ul>
+<li><a href="#21-spring%E9%85%8D%E7%BD%AE%E7%9A%84%E5%8F%AF%E9%80%89%E6%96%B9%E6%A1%88">2.1 Spring配置的可选方案</a></li>
+<li><a href="#22-%E8%87%AA%E5%8A%A8%E5%8C%96%E8%A3%85%E9%85%8Dbean">2.2 自动化装配bean</a>
+<ul>
+<li><a href="#221-%E5%88%9B%E5%BB%BA%E5%8F%AF%E8%A2%AB%E5%8F%91%E7%8E%B0%E7%9A%84bean">2.2.1 创建可被发现的bean</a></li>
+<li><a href="#222-%E4%B8%BA%E7%BB%84%E4%BB%B6%E6%89%AB%E6%8F%8F%E7%9A%84bean%E5%91%BD%E5%90%8D">2.2.2 为组件扫描的bean命名</a></li>
+<li><a href="#223-%E8%AE%BE%E7%BD%AE%E7%BB%84%E4%BB%B6%E6%89%AB%E6%8F%8F%E7%9A%84%E5%9F%BA%E7%A1%80%E5%8C%85">2.2.3 设置组件扫描的基础包</a></li>
+<li><a href="#224-%E9%80%9A%E8%BF%87%E4%B8%BAbean%E6%B7%BB%E5%8A%A0%E6%B3%A8%E8%A7%A3%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D">2.2.4 通过为bean添加注解实现自动装配</a></li>
+<li><a href="#225-%E9%AA%8C%E8%AF%81%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D">2.2.5 验证自动装配</a></li>
+</ul>
+</li>
+<li><a href="#23-%E9%80%9A%E8%BF%87java%E4%BB%A3%E7%A0%81%E8%A3%85%E9%85%8D">2.3 通过Java代码装配</a>
+<ul>
+<li><a href="#231-%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E7%B1%BB">2.3.1 创建配置类</a></li>
+<li><a href="#232-%E5%A3%B0%E6%98%8E%E7%AE%80%E5%8D%95%E7%9A%84bean">2.3.2 声明简单的bean</a></li>
+<li><a href="#233-%E5%80%9F%E5%8A%A9javaconfig%E5%AE%9E%E7%8E%B0%E6%B3%A8%E5%85%A5">2.3.3 借助JavaConfig实现注入</a></li>
+</ul>
+</li>
+<li><a href="#24-%E9%80%9A%E8%BF%87xml%E8%A3%85%E9%85%8Dbean">2.4 通过XML装配bean</a>
+<ul>
+<li><a href="#241-%E5%88%9B%E5%BB%BAxml%E9%85%8D%E7%BD%AE%E8%A7%84%E8%8C%83">2.4.1 创建XML配置规范</a></li>
+<li><a href="#242-%E5%A3%B0%E6%98%8E%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84bean">2.4.2 声明一个简单的&lt;bean&gt;</a></li>
+<li><a href="#243-%E5%80%9F%E5%8A%A9%E6%9E%84%E9%80%A0%E5%99%A8%E6%B3%A8%E5%85%A5%E5%88%9D%E5%A7%8B%E5%8C%96bean">2.4.3 借助构造器注入初始化bean</a></li>
+<li><a href="#244-%E8%AE%BE%E7%BD%AE%E5%B1%9E%E6%80%A7">2.4.4 设置属性</a></li>
+</ul>
+</li>
+<li><a href="#25-%E5%AF%BC%E5%85%A5%E5%92%8C%E6%B7%B7%E5%90%88%E9%85%8D%E7%BD%AE">2.5 导入和混合配置</a>
+<ul>
+<li><a href="#251-%E5%9C%A8javaconfig%E4%B8%AD%E5%BC%95%E7%94%A8xml%E9%85%8D%E7%BD%AE">2.5.1 在JavaConfig中引用XML配置</a></li>
+<li><a href="#252-%E5%9C%A8xml%E4%B8%AD%E5%BC%95%E7%94%A8javaconfig">2.5.2 在XML中引用JavaConfig</a></li>
+</ul>
+</li>
+<li><a href="#26-%E5%B0%8F%E7%BB%93">2.6 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC%E4%B8%89%E7%AB%A0-%E9%AB%98%E7%BA%A7%E8%A3%85%E9%85%8D">第三章 高级装配</a>
+<ul>
+<li><a href="#31-%E7%8E%AF%E5%A2%83%E4%B8%8Eprofile">3.1 环境与profile</a>
+<ul>
+<li><a href="#311-%E9%85%8D%E7%BD%AEprofile-bean">3.1.1 配置profile bean</a></li>
+<li><a href="#312-%E6%BF%80%E6%B4%BBprofile">3.1.2 激活profile</a></li>
+</ul>
+</li>
+<li><a href="#32-%E6%9D%A1%E4%BB%B6%E5%8C%96%E7%9A%84bean">3.2 条件化的bean</a></li>
+<li><a href="#33-%E5%A4%84%E7%90%86%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E7%9A%84%E6%AD%A7%E4%B9%89%E6%80%A7">3.3 处理自动装配的歧义性</a>
+<ul>
+<li><a href="#331-%E6%A0%87%E8%AF%86%E9%A6%96%E9%80%89%E7%9A%84bean">3.3.1 标识首选的bean</a></li>
+<li><a href="#332-%E9%99%90%E5%AE%9A%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E7%9A%84bean">3.3.2 限定自动装配的bean</a></li>
+</ul>
+</li>
+<li><a href="#34-bean%E7%9A%84%E4%BD%9C%E7%94%A8%E5%9F%9F">3.4 bean的作用域</a>
+<ul>
+<li><a href="#341-%E4%BD%BF%E7%94%A8%E4%BC%9A%E8%AF%9D%E5%92%8C%E8%AF%B7%E6%B1%82%E4%BD%9C%E7%94%A8%E5%9F%9F">3.4.1 使用会话和请求作用域</a></li>
+<li><a href="#342-%E5%9C%A8xml%E4%B8%AD%E5%A3%B0%E6%98%8E%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%BB%A3%E7%90%86">3.4.2 在XML中声明作用域代理</a></li>
+</ul>
+</li>
+<li><a href="#35-%E8%BF%90%E8%A1%8C%E6%97%B6%E5%80%BC%E6%B3%A8%E5%85%A5">3.5 运行时值注入</a>
+<ul>
+<li><a href="#351-%E6%B3%A8%E5%85%A5%E5%A4%96%E9%83%A8%E7%9A%84%E5%80%BC">3.5.1 注入外部的值</a></li>
+<li><a href="#352-%E4%BD%BF%E7%94%A8spring%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%AF%AD%E8%A8%80%E8%BF%9B%E8%A1%8C%E8%A3%85%E9%85%8D">3.5.2 使用Spring表达式语言进行装配</a></li>
+</ul>
+</li>
+<li><a href="#36-%E5%B0%8F%E7%BB%93">3.6 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%9A%84spring">第四章 面向切面的Spring</a>
+<ul>
+<li><a href="#41-%E4%BB%80%E4%B9%88%E6%98%AF%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B">4.1 什么是面向切面编程</a>
+<ul>
+<li><a href="#411-%E5%AE%9A%E4%B9%89aop%E6%9C%AF%E8%AF%AD">4.1.1 定义AOP术语</a></li>
+<li><a href="#412-spring%E5%AF%B9aop%E7%9A%84%E6%94%AF%E6%8C%81">4.1.2 Spring对AOP的支持</a></li>
+</ul>
+</li>
+<li><a href="#42-%E9%80%9A%E8%BF%87%E5%88%87%E7%82%B9%E6%9D%A5%E9%80%89%E6%8B%A9%E8%BF%9E%E6%8E%A5%E7%82%B9">4.2 通过切点来选择连接点</a>
+<ul>
+<li><a href="#421-%E7%BC%96%E5%86%99%E5%88%87%E7%82%B9">4.2.1 编写切点</a></li>
+<li><a href="#422-%E5%9C%A8%E5%88%87%E7%82%B9%E4%B8%AD%E9%80%89%E6%8B%A9bean">4.2.2 在切点中选择bean</a></li>
+</ul>
+</li>
+<li><a href="#43-%E4%BD%BF%E7%94%A8%E6%B3%A8%E8%A7%A3%E5%88%9B%E5%BB%BA%E5%88%87%E9%9D%A2">4.3 使用注解创建切面</a>
+<ul>
+<li><a href="#431-%E5%AE%9A%E4%B9%89%E5%88%87%E9%9D%A2">4.3.1 定义切面</a></li>
+<li><a href="#432-%E5%88%9B%E5%BB%BA%E7%8E%AF%E7%BB%95%E9%80%9A%E7%9F%A5">4.3.2 创建环绕通知</a></li>
+<li><a href="#433-%E5%A4%84%E7%90%86%E9%80%9A%E7%9F%A5%E4%B8%AD%E7%9A%84%E5%8F%82%E6%95%B0">4.3.3 处理通知中的参数</a></li>
+<li><a href="#434-%E9%80%9A%E8%BF%87%E6%B3%A8%E8%A7%A3%E5%BC%95%E5%85%A5%E6%96%B0%E5%8A%9F%E8%83%BD">4.3.4 通过注解引入新功能</a></li>
+</ul>
+</li>
+<li><a href="#44-%E5%9C%A8xml%E4%B8%AD%E5%A3%B0%E6%98%8E%E5%88%87%E9%9D%A2">4.4 在XML中声明切面</a></li>
+<li><a href="#45-%E6%B3%A8%E5%85%A5aspectj%E5%88%87%E9%9D%A2">4.5 注入AspectJ切面</a></li>
+<li><a href="#46-%E5%B0%8F%E7%BB%93">4.6 小结</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/Java中的日期与时间/">
+              <h3 class="post-title">
+                Java中的日期与时间
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

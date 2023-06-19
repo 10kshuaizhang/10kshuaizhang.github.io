@@ -1,0 +1,340 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Grafana Alerting | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Grafana Alerting | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Grafana Alerting
+
+This article illustrates a breif introdcutions on how to setup a simplest alert in grafana.
+
+1. What i..." />
+    <meta name="keywords" content="Other,Grafana" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Grafana Alerting
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-09-11
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/s6FeLetgn/" class="post-tag">
+                  # Other
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/vtP8RzSr5L/" class="post-tag">
+                  # Grafana
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="grafana-alerting">Grafana Alerting</h1>
+<blockquote>
+<p>This article illustrates a breif introdcutions on how to setup a simplest alert in grafana.</p>
+</blockquote>
+<h2 id="1-what-is-alerting-and-how-it-works">1. What is alerting and How it works</h2>
+<p>Grafana Alerting allows you to learn about problems in your systems moments after they occur.</p>
+<figure data-type="image" tabindex="1"><img src="https://grafana.com/static/img/docs/alerting/unified/about-alerting-flow-diagram-latest.png" alt="Grafana Alerting overview" loading="lazy"></figure>
+<ol>
+<li>Alert rules: Set evaluation criteria that determines whether an alert instance will fire.</li>
+<li>Labels: Match an alert rule and its instances to notification policies and silences. They can also be used to group your alerts by severity.</li>
+<li>Notification policies： Set where, when, and how the alerts get routed.</li>
+<li>Contact points: Define how your contacts are notified when an alert fires.</li>
+</ol>
+<h2 id="2-how-to-set-up-an-alter">2. How To Set Up An Alter</h2>
+<ol>
+<li>
+<p>Go to Grafana index page find the alert tab on the left side and click it</p>
+</li>
+<li>
+<p>Create a new alert rule</p>
+<ol>
+<li>
+<p>Click &quot;+ New alert rule&quot;</p>
+</li>
+<li>
+<p>Follow the steps to customize the alert</p>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209111524024.png" alt="image-20220828134500660" loading="lazy"></figure>
+<ol>
+<li>In rule type, choose one type and fill in the Rule name and it's group. Do not forget to select a folder for your rule. It usually stores in same folder of related topic dashboard.</li>
+</ol>
+</li>
+<li>
+<p>Crearte a query to be alerted on.<br>
+* Choose the right data source and fill in the query to get the data. Expressions are usually used here, e.g. Math(comparasion)<br>
+* Run queries button helps you to verify you are getting the right data response.</p>
+<ol start="3">
+<li>Define alert conditions. Choose which condition you finally used for measurement and how to evaluate.(Here you can preview your alerts)</li>
+<li>In the last step, you are allow to add addtional details of your alter.</li>
+</ol>
+</li>
+<li>
+<p>Do not forget to &quot;<strong>Save</strong>&quot;.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Create contact points if there is no one before</p>
+<ol>
+<li>
+<p>Create new contact points</p>
+<figure data-type="image" tabindex="3"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209111525436.png" alt="image-20220828135348571" loading="lazy"></figure>
+</li>
+<li>
+<p>Name the contact points name such as &quot;XXX Alert Contact Group&quot;</p>
+<figure data-type="image" tabindex="4"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209111525535.png" alt="image-20220828135414693" loading="lazy"></figure>
+</li>
+<li>
+<p>Choose a contact group point such as email, slack or other apps and defien the addreses for eaample for email. (Here you can send a test message to see if receives can receive the alters by just click &quot;Test&quot;)</p>
+</li>
+<li>
+<p>Do no forget to Save.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Define alterting polices</p>
+<ol>
+<li>
+<p>Switch to the Notification policies tab to create a new policy.</p>
+<figure data-type="image" tabindex="5"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209111525945.png" alt="image-20220828135857103" loading="lazy"></figure>
+</li>
+<li>
+<p>Click add matcher, this will select a alert rule. For instance, you could define lebel value as &quot;alertname &quot; and operaor as &quot;=&quot; and value is alert you just defined.</p>
+<figure data-type="image" tabindex="6"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209111525946.png" alt="image-20220828135947654" loading="lazy"></figure>
+</li>
+<li>
+<p>Select the page duty contact in contact points.</p>
+</li>
+<li>
+<p>Do not forget to &quot;<strong>SAVE</strong>&quot;.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Your alert should be well set up now.</p>
+</li>
+</ol>
+<h2 id="3-verify-your-alert-works">3. Verify your alert works</h2>
+<ol>
+<li>
+<p><strong>Test on setting up</strong></p>
+<p>When setting up the contact points, you have a chance to send pre-defined or self-defined format of alterings to the target people. Please test to ensure they could correctelly receive the alters.</p>
+</li>
+<li>
+<p><strong>Modify the alerting rule for verification</strong></p>
+<p>Once you have set up a rules and wants to verify if it works, you may want to change the threshold to fire the alarm to see if other parts of your rules works well.</p>
+</li>
+</ol>
+<h2 id="4-keep-eyes-open">4. Keep eyes open</h2>
+<p>No matter the alerts are sent via slack channels or email or phone, take imediate action when you are notified to avoid possible loss.</p>
+<h2 id="5-useful-links">5. Useful Links</h2>
+<ol>
+<li><a href="https://grafana.com/docs/grafana/latest/alerting/">Grafana Alerting</a></li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#grafana-alerting">Grafana Alerting</a>
+<ul>
+<li><a href="#1-what-is-alerting-and-how-it-works">1. What is alerting and How it works</a></li>
+<li><a href="#2-how-to-set-up-an-alter">2. How To Set Up An Alter</a></li>
+<li><a href="#3-verify-your-alert-works">3. Verify your alert works</a></li>
+<li><a href="#4-keep-eyes-open">4. Keep eyes open</a></li>
+<li><a href="#5-useful-links">5. Useful Links</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/Wavefront-Migration/">
+              <h3 class="post-title">
+                Wavefront Migration
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

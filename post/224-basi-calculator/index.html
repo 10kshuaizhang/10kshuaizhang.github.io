@@ -1,0 +1,295 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>224. Basic Calculator  | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="224. Basic Calculator  | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Question
+Given a string s representing a valid expression, implement a basic calculator to evaluate it, and return the r..." />
+    <meta name="keywords" content="Stack,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              224. Basic Calculator 
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-05-19
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/ZerykMID8/" class="post-tag">
+                  # Stack
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="question">Question</h2>
+<p>Given a string <code>s</code> representing a valid expression, implement a basic calculator to evaluate it, and return <em>the result of the evaluation</em>.</p>
+<p><strong>Note:</strong> You are <strong>not</strong> allowed to use any built-in function which evaluates strings as mathematical expressions, such as <code>eval()</code>.</p>
+<p><strong>Example 3:</strong></p>
+<pre><code>Input: s = &quot;(1+(4+5+2)-3)+(6+8)&quot;
+Output: 23
+</code></pre>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li><code>1 &lt;= s.length &lt;= 3 * 105</code></li>
+<li><code>s</code> consists of digits, <code>'+'</code>, <code>'-'</code>, <code>'('</code>, <code>')'</code>, and <code>' '</code>.</li>
+<li><code>s</code> represents a valid expression.</li>
+<li><code>'+'</code> is <strong>not</strong> used as a unary operation (i.e., <code>&quot;+1&quot;</code> and <code>&quot;+(2 + 3)&quot;</code> is invalid).</li>
+<li><code>'-'</code> could be used as a unary operation (i.e., <code>&quot;-1&quot;</code> and <code>&quot;-(2 + 3)&quot;</code> is valid).</li>
+<li>There will be no two consecutive operators in the input.</li>
+<li>Every number and running calculation will fit in a signed 32-bit integer.</li>
+</ul>
+<h2 id="algorithm">Algorithm</h2>
+<p>This question is pretty hard for me. I've tried some thoughts and failed due to handling the <code>()</code> especially multiple  like<code>(())</code>. The point here is to solve this problem, how to handle the <code>()</code> layer and the calculating sequence with inner and outer results.</p>
+<p>So according to standard solutions provided by the official Leetcode, they have two ways to solve the question. The first one is you reverse whole string and do the calculation by pop and push elements. (I think this is a little bit trick, or at least it cannot be found in a short period of time). So I turned to the second method:</p>
+<ol>
+<li>Iterate the expression one character at a time</li>
+<li>Concatenate the numbers in reverse order. if the character read is a digit we need to form the operand by multiplying <code>10</code> to the previously formed</li>
+<li>Whenever there is <code>+</code> or <code>-</code>, we change the sign for next evaluation</li>
+<li>If the char is <code>(</code>. We push the result we accumulated for far and the sign on to the stack. This symbol means we need to start new layer calculation</li>
+<li>If we meet <code>)</code>, this mean current level or layer calculation is finished. We first calculate the expression to the left.  Then we pop the sign and pre layer result and calculate withe current value to reduce a layer. (This sign is associated with the parenthesis that started then, thus when the expression ends or concludes, we pop the <code>sign</code> and multiply it with result of the expression. It is then just added to the next element on top of the stack.)</li>
+</ol>
+<h2 id="code">Code</h2>
+<pre><code class="language-java">class Solution {
+    public int calculate(String s) {
+        Stack&lt;Integer&gt; stack = new Stack();
+        int operand = 0;
+        int res = 0;
+        int sign = 1;
+        
+        for (int i = 0; i &lt; s.length(); i++) {
+            Character ch = s.charAt(i);
+            if (Character.isDigit(ch)) {
+                operand = 10 * operand + (int)(ch - '0');
+            } else if (ch == '+') {
+                res += sign * operand;
+                sign = 1;
+                operand = 0;
+            } else if (ch == '-') {
+                res += sign * operand;
+                sign = -1;
+                operand = 0;
+            } else if (ch == '(') {
+                stack.push(res);
+                stack.push(sign);
+                res = 0;
+                sign = 1;
+            } else if (ch ==')') {
+                res += sign * operand;
+                res *= stack.pop();
+                res += stack.pop();
+                operand = 0;
+                sign = 1;
+            }
+        }
+        return res + (operand * sign);
+    }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#question">Question</a></li>
+<li><a href="#algorithm">Algorithm</a></li>
+<li><a href="#code">Code</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/ood-design-patterns-design-principles/">
+              <h3 class="post-title">
+                OOD, Design Patterns, Design Principles
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,612 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spring实战(第四版)- part4(Spring集成) | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Spring实战(第四版)- part4(Spring集成) | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Spring实战（第四版）笔记 - part4 Spring集成
+第15章 使用远程服务
+略
+第16章 使用Spring MVC创建REST API
+
+编写处理REST资源的控制器
+以XML、JSON及其他格式来表述资源
+使用REST资源数..." />
+    <meta name="keywords" content="Spring,Java" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Spring实战(第四版)- part4(Spring集成)
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-09-11
+              </span>
+              <span>
+                11 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/2LjrGhsYzm/" class="post-tag">
+                  # Spring
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/YyW64XHFs/" class="post-tag">
+                  # Java
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="spring实战第四版笔记-part4-spring集成">Spring实战（第四版）笔记 - part4 Spring集成</h2>
+<h3 id="第15章-使用远程服务">第15章 使用远程服务</h3>
+<p>略</p>
+<h3 id="第16章-使用spring-mvc创建rest-api">第16章 使用Spring MVC创建REST API</h3>
+<ul>
+<li>编写处理REST资源的控制器</li>
+<li>以XML、JSON及其他格式来表述资源</li>
+<li>使用REST资源<strong>数据</strong>为王</li>
+</ul>
+<h4 id="161-了解rest">16.1 了解REST</h4>
+<h5 id="1611-rest基础知识">16.1.1 REST基础知识</h5>
+<ol>
+<li>REST就是将资源一最适合客户端或服务端的形式从服务器端转移到客户端（或反过来）。</li>
+<li>REST通过URL进行资源定位。他关注的是资源（事物、数据）而非行为（对应SOAP）。</li>
+<li>HTTP  中的方法映射了数据操作中的CRUD（但不是绝对的例如POST可以用来创建，也可以用来更新）。</li>
+</ol>
+<h5 id="1612-spring是如何支持rest的">16.1.2 Spring是如何支持REST的</h5>
+<ol>
+<li>控制器可以处理所有的HTTP方法；</li>
+<li>通过@PathVariable可以处理参数化URL；</li>
+<li>借助视图和视图解析器，资源可以被渲染成XML、JSON等多种实现；</li>
+<li>可以使用ContentNegotiatingViewResolver 来选择最适合客户端的表述；</li>
+<li>借助@ResponseBody注解以及HttpMethodConverter能够替换基于视图的渲染方式；</li>
+<li>使用@RequestBody 注解以及 HttpMethodConverter 实现可以将传入的 HTTP 数据转化为传入控制器处理方法的 Java 对象；</li>
+</ol>
+<h4 id="162-创建第一个rest端点">16.2 创建第一个REST端点</h4>
+<ol>
+<li>表述是关于客户端和服务端针对某一资源如何通信的。</li>
+<li>控制器不关心资源如何表述（资源在其中都是Java对象）。Spring有两种方法将资源的Java表述转换为发给客户端的表述：
+<ol>
+<li>内容协商：选择一个视图，将模型渲染为呈现给客户端的表述</li>
+<li>消息转换器：通过一个消息转换器将控制器所返回的对象转换为呈现给客户端的表述。</li>
+</ol>
+</li>
+</ol>
+<h5 id="1621-协商资源表述">16.2.1 协商资源表述</h5>
+<ol>
+<li>
+<p>当视图返回给人类时，多数是渲染成HTML。根据视图名称匹配到视图即可。</p>
+</li>
+<li>
+<p>当考虑到资源表述时，还需要考虑格式是否适合客户端。</p>
+</li>
+<li>
+<p>Spring 的 ContentNegotiatingViewResolver 是一个特殊的视图解析器，它考虑到了客户端所需要的内容类型</p>
+<pre><code class="language-java">@Bean
+public ViewResolver cnViewResolver() {
+    return new ContentNegotingResolver();
+}
+</code></pre>
+</li>
+<li>
+<p>内容协商的步骤：1. 确定媒体类型 2. 找到适合请求媒体类型的最佳视图。</p>
+</li>
+<li>
+<p>确定媒体类型的方式</p>
+<ol>
+<li>看URL的文件扩展名</li>
+<li>看Accept请求头信息</li>
+<li>都没找到的话，会使用默认类型：“/” 让客户端强制接收。</li>
+</ol>
+</li>
+<li>
+<p>视图解析： ContentNegotingResolver将视图解析委托给合适的viewResolver</p>
+<p>他会将所有的视图类型都解析放进一个列表，然后最后选择合适的。</p>
+</li>
+<li>
+<p><strong>ContentNegotiationManager</strong>可以被设置来更改默认媒体类型选择的行为。</p>
+</li>
+<li>
+<p>ContentNegotiatingViewResolver在Spring MVC之上构建REST资源表述层，资源代码无需修改。当面向人类和非人类的接口有很多重合时，他的作用就比较大。</p>
+</li>
+<li>
+<p>他的一个限制是他没办法觉得客户端发送来的媒体资源的格式类型。</p>
+</li>
+</ol>
+<h5 id="1622-使用http信息转换器">16.2.2 使用HTTP信息转换器</h5>
+<ol>
+<li>直接将得到的数据转换为需要的格式。</li>
+<li>不再像之前一样存入model，然后通过视图渲染。直接添加@ResponseBody，将返回转换为响应体。</li>
+<li>类似的可以通过@RequestBody来搜寻适合的来自客户端的资源表述转换为对象。</li>
+<li>@RestController实现了默认的信息转换，适用于类中多个方法都需要配置的时候。</li>
+</ol>
+<h4 id="163-提供资源之外的其他内容">16.3 提供资源之外的其他内容</h4>
+<p>提供元数据给客户端，让客户端明白发生了什么。</p>
+<h5 id="1631-发送错误信息到客户端">16.3.1 发送错误信息到客户端</h5>
+<ol>
+<li>
+<p>Spring提供了多种方式处理错误响应</p>
+<ul>
+<li>使用@ResponseStatus可以制定状态码</li>
+<li>控制器方法可以返回ResponseEntity对象，该对象能够包含更多相应相关的元数据。</li>
+<li>异常处理器</li>
+</ul>
+</li>
+<li>
+<p>使用ResponseEntity</p>
+<pre><code class="language-java">@RequestMapping(value=&quot;/{id}&quot;, method=RequestMethod.GET)
+public Spittle spittleById(@PathViriable long id) {
+    Spittle spittle = spittleRepository.findOne(id);
+    HttpStatus httpStatus = spittle != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
+    return new ResponseEntity&lt;Spittle&gt;(spittle, status);
+}
+</code></pre>
+<p>此时响应体在错误时候依然为空，可以自定义一个：</p>
+<pre><code class="language-java">public Error {
+  private int code;
+  private String message;
+  
+  public Error(int code, String message) {
+    this.code = code;
+    this.message = message;
+  }
+  
+  public int getCode() {
+    return code;
+  }
+  
+  public int getMessage() {
+    return message;
+  }
+}
+</code></pre>
+<p>将spittleById方法修改</p>
+<pre><code class="language-java">@RequestMapping(value=&quot;/{id}&quot;, method=RequestMethod.GET)
+public Spittle spittleById(@PathViriable long id) {
+    Spittle spittle = spittleRepository.findOne(id);
+    if (spittle == null) {
+   		Error error = new Error(4, &quot;Spittle [&quot; + id + &quot;] not found&quot;);
+    	return new ResponseEntity&lt;Error&gt;(error, HttpStatus.NOT_FOUND);
+  	}
+    return new ResponseEntity&lt;Spittle&gt;(spittle, status);
+}
+</code></pre>
+</li>
+<li>
+<p>代码看起来更复杂了。。。 使用错误处理器重构下</p>
+<pre><code class="language-java">@ExceptionHandler(SpittleNotFoundException.class)
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public @ResponseBody Error spittleNotFound(SpittleNotFoundException e) {
+  long spittleId = e.getSpittleId();
+  return new Error(4, &quot;Spittle [&quot; + spittleId + &quot;] not found&quot;);
+}
+</code></pre>
+<p>如果在控制器的任意处理方法中抛出 SpittleNotFoundException 异常，就会调 用 spittleNotFound() 方法来处理异常。16.3.2 在响应中设置头部信息</p>
+<p>SpittleNotFoundException</p>
+<pre><code class="language-java">package spittr.data;
+
+public class SpittleNotFoundException extends RuntimeException {
+
+  private static final long serialVersionUID = 1L;
+  
+  private long spittleId;
+
+  public SpittleNotFoundException(long spittleId) {
+    this.spittleId = spittleId;
+  }
+  
+  public long getSpittleId() {
+    return spittleId;
+  }
+  
+}
+</code></pre>
+<p>spittleById() 方法</p>
+<pre><code class="language-java">@RequestMapping(value=&quot;/{id}&quot;, method=RequestMethod.GET)
+public @ResponseBody Spittle spittleById(@PathVariable long id) {
+  Spittle spittle = spittleRepository.findOne(id);
+  if (spittle == null) { throw new SpittleNotFoundException(id); }
+  return spittle;
+}
+</code></pre>
+<p>spittle正常返回的话一定有值，所以就不需要使用ResponseEntity了。</p>
+</li>
+</ol>
+<h5 id="1632-在响应中设置头部信息">16.3.2 在响应中设置头部信息</h5>
+<ol>
+<li>
+<p>使用@ResponseStatus单单可以设置响应码</p>
+</li>
+<li>
+<p>使用@ResponseEntity可以设置更多的元数据</p>
+</li>
+<li>
+<p>比如返回新建的资源信息。在处理器方法所得到的 <strong>UriComponentsBuilder</strong> 中，会预先配置已知的信息如 host、端口以及 Servlet 内容。它会从处理器方法所对应的请求中获取这些基础信息。基于这些信息，代码会通过设置路径的方式构建 UriComponents 其余的部分。</p>
+<pre><code class="language-java">@RequestMapping(method=RequestMethod.POST, consumes=&quot;application/json&quot;)
+@ResponseStatus(HttpStatus.CREATED)
+public ResponseEntity&lt;Spittle&gt; saveSpittle(@RequestBody Spittle spittle, UriComponentsBuilder ucb) {
+  Spittle saved = spittleRepository.save(spittle);
+    
+  HttpHeaders headers = new HttpHeaders();
+  URI locationUri = ucb.path(&quot;/spittles/&quot;)
+      .path(String.valueOf(saved.getId()))
+      .build()
+      .toUri();
+  headers.setLocation(locationUri);
+    
+  ResponseEntity&lt;Spittle&gt; responseEntity = new ResponseEntity&lt;Spittle&gt;(saved, headers, HttpStatus.CREATED);
+  return responseEntity;
+}
+</code></pre>
+</li>
+</ol>
+<h4 id="164-编写rest客户端">16.4 编写REST客户端</h4>
+<h5 id="1641-了解resttemplate的操作">16.4.1 了解RestTemplate的操作</h5>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>delete()</td>
+<td>在特定的 URL 上对资源执行 HTTP DELETE 操作</td>
+</tr>
+<tr>
+<td>exchange()</td>
+<td>在 URL 上执行特定的 HTTP 方法，返回包含对象的 ResponseEntity，这个对象是从响应体中映射得到的</td>
+</tr>
+<tr>
+<td>execute()</td>
+<td>在 URL 上执行特定的 HTTP 方法，返回一个从响应体映射得到的对象</td>
+</tr>
+<tr>
+<td>getForEntity()</td>
+<td>发送一个 HTTP GET 请求，返回的 ResponseEntity 包含了响应体所映射成的对象</td>
+</tr>
+<tr>
+<td>getForObject()</td>
+<td>发送一个 HTTP GET 请求，返回的请求体将映射为一个对象</td>
+</tr>
+<tr>
+<td>headForHeaders()</td>
+<td>发送 HTTP HEAD 请求，返回包含特定资源 URL 的 HTTP 头</td>
+</tr>
+<tr>
+<td>optionsForAllow()</td>
+<td>发送 HTTP OPTIONS 请求，返回对特定 URL 的 Allow 头信息</td>
+</tr>
+<tr>
+<td>postForEntity()</td>
+<td>POST 数据到一个 URL，返回包含一个对象的 ResponseEntity，这个对象是从响应体中映射得到的</td>
+</tr>
+<tr>
+<td>postForLocation()</td>
+<td>POST 数据到一个 URL，返回新创建资源的 URL</td>
+</tr>
+<tr>
+<td>postForObject()</td>
+<td>POST 数据到一个 URL，返回根据响应体匹配形成的对象 put() PUT 资源到特定的 URL</td>
+</tr>
+</tbody>
+</table>
+<h4 id="165-小结">16.5 小结</h4>
+<h3 id="第17章-spring消息">第17章 Spring消息</h3>
+<ul>
+<li>异步消息简介</li>
+<li>基于 JMS 的消息功能</li>
+<li>使用 Spring 和 AMQP 发送消息</li>
+<li>消息驱动的 POJO</li>
+</ul>
+<h4 id="171-异步消息简介">17.1 异步消息简介</h4>
+<ol>
+<li>如果通信是同步的，客户端必须等待服务端的响应.</li>
+<li><strong>异步</strong>就是客户端发送消息之后不需要等待，继续执行其他任务。</li>
+</ol>
+<h5 id="1711-发送消息">17.1.1 发送消息</h5>
+<ol>
+<li>
+<p><strong>间接性</strong>是异步消息的关键。两个端异步通信并非直接通信，而是将消息交由中间方。</p>
+</li>
+<li>
+<p>关键概念：<strong>消息代理</strong>和<strong>目的地</strong>。</p>
+<ol>
+<li>消息代理：即中间方，用来接收异步消息/</li>
+<li>目的地：此处目的地不是要发到哪里，而是发送方的地址。他将消息发到消息代理就不管了。后续会有其他人取走消息（他们通过目的地获取消息是谁发来的）。</li>
+</ol>
+</li>
+<li>
+<p><strong>点对点消息模型</strong>：当消息代理得到消息时，它将消息放入一个队列中。当接收者请求队列中的下一条消息时，消息会从队列中取出，并投递给接收者。因为消息投递后会从队列中删除，这样就可以保证消息只能投递给一个接收者。</p>
+<figure data-type="image" tabindex="1"><img src="https://702021806-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-LmcjU5gG__lBrRbUxBO%2F-LnqWV31Lm86jhlj-u6Q%2F-LnqWzIzyOP3IJq6N8Pi%2F17.3%20%E7%82%B9%E5%AF%B9%E7%82%B9%E6%B6%88%E6%81%AF%E6%A8%A1%E5%9E%8B.jpg?alt=media&amp;token=a4d59f8a-78dd-44bd-a2b1-0264583db680" alt="img" loading="lazy"></figure>
+</li>
+<li>
+<p>但是并没有约束只能有一个接受者，可以有多个接收者轮流获取消息，各自处理得到的那条消息。e.g.  此模型比较像银行处理业务窗口，（多个）业务员通过（一个）取号机叫号，每人每次接待一位顾客（消息）。</p>
+</li>
+<li>
+<p><strong>发布—订阅消息模型</strong>： 在发布—订阅消息模型中，消息会发送给一个主题。与队列类似，多个接收者都可以监听一个主题。但是，与队列不同的是，消息不再是只投递给一个接收者，而是主题的所有订阅者都会接收到此消息的副本。</p>
+<figure data-type="image" tabindex="2"><img src="https://702021806-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-LmcjU5gG__lBrRbUxBO%2F-LnqWV31Lm86jhlj-u6Q%2F-LnqXX75u_e6Pf0AbDRW%2F17.4%20%E4%B8%BB%E9%A2%98%E6%B6%88%E6%81%AF.jpg?alt=media&amp;token=37413bdb-d397-4429-9ba8-bb071895911f" alt="img" loading="lazy"></figure>
+</li>
+<li>
+<p>发布—订阅消息模型与杂志发行商和杂志订阅者很相似。杂志（消息）出版后，发送给邮局，然后所有的订阅者都会收到杂志的副本</p>
+</li>
+</ol>
+<h5 id="1722-异步消息的优点">17.2.2 异步消息的优点</h5>
+<ol>
+<li>同步通信的局限
+<ol>
+<li>等待。</li>
+<li>服务接口和远程服务耦合。</li>
+<li>客户端与远程服务的位置耦合。</li>
+<li>客户端与服务的可用性相耦合。</li>
+</ol>
+</li>
+<li>异步消息解决了这些局限。
+<ol>
+<li>客户端发送完消息无需等待。</li>
+<li>面向数据，而非远程方法</li>
+<li>同步 RPC 服务通常需要网络地址来定位。这意味着客户端无法灵活地适应网络拓扑的改变。如果服务的 IP 地址改变了，或者服务被配置为监听其他端口，客户端必须进行相应的调整，否则无法访问服务。与之相反，消息客户端不必知道谁会处理它们的消息，或者服务的位置在哪里。客户端只需要了解需要通过哪个队列或主题来发送消息。</li>
+<li>发送异步消息时，客户端完全可以相信消息会被投递。即使在消息发送时，服务无法使用，消息也会被存储起来，直到服务重新可以使用为止。</li>
+</ol>
+</li>
+</ol>
+<h4 id="172-使用jms发送消息">17.2 使用JMS发送消息</h4>
+<h4 id="173-使用amqp实现消息功能">17.3 使用AMQP实现消息功能</h4>
+<h4 id="174-小结">17.4 小结</h4>
+<h3 id="第18章-使用websocket和stomp实现消息功能">第18章 使用WebSocket和STOMP实现消息功能</h3>
+<p>略</p>
+<h3 id="第19章-使用spring发送email">第19章 使用Spring发送Email</h3>
+<p>略</p>
+<h3 id="第20章-使用jxm管理springbean">第20章 使用JXM管理SpringBean</h3>
+<p>略</p>
+<h3 id="第21章-借助spring-boot简化spring开发">第21章 借助Spring Boot简化Spring开发</h3>
+<p>略</p>
+<h2 id="reference">REFERENCE</h2>
+<p>https://potoyang.gitbook.io/spring-in-action-v4/untitled-10/untitled-2/untitled</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#spring%E5%AE%9E%E6%88%98%E7%AC%AC%E5%9B%9B%E7%89%88%E7%AC%94%E8%AE%B0-part4-spring%E9%9B%86%E6%88%90">Spring实战（第四版）笔记 - part4 Spring集成</a>
+<ul>
+<li><a href="#%E7%AC%AC15%E7%AB%A0-%E4%BD%BF%E7%94%A8%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1">第15章 使用远程服务</a></li>
+<li><a href="#%E7%AC%AC16%E7%AB%A0-%E4%BD%BF%E7%94%A8spring-mvc%E5%88%9B%E5%BB%BArest-api">第16章 使用Spring MVC创建REST API</a>
+<ul>
+<li><a href="#161-%E4%BA%86%E8%A7%A3rest">16.1 了解REST</a>
+<ul>
+<li><a href="#1611-rest%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86">16.1.1 REST基础知识</a></li>
+<li><a href="#1612-spring%E6%98%AF%E5%A6%82%E4%BD%95%E6%94%AF%E6%8C%81rest%E7%9A%84">16.1.2 Spring是如何支持REST的</a></li>
+</ul>
+</li>
+<li><a href="#162-%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%B8%80%E4%B8%AArest%E7%AB%AF%E7%82%B9">16.2 创建第一个REST端点</a>
+<ul>
+<li><a href="#1621-%E5%8D%8F%E5%95%86%E8%B5%84%E6%BA%90%E8%A1%A8%E8%BF%B0">16.2.1 协商资源表述</a></li>
+<li><a href="#1622-%E4%BD%BF%E7%94%A8http%E4%BF%A1%E6%81%AF%E8%BD%AC%E6%8D%A2%E5%99%A8">16.2.2 使用HTTP信息转换器</a></li>
+</ul>
+</li>
+<li><a href="#163-%E6%8F%90%E4%BE%9B%E8%B5%84%E6%BA%90%E4%B9%8B%E5%A4%96%E7%9A%84%E5%85%B6%E4%BB%96%E5%86%85%E5%AE%B9">16.3 提供资源之外的其他内容</a>
+<ul>
+<li><a href="#1631-%E5%8F%91%E9%80%81%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF%E5%88%B0%E5%AE%A2%E6%88%B7%E7%AB%AF">16.3.1 发送错误信息到客户端</a></li>
+<li><a href="#1632-%E5%9C%A8%E5%93%8D%E5%BA%94%E4%B8%AD%E8%AE%BE%E7%BD%AE%E5%A4%B4%E9%83%A8%E4%BF%A1%E6%81%AF">16.3.2 在响应中设置头部信息</a></li>
+</ul>
+</li>
+<li><a href="#164-%E7%BC%96%E5%86%99rest%E5%AE%A2%E6%88%B7%E7%AB%AF">16.4 编写REST客户端</a>
+<ul>
+<li><a href="#1641-%E4%BA%86%E8%A7%A3resttemplate%E7%9A%84%E6%93%8D%E4%BD%9C">16.4.1 了解RestTemplate的操作</a></li>
+</ul>
+</li>
+<li><a href="#165-%E5%B0%8F%E7%BB%93">16.5 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC17%E7%AB%A0-spring%E6%B6%88%E6%81%AF">第17章 Spring消息</a>
+<ul>
+<li><a href="#171-%E5%BC%82%E6%AD%A5%E6%B6%88%E6%81%AF%E7%AE%80%E4%BB%8B">17.1 异步消息简介</a>
+<ul>
+<li><a href="#1711-%E5%8F%91%E9%80%81%E6%B6%88%E6%81%AF">17.1.1 发送消息</a></li>
+<li><a href="#1722-%E5%BC%82%E6%AD%A5%E6%B6%88%E6%81%AF%E7%9A%84%E4%BC%98%E7%82%B9">17.2.2 异步消息的优点</a></li>
+</ul>
+</li>
+<li><a href="#172-%E4%BD%BF%E7%94%A8jms%E5%8F%91%E9%80%81%E6%B6%88%E6%81%AF">17.2 使用JMS发送消息</a></li>
+<li><a href="#173-%E4%BD%BF%E7%94%A8amqp%E5%AE%9E%E7%8E%B0%E6%B6%88%E6%81%AF%E5%8A%9F%E8%83%BD">17.3 使用AMQP实现消息功能</a></li>
+<li><a href="#174-%E5%B0%8F%E7%BB%93">17.4 小结</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AC%AC18%E7%AB%A0-%E4%BD%BF%E7%94%A8websocket%E5%92%8Cstomp%E5%AE%9E%E7%8E%B0%E6%B6%88%E6%81%AF%E5%8A%9F%E8%83%BD">第18章 使用WebSocket和STOMP实现消息功能</a></li>
+<li><a href="#%E7%AC%AC19%E7%AB%A0-%E4%BD%BF%E7%94%A8spring%E5%8F%91%E9%80%81email">第19章 使用Spring发送Email</a></li>
+<li><a href="#%E7%AC%AC20%E7%AB%A0-%E4%BD%BF%E7%94%A8jxm%E7%AE%A1%E7%90%86springbean">第20章 使用JXM管理SpringBean</a></li>
+<li><a href="#%E7%AC%AC21%E7%AB%A0-%E5%80%9F%E5%8A%A9spring-boot%E7%AE%80%E5%8C%96spring%E5%BC%80%E5%8F%91">第21章 借助Spring Boot简化Spring开发</a></li>
+</ul>
+</li>
+<li><a href="#reference">REFERENCE</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/Spring实战-第四版-part3-后端部分/">
+              <h3 class="post-title">
+                Spring实战(第四版)- part3(后端部分)
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

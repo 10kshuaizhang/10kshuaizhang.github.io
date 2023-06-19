@@ -1,0 +1,441 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>346. Moving Average from Data Stream | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="346. Moving Average from Data Stream | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Problem
+The problem is to design something that can find the moving average of an integer column, the moving window will..." />
+    <meta name="keywords" content="Design,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              346. Moving Average from Data Stream
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-03-08
+              </span>
+              <span>
+                8 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/gqDyHl5kO/" class="post-tag">
+                  # Design
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="problem">Problem</h2>
+<p>The problem is to design something that can find the moving average of an integer column, the moving window will be set by initializing the constructor, and then if you want to get the moving average, a next function will be called, and this function will pass a new number in. next returns the current moving average after this number is put in.</p>
+<pre><code>Input
+[&quot;MovingAverage&quot;, &quot;next&quot;, &quot;next&quot;, &quot;next&quot;, &quot;next&quot;]
+[[3], [1], [10], [3], [5]]
+Output
+[null, 1.0, 5.5, 4.66667, 6.0]
+
+Explanation
+MovingAverage movingAverage = new MovingAverage(3);
+movingAverage.next(1); // return 1.0 = 1 / 1
+movingAverage.next(10); // return 5.5 = (1 + 10) / 2
+movingAverage.next(3); // return 4.66667 = (1 + 10 + 3) / 3
+movingAverage.next(5); // return 6.0 = (10 + 3 + 5) / 3
+</code></pre>
+<p>This design problem is just like writing code everyday <strong>doing requirements</strong> more closely. We need to have a use case, like the Example above, and it will be immediately clear what functionality we need to achieve.</p>
+<h2 id="parse">Parse</h2>
+<p>The moving window needs a size to record how long it needs to be, and a data structure to record the <strong>maximum</strong> first size for calculation purposes. The reason why it is called the most is that the number of numbers in the container may not be enough for size at the beginning, so we can calculate the average of these numbers according to the question.</p>
+<p>When the number reaches size, every time a new value is entered, an old value is discarded. Can we think of <strong>FIFO</strong> in this place? and <strong>queue</strong>? At first I thought of using a list and removeFirst function. But I didn't think of a queue.</p>
+<p>Another small point is that the sum value can actually be updated as an auxiliary variable when the data is added or removed, so it's simpler than writing a separate sum function to iterate through the values of the summation containers.</p>
+<p>For design topics, the idea is generally</p>
+<ul>
+<li>abstracting the problem and decomposing it into smaller problems, categorized and discussed (the framework of the code is there).</li>
+<li>consider multiple perspectives, you can use reverse thinking, yes, no.</li>
+<li>picking the right data structure (10 common)
+<ul>
+<li>BitSet - generally occurs in space optimization</li>
+<li>HashSet (with or without problems) &amp; HashMap (correspondence)</li>
+<li>ArrayList (add, get O(1) time complexity) &amp; LinkedList (addFirst O(1) time complexity)</li>
+<li>Stack (LIFO) &amp; Queue (FIFO) &amp; Deque (combination of heap and queue)</li>
+<li>TreeSet (ordered HashSet) &amp; PriorityQueue (sorted) &amp; TreeMap (ordered hashmap)</li>
+<li>If an object has more than one property, you may even want to consider a new class</li>
+</ul>
+</li>
+<li>Constructed code</li>
+</ul>
+<h2 id="code">Code</h2>
+<pre><code class="language-java">class MovingAverage {
+    
+    private int size;
+    private List&lt;Integer&gt; nums;
+
+    public MovingAverage(int size) {
+        this.size = size;
+        this.nums = new ArrayList&lt;&gt;();
+    }
+    
+    public double next(int val) {
+        nums.add(val);
+        int numCount = nums.size();
+        if (numCount &lt;= this.size) {
+            return (double) sum(nums) / numCount;
+        } else {
+            nums.remove(0);
+            return (double) sum(nums) / size;
+        }
+    }
+    
+    private int sum(List&lt;Integer&gt; nums) {
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        return sum;
+    }
+}
+
+/**
+ * Your MovingAverage object will be instantiated and called as such:
+ * MovingAverage obj = new MovingAverage(size);
+ * double param_1 = obj.next(val);
+ */
+</code></pre>
+<pre><code class="language-java">class MovingAverage {
+    
+    private int size;
+    private Queue&lt;Integer&gt; queue;
+    double sum;
+
+    public MovingAverage(int size) {
+        this.size = size;
+        this.queue = new LinkedList&lt;&gt;();
+        this.sum = 0;
+    }
+    
+    public double next(int val) {
+        if (queue.size() == size) {
+            int ele = queue.poll();
+            sum -= ele;
+        }
+        
+        queue.offer(val);
+        sum += val;
+        return sum / queue.size();
+    }
+}
+
+/**
+ * Your MovingAverage object will be instantiated and called as such:
+ * MovingAverage obj = new MovingAverage(size);
+ * double param_1 = obj.next(val);
+ */
+</code></pre>
+<hr>
+<h2 id="问题">问题</h2>
+<p>这个问题就是说，设计一个东西可以求一个整数列的移动平均值，移动窗口会通过初始化构造函数来设定，然后如果想要取到移动平均值，会调用一个next函数，这个函数同时会传一个新的数字进去。next返回的就是这个数字放进去之后的当前的移动平均值。</p>
+<pre><code>Input
+[&quot;MovingAverage&quot;, &quot;next&quot;, &quot;next&quot;, &quot;next&quot;, &quot;next&quot;]
+[[3], [1], [10], [3], [5]]
+Output
+[null, 1.0, 5.5, 4.66667, 6.0]
+
+Explanation
+MovingAverage movingAverage = new MovingAverage(3);
+movingAverage.next(1); // return 1.0 = 1 / 1
+movingAverage.next(10); // return 5.5 = (1 + 10) / 2
+movingAverage.next(3); // return 4.66667 = (1 + 10 + 3) / 3
+movingAverage.next(5); // return 6.0 = (10 + 3 + 5) / 3
+</code></pre>
+<p>这种设计题就像日常写代码<strong>做需求</strong>更贴近一样。我们需要有一个use case，如上文的Example，就会马上清晰的知道我们需要实现的功能是什么。</p>
+<h2 id="解析">解析</h2>
+<p>移动窗口需要一个size来记录到底需要多长的移动窗口；需要一个数据结构来记录<strong>最多</strong>前size个数字以便计算。为什么叫最多，因为可能在最开始的时候这个容器中数字的数量还不够size个，根据题意我们就计算这些数字的平均值即可。</p>
+<p>当数量达到size之后，每进一个新的数值，就会丢弃一个老的数值。这个地方是否能想到<strong>FIFO</strong>？以及<strong>queue</strong>？我最开始的时候想到了使用一个list和removeFirst函数。但是并没有想到queue。</p>
+<p>另外一个小点就是说，其实sum值可以作为辅助的变量在数据加入或者删除的时候一并更新，这样比我单独再写一个sum函数遍历求和容器的值要看着简洁一些。</p>
+<p>对于设计题目来说，思路一般是</p>
+<ul>
+<li>抽象问题，并且化解成小问题，分类讨论（代码的框架就有了）；</li>
+<li>多角度考虑，可以使用逆向思维，是、否；</li>
+<li>选取合适的数据结构（10种常见）
+<ul>
+<li>BitSet - 一般出现在空间优化</li>
+<li>HashSet（有或无问题） &amp; HashMap（对应关系）</li>
+<li>ArrayList（add、get O(1)时间复杂度） &amp; LinkedList（addFirst O(1)时间复杂度）</li>
+<li>Stack（LIFO） &amp; Queue（FIFO） &amp; Deque（堆和队列结合）</li>
+<li>TreeSet（有序的HashSet） &amp; PriorityQueue（排序） &amp; TreeMap（有序的hashmap）</li>
+<li>如果一个object有多个属性，甚至可能要考虑一个新class</li>
+</ul>
+</li>
+<li>构造代码</li>
+</ul>
+<h2 id="代码">代码</h2>
+<pre><code class="language-java">class MovingAverage {
+    
+    private int size;
+    private List&lt;Integer&gt; nums;
+
+    public MovingAverage(int size) {
+        this.size = size;
+        this.nums = new ArrayList&lt;&gt;();
+    }
+    
+    public double next(int val) {
+        nums.add(val);
+        int numCount = nums.size();
+        if (numCount &lt;= this.size) {
+            return (double) sum(nums) / numCount;
+        } else {
+            nums.remove(0);
+            return (double) sum(nums) / size;
+        }
+    }
+    
+    private int sum(List&lt;Integer&gt; nums) {
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        return sum;
+    }
+}
+
+/**
+ * Your MovingAverage object will be instantiated and called as such:
+ * MovingAverage obj = new MovingAverage(size);
+ * double param_1 = obj.next(val);
+ */
+</code></pre>
+<pre><code class="language-java">class MovingAverage {
+    
+    private int size;
+    private Queue&lt;Integer&gt; queue;
+    double sum;
+
+    public MovingAverage(int size) {
+        this.size = size;
+        this.queue = new LinkedList&lt;&gt;();
+        this.sum = 0;
+    }
+    
+    public double next(int val) {
+        if (queue.size() == size) {
+            int ele = queue.poll();
+            sum -= ele;
+        }
+        
+        queue.offer(val);
+        sum += val;
+        return sum / queue.size();
+    }
+}
+
+/**
+ * Your MovingAverage object will be instantiated and called as such:
+ * MovingAverage obj = new MovingAverage(size);
+ * double param_1 = obj.next(val);
+ */
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#problem">Problem</a></li>
+<li><a href="#parse">Parse</a></li>
+<li><a href="#code">Code</a></li>
+<li><a href="#%E9%97%AE%E9%A2%98">问题</a></li>
+<li><a href="#%E8%A7%A3%E6%9E%90">解析</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/httpserveletandserveltandthread-per-request/">
+              <h3 class="post-title">
+                httpservelet&amp;Servelt&amp;Thread-per-request
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

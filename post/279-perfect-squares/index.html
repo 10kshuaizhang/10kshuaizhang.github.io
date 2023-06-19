@@ -1,0 +1,328 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>279. Perfect Squares | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="279. Perfect Squares | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="问题
+原问题是说，给一个正整数n，找出最小数量的平方数并且这些平方数的和为n。或者说反过来，一个n，最少能分解成平方数的数量。
+解析
+这个题目我一开始想的时候，想n=1的时候，结果为1（只有一种情况）；那么从1开始如何得到2的结果？那就是1..." />
+    <meta name="keywords" content="Dynamic Programming,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              279. Perfect Squares
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-03-03
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/8XHIFnHCE/" class="post-tag">
+                  # Dynamic Programming
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="问题">问题</h2>
+<p>原问题是说，给一个正整数n，找出最小数量的平方数并且这些平方数的和为n。或者说反过来，一个n，最少能分解成平方数的数量。</p>
+<h2 id="解析">解析</h2>
+<p>这个题目我一开始想的时候，想n=1的时候，结果为1（只有一种情况）；那么从1开始如何得到2的结果？那就是1的结果加上 2-1的结果，同理3的结果就是2的结果加上3-2的结果；</p>
+<p>但是到4情况变了，4本身他自己是一个平方数。那么组成他的数最少数量是1，也就是他自己。</p>
+<p>想了一会，其实是之前的一道完美平方数的题目给了一点思路，忘了具体是哪道了，反正就是在初始化其实也可以把小于n的所有的平方数的结果都置为1。</p>
+<p>到这这个题目就是就已经比较明显了，初始化解决了，当前的结果如何从前面的结果推导出也解决了（状态转移）。</p>
+<h2 id="代码1">代码1</h2>
+<pre><code class="language-java">class Solution {
+    public int numSquares(int n) {
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        for (int i = 1; i*i &lt;= n; i++) {
+            dp[i*i] = 1;
+        }
+        for (int i = 2; i &lt;= n; i++) {
+            for (int j = 1; j &lt; i; j++) {
+                dp[i] = Math.min(dp[i], dp[j] + dp[i-j]);
+            }
+        }
+        return dp[n];
+    }
+}
+</code></pre>
+<h2 id="代码2">代码2</h2>
+<p>这个是我提交代码后看到的别人的一种写法，比我的快很多。我就琢磨了一下他这个写法。</p>
+<p>首先他不用初始化每一个平方数，在状态转移的过程中直接就可以得到。</p>
+<p>他这比较巧妙的是，运用了dp0这个值，另外就是只看平方数相关的结果，因为我们可以推导出来，结果应该是出于某些大平方数（区别于全都是加一）相加，所以只看其相关的结果即可。</p>
+<p>代码中<code>dp[i - j * j] + 1</code>,这个加一，其实就是<code>i - j * j</code>中<code>j*j</code>的结果即1。</p>
+<pre><code class="language-java">class Solution {
+    public int numSquares(int n) {
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
+        for (int i = 0; i &lt;= n; i++) {
+            for (int j = 1; j * j &lt;= i; j++) {
+                dp[i] = Math.min(dp[i], dp[i - j * j] + 1);
+            }
+        }
+        return dp[n];
+    }
+}
+</code></pre>
+<hr>
+<ol start="279">
+<li>Perfect Squares</li>
+</ol>
+<h2 id="problem">Problem</h2>
+<p>The original problem is to find the smallest number of squares that sum to n given a positive integer n. Or conversely, the smallest number of squares an n can be decomposed into.</p>
+<h2 id="analysis">Analysis</h2>
+<p>When I first thought about this topic, I thought that n=1 results in 1 (there is only one case); so how do you get the result of 2 starting from 1? That is, the result of 1 plus the result of 2-1, and similarly the result of 3 is the result of 2 plus the result of 3-2.</p>
+<p>But the situation changes to 4, which is itself a square number. Then the minimum number of numbers that make up his number is 1, which is himself.</p>
+<p>After thinking for a while, it is actually a perfect square number of the previous topic gave a little thought, I forget exactly which one, anyway, is in the initialization can also be less than n of all the results of the square number are set to 1.</p>
+<p>To this topic is already relatively obvious, the initialization is solved, the current results of how to derive from the previous results are also solved (state transfer).</p>
+<h2 id="code-1">Code 1</h2>
+<pre><code class="language-java">class Solution {
+    public int numSquares(int n) {
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        for (int i = 1; i*i &lt;= n; i++) {
+            dp[i*i] = 1;
+        }
+        for (int i = 2; i &lt;= n; i++) {
+            for (int j = 1; j &lt; i; j++) {
+                dp[i] = Math.min(dp[i], dp[j] + dp[i-j]);
+            }
+        }
+        return dp[n];
+    }
+}
+</code></pre>
+<h2 id="code-2">Code 2</h2>
+<p>This is a writeup I saw after I submitted my code, and it was much faster than mine. I then pondered this way he wrote it.</p>
+<p>First of all, he doesn't need to initialize every square number, he can get it directly during the state transfer process.</p>
+<p>What is clever is that he uses the value dp0, and he only looks at the results related to the square numbers, because we can deduce that the results should be added out of some large square numbers (as opposed to all adding one), so we can only look at the results related to them.</p>
+<p>In the code <code>dp[i - j * j] + 1</code>, the plus one is actually the result of <code>j*j</code> in <code>i - j * j</code>, which is 1.</p>
+<pre><code class="language-java">class Solution {
+    public int numSquares(int n) {
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
+        for (int i = 0; i &lt;= n; i++) {
+            for (int j = 1; j * j &lt;= i; j++) {
+                dp[i] = Math.min(dp[i], dp[i - j * j] + 1);
+            }
+        }
+        return dp[n];
+    }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E9%97%AE%E9%A2%98">问题</a></li>
+<li><a href="#%E8%A7%A3%E6%9E%90">解析</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%811">代码1</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%812">代码2</a></li>
+<li><a href="#problem">Problem</a></li>
+<li><a href="#analysis">Analysis</a></li>
+<li><a href="#code-1">Code 1</a></li>
+<li><a href="#code-2">Code 2</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/62-unique-paths/">
+              <h3 class="post-title">
+                62. Unique Paths
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

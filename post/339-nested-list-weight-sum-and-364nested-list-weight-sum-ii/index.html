@@ -1,0 +1,467 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>339. Nested List Weight Sum &amp; 364.Nested List Weight Sum II | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="339. Nested List Weight Sum &amp; 364.Nested List Weight Sum II | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Question 1
+This question says that there is a special data type as follows:
+
+This data structure provides several method..." />
+    <meta name="keywords" content="Depth First Search&Bread First Search,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              339. Nested List Weight Sum &amp; 364.Nested List Weight Sum II
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-10
+              </span>
+              <span>
+                8 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/SQ7QEvjYu/" class="post-tag">
+                  # Depth First Search&amp;Bread First Search
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="question-1">Question 1</h2>
+<p>This question says that there is a special data type as follows:</p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304101636143.png" alt="img" loading="lazy"></figure>
+<p>This data structure provides several method interfaces to manipulate the data (shown in code 1).</p>
+<p>The depth of an element is how many levels of list nesting he consists of. Find the sum of the products of the elements and the depths.</p>
+<h2 id="algorithm-1">Algorithm 1</h2>
+<p>The first thing that comes to my mind with this topic is that the array looks like a tiled tree result or graph. Then the first level is the root, the second level is his child nodes, and so on. By traversing through them we can easily get information about the number of layers. Then by determining whether he is an integer at this level, we can decide whether to compute it or not.</p>
+<p>I used the recursive way of writing bfs.</p>
+<h2 id="code-1">Code 1</h2>
+<pre><code class="language-java">/*
+ * // This is the interface that allows for creating nested lists.
+ * // You should not implement it, or speculate about its implementation
+ * public interface NestedInteger {
+ * // Constructor initializes an empty nested list.
+ * public NestedInteger().
+ *
+ public NestedInteger(); * // Constructor initializes a single integer.
+ * public NestedInteger(int value).
+ *
+ * // @return true if this NestedInteger holds a single integer, rather than a nested list.
+ * public boolean isInteger().
+ *
+ * // @return the single integer that this NestedInteger holds, if it holds a single integer
+ * // Return null if this NestedInteger holds a nested list
+ * public Integer getInteger().
+ *
+ * // Set this NestedInteger to hold a single integer.
+ * public void setInteger(int value).
+ *
+ * // Set this NestedInteger to hold a nested list and adds a nested integer to it.
+ * public void add(NestedInteger ni).
+ *
+ * // @return the nested list that this NestedInteger holds, if it holds a nested list
+ * // Return empty list if this NestedInteger holds a single integer
+ * public List&lt;NestedInteger&gt; getList().
+ * }
+ */
+class Solution {
+    public int depthSum(List&lt;NestedInteger&gt; nestedList) {
+        if (nestedList == null || nestedList.size() == 0) {
+            return 0.
+        }
+        int res = 0.
+        Queue&lt;NestedInteger&gt; queue = new LinkedList&lt;&gt;().
+        for (int i = 0; i &lt; nestedList.size(); i++) {
+            queue.offer(nestedList.get(i)).
+        }
+        
+        int depth = 0.
+        while (!queue.isEmpty()) {
+            depth++.
+            int size = queue.size().
+            for (int i = 0; i &lt; size; i++) {
+                NestedInteger integer = queue.poll().
+                if (integer.isInteger()) {
+                    res += depth*integer.getInteger().
+                } else {
+                    for (int j = 0; j &lt; integer.getList().size(); j++) {
+                        queue.offer(integer.getList().get(j)).
+                    }
+                }
+            }
+            
+        }
+        return res.
+    }
+}
+</code></pre>
+<h2 id="problem-2">Problem 2</h2>
+<p>The difference between this problem and the one above is that instead of calculating the sum of the product of the depth and the integer elements, we calculate the sum of the product of the weights and the integer elements. The value of the weight is equal to the maximum depth - the depth of the current element + 1.</p>
+<h2 id="algorithm-2">Algorithm 2</h2>
+<p>The rest of the topic is unchanged, as it iterates once to find the maximum depth before iterating to find the sum.</p>
+<p>I actually thought at the beginning of the same traversal, there should be a way to find both the maximum depth and the summation in another traversal. The knowledge was not implemented in the end, but I guess it is through recursion down to the bottom layer and then return the maximum value for the upper layer to calculate.</p>
+<p>You can refer to the discussion forum on the official website. The official solution has an onepass solution but no explanation.</p>
+<h2 id="code-2">Code 2</h2>
+<pre><code class="language-java">class Solution {
+    int maxDepth = 0.
+    int res = 0.
+    public int depthSumInverse(List&lt;NestedInteger&gt; nestedList) {
+        for (NestedInteger ele : nestedList) {
+            getMaxDepth(ele, 1).
+        }
+        
+        
+        for (NestedInteger integer : nestedList) {
+            dfs(integer, 1).
+        }
+        return res.
+    }
+    
+    private void dfs(NestedInteger integer, int depth) {
+        depth++.
+        if (integer.isInteger()) {
+            res += (maxDepth - depth + 1) * integer.getInteger().
+        } else {
+            for (NestedInteger ele : integer.getList()) {
+                dfs(ele, depth).
+            }
+        }
+    }
+    
+    private void getMaxDepth(NestedInteger integer, int depth) {
+        depth++.
+        if (!integer.isInteger()) {
+            for (NestedInteger ele : integer.getList()) {
+                getMaxDepth(ele, depth).
+            }
+        }
+        maxDepth = Math.max(maxDepth, depth).
+    }
+}
+</code></pre>
+<hr>
+<h2 id="问题1">问题1</h2>
+<p>这个题目是说，有一个特殊的数据类型，如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304101613312.png" alt="img" loading="lazy"></figure>
+<p>这个数据结构提供了几个操作数据的方法接口（在代码1中展示）。</p>
+<p>一个元素的深度，就是他有几层列表嵌套组成。求元素和深度的乘积的和。</p>
+<h2 id="算法1">算法1</h2>
+<p>这个题目，我首先想到的就是这个数组看起来就像一个平铺的树结果或者图。那么第一层就是根，第二层就是他的子节点，以此类推。通过遍历我们可以很容易的拿到他们的层数信息。再通过判断他在这一层是否是一个整数，来决定是否要计算。</p>
+<p>我使用了bfs的递归写法。</p>
+<h2 id="代码1">代码1</h2>
+<pre><code class="language-java">/**
+ * // This is the interface that allows for creating nested lists.
+ * // You should not implement it, or speculate about its implementation
+ * public interface NestedInteger {
+ *     // Constructor initializes an empty nested list.
+ *     public NestedInteger();
+ *
+ *     // Constructor initializes a single integer.
+ *     public NestedInteger(int value);
+ *
+ *     // @return true if this NestedInteger holds a single integer, rather than a nested list.
+ *     public boolean isInteger();
+ *
+ *     // @return the single integer that this NestedInteger holds, if it holds a single integer
+ *     // Return null if this NestedInteger holds a nested list
+ *     public Integer getInteger();
+ *
+ *     // Set this NestedInteger to hold a single integer.
+ *     public void setInteger(int value);
+ *
+ *     // Set this NestedInteger to hold a nested list and adds a nested integer to it.
+ *     public void add(NestedInteger ni);
+ *
+ *     // @return the nested list that this NestedInteger holds, if it holds a nested list
+ *     // Return empty list if this NestedInteger holds a single integer
+ *     public List&lt;NestedInteger&gt; getList();
+ * }
+ */
+class Solution {
+    public int depthSum(List&lt;NestedInteger&gt; nestedList) {
+        if (nestedList == null || nestedList.size() == 0) {
+            return 0;
+        }
+        int res = 0;
+        Queue&lt;NestedInteger&gt; queue = new LinkedList&lt;&gt;();
+        for (int i = 0; i &lt; nestedList.size(); i++) {
+            queue.offer(nestedList.get(i));
+        }
+        
+        int depth = 0;
+        while (!queue.isEmpty()) {
+            depth++;
+            int size = queue.size();
+            for (int i = 0; i &lt; size; i++) {
+                NestedInteger integer = queue.poll();
+                if (integer.isInteger()) {
+                    res += depth*integer.getInteger();
+                } else {
+                    for (int j = 0; j &lt; integer.getList().size(); j++) {
+                        queue.offer(integer.getList().get(j));
+                    }
+                }
+            }
+            
+        }
+        return res;
+    }
+}
+</code></pre>
+<h2 id="问题2">问题2</h2>
+<p>这个题目和上面题目有不同的地方是我们不再计算深度和整数元素的乘积和，而是计算权重和整数元素的乘积和。权重的值等于最大深度-当前元素深度+1。</p>
+<h2 id="算法2">算法2</h2>
+<p>这个题目其他的地方没什么变化，在遍历求和之前先遍历一次找到最大深度。</p>
+<p>我其实一开始也想到了同样是遍历，应该有方法再一次遍历中既可以找到最大深度也可以求和计算。知识最后没有实现，猜测是通过递归不断向下直到最底层然后返回最大值供上层计算。</p>
+<p>可以参考官方的网站的讨论区。官方的解答虽然有onepass解答但是并没有解释。</p>
+<h2 id="代码2">代码2</h2>
+<pre><code class="language-java">class Solution {
+    int maxDepth = 0;
+    int res = 0;
+    public int depthSumInverse(List&lt;NestedInteger&gt; nestedList) {
+        for (NestedInteger ele : nestedList) {
+            getMaxDepth(ele, 1);
+        }
+        
+        
+        for (NestedInteger integer : nestedList) {
+            dfs(integer, 1);
+        }
+        return res;
+    }
+    
+    private void dfs(NestedInteger integer, int depth) {
+        depth++;
+        if (integer.isInteger()) {
+            res += (maxDepth - depth + 1) * integer.getInteger();
+        } else {
+            for (NestedInteger ele : integer.getList()) {
+                dfs(ele, depth);
+            }
+        }
+    }
+    
+    private void getMaxDepth(NestedInteger integer, int depth) {
+        depth++;
+        if (!integer.isInteger()) {
+            for (NestedInteger ele : integer.getList()) {
+                getMaxDepth(ele, depth);
+            }
+        }
+        maxDepth = Math.max(maxDepth, depth);
+    }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#question-1">Question 1</a></li>
+<li><a href="#algorithm-1">Algorithm 1</a></li>
+<li><a href="#code-1">Code 1</a></li>
+<li><a href="#problem-2">Problem 2</a></li>
+<li><a href="#algorithm-2">Algorithm 2</a></li>
+<li><a href="#code-2">Code 2</a></li>
+<li><a href="#%E9%97%AE%E9%A2%981">问题1</a></li>
+<li><a href="#%E7%AE%97%E6%B3%951">算法1</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%811">代码1</a></li>
+<li><a href="#%E9%97%AE%E9%A2%982">问题2</a></li>
+<li><a href="#%E7%AE%97%E6%B3%952">算法2</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%812">代码2</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/system-design-case-study-5-design-a-url-shortener/">
+              <h3 class="post-title">
+                System Design Case Study 5 - Design A URL shortener
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

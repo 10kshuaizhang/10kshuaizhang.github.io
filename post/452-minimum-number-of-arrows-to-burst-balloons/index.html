@@ -1,0 +1,315 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>452. Minimum Number of Arrows to Burst Balloons | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="452. Minimum Number of Arrows to Burst Balloons | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Problem
+This problem looks complicated to describe, so look at it more closely. We have a bunch of balloons, 🎈 staggere..." />
+    <meta name="keywords" content="Greedy algorithm,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              452. Minimum Number of Arrows to Burst Balloons
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-03-21
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/xldsVr9iS/" class="post-tag">
+                  # Greedy algorithm
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="problem">Problem</h2>
+<p>This problem looks complicated to describe, so look at it more closely. We have a bunch of balloons, 🎈 staggered in front of you, you shoot one arrow at a time, when the balloons are not overlapping, one arrow can only shoot through one balloon; when the balloons are overlapping, one arrow can shoot through them all. Ask how many arrows are needed to shoot through all the balloons. A diagram of this topic is clear at a glance.</p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303211111814.png" alt="image-20230321111119694" style=" zoom:50%;" />
+<h2 id="algorithms">Algorithms</h2>
+<p>Seeing the most value can be considered using greedy thinking.</p>
+<blockquote>
+<p>Dynamic programming is actually also an idea to consider when you see the most value. Of course there are some differences between the two, and the final decision is whether to use greedy thinking or dynamic programming.</p>
+<p>Also, we are talking about &quot;ideas&quot; here, not algorithms. Because this is an idea, a direction, not a specific algorithm.</p>
+</blockquote>
+<p>This topic has the most value, use greedy thinking to try to consider. First find the local optimal solution, then iterate forward until the end.</p>
+<p>As we can see from the figure above, we can iterate through the balloons from left to right (sorting first), and then when a balloon does not overlap with the previous balloon we can move to the new balloon and ignore the previous balloon (the previous result has been saved).</p>
+<p>Here we first need to sort the balloons (according to their end position or right border), at this time will need to consume an arrow; then continue to look behind the balloon, if the balloon behind the overlap with the previous one, that is, the left border of the back is smaller than the current right border, then they can be shot by the same arrow, the cycle continues; when encountered no overlap balloon. That is, the left boundary of the balloon is greater than the current right boundary, at this time an arrow has not been able to pierce them, the new balloon needs another arrow, the result increases one, and at this time the new right boundary is the new right boundary of this balloon, we have to continue to look at the left boundary of the balloon behind him prevail.</p>
+<h2 id="code">Code</h2>
+<pre><code class="language-java">class Solution {
+    public int findMinArrowShots(int[][] points) {
+        if (points == null || points.length == 0 || points[0] == null || points[0].length == 0) {
+            return Integer.MAX_VALUE;
+        }
+        
+        int res = 1;
+        Arrays.sort(points, (a, b) -&gt; {
+            if (a[1] == b[1]) return 0;
+            if (a[1] &lt; b[1]) return -1;
+            return 1;
+        });
+        int end = points[0][1];
+        
+        for (int i = 1; i &lt; points.length; i++) {
+            if (points[i][0] &gt; end) {
+                res++;
+                end = points[i][1];
+            } 
+        }
+        return res;
+    }
+}
+</code></pre>
+<blockquote>
+<p>The code before this topic, can't pass the test anymore, because before for array sorting use <code>Arrays.sort(points, (a, b) -&gt; (a[1] - b[1]));</code> for larger numbers, such as <code>[[-2147483646, -2147483645], [2147483646, 2147483647]]</code>, the result of their operations in anonymous functions may cause overflow, which in turn may affect the correctness of the result.</p>
+</blockquote>
+<hr>
+<h2 id="问题">问题</h2>
+<p>这个问题看起来描述的复杂，要多仔细看一下。就是我们有一堆气球，🎈交错的排列在你的面前，你每次射一支箭，当气球没有重叠，一支箭只能射穿一个气球；当气球重叠，一支箭可以把他们都射穿。问最少需要多少支箭射穿全部气球。这个题目画个图一目了然：</p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303211111814.png" alt="image-20230321111119694" style="zoom:50%;" />
+<h2 id="算法">算法</h2>
+<p>看到求最值可以考虑使用贪心思想。</p>
+<blockquote>
+<p>动态规划其实也是看到最值的时候可以考虑的一种思路。当然这两者存在一些区别，最终以决定使用贪心思想还是动态规划思想。</p>
+<p>另外这里说的是“思想”而非算法。因为这是一种思路，指导方向，而非一个具体的算法。</p>
+</blockquote>
+<p>这个题目有求最值，使用贪心思路去尝试考虑一下。先求局部最优解，然后向前迭代，直到最后。</p>
+<p>我们根据上图可以看到，我们可以从左到右去遍历这些气球（先排序），然后当一个气球与前一个气球不重叠的时候我们可以移动到新的的气球，而不用管之前的气球了（之前的结果已经保存）。</p>
+<p>这里我们首先需要将气球们排序（按照他们的结束位置或者是右边界），此时将需要消耗一支箭；然后继续看后面的气球，如果后面的气球与前面的重叠，也即后面的左边界小于当前的右边界，那么他们可以被同一支箭射穿，循环继续；当遇到没重叠的气球。即气球的左边界大于当前的右边界，此时一支箭已经不能戳穿他们了，新的气球需要另一支箭，结果增加一个，并且此时新的右边界是新的这个气球的右边界，我们要依他为准继续看后面的气球的左边界了。</p>
+<h2 id="代码">代码</h2>
+<pre><code class="language-java">class Solution {
+    public int findMinArrowShots(int[][] points) {
+        if (points == null || points.length == 0 || points[0] == null || points[0].length == 0) {
+            return Integer.MAX_VALUE;
+        }
+        
+        int res = 1;
+        Arrays.sort(points, (a, b) -&gt; {
+            if (a[1] == b[1]) return 0;
+            if (a[1] &lt; b[1]) return -1;
+            return 1;
+        });
+        int end = points[0][1];
+        
+        for (int i = 1; i &lt; points.length; i++) {
+            if (points[i][0] &gt; end) {
+                res++;
+                end = points[i][1];
+            } 
+        }
+        return res;
+    }
+}
+</code></pre>
+<blockquote>
+<p>这个题目之前的代码，无法通过测试了，因为之前对于数组排序使用的是 <code>Arrays.sort(points, (a, b) -&gt; (a[1] - b[1]));</code> 对于较大的数字，例如<code>[[-2147483646, -2147483645], [2147483646, 2147483647]]</code>, 他们在匿名函数中的运算结果，可能会造成overflow，进而会影响结果的正确性。</p>
+</blockquote>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#problem">Problem</a></li>
+<li><a href="#algorithms">Algorithms</a></li>
+<li><a href="#code">Code</a></li>
+<li><a href="#%E9%97%AE%E9%A2%98">问题</a></li>
+<li><a href="#%E7%AE%97%E6%B3%95">算法</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/a-quick-note-of-segment-tree/">
+              <h3 class="post-title">
+                A Quick Note of Segment Tree
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

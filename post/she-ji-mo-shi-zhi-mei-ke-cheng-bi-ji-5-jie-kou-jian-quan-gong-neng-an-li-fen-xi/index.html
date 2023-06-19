@@ -1,0 +1,529 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>设计模式之美-课程笔记6-接口鉴权功能案例分析 | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="设计模式之美-课程笔记6-接口鉴权功能案例分析 | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="实战二：如何对接口鉴权这样一个功能开发做面向对象分析？
+
+如何做。分析，设计。
+如何做需求分析，职责划分，需要定义哪些类，有哪些方法属性，类之间如何交互？如何组装成一个程序？如何结合设计原则、设计模式……
+
+案例介绍和难点剖析
+背景
+假设要..." />
+    <meta name="keywords" content="OOD,Design Pattern" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              设计模式之美-课程笔记6-接口鉴权功能案例分析
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-06-03
+              </span>
+              <span>
+                13 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/sSLhqMzY-/" class="post-tag">
+                  # OOD
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/d2JaGqwpzA/" class="post-tag">
+                  # Design Pattern
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="实战二如何对接口鉴权这样一个功能开发做面向对象分析">实战二：如何对接口鉴权这样一个功能开发做面向对象分析？</h2>
+<ol>
+<li>如何做。分析，设计。</li>
+<li>如何做需求分析，职责划分，需要定义哪些类，有哪些方法属性，类之间如何交互？如何组装成一个程序？如何结合设计原则、设计模式……</li>
+</ol>
+<h3 id="案例介绍和难点剖析">案例介绍和难点剖析</h3>
+<h4 id="背景">背景</h4>
+<p>假设要做一个微服务。微服务通过HTTP协议暴露接口给其他系统调用（其他系统通过URL接口调用微服务）。</p>
+<p>为了保证接口调用的安全性，设计实现一个接口调用鉴权功能，只有认证过的系统才能调用我们的接口，未经认证的系统会被拒绝。</p>
+<h4 id="难点">难点</h4>
+<ol>
+<li>
+<p>需求不明确：只是一个最终的要求，但是对于细节上的设计要求，以及编码还不是很清晰。</p>
+<p>分析需求。将需求细化到很清晰，可执行。需要通过沟通、挖掘、分析、假设、梳理，搞清楚具体需求，哪些是现在要做的，哪些是未来要做的，那些是不用考虑做的。</p>
+</li>
+<li>
+<p>没做过</p>
+<p>平常都是仿照现有的业务功能做一些CRUD，对于这种跟具体业务无关的功能，需要整体考虑分析和设计。</p>
+</li>
+</ol>
+<h3 id="需求分析">需求分析</h3>
+<p>思考路径。</p>
+<h4 id="1-第一轮基础分析">1. 第一轮基础分析</h4>
+<p>首先想到的是用户名加密码来做认证。</p>
+<p>给调用方分配应用名（AppId）和秘钥，等他们访问的时候带上这个信息，然后和服务端的存储的作对比。</p>
+<h4 id="2-第二轮分析优化">2. 第二轮分析优化</h4>
+<p>问题在于，秘钥是明文传输的（基于HTTP）。</p>
+<p>如果我们将秘钥加密之后传输呢？</p>
+<p>也不行，黑客还是可以截取这个内容，并且伪装成已认证系统来访问接口（这个叫重放攻击）。</p>
+<p>那我们借助OAuth验证思路解决。将请求ULR拼接appid和秘钥一起加密成为一个token，appid和token一起在调用的时候发过来，然后服务端用同样方法去加密，然后对比token。</p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306030933281.jpg" alt="img" style="zoom:33%;" />
+<h4 id="3-第三轮分析优化">3. 第三轮分析优化</h4>
+<p>还不行啊，还是可以被重放攻击。token是固定的。</p>
+<p>可以在生成token的时候引入随机变量，让token随机。我们可以选择时间戳作为随机变量。原来的 token 是对 URL、AppID、密码三者进行加密生成的，现在我们将 URL、AppID、密码、时间戳四者进行加密来生成 token。调用方在进行接口请求的时候，将 token、AppID、时间戳，随 URL 一并传递给微服务端。</p>
+<p>微服务端在收到这些数据之后，会验证当前时间戳跟传递过来的时间戳，是否在一定的时间窗口内（比如一分钟）。如果超过一分钟，则判定 token 过期，拒绝接口请求。如果没有超过一分钟，则说明 token 没有过期，就再通过同样的 token 生成算法，在服务端生成新的 token，与调用方传递过来的 token 比对，看是否一致。如果一致，则允许接口调用请求；否则，就拒绝接口调用请求。</p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306030937871.jpg" alt="img" style="zoom:33%;" />
+<h4 id="4-第四轮分析优化">4. 第四轮分析优化</h4>
+<p>和我想的一样，这还是不行啊。。。。</p>
+<p>作者说了，没有绝对的安全，我们只能是尽可能提高攻击成本。这个方案提高安全性的同时不会过于影响接口的性能。</p>
+<p>另一个问题是服务端在哪存appid和密码？业务数据库并不是一个好的选择，这种非业务性的功能不应该和系统过度耦合。</p>
+<p>其实有很多选择配置和存储。针对 AppID 和密码的存储，灵活地支持各种不同的存储方式，比如 ZooKeeper、本地配置文件、自研配置中心、MySQL、Redis 等。我们不一定针对每种存储方式都去做代码实现，但起码要留有扩展点，保证系统有足够的灵活性和扩展性，能够在我们切换存储方式的时候，尽可能地减少代码的改动。</p>
+<h4 id="5-最终确定需求">5. 最终确定需求</h4>
+<ul>
+<li>调用接口的时候，将URL、AppID、密码和时间戳拼接，通过加密算法生成token，并将token、AppID、时间戳拼接在URL中一起发送到服务端。</li>
+<li>微服务在接收到调用方的请求后，从URL中拆解出token、AppID、时间戳。</li>
+<li>微服务端检查时间戳是否在设置的失效窗口期内。超过时间则算鉴权失败，拒绝调用。</li>
+<li>如果没有过期，则从存储中取出AppID和密码，用同样的算法生成token，与传过来的匹配，一致则鉴权成功否则拒绝调用。</li>
+</ul>
+<blockquote>
+<p>就是我们需求分析的整个思考过程，从最粗糙、最模糊的需求开始，通过“提出问题 - 解决问题”的方式，循序渐进地进行优化，最后得到一个足够清晰、可落地的需求描述。</p>
+<p>针对框架、类库、组件等非业务系统的开发，其中一个比较大的难点就是，需求一般都比较抽象、模糊，需要你自己去挖掘，做<strong>合理取舍、权衡、假设</strong>，把抽象的问题<strong>具象化</strong>，最终产生清晰的、可落地的需求定义。</p>
+</blockquote>
+<h3 id="如何进行面向对象设计">如何进行面向对象设计</h3>
+<ol>
+<li>面向对象分析是产出详细的需求描述，面向对象设计产出的就是<strong>类</strong>
+<ul>
+<li>划分职责进而识别出有哪些类；</li>
+<li>定义类及其属性和方法；</li>
+<li>定义类和类之间的交互关系；</li>
+<li>将类组装并提供执行入口。</li>
+</ul>
+</li>
+</ol>
+<h4 id="1-划分职责进而识别出有哪些类">1. 划分职责进而识别出有哪些类</h4>
+<ol>
+<li>类是现实世界中一个**<u>事物</u>**的建模（不绝对，有的就不是事物）。</li>
+<li>或者另一个方法，把需求中的名词作为候选类。（新手友好）</li>
+<li>或者根据需求，将其中的功能点一个个罗列出来，找到职责相似的，操作同样属性的，看他们是否可以归为一个类。
+<ol>
+<li>拆解的功能点一定要小（单一职责）。
+<ol>
+<li>把 URL、AppID、密码、时间戳拼接为一个字符串；(这个是客户端做的事情)</li>
+<li>对字符串通过加密算法加密生成 token；</li>
+<li>将 token、AppID、时间戳拼接到 URL 中，形成新的 URL；</li>
+<li>解析 URL，得到 token、AppID、时间戳等信息；</li>
+<li>从存储中取出 AppID 和对应的密码；</li>
+<li>根据时间戳判断 token 是否过期失效；</li>
+<li>验证两个 token 是否匹配；</li>
+</ol>
+</li>
+<li>从上面的功能列表中，我们发现，1、2、6、7 都是跟 <strong>token</strong> 有关，负责 token 的生成、验证；3、4 都是在处理 <strong>URL</strong>，负责 URL 的拼接、解析；5 是操作 AppID 和密码，负责从<strong>存储</strong>中读取 AppID 和密码。所以，我们可以粗略地得到三个核心的类：AuthToken、Url、CredentialStorage。AuthToken 负责实现 1、2、6、7 这四个操作；Url 负责 3、4 两个操作；CredentialStorage 负责 5 这个操作。</li>
+</ol>
+</li>
+<li>针对更加复杂的需求开发，线划分模块，再去模块内部进行功能点拆解。</li>
+</ol>
+<h4 id="2-定义类及其属性和方法">2. 定义类及其属性和方法</h4>
+<ol>
+<li>
+<p>对于方法，一般建议识别出需求描述中的动词作为候选方法，再进一步筛选过滤。</p>
+</li>
+<li>
+<p>对于AuthToken我们可以得到</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306031020340.jpg" alt="img" style="zoom:50%;" />
+<ul>
+<li>不是所有的名词都被定义为类，有些就成了属性。<strong>从业务上来说不属于这个类的属性和方法不应该放到类中。</strong></li>
+<li>在方法设计过程中还需要设计一些其他的属性和方法，例如<code>createTime</code>，<code>expireTimeInterval</code>，他们勇于<code>isExpired()</code>函数中用来判断<code>token</code>是否过期。我们还给AuthToken类添加了<code>getToken()</code>方法。<u>在设计方法和属性的时候，不能单单依赖当下的需求，要从业务模型上分析应该具有哪些属性和方法。</u> 既保证类的完整性，也为未来做准备。</li>
+</ul>
+</li>
+<li>
+<p>URL类的功能点有两个</p>
+<ul>
+<li>
+<p>将 token、AppID、时间戳拼接到 URL 中，形成新的 URL；</p>
+</li>
+<li>
+<p>解析 URL，得到 token、AppID、时间戳等信息。</p>
+</li>
+</ul>
+<p>为了让这个类更加通用，命名更加贴切，我们接下来把它命名为 <strong><u>ApiRequest</u></strong>。</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306031027524.jpg" alt="img" style="zoom:50%;" />
+</li>
+<li>
+<p>CredentialStorage类的功能点只有一个，是从存储中取出AppID和对应密码。为了做到抽象封装具体的存储方式，我们将 CredentialStorage 设计成了接口，基于接口而非具体的实现编程。</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306031028366.jpg" alt="img" style="zoom:50%;" />
+</li>
+</ol>
+<h4 id="3-定义类和类之间的交互关系">3. 定义类和类之间的交互关系</h4>
+<ol>
+<li>
+<p>UML 统一建模语言中定义了六种类之间的关系。它们分别是：泛化、实现、关联、聚合、组合、依赖.</p>
+</li>
+<li>
+<p><strong>泛化Generalization</strong>，简单理解就是<strong>继承</strong>关系。</p>
+<pre><code class="language-java">public class A { ... }
+public class B extends A { ... }
+</code></pre>
+</li>
+<li>
+<p><strong>实现Realization</strong>一般指接口和实现类之间的关系。</p>
+<pre><code class="language-java">public interface A {...}
+public class B implements A { ... }
+</code></pre>
+</li>
+<li>
+<p><strong>聚合Aggregation</strong>是一种包含关系。A 类对象包含 B 类对象，B 类对象的生命周期可以不依赖 A 类对象的生命周期，也就是说可以单独销毁 A 类对象而不影响 B 对象，比如课程与学生之间的关系。</p>
+<pre><code class="language-java">public class A {
+  private B b;
+  public A(B b) {
+    this.b = b;
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>**组合（Composition）**也是一种包含关系。A 类对象包含 B 类对象，B 类对象的生命周期依赖 A 类对象的生命周期，B 类对象不可单独存在，比如鸟与翅膀之间的关系。</p>
+<pre><code class="language-java">public class A {
+  private B b;
+  public A() {
+    this.b = new B();
+  }
+}
+</code></pre>
+</li>
+<li>
+<p><strong>关联（Association</strong>）是一种非常弱的关系，包含聚合、组合两种关系。具体到代码层面，如果 B 类对象是 A 类的成员变量，那 B 类和 A 类就是关联关系。(聚合和组合都可以称之为关联)</p>
+<pre><code class="language-java">public class A {
+  private B b;
+  public A(B b) {
+    this.b = b;
+  }
+}
+或者
+public class A {
+  private B b;
+  public A() {
+    this.b = new B();
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>**依赖（Dependency）**是一种比关联关系更加弱的关系，包含关联关系。不管是 B 类对象是 A 类对象的成员变量，还是 A 类的方法使用 B 类对象作为参数或者返回值、局部变量，只要 B 类对象和 A 类对象有任何使用关系，我们都称它们有依赖关系。</p>
+<pre><code class="language-java">public class A {
+  private B b;
+  public A(B b) {
+    this.b = b;
+  }
+}
+或者
+public class A {
+  private B b;
+  public A() {
+    this.b = new B();
+  }
+}
+或者
+public class A {
+  public void func(B b) { ... }
+}
+</code></pre>
+</li>
+<li>
+<p>笔者还是只保留了四个关系：泛化、实现、组合、依赖。泛化、实现、依赖的定义不变，组合关系替代 UML 中组合、聚合、关联三个概念。这样比较贴合前面多用组合少用继承的理念。</p>
+</li>
+</ol>
+<h4 id="4-将类组装并提供执行入口">4. 将类组装并提供执行入口</h4>
+<ol>
+<li>
+<p>接口鉴权并不是一个独立运行的系统，而是一个集成在系统上运行的<strong>组件</strong>，所以，我们<strong>封装所有的实现细节</strong>，设计了一个最顶层的 ApiAuthenticator 接口类，暴露一组给外部调用者使用的 API 接口，作为触发执行鉴权逻辑的入口。</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306031038690.jpg" alt="img" style="zoom: 33%;" />
+</li>
+</ol>
+<h3 id="如何面向对象编程">如何面向对象编程</h3>
+<ol>
+<li>
+<p>ApiAuthenticator</p>
+<pre><code class="language-java">public interface ApiAuthenticator {
+  void auth(String url);
+  void auth(ApiRequest apiRequest);
+}
+
+public class DefaultApiAuthenticatorImpl implements ApiAuthenticator {
+  private CredentialStorage credentialStorage;
+  
+  public DefaultApiAuthenticatorImpl() {
+    this.credentialStorage = new MysqlCredentialStorage();
+  }
+  
+  public DefaultApiAuthenticatorImpl(CredentialStorage credentialStorage) {
+    this.credentialStorage = credentialStorage;
+  }
+
+  @Override
+  public void auth(String url) {
+    ApiRequest apiRequest = ApiRequest.buildFromUrl(url);
+    auth(apiRequest);
+  }
+
+  @Override
+  public void auth(ApiRequest apiRequest) {
+    String appId = apiRequest.getAppId();
+    String token = apiRequest.getToken();
+    long timestamp = apiRequest.getTimestamp();
+    String originalUrl = apiRequest.getOriginalUrl();
+
+    AuthToken clientAuthToken = new AuthToken(token, timestamp);
+    if (clientAuthToken.isExpired()) {
+      throw new RuntimeException(&quot;Token is expired.&quot;);
+    }
+
+    String password = credentialStorage.getPasswordByAppId(appId);
+    AuthToken serverAuthToken = AuthToken.generate(originalUrl, appId, password, timestamp);
+    if (!serverAuthToken.match(clientAuthToken)) {
+      throw new RuntimeException(&quot;Token verfication failed.&quot;);
+    }
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>To be added - AuthToken、ApiRequest、CredentialStorage</p>
+<p>参照这个同学的内容，写的比较完整。</p>
+<p>https://github.com/murreIsCoding/auth/tree/master/src/main/java/com/murre/auth</p>
+</li>
+</ol>
+<h3 id="辩证思考">辩证思考</h3>
+<ol>
+<li>不需要所有的需求完全按照这个在日常工作，灵活运用。</li>
+</ol>
+<h3 id="util的故事">Util的故事</h3>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306041003521.png" alt="image-20230604100318410" style="zoom:50%;" />
+<p>看到了下面一起学习的人留言，然后回想起自己上周刚做的需求。也是忍俊不禁。因为自己也是刚刚做了类似的事情，一个新的上游feature上线，我们team需要对传过来的Objects做一些validation即可。我最开始是在相关的包里找到了一个xxxValidator，本着学习前辈的原则，我直接在这个validator里面加了一个<u>只针对</u>我当前这个需求的对象的方法，在save之前调用这个validator去检查对象的属性。</p>
+<p>后面被组里的engineer review 代码的时候，推荐在另一个地方实现，因为我们组里的大佬已经对代码进行了一些重构前一阵子，其中有一点是，我们的Object在中途的处理过程中，反复存取，对于性能有很大的影响，应该集中在某一处去做逻辑处理。所以我就讲xxxValidator该到了对应的xxxService中，并且拆分到了相应的位置，确实看起来更加融为一体了。</p>
+<p>看完这个案例分析，又结合了自己的实践，想到的是自己之前的实现也是不折不扣的面向过程，而且也没考虑到性能问题，颇有感触。</p>
+<p>写了一阵子的代码，脑子里很多时候是在学习别人的写法，对于为什么这么实现却很多有时候不理解，也不能结合整体去思考，也没有一些指导原则和思路。这个课程真的是解决了我的燃眉之急，是我一直以来在脑子里想要梳理的一些东西。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%AE%9E%E6%88%98%E4%BA%8C%E5%A6%82%E4%BD%95%E5%AF%B9%E6%8E%A5%E5%8F%A3%E9%89%B4%E6%9D%83%E8%BF%99%E6%A0%B7%E4%B8%80%E4%B8%AA%E5%8A%9F%E8%83%BD%E5%BC%80%E5%8F%91%E5%81%9A%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%88%86%E6%9E%90">实战二：如何对接口鉴权这样一个功能开发做面向对象分析？</a>
+<ul>
+<li><a href="#%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%92%8C%E9%9A%BE%E7%82%B9%E5%89%96%E6%9E%90">案例介绍和难点剖析</a>
+<ul>
+<li><a href="#%E8%83%8C%E6%99%AF">背景</a></li>
+<li><a href="#%E9%9A%BE%E7%82%B9">难点</a></li>
+</ul>
+</li>
+<li><a href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90">需求分析</a>
+<ul>
+<li><a href="#1-%E7%AC%AC%E4%B8%80%E8%BD%AE%E5%9F%BA%E7%A1%80%E5%88%86%E6%9E%90">1. 第一轮基础分析</a></li>
+<li><a href="#2-%E7%AC%AC%E4%BA%8C%E8%BD%AE%E5%88%86%E6%9E%90%E4%BC%98%E5%8C%96">2. 第二轮分析优化</a></li>
+<li><a href="#3-%E7%AC%AC%E4%B8%89%E8%BD%AE%E5%88%86%E6%9E%90%E4%BC%98%E5%8C%96">3. 第三轮分析优化</a></li>
+<li><a href="#4-%E7%AC%AC%E5%9B%9B%E8%BD%AE%E5%88%86%E6%9E%90%E4%BC%98%E5%8C%96">4. 第四轮分析优化</a></li>
+<li><a href="#5-%E6%9C%80%E7%BB%88%E7%A1%AE%E5%AE%9A%E9%9C%80%E6%B1%82">5. 最终确定需求</a></li>
+</ul>
+</li>
+<li><a href="#%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1">如何进行面向对象设计</a>
+<ul>
+<li><a href="#1-%E5%88%92%E5%88%86%E8%81%8C%E8%B4%A3%E8%BF%9B%E8%80%8C%E8%AF%86%E5%88%AB%E5%87%BA%E6%9C%89%E5%93%AA%E4%BA%9B%E7%B1%BB">1. 划分职责进而识别出有哪些类</a></li>
+<li><a href="#2-%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%8F%8A%E5%85%B6%E5%B1%9E%E6%80%A7%E5%92%8C%E6%96%B9%E6%B3%95">2. 定义类及其属性和方法</a></li>
+<li><a href="#3-%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%92%8C%E7%B1%BB%E4%B9%8B%E9%97%B4%E7%9A%84%E4%BA%A4%E4%BA%92%E5%85%B3%E7%B3%BB">3. 定义类和类之间的交互关系</a></li>
+<li><a href="#4-%E5%B0%86%E7%B1%BB%E7%BB%84%E8%A3%85%E5%B9%B6%E6%8F%90%E4%BE%9B%E6%89%A7%E8%A1%8C%E5%85%A5%E5%8F%A3">4. 将类组装并提供执行入口</a></li>
+</ul>
+</li>
+<li><a href="#%E5%A6%82%E4%BD%95%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B">如何面向对象编程</a></li>
+<li><a href="#%E8%BE%A9%E8%AF%81%E6%80%9D%E8%80%83">辩证思考</a></li>
+<li><a href="#util%E7%9A%84%E6%95%85%E4%BA%8B">Util的故事</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/59-spiral-matrix-ii/">
+              <h3 class="post-title">
+                59. Spiral Matrix II
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

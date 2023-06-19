@@ -1,0 +1,312 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>227. Basic Calculator II  | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="227. Basic Calculator II  | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Question
+Given a string s which represents an expression, evaluate this expression and return its value.
+The integer div..." />
+    <meta name="keywords" content="Stack,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              227. Basic Calculator II 
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-05-22
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/ZerykMID8/" class="post-tag">
+                  # Stack
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="question">Question</h2>
+<p>Given a string <code>s</code> which represents an expression, <em>evaluate this expression and return its value</em>.</p>
+<p>The integer division should truncate toward zero.</p>
+<p>You may assume that the given expression is always valid. All intermediate results will be in the range of <code>[-231, 231 - 1]</code>.</p>
+<p><strong>Note:</strong> You are not allowed to use any built-in function which evaluates strings as mathematical expressions, such as <code>eval()</code>.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: s = &quot;3+2*2&quot;
+Output: 7
+</code></pre>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li><code>1 &lt;= s.length &lt;= 3 * 105</code></li>
+<li><code>s</code> consists of integers and operators <code>('+', '-', '*', '/')</code> separated by some number of spaces.</li>
+<li><code>s</code> represents <strong>a valid expression</strong>.</li>
+<li>All the integers in the expression are non-negative integers in the range <code>[0, 231 - 1]</code>.</li>
+<li>The answer is <strong>guaranteed</strong> to fit in a <strong>32-bit integer</strong>.</li>
+</ul>
+<h2 id="algorithm">Algorithm</h2>
+<p>This question is easier than the previous 224. Basic Calculator in my view, or maybe I was inspired by that question thus this question looks easier.</p>
+<p>This question, we don't have '()' such characters so the only thing we need to care about the is to calculate the multiplication and divide from left to right when we encounter those operator.</p>
+<p>We use a <code>sign</code> to keep the previous operator:</p>
+<ul>
+<li>
+<p>If it's <code>+</code> or space, we do nothing, if it's <code>-</code>, we make the sign as -1 so we could turn the next operand negative;</p>
+</li>
+<li>
+<p>If the the char is <code>*</code> or <code>/</code>, we mark the sign to 2 or 3 for next round of calculation.</p>
+</li>
+</ul>
+<p>If the char is number we calculate the final number, and check the previous operator,</p>
+<ul>
+<li>If the sign is -1, we turn the number negative and push it;</li>
+<li>If the sign is 1, we directly push the number;</li>
+<li>If the  char is <code>*</code> or <code>/</code>, we pop a number from stack, as dividend or multiplier, and do the calculation with current number, then push back the result.</li>
+</ul>
+<p>Finally, we sum all the numbers left in the stack and get the answer.</p>
+<h2 id="code">Code</h2>
+<pre><code class="language-java">class Solution {
+    public int calculate(String s) {
+        int sum = 0;
+        int sign = 1;
+        Stack&lt;Integer&gt; stack = new Stack();
+        
+        for (int i = 0; i &lt; s.length(); i++) {
+            char ch = s.charAt(i);
+            if (ch == '+' || ch == ' ') {
+                continue;
+            } else if (ch == '-') {
+                sign = -1;
+            } else if (ch == '*') {
+                sign = 2;
+            } else if (ch == '/') {
+                sign = 3;
+            } else if (Character.isDigit(ch)) {
+                int num = 0;
+                while (i &lt; s.length() &amp;&amp; Character.isDigit(s.charAt(i))) {
+                    num = num * 10 + (s.charAt(i++) - '0');
+                }
+                i--;
+                if (sign == -1) {
+                    stack.push(sign * num);
+                } else if (sign == 2) {
+                    int mul = stack.pop();
+                    stack.push(mul * num);
+                } else if (sign == 3) {
+                    int div = stack.pop();
+                    stack.push(div / num);
+                } else {
+                    stack.push(num);
+                }
+                sign = 1;
+            }
+        }
+        while (!stack.isEmpty()) {
+            sum += stack.pop();
+        }
+        return sum;
+    }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#question">Question</a></li>
+<li><a href="#algorithm">Algorithm</a></li>
+<li><a href="#code">Code</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/she-ji-mo-shi-zhi-mei-ke-cheng-bi-ji-1/">
+              <h3 class="post-title">
+                设计模式之美-课程笔记1
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

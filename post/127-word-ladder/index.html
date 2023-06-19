@@ -1,0 +1,417 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>127. Word Ladder | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="127. Word Ladder | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Problem 1
+This problem is given a start word and an end word, and transforms one letter at a time from the start word to..." />
+    <meta name="keywords" content="Depth First Search&Bread First Search,Graph,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              127. Word Ladder
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-13
+              </span>
+              <span>
+                9 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/SQ7QEvjYu/" class="post-tag">
+                  # Depth First Search&amp;Bread First Search
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/W_93vV191q/" class="post-tag">
+                  # Graph
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="problem-1">Problem 1</h2>
+<p>This problem is given a start word and an end word, and transforms one letter at a time from the start word to see if the end word can be reached, returning the shortest path of the transformation. The restriction is that each transformed word must be in the given list of words. Look at an example:</p>
+<pre><code>Input: beginWord = &quot;hit&quot;, endWord = &quot;cog&quot;, wordList = [&quot;hot&quot;, &quot;dot&quot;, &quot;dog&quot;, &quot;lot&quot;, &quot;log&quot;, &quot;cog&quot;]
+Output: 5
+Explanation: One shortest transformation sequence is &quot;hit&quot; -&gt; &quot;hot&quot; -&gt; &quot;dot&quot; -&gt; &quot;dog&quot; -&gt; cog&quot;, which is 5 words long.
+</code></pre>
+<h2 id="algorithm-1">Algorithm 1</h2>
+<p>I used backtracking at first, but didn't write it (forgot about it), and according to the discussion in the discussion forum, the solution written by backtracking will also time out.</p>
+<p>How to build a graph to traverse is a key point. In the previous backtracking I have actually implemented this method, because the topic is only limited to lowercase letters, so we can replace the letters in each position in turn to see if they exist in the word list.</p>
+<h2 id="code-1">Code 1</h2>
+<pre><code class="language-java">class Solution {
+    public int ladderLength(String beginWord, String endWord, List&lt;String&gt; wordList) {
+        Set&lt;String&gt; words = new HashSet&lt;&gt;(wordList);
+        Set&lt;String&gt; seen = new HashSet&lt;&gt;();
+        Queue&lt;String&gt; queue = new LinkedList&lt;&gt;();
+        seen.add(beginWord);
+        queue.add(beginWord);
+        int level = 1;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int k = 0; k &lt; size; k++) {
+                String str = queue.poll();
+                if (str.equals(endWord)) return level;
+                for (int i = 0; i &lt; str.length(); i++) {
+                    char[] chars = str.toCharArray();
+                    for (Character j = 'a'; j &lt;= 'z'; j++) {
+                        chars[i] = j;
+                        String tempStr = new String(chars);
+                        if (!seen.contains(tempStr) &amp;&amp; words.contains(tempStr)) {
+                            queue.add(tempStr);
+                            seen.add(tempStr);
+                        }
+                    }
+                }
+            }
+            level++;
+        }
+        
+        return 0;
+        
+    }
+}
+</code></pre>
+<p>When the backtracking did not come up with a direct look at the standard answer, the method given is to introduce a pattern as the key value to save the corresponding words that match the pattern. After doing this preprocessing, then just go for the corresponding BFS. The idea is the same.</p>
+<h2 id="code-1-2">Code 1-2</h2>
+<pre><code class="language-java">class Solution {
+    public int ladderLength(String beginWord, String endWord, List&lt;String&gt; wordList) {
+        int L = beginWord.length();
+        Map&lt;String, List&lt;String&gt;&gt; map = new HashMap&lt;&gt;();
+        
+        wordList.forEach(word -&gt; {
+           for (int i = 0; i &lt; word.length(); i++) {
+               String newWord = word.substring(0, i) + &quot;*&quot; + word.substring(i+1, L);
+               List&lt;String&gt; list = map.getOrDefault(newWord, new ArrayList&lt;&gt;());
+               list.add(word);
+               map.put(newWord, list);
+           } 
+        });
+        
+        Set&lt;String&gt; visited = new HashSet&lt;&gt;();
+        Queue&lt;Pair&lt;String, Integer&gt;&gt; queue = new LinkedList&lt;&gt;();
+        queue.offer(new Pair(beginWord, 1));
+        visited.add(beginWord);
+        
+        while (!queue.isEmpty()) {
+            Pair&lt;String, Integer&gt; pair = queue.poll();
+            String word = pair.getKey();
+            Integer level = pair.getValue();
+            for (int i = 0; i &lt; L; i++) {
+                String newWord = word.substring(0, i) + &quot;*&quot; + word.substring(i+1, L);
+                for (String neighbor : map.getOrDefault(newWord, new ArrayList&lt;&gt;())) {
+                    if (neighbor.equals(endWord)) {
+                        return level + 1;
+                    }
+                    if (!visited.contains(neighbor)) {
+                        visited.add(neighbor);
+                        queue.offer(new Pair(neighbor, level + 1));
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+}
+</code></pre>
+<p>The time complexity is O(m*m*n). Preprocessing time: traversing all words is m*n, and doing character substitution for each word is m time again, so it is m*n*m. BFS time: same as preprocessing, traversing all words is m*n, and doing character substitution for each word is m time again.</p>
+<p>Space complexity: preprocessing space takes m*n*m, bfs queue takes m*n, visited takes m*n.</p>
+<p>If method one is used, one m in the above m*n*m needs to be changed to 26, so the advantage and disadvantage of the slight time of these two algorithms lies in the length of each word.</p>
+<hr>
+<h2 id="问题1">问题1</h2>
+<p>这个问题是给一个开始单词和一个结束单词，从开始单词开始每次只变换一个字母，看是否可以到达结束单词，返回变换的最短路径。限制是，每次变换的单词都必须在给定的一个单词列表中。看一个例子：</p>
+<pre><code>Input: beginWord = &quot;hit&quot;, endWord = &quot;cog&quot;, wordList = [&quot;hot&quot;,&quot;dot&quot;,&quot;dog&quot;,&quot;lot&quot;,&quot;log&quot;,&quot;cog&quot;]
+Output: 5
+Explanation: One shortest transformation sequence is &quot;hit&quot; -&gt; &quot;hot&quot; -&gt; &quot;dot&quot; -&gt; &quot;dog&quot; -&gt; cog&quot;, which is 5 words long.
+</code></pre>
+<h2 id="算法1">算法1</h2>
+<p>这个题目看到最短路径可以考虑用BFS。我一开始用了回溯，但是没写出来（对回溯有些忘记了），根据讨论区的讨论回溯写出来的解也是会超时的。</p>
+<p>所以考虑用普通的BFS。如何构建图来遍历是一个关键点。在之前的回溯其实我已经实现了这种方法，因为题目只限定了是小写字母，那么我们可以对每一个位置的字母进行依次替换看是否存在于单词列表中。</p>
+<h2 id="代码1">代码1</h2>
+<pre><code class="language-java">class Solution {
+    public int ladderLength(String beginWord, String endWord, List&lt;String&gt; wordList) {
+        Set&lt;String&gt; words = new HashSet&lt;&gt;(wordList);
+        Set&lt;String&gt; seen = new HashSet&lt;&gt;();
+        Queue&lt;String&gt; queue = new LinkedList&lt;&gt;();
+        seen.add(beginWord);
+        queue.add(beginWord);
+        int level = 1;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int k = 0; k &lt; size; k++) {
+                String str = queue.poll();
+                if (str.equals(endWord)) return level;
+                for (int i = 0; i &lt; str.length(); i++) {
+                    char[] chars = str.toCharArray();
+                    for (Character j = 'a'; j &lt;= 'z'; j++) {
+                        chars[i] = j;
+                        String tempStr = new String(chars);
+                        if (!seen.contains(tempStr) &amp;&amp; words.contains(tempStr)) {
+                            queue.add(tempStr);
+                            seen.add(tempStr);
+                        }
+                    }
+                }
+            }
+            level++;
+        }
+        
+        return 0;
+        
+    }
+}
+</code></pre>
+<p>当回溯没有想出来之后直接看了标准答案，给出的方法是引入了一个pattern来作为键值，保存对应的符合模式的单词。做完这个预处理之后，再去作相应的BFS即可。思路是一样的。</p>
+<h2 id="代码1-2">代码1-2</h2>
+<pre><code class="language-java">class Solution {
+    public int ladderLength(String beginWord, String endWord, List&lt;String&gt; wordList) {
+        int L = beginWord.length();
+        Map&lt;String, List&lt;String&gt;&gt; map = new HashMap&lt;&gt;();
+        
+        wordList.forEach(word -&gt; {
+           for (int i = 0; i &lt; word.length(); i++) {
+               String newWord = word.substring(0, i) + &quot;*&quot; + word.substring(i+1, L);
+               List&lt;String&gt; list = map.getOrDefault(newWord, new ArrayList&lt;&gt;());
+               list.add(word);
+               map.put(newWord, list);
+           } 
+        });
+        
+        Set&lt;String&gt; visited = new HashSet&lt;&gt;();
+        Queue&lt;Pair&lt;String, Integer&gt;&gt; queue = new LinkedList&lt;&gt;();
+        queue.offer(new Pair(beginWord, 1));
+        visited.add(beginWord);
+        
+        while (!queue.isEmpty()) {
+            Pair&lt;String, Integer&gt; pair = queue.poll();
+            String word = pair.getKey();
+            Integer level = pair.getValue();
+            for (int i = 0; i &lt; L; i++) {
+                String newWord = word.substring(0, i) + &quot;*&quot; + word.substring(i+1, L);
+                for (String neighbor : map.getOrDefault(newWord, new ArrayList&lt;&gt;())) {
+                    if (neighbor.equals(endWord)) {
+                        return level + 1;
+                    }
+                    if (!visited.contains(neighbor)) {
+                        visited.add(neighbor);
+                        queue.offer(new Pair(neighbor, level + 1));
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+}
+</code></pre>
+<p>时间复杂度是O(m*m*n)。预处理时间：遍历所有的单词是m*n，对每一个单词做字符替换又是m时间，所以是m*n*m。BFS时间：与预处理一样，遍历所有的单词是m*n，对每一个单词做字符替换又是m时间。</p>
+<p>空间复杂度：预处理空间需要m*n*m， bfs的queue需要m*n, visited需要m*n。</p>
+<p>如果采用方法一，上述m*n*m中的一个m需要改为26，所以这两个算法轻微时间的优劣在于每个单词的长度。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#problem-1">Problem 1</a></li>
+<li><a href="#algorithm-1">Algorithm 1</a></li>
+<li><a href="#code-1">Code 1</a></li>
+<li><a href="#code-1-2">Code 1-2</a></li>
+<li><a href="#%E9%97%AE%E9%A2%981">问题1</a></li>
+<li><a href="#%E7%AE%97%E6%B3%951">算法1</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%811">代码1</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%811-2">代码1-2</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/system-design-case-study-6-design-a-web-crawler/">
+              <h3 class="post-title">
+                System Design Case Study 6 - Design A Web Crawler
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,296 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OOD, Design Patterns, Design Principles | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="OOD, Design Patterns, Design Principles | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="This article is the note of a online course I plan to learn this year. The content is what I need as a complementary to ..." />
+    <meta name="keywords" content="OOD,Design Pattern" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              OOD, Design Patterns, Design Principles
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-05-19
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/sSLhqMzY-/" class="post-tag">
+                  # OOD
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/d2JaGqwpzA/" class="post-tag">
+                  # Design Pattern
+                </a>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://10kshuaizhang.github.io/post-images/ood-design-patterns-design-principles.jpg" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <p>This article is the note of a online course I plan to learn this year. The content is what I need as a complementary to my day to day work - how to design and write good code(the thoughts and practices, in my daily work, you need to either read some good code from your company code base or some famous project, however, we only know how to write, we do not know why and the logic behind it). From the table of content I regard it as a helpful recourse for those who want write lean code, as well as the people who want to learn design pattern, and perform well in such interviews.</p>
+<h2 id="object-oriented">Object oriented</h2>
+<p>Object oriented has many characteristics(encapsulation, inheritance, polymorphism, abstract), they the basic for some complex design patterns</p>
+<ol>
+<li>Four characteristic for OO: encapsulation, inheritance, polymorphism, abstract</li>
+<li>The difference of object oriented and procedure oriented</li>
+<li>OO analysis, OO design, OO programming</li>
+<li>Difference of interface and abstract class, and when to use them</li>
+<li>Programming based on interface rather than implementation</li>
+<li>Use compose rather than inheritance;</li>
+<li>Procedure oriented - domain model, anaemic domain model, rich domain model</li>
+</ol>
+<h2 id="design-principle">Design principle</h2>
+<p>Design principles are the philosophy of building code.(Vague and abstract).</p>
+<p>SOLID principles:</p>
+<ul>
+<li>SRP</li>
+<li>OCP</li>
+<li>LSP</li>
+<li>ISP</li>
+<li>DIP</li>
+<li>DRY, KISS, YAGNI, LOD</li>
+</ul>
+<h2 id="design-pattern">Design Pattern</h2>
+<p>Design patterns are solutions to some particular scenario/questions, they a some standard solutions to some problems.(Most likely extendability)</p>
+<ul>
+<li>
+<p>Creation type</p>
+<ul>
+<li>Used more: Singleton pattern, factory pattern(single &amp;&amp; abstract), builder pattern</li>
+<li>Used less: prototype pattern</li>
+</ul>
+</li>
+<li>
+<p>Structure type</p>
+<ul>
+<li>Used more: Proxy pattern, bridge pattern, decorator pattern, adaptor pattern</li>
+<li>Used less: Facade pattern, compose pattern, Flyweight pattern</li>
+</ul>
+</li>
+<li>
+<p>Behavior type</p>
+<ul>
+<li>Used more: Observer pattern, templated pattern, strategy pattern, Chain of Responsibility Pattern, Iterator patter, stage pattern;</li>
+<li>Used less: Visitor pattern, memo pattern, command patter, explainer pattern, agent pattern</li>
+</ul>
+</li>
+</ul>
+<h2 id="coding-rules-and-refactoring">Coding rules and refactoring</h2>
+<p>Coding rules how should we write clean code, preventing the readability issue.</p>
+<p>Refactoring, based on the previous principles/patterns, we refactor the code to mitigate some issues generated by code over time.</p>
+<ul>
+<li>The tools we used for refactoring is the OOD thinking, design principles, design patterns…</li>
+<li>Why, what, when, how</li>
+<li>The way of keep refactoring works: unit test and testability</li>
+<li>Big scale vs small scale refactor</li>
+</ul>
+<p>Object oriented has many characteristics(encapsulation, inheritance, polymorphism, abstract), they the basic for some complex design patterns</p>
+<p>Design principles are the philosophy of building code.(Vague and abstract)</p>
+<p>Design patterns are solutions to some particular scenario/questions;</p>
+<p>Coding rules how should we write clean code, prevent the readability issue.</p>
+<p>Refactoring, based on the previous principles/patterns, we refactor the code to mitigate some issues generated by code with time.</p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202305190954142.jpg" alt="Pasted Graphic" loading="lazy"></figure>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#object-oriented">Object oriented</a></li>
+<li><a href="#design-principle">Design principle</a></li>
+<li><a href="#design-pattern">Design Pattern</a></li>
+<li><a href="#coding-rules-and-refactoring">Coding rules and refactoring</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/394-decode-string/">
+              <h3 class="post-title">
+                394. Decode String
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

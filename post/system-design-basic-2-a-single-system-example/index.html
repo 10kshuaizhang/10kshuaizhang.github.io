@@ -1,0 +1,621 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>System Design Basic 2 - A Single System Example | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="System Design Basic 2 - A Single System Example | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Scale From Zero To Millions of Users
+A step by step example
+Single server setup
+
+
+
+User access web throught domain names..." />
+    <meta name="keywords" content="System Design" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              System Design Basic 2 - A Single System Example
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-03-07
+              </span>
+              <span>
+                10 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/h_IFyWw8r/" class="post-tag">
+                  # System Design
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="scale-from-zero-to-millions-of-users">Scale From Zero To Millions of Users</h2>
+<p>A step by step example</p>
+<h3 id="single-server-setup">Single server setup</h3>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303060826808.png" alt="image-20230306082656707" style="zoom:33%;" />
+<ol>
+<li>
+<p>User access web throught domain names. The Domain Name System(DNS) is a paid service <u>provided by 3rd party and not hosted by our server</u>s.</p>
+</li>
+<li>
+<p>Internel Protocal(IP) address is returned to browser or app.</p>
+</li>
+<li>
+<p>Once the IP is obtained, Hypertext Tranfer Protocal(HTTP) requests are sent directly to web server.</p>
+</li>
+<li>
+<p>The web server return HTML pages or JSON response for rendering.</p>
+</li>
+<li>
+<p>The trafic</p>
+<ol>
+<li>
+<p>Web application. It uses a <strong>combination</strong> of server-side language(Java, Python, etc.) to handle business logic, storage, etc., and client side languages(HTML and Javascript) for presentaion.</p>
+</li>
+<li>
+<p>Mobile Application. HTTP is the communication protocal. Javascript Object Notation (JSON) is commonly used for API response format to trasfer data due to the <strong>simplicity</strong>. A example JSON response:</p>
+<p><em>GET /users/12 – Retrieve user object for id = 12</em></p>
+<pre><code class="language-json">{
+   &quot;id&quot;:12,
+   &quot;firstName&quot;:&quot;John&quot;,
+   &quot;lastName&quot;:&quot;Smith&quot;,
+   &quot;address&quot;:{
+      &quot;streetAddress&quot;:&quot;21 2nd Street&quot;,
+      &quot;city&quot;:&quot;New York&quot;,
+      &quot;state&quot;:&quot;NY&quot;,
+      &quot;postalCode&quot;:10021
+   },
+   &quot;phoneNumbers&quot;:[
+      &quot;212 555-1234&quot;,
+      &quot;646 555-4567&quot;
+   ]
+}
+</code></pre>
+</li>
+</ol>
+<h3 id="database">Database</h3>
+<p>With growth of the user base, one server is not enough, we need multiple servers: one for web and the other for the database. <strong>Seperating traficts</strong> allows them to be <strong>scaled dependently.</strong></p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303060838809.png" alt="image-20230306083843766" style="zoom:33%;" />
+</li>
+</ol>
+<h4 id="which-database-to-use">Which database to use?</h4>
+<ol>
+<li>Traditional relational databases
+<ul>
+<li>also called relational database management system(RDBMS) or SQL database.</li>
+<li>Example: MySQL, Oracle  database, PostgreSQL..</li>
+<li>represent and store data in rows and columns, You use join across tables to 'connect' data in different tables.</li>
+</ul>
+</li>
+<li>Non-relational databases
+<ul>
+<li>Also called NoSQL databases.</li>
+<li>CouchDB, Neo4J, Cassandra, Hbase, Amazon DynamoDB.</li>
+<li>Grouped in for categories: Key-value, graph, column, document</li>
+<li>Notmally do not support JOIN</li>
+<li>Might be right choice when:
+<ul>
+<li>requires super-low latency</li>
+<li>unstructured data or non-relational data</li>
+<li>data serialization and deserialzation needed (JSON, YAML, XML,...)</li>
+<li>store massive amount of data..</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="vertical-scaling-vs-horizental-scaling">Vertical Scaling vs horizental scaling</h3>
+<ol>
+<li>Vertical scalling: scale up. means adding more power(cpu, RAM etc.) to servers.
+<ul>
+<li>Advantage: simplicity</li>
+<li>disadvantge:1) limit: you cannot add unlimited CPU and memory 2) have no failover and redundency</li>
+</ul>
+</li>
+<li>Horizontal scaling: scale out. adding more servers to pools.</li>
+<li>If the server is offline; or too many user access server which cause a slowdonw or fail to connection, a <strong><u>load balancer</u></strong> is the best technique.</li>
+</ol>
+<h3 id="load-balancer">Load Balancer</h3>
+<ol>
+<li>
+<p>A load balancer evenly distrbuts incoming traffic among web servers.</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303061432855.png" alt="image-20230306143226736" style="zoom:33%;" />
+</li>
+<li>
+<p>Users connect to the public IP of load balancer rather than directly to the servers.</p>
+</li>
+<li>
+<p>Load balancer communicate with web servers via private IPs.</p>
+</li>
+<li>
+<p>Solved no failover issue and imporve availability.</p>
+</li>
+</ol>
+<p>The single point of database doesn't support failover and redundency.</p>
+<h3 id="data-replication">Data Replication</h3>
+<ol>
+<li>
+<p><strong>Master database</strong>: accepts write operations.</p>
+</li>
+<li>
+<p><strong>Slave database</strong>: accepts read operations.</p>
+</li>
+<li>
+<p>Most applications requires a high ratio of read write so the slave is more than master in a system. (According DDIA this is only one kind of replication (Master-Slave))</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303061442425.png" alt="image-20230306144228392" style="zoom:33%;" />
+</li>
+<li>
+<p>Advantage</p>
+<ul>
+<li>Better performace:  it allows more queries run in parallel;</li>
+<li>Reliability: If one database replocation is destroyed, others still have you data.</li>
+<li>High availability: if a database is offline, others are still available to support data quering.</li>
+</ul>
+</li>
+<li>
+<p>How data replication improve availability?</p>
+<ul>
+<li>
+<p>if only one slave available and down, the traffic will go to master temporarily and once the issue was resolve, a new slave will repalce the old one.</p>
+</li>
+<li>
+<p>If multiple slave available and some of them down, the read request will redirect to other healthy ones. and a new database server will replace the old one.</p>
+</li>
+<li>
+<p>If the master goes down. A slave will be prompted to master and a new slave database server will replace the old one.</p>
+<blockquote>
+<p>one problem is maybe the new master do not have updated data and needs to be update. This will be more complicated when doing this.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ol>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303061459955.png" alt="image-20230306145952921" style="zoom:25%;" />
+<p>it is time to improve the load/response time. This can be done by adding a cache layer and shifting static content (JavaScript/CSS/image/video files) to the <strong><u>content delivery network (CDN)</u></strong>.</p>
+<h3 id="cache">Cache</h3>
+<ol>
+<li>Cache: <strong><u>temporary storage</u></strong> are that stores <strong><u>expensive resopnses or frequently accessed data in memory</u></strong> so that subsequent requests are served more quickly.</li>
+</ol>
+<h4 id="cache-tier">Cache tier</h4>
+<ol>
+<li>
+<p>Benefits: better performance, reduce database workloads, scale the cache independently.</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303061519098.png" alt="image-20230306151953060" style="zoom:33%;" />
+</li>
+<li>
+<p>this Caching strategy： read-through</p>
+</li>
+<li>
+<p>interacting with cache servers is simple because most cache servers provide APIs for common programming laguagues.</p>
+</li>
+<li>
+<p>A typical Memchached APIs:</p>
+<pre><code>SECONDS = 1
+cache.set('myKey, 'hi there', 3600 * SECONDS)
+cache.get('myKey')
+</code></pre>
+</li>
+</ol>
+<h4 id="considerations-for-using-cache">Considerations for using cache</h4>
+<ol>
+<li>When to use: More read, less write; not for persistance vital data.</li>
+<li>Expiration policy: expiration date not too soon thus cause reload data too frequently; and not to long to prevent data to be not fresh.</li>
+<li>Consistency:</li>
+<li>Mitigation failures
+<ul>
+<li>a cache server represents a <a href="WIKI">potential point of failure</a>.</li>
+<li>multiple cache servers accross different data centers are recommended</li>
+<li>Or overprovison the required memory to provide buffer for memory increasing.</li>
+</ul>
+</li>
+<li>Eviction policy: LRU/FIFO/LFU</li>
+</ol>
+<h3 id="content-delivery-networkcdn">Content delivery network(CDN)</h3>
+<ol>
+<li>geographically distributed servers to deliver static contents(iamges, videos, CSS, javascript files.</li>
+<li>The further the CDN is from a client, the longer the request time it is normally.</li>
+<li>How does it work:
+<ol>
+<li>User A visist a website, a CDN server close to it will deliver the static content.</li>
+<li>If the CDN server does not have the content, it will request from the orginal server, and stores in the CDN server for further use, with a expiration time(TTL-time_To_Live);</li>
+<li>if the server has the content, the contents would be returned directly unless they are expired.</li>
+</ol>
+</li>
+</ol>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303071345464.png" alt="image-20230307134538349" style="zoom:25%;" />
+<ol start="4">
+<li>Considerations of using CDN
+<ul>
+<li>Cost: if you cache infrequenly used things, that may be worthless.</li>
+<li>Cache expiry: not  to long, not too short.</li>
+<li>fallback: how to handle CDN down.</li>
+<li>Invalidate the CDN objects:
+<ul>
+<li>via API provided by vendors</li>
+<li>via a versioning server to version things and you fetch the latest version each time.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303071350408.png" alt="image-20230307135041376" style="zoom:50%;" />
+<ol start="5">
+<li>better perfomance for retriving static contents; less pressure on database by caching data.</li>
+</ol>
+<h3 id="stateless-web-tier">Stateless web tier</h3>
+<p>It's time to scale up.</p>
+<p>Stateful data: user session data, etc.</p>
+<p>We need to move these data out of single server and store them into persistence storage. So each server can access them. This is called <strong><u>stateless web tier.</u></strong></p>
+<h4 id="stateful-architecture">Stateful architecture</h4>
+<ol>
+<li>
+<p>stateful server vs stageless server</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303071822062.png" alt="image-20230307182228950" style="zoom:33%;" />
+</li>
+<li>
+<p>The issue is that every request from the same client must route to the same server. This can be done in load balance but added overheads.</p>
+</li>
+<li>
+<p>Adding or removing(or server fail) is more difficut.</p>
+</li>
+</ol>
+<h4 id="stateless-architecture">Stateless architecture</h4>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303071826513.png" alt="image-20230307182649481" style="zoom:25%;" />
+<ol>
+<li><strong>Auto scaling</strong>(add or remove server based on trafic load) is easy by moving out state data from server.</li>
+</ol>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303071828219.png" alt="image-20230307182849189" style="zoom:25%;" />
+<h3 id="data-centers">Data centers</h3>
+<ol>
+<li>we could use <strong>geoDNS</strong> (provided by DNS service) to route to closest data center.</li>
+<li>geoDNS, also know as geo-routed, allows domain names to be resolved to IP address based on the location of a user.</li>
+</ol>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303071832059.png" alt="image-20230307183227011" style="zoom:25%;" />
+<ol start="3">
+<li>If one data center ourage, the trafict will be routed to a healthy one.</li>
+</ol>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303071835385.png" alt="image-20230307183513297" style="zoom:25%;" />
+<ol start="4">
+<li>Techinical challenges for achiving multi-data center
+<ul>
+<li>traffic redirection</li>
+<li>data synchronozation</li>
+<li>Test in diffrent locations to make sure they are good</li>
+<li>Auto delopyment tool is vital for consistent data in all data centers.</li>
+</ul>
+</li>
+</ol>
+<p>To further scale, we need to decouple components to allow them scale independently. <strong>Messaging queue</strong> is a key stretegy to solve this.</p>
+<h3 id="message-queue">Message queue</h3>
+<ol>
+<li>
+<p>a message queue is a component that supppots <strong>asynchronose communication</strong> bewteen components of a systme and can be either stored in memory or on disk to achive <strong>durability</strong>.</p>
+</li>
+<li>
+<p>The architectur</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303071856843.png" alt="image-20230307185625749" style="zoom:30%;" />
+</li>
+<li>
+<p><strong>Decoupling</strong> makes it a prefered arechtecture for scaling system.</p>
+</li>
+<li>
+<p>The producer and consumer can scale or shirink based on the workload.</p>
+</li>
+</ol>
+<h3 id="logging-metrics-automation">Logging, Metrics, automation</h3>
+<ol>
+<li>
+<p>Logging</p>
+</li>
+<li>
+<p>Metrics</p>
+<ul>
+<li>host level: CPU, Memory...</li>
+<li>Aggragated level metrics: perfromance of database tier..</li>
+<li>business metrics: daily active users...</li>
+</ul>
+</li>
+<li>
+<p>Automation tools</p>
+<ul>
+<li>continuous integration</li>
+<li>autmating build, test and deploy process..</li>
+</ul>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303072135216.png" alt="image-20230307213512176" style="zoom:33%;" />
+</li>
+</ol>
+<p>As the data grows, you should also scale the data tier.</p>
+<h3 id="database-scaling">Database scaling</h3>
+<ol>
+<li>
+<p>vertical scaling: more powerful server</p>
+<ul>
+<li>
+<p>Not unlimited</p>
+</li>
+<li>
+<p>single point failuer</p>
+</li>
+<li>
+<p>high cost</p>
+</li>
+</ul>
+</li>
+<li>
+<p>horizontal scaling: <strong>Sharding</strong> seperated large databases into smaller, more easily managed parts -- <strong>shards</strong>.</p>
+</li>
+<li>
+<p><strong>Sharding key(partition key)</strong> consists one or more columns that determine how data is distributed.</p>
+</li>
+<li>
+<p>Cretiria for choosing a sharding key: evenly distributed to servers.</p>
+</li>
+<li>
+<p>Challenges</p>
+<ul>
+<li>Rehashing
+<ul>
+<li>Why: one server takes too much due to uneven distribution; or one server is full</li>
+<li>Consistent hashing</li>
+</ul>
+</li>
+<li>Celebrity problem
+<ul>
+<li>hotspot key problem.</li>
+<li>To address this issue: allocate partition for hotspot( dedicated)</li>
+</ul>
+</li>
+<li>Join and de-normalization
+<ul>
+<li>It's hard for tables to join in different partitions.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303072145398.png" alt="image-20230307214538348" style="zoom:33%;" />
+<h3 id="millions-of-users-and-beyond">Millions of users and beyond</h3>
+<ol>
+<li>scaling system is an iterative process.</li>
+<li>summary
+<ul>
+<li>Keep web tier stateless</li>
+<li>Build redundancy at every tier</li>
+<li>Cache data as much as you can</li>
+<li>Support multiple data centers</li>
+<li>Host static assets in CDN</li>
+<li>Scale your data tier by sharding</li>
+<li>Split tiers into individual services</li>
+<li>Monitor your system and use automation tools</li>
+</ul>
+</li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#scale-from-zero-to-millions-of-users">Scale From Zero To Millions of Users</a>
+<ul>
+<li><a href="#single-server-setup">Single server setup</a></li>
+<li><a href="#database">Database</a>
+<ul>
+<li><a href="#which-database-to-use">Which database to use?</a></li>
+</ul>
+</li>
+<li><a href="#vertical-scaling-vs-horizental-scaling">Vertical Scaling vs horizental scaling</a></li>
+<li><a href="#load-balancer">Load Balancer</a></li>
+<li><a href="#data-replication">Data Replication</a></li>
+<li><a href="#cache">Cache</a>
+<ul>
+<li><a href="#cache-tier">Cache tier</a></li>
+<li><a href="#considerations-for-using-cache">Considerations for using cache</a></li>
+</ul>
+</li>
+<li><a href="#content-delivery-networkcdn">Content delivery network(CDN)</a></li>
+<li><a href="#stateless-web-tier">Stateless web tier</a>
+<ul>
+<li><a href="#stateful-architecture">Stateful architecture</a></li>
+<li><a href="#stateless-architecture">Stateless architecture</a></li>
+</ul>
+</li>
+<li><a href="#data-centers">Data centers</a></li>
+<li><a href="#message-queue">Message queue</a></li>
+<li><a href="#logging-metrics-automation">Logging, Metrics, automation</a></li>
+<li><a href="#database-scaling">Database scaling</a></li>
+<li><a href="#millions-of-users-and-beyond">Millions of users and beyond</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/systen-design-basic-1-the-first-glance/">
+              <h3 class="post-title">
+                Systen Design Basic 1 - The First Glance
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,417 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>305. Number of Islands II  | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="305. Number of Islands II  | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Question
+You are given an empty 2D binary grid grid of size m x n. The grid represents a map where 0's represent water a..." />
+    <meta name="keywords" content="Matrix,Union Find,Graph,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              305. Number of Islands II 
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-23
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/mSicWA2Zb/" class="post-tag">
+                  # Matrix
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/wWsAc9OyT/" class="post-tag">
+                  # Union Find
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/W_93vV191q/" class="post-tag">
+                  # Graph
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="question">Question</h2>
+<p>You are given an empty 2D binary grid <code>grid</code> of size <code>m x n</code>. The grid represents a map where <code>0</code>'s represent water and <code>1</code>'s represent land. Initially, all the cells of <code>grid</code> are water cells (i.e., all the cells are <code>0</code>'s).</p>
+<p>We may perform an add land operation which turns the water at position into a land. You are given an array <code>positions</code> where <code>positions[i] = [ri, ci]</code> is the position <code>(ri, ci)</code> at which we should operate the <code>ith</code> operation.</p>
+<p>Return <em>an array of integers</em> <code>answer</code> <em>where</em> <code>answer[i]</code> <em>is the number of islands after turning the cell</em> <code>(ri, ci)</code> <em>into a land</em>.</p>
+<p>An <strong>island</strong> is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.</p>
+<p><strong>Example 1:</strong></p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304231511307.jpg" alt="img" style="zoom:50%;" />
+<h2 id="algorithm">Algorithm</h2>
+<p>Find the final components count in a forrest.</p>
+<p>The point for this question is how you construct the graph(the connection of nodes).</p>
+<h2 id="code">Code</h2>
+<h3 id="standard-answer">Standard answer</h3>
+<pre><code class="language-java">class UnionFind {
+    int[] parent;
+    int[] rank;
+    int count;
+
+    public UnionFind(int size) {
+        parent = new int[size];
+        rank = new int[size];
+        for (int i = 0; i &lt; size; i++)
+            parent[i] = -1;
+        count = 0;
+    }
+
+    public void addLand(int x) {
+        if (parent[x] &gt;= 0)
+            return;
+        parent[x] = x;
+        count++;
+    }
+
+    public boolean isLand(int x) {
+        if (parent[x] &gt;= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    int numberOfIslands() {
+        return count;
+    }
+
+    public int find(int x) {
+        if (parent[x] != x)
+            parent[x] = find(parent[x]);
+        return parent[x];
+    }
+
+    public void union(int x, int y) {
+        int xset = find(x), yset = find(y);
+        if (xset == yset) {
+            return;
+        } else if (rank[xset] &lt; rank[yset]) {
+            parent[xset] = yset;
+        } else if (rank[xset] &gt; rank[yset]) {
+            parent[yset] = xset;
+        } else {
+            parent[yset] = xset;
+            rank[xset]++;
+        }
+        count--;
+    }
+}
+
+class Solution {
+    public List&lt;Integer&gt; numIslands2(int m, int n, int[][] positions) {
+        int x[] = { -1, 1, 0, 0 };
+        int y[] = { 0, 0, -1, 1 };
+        UnionFind dsu = new UnionFind(m * n);
+        List&lt;Integer&gt; answer = new ArrayList&lt;&gt;();
+
+        for (int[] position : positions) {
+            int landPosition = position[0] * n + position[1];
+            dsu.addLand(landPosition);
+
+            for (int i = 0; i &lt; 4; i++) {
+                int neighborX = position[0] + x[i];
+                int neighborY = position[1] + y[i];
+                int neighborPosition = neighborX * n + neighborY;
+                // If neighborX and neighborY correspond to a point in the grid and there is a
+                // land at that point, then merge it with the current land.
+                if (neighborX &gt;= 0 &amp;&amp; neighborX &lt; m &amp;&amp; neighborY &gt;= 0 &amp;&amp; neighborY &lt; n &amp;&amp;
+                        dsu.isLand(neighborPosition)) {
+                    dsu.union(landPosition, neighborPosition);
+                }
+            }
+            answer.add(dsu.numberOfIslands());
+        }
+        return answer;
+    }
+}
+</code></pre>
+<hr>
+<p>This code is my initial code and cannot pass the test case:</p>
+<pre><code>3
+3
+[[0,1],[1,2],[2,1],[1,0],[0,2],[0,0],[1,1]]
+</code></pre>
+<p><strong>I tried use the sum and product of the <code>position[i][j]</code> as the index in union find. But forget the simplest one, <code>i*n+j</code> flatten the matrix.</strong> I believe if I make things easier like this, I could have come up with the final answer.</p>
+<pre><code class="language-java">class Solution {
+    int[][][] parents;
+    int count;
+    int[][] grid;
+    public List&lt;Integer&gt; numIslands2(int m, int n, int[][] positions) {
+        count = 0;
+        List&lt;Integer&gt; res = new ArrayList&lt;&gt;();
+        if (positions == null || positions.length == 0 || positions[0] == null || positions[0].length == 0) {
+            return res;
+        }
+        parents = new int[m][n][2];
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                parents[i][j] = new int[]{i, j};
+            }
+        }
+        grid = new int[m][n];
+        for (int[] position : positions) {
+            int x = position[0];
+            int y = position[1];
+            grid[x][y] = 1;
+            count++;
+            union(position, m, n);
+            res.add(count);
+        }
+        return res;
+    }
+    
+    private int[] find(int[] position) {
+        int x = position[0];
+        int y = position[1];
+        if (x != parents[x][y][0] &amp;&amp; y != parents[x][y][1]) {
+            parents[x][y] = find(parents[x][y]);
+        }
+        return parents[x][y];
+    }
+    
+    private void union(int[] position, int m, int n) {
+        int x = position[0];
+        int y = position[1];
+        int[] xRoot = find(parents[x][y]);
+        if (x-1 &gt;= 0 &amp;&amp; grid[x-1][y] == 1) {
+            int[] leftRoot = find(parents[x-1][y]);
+            if (xRoot[0] != leftRoot[0] || xRoot[1] != leftRoot[1]) {
+                parents[xRoot[0]][xRoot[1]] = leftRoot;
+                count--;
+            }
+        }
+        if (x+1 &lt; m &amp;&amp; grid[x+1][y] == 1) {
+            int[] rightRoot = find(parents[x+1][y]);
+            if (xRoot[0] != rightRoot[0] || xRoot[1] != rightRoot[1]) {
+                parents[xRoot[0]][xRoot[1]] = rightRoot;
+                count--;
+            }
+            
+        }
+        if (y-1 &gt;= 0 &amp;&amp; grid[x][y-1] == 1) {
+            int[] upperRoot = find(parents[x][y-1]);
+            if (xRoot[0] != upperRoot[0] || xRoot[1] != upperRoot[1]) {
+                parents[xRoot[0]][xRoot[1]] = upperRoot;
+                count--;
+            }
+        }
+        if (y + 1 &lt; n &amp;&amp; grid[x][y+1] == 1) {
+            int[] lowerRoot = find(parents[x][y+1]);
+            if (xRoot[0] != lowerRoot[0] || xRoot[1] != lowerRoot[1]) {
+                parents[xRoot[0]][xRoot[1]] = lowerRoot;
+                count--;
+            }
+        }
+    }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#question">Question</a></li>
+<li><a href="#algorithm">Algorithm</a></li>
+<li><a href="#code">Code</a>
+<ul>
+<li><a href="#standard-answer">Standard answer</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/323-number-of-connected-components-in-an-undirected-graph/">
+              <h3 class="post-title">
+                323. Number of Connected Components in an Undirected Graph
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

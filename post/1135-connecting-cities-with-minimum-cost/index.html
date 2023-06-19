@@ -1,0 +1,409 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>1135.  Connecting Cities With Minimum Cost | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="1135.  Connecting Cities With Minimum Cost | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="
+Connecting Cities With Minimum Cost
+
+Question
+There are n cities labeled from 1 to n. You are given the integer n and a..." />
+    <meta name="keywords" content="Minimum Spanning Tree,Union Find,Graph,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              1135.  Connecting Cities With Minimum Cost
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-24
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/7w_JWV6b3/" class="post-tag">
+                  # Minimum Spanning Tree
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/wWsAc9OyT/" class="post-tag">
+                  # Union Find
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/W_93vV191q/" class="post-tag">
+                  # Graph
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <ol start="1135">
+<li>Connecting Cities With Minimum Cost</li>
+</ol>
+<h2 id="question">Question</h2>
+<p>There are <code>n</code> cities labeled from <code>1</code> to <code>n</code>. You are given the integer <code>n</code> and an array <code>connections</code> where <code>connections[i] = [xi, yi, costi]</code> indicates that the cost of connecting city <code>xi</code> and city <code>yi</code> (bidirectional connection) is <code>costi</code>.</p>
+<p>Return <em>the minimum <strong>cost</strong> to connect all the</em> <code>n</code> <em>cities such that there is at least one path between each pair of cities</em>. If it is impossible to connect all the <code>n</code> cities, return <code>-1</code>,</p>
+<p>The <strong>cost</strong> is the sum of the connections' costs used.</p>
+<p><strong>Example 1:</strong></p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304240802226.png" alt="img" loading="lazy"></figure>
+<pre><code>Input: n = 3, connections = [[1,2,5],[1,3,6],[2,3,1]]
+Output: 6
+Explanation: Choosing any 2 edges will connect all cities so we choose the minimum 2.
+</code></pre>
+<h2 id="algorithm">Algorithm</h2>
+<p>This is a typical question of finding the minimum spanning tree. Here we implement the Kruskal Algorithm.</p>
+<p>For minimum spanning tree, we should find a tree without cycle and with least cost. In the question 261, we are asking to tell if a graph is a tree. So there are three main points:</p>
+<ul>
+<li>Acyclic;</li>
+<li>The graph has only one component after union;</li>
+<li>Least cost.</li>
+</ul>
+<p>Kruskal algorithm is utilizing the union find data structure.  Unionfind could help us to identify cycle when processing the edges and after union all the nodes, we could get components count by calling <code>count()</code>. To get the least cost, we sort the edges by weight(cost), and processing by this order.</p>
+<p>In the end, if there is only one component in the forest, we could return the calculated cost.</p>
+<h2 id="code">Code</h2>
+<pre><code class="language-java">class Solution {
+    public int minimumCost(int n, int[][] connections) {
+        int res = 0;
+        if (connections == null || connections.length == 0 || connections[0] == null || connections[0].length == 0) {
+            return -1;
+        }
+        UnionFind unionFind = new UnionFind(n + 1);
+        Arrays.sort(connections, (a, b) -&gt; (a[2] - b[2]));
+        
+        for (int[] connection : connections) {
+            int v1 = connection[0];
+            int v2 = connection[1];
+            int cost = connection[2];
+            if (unionFind.connected(v1, v2)) continue;
+            unionFind.union(v1, v2);
+            res += cost;
+        }
+        return unionFind.count == 2 ? res : -1;
+    }
+    
+    class UnionFind {
+        int[] parents;
+        int count;
+        
+        public UnionFind(int n) {
+            count = n;
+            parents = new int[n];
+            for (int i = 0; i &lt; n; i++) {
+                parents[i] = i;
+            }
+        }
+        
+        public int find(int x) {
+            if (x != parents[x]) {
+                parents[x] = find(parents[x]);
+            }
+            return parents[x];
+        }
+        
+        public void union(int x, int y) {
+            int xRoot = find(x);
+            int yRoot = find(y);
+            if (xRoot == yRoot) return;
+            parents[yRoot] = xRoot;
+            count--;
+        }
+        
+        public int count() {
+            return count;
+        }
+        
+        public boolean connected(int x, int y) {
+            return find(x) == find(y);
+        }
+    }
+}
+</code></pre>
+<h2 id="code2">Code2</h2>
+<p>We have another algorithm: Prim's algorithm to solve this problem.</p>
+<p>We need to construct a graph fist if necessary. Then choose a start node and put it to a priority queue.  And then put the neighbors and edges to the PQ. By the nature of the PQ,  one node with shortest edge (and the neighbor was not visited) was pop each time. After all the nodes was popped, we may get a MST.</p>
+<pre><code class="language-java">class Solution {
+    List&lt;int[]&gt;[] graph;
+    public int minimumCost(int n, int[][] connections) {
+        Prim prim = new Prim(n, connections);
+        if (!prim.allConnected()) {
+            return -1;
+        }
+        return prim.minDist;
+        
+    }
+    
+    class Prim {
+        boolean[] visited;
+        int[] minDists;
+        int minDist;
+        int[][] connections;
+        int n;
+        
+        
+        public Prim(int n, int[][] connections) {
+            buildGraph(connections, n);
+            this.connections = connections;
+            this.n = n;
+            visited = new boolean[n + 1];
+            minDists = new int[n + 1];
+            Arrays.fill(minDists, Integer.MAX_VALUE);
+        
+        
+            PriorityQueue&lt;int[]&gt; pq = new PriorityQueue&lt;&gt;((a, b) -&gt; (a[2] - b[2]));
+            for (int[] edge : graph[1]) {
+                pq.offer(new int[]{0, edge[1], edge[2]});
+            }
+            minDists[1] = 0;
+            minDist = 0;	
+            visited[1] = true;
+        
+            while (!pq.isEmpty()) {
+            int[] connection = pq.poll();
+            int start = connection[0];
+            int end = connection[1];
+            int cost = connection[2];
+            
+            if (!visited[end]) {
+                visited[end] = true;
+                minDists[end] = cost;
+                minDist += cost;
+                for (int[] edge : graph[end]) {
+                    if (!visited[edge[1]]) {
+                        pq.offer(new int[]{end, edge[1], edge[2]});
+                    }
+                }
+            }
+            
+        }
+        }
+        
+        public boolean allConnected() {
+            for (int i = 1; i &lt;= n; i++) {
+                if (!visited[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+    }
+    
+    private void buildGraph(int[][] connections, int n) {
+        graph = new List[n + 1];
+        for (int i = 1; i &lt;= n; i++) {
+            graph[i] = new ArrayList&lt;&gt;();
+        }
+        for (int[] connection : connections) {
+            int start = connection[0];
+            int end = connection[1];
+            int cost = connection[2];
+            graph[start].add(new int[]{start, end, cost});
+            graph[end].add(new int[]{end, start, cost});
+        }
+    }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#question">Question</a></li>
+<li><a href="#algorithm">Algorithm</a></li>
+<li><a href="#code">Code</a></li>
+<li><a href="#code2">Code2</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/305-number-of-islands-ii/">
+              <h3 class="post-title">
+                305. Number of Islands II 
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

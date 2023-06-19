@@ -1,0 +1,358 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>System Design Basic 4 - The Framework to breakdown system design questions | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="System Design Basic 4 - The Framework to breakdown system design questions | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="The Framework to breakdown system design questions
+
+You and the other guy work together to solve a real-life problem to ..." />
+    <meta name="keywords" content="System Design" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              System Design Basic 4 - The Framework to breakdown system design questions
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-03-10
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/h_IFyWw8r/" class="post-tag">
+                  # System Design
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="the-framework-to-breakdown-system-design-questions">The Framework to breakdown system design questions</h2>
+<ol>
+<li>You and the other guy work together to solve a real-life problem to meet their goals.</li>
+<li>Technical skill, collaborate, work under pressure, resolve ambiguity <strong>constructively</strong> , ask good questions.</li>
+<li>Do not ignore trade offs and care about cost.</li>
+</ol>
+<h3 id="4-step-process">4-step process</h3>
+<h4 id="1-understand-the-problem-and-deign-scope">1. Understand the problem and deign scope</h4>
+<ol>
+<li>
+<p><u>DO NOT</u> give an answer quickly without clarify the <strong><u>requirements</u></strong> and <strong><u>assumptions</u></strong>.</p>
+</li>
+<li>
+<p>Ask good questions. Questions to understand the <strong>exact</strong> requirements.</p>
+</li>
+<li>
+<p>Write down you assumptions or their answers.</p>
+<blockquote>
+<ul>
+<li>What specific features are we going to build?</li>
+<li>How many users does the product have?</li>
+<li>How fast does the company anticipate to scale up? What are the anticipated scales in 3 months, 6 months, and a year?</li>
+<li>What is the company’s technology stack? What existing services you might leverage to simplify the design?</li>
+</ul>
+</blockquote>
+</li>
+</ol>
+<h4 id="2-propose-high-level-design-and-get-buy-in">2. Propose high-level design and get buy-in</h4>
+<ol>
+<li>Develop a high-level design and reach an agreement with the interviewer.</li>
+<li><strong>Ask feedback</strong> when you come up with a blueprint. Communicate with interviewer.</li>
+<li><strong>Draw diagrams with key components</strong> on paper. Clients(web/mobile), APIs, web servers, data stores, cache, CDN, message queue, etc.</li>
+<li><strong>Do calculations to evaluate the system fits the scale constraint</strong>. Communicate with interviewer.</li>
+<li>Go through a few concrete cases helps you frame and pick the missing part.</li>
+<li>Whether to include the endpoints and database schema depend the problem. Communicate with the other guy.</li>
+</ol>
+<h5 id="example-design-a-news-feed-system">Example - Design a news feed system</h5>
+<ol>
+<li>
+<p>At high level, the system is designed into two flows: feed publishing and news feed building.</p>
+<ol>
+<li>Feed publishing: when a user post, corresponding data is written into cache/ database, and the post will be populated to their friends' feed.</li>
+<li>Newsfeed building: aggregating friends post in chronological order.</li>
+</ol>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303101524730.png" alt="image-20230310152449907" style="zoom:50%;" />
+</li>
+</ol>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303101525974.png" alt="image-20230310152523931" style="zoom:50%;" />
+<h4 id="3-system-deep-dive">3. System Deep Dive</h4>
+<ol>
+<li>At this point, you and your interviews should already achieved:</li>
+</ol>
+<ul>
+<li>Agreed on the <strong>overall goals and feature scope</strong></li>
+<li>Sketched a high level blueprint for the <strong>overall design</strong></li>
+<li>Obtained <strong>feedback</strong> for the high-level design</li>
+<li>Some initial ideas about <strong>areas to focus</strong></li>
+</ul>
+<ol start="2">
+<li>Time management  is important and do not dive in complicated algorithms.</li>
+</ol>
+<h5 id="example-focus-areatopic">Example - Focus area(topic)</h5>
+<ol>
+<li>
+<p>Feed publishing</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303101532537.png" alt="image-20230310153219492" style="zoom:33%;" />
+</li>
+<li>
+<p>News feed retrieval</p>
+</li>
+</ol>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202303101532061.png" style="zoom:33%;" />
+<h4 id="4-wrap-up">4. Wrap up</h4>
+<ol>
+<li>A few follow up questions may be discussed
+<ul>
+<li>Identify the system bottleneck and potential improvements; there is <strong><u>ALWAYS</u></strong> something to improve upon.</li>
+<li>Give a recap of you whole design;</li>
+<li>Error cases(server failure, network loss, etc);</li>
+<li>Operation issues are worth mentioning. Monitoring, metrics, logs...</li>
+<li>How to handle the next level scale curve;...</li>
+<li>...</li>
+</ul>
+</li>
+<li>Dos
+<ul>
+<li>Always ask for clarification. Do not assume something by your self.</li>
+<li>Understand the problem. Startup and Huge company needs different solution.</li>
+<li>Let interviewer know you are thinking. Speak out.</li>
+<li>Suggest multiple choices.</li>
+<li>Once agree on blueprint, go into details on each component. Most critical first.</li>
+<li>Get ideas from interviewer if they have;</li>
+<li>Never give up</li>
+</ul>
+</li>
+<li>Don'ts
+<ul>
+<li>Do not be unprepared for typical interview questions.</li>
+<li>Do not jump into solution without clarifying the requirements and problem and constrains.</li>
+<li>Do not go too much detail on a single component in the beginning. Get the high-level design first.</li>
+<li>Communicate, do not think in silence.</li>
+<li>If you get stuck, ask.</li>
+<li>Do not think your interview is done once you give the design. You are not done until your interviewer says you are done. <strong>Ask feedback early and often.</strong></li>
+</ul>
+</li>
+</ol>
+<h3 id="time-allocation-on-each-step">Time allocation on each step</h3>
+<p>Normally the session will be 45 min.</p>
+<p>Step1 Understand the problem and clarify requirements and scope: 3-10min;</p>
+<p>Step2 Propose high-level design: 10-15min;</p>
+<p>Step3 Deep dive: 10-25min;</p>
+<p>Step4: Wrap: 3-5min</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#the-framework-to-breakdown-system-design-questions">The Framework to breakdown system design questions</a>
+<ul>
+<li><a href="#4-step-process">4-step process</a>
+<ul>
+<li><a href="#1-understand-the-problem-and-deign-scope">1. Understand the problem and deign scope</a></li>
+<li><a href="#2-propose-high-level-design-and-get-buy-in">2. Propose high-level design and get buy-in</a>
+<ul>
+<li><a href="#example-design-a-news-feed-system">Example - Design a news feed system</a></li>
+</ul>
+</li>
+<li><a href="#3-system-deep-dive">3. System Deep Dive</a>
+<ul>
+<li><a href="#example-focus-areatopic">Example - Focus area(topic)</a></li>
+</ul>
+</li>
+<li><a href="#4-wrap-up">4. Wrap up</a></li>
+</ul>
+</li>
+<li><a href="#time-allocation-on-each-step">Time allocation on each step</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/284-peeking-iterator/">
+              <h3 class="post-title">
+                284. Peeking Iterator
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,413 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A Quick Note of Dynamic Programming and Greedy Algorithm | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="A Quick Note of Dynamic Programming and Greedy Algorithm | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Greedy Algorithm
+
+
+For the greedy algorithm, it basically looks at whether it is an extreme value problem, and generally..." />
+    <meta name="keywords" content="Greedy algorithm,Dynamic Programming,Algorithm" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              A Quick Note of Dynamic Programming and Greedy Algorithm
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-03-22
+              </span>
+              <span>
+                8 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/xldsVr9iS/" class="post-tag">
+                  # Greedy algorithm
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/8XHIFnHCE/" class="post-tag">
+                  # Dynamic Programming
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/o6URDPFApM/" class="post-tag">
+                  # Algorithm
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="greedy-algorithm">Greedy Algorithm</h2>
+<ul>
+<li>
+<p>For the greedy algorithm, it basically looks at whether it is an extreme value problem, and generally goes through the local optimal solution and finally derives the global optimal solution. However, the local optimal solution of the greedy algorithm has no posteriority.</p>
+</li>
+<li>
+<p>The first thing you need to ** confirm the whole idea of the problem ** is how to derive the global optimal solution through the local solution.</p>
+</li>
+<li>
+<p>Next is the implementation, which is generally done in iterations to find the local optimal solution; then iterations are derived based on the previous ideas to achieve the derivation of the optimal solution.</p>
+</li>
+</ul>
+<h2 id="dynamic-programming">Dynamic programming</h2>
+<ul>
+<li>
+<p>For dynamic programming is also generally an extreme value problem, also involving optimal sub-structures, but the difference is that dynamic programming also involves overlapping sub-problems (that is, sub-problems are generally not independent)</p>
+</li>
+<li>
+<p>By independent, I mean that I calculate the solution to this subproblem and that's it. The next subproblem follows the same algorithm, but is not related to the solution of the previous subproblem. Not independent, like dynamic programming problems in general the solution of the current subproblem may be based on the solution of some previous subproblem. This is related to the problem of dynamic programming itself. After the problem is decomposed, it is found that there are many repeated calculations, and in order to reduce these redundant calculations, memorization and dynamic programming are used to optimize the idea.</p>
+</li>
+</ul>
+<h2 id="differences">Differences</h2>
+<ul>
+<li>
+<p>Both greedy and dynamic programming have the nature of optimal substructure, i.e., the global optimal solution contains the optimal solution of the subproblem.</p>
+</li>
+<li>
+<p>The difference is that dynamic programming has overlapping subproblems, whereas the greedy algorithm does not. In addition, dynamic programming is a bottom-up decomposition problem, and greedy is not quite similar (somewhat top-down).</p>
+</li>
+</ul>
+<h2 id="give-a-gnawing-example">Give a gnawing example</h2>
+<h3 id="problem">Problem</h3>
+<ol start="322">
+<li>Coin Change</li>
+</ol>
+<p>You have several denominations of coins to use as you wish, and a number of coins, pick the fewest coins to make up that number.</p>
+<h3 id="algorithm">Algorithm</h3>
+<p>When I first started working on this problem, I naturally chose the greedy algorithm. The idea is to pick the largest denomination until the number of coins left is not enough for the largest denomination, and then pick the second largest, and so on until the composition or group can not be the number of money.</p>
+<p>After the interviewer tips found a kind of case can not pass, the code accordingly do not know how to change.</p>
+<p>Where does the problem lie here?</p>
+<p>Overlapping sub-problems. The basis of greed is not dependent on the overlapping subproblems, if the subproblems overlap, greed can not come up with the true extreme value (optimal solution). This topic has an overlapping subproblem (that is, the greedy idea to go to the end of the non-optimal solution, you need to go back one step to find again.)</p>
+<p>This topic we now consider with the idea of dynamic programming. From the bottom up, several aspects.</p>
+<p>The state, that is, according to the result, our state dp[i] is the minimum number of coins needed when the number of money is i.</p>
+<p>Transfer formula: <code>dp[i] = min(dp[i - coin[k]], dp[i]);</code>, there are several choices, i.e. different denominations of coin.</p>
+<p>Initialization: when the money to be composed is 0, no coin, so also <code>dp[0]=0</code>.</p>
+<h3 id="code">Code</h3>
+<pre><code class="language-java">import java.util.Arrays;
+
+/**
+ * Created by szhang on 2023/3/22
+ */
+public class CoinChange {
+    public static int coinChange(int[] coins, int amount) {
+        if (coins == null || coins.length == 0) {
+            return -1;
+        }
+        int[] dp = new int[amount+1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
+        for (int i = 1; i &lt;= amount; i++) {
+            for (int coin : coins) {
+                if (i &gt;= coin) {
+                    dp[i] = Math.min(dp[i], dp[i-coin] + 1);
+                }
+            }
+        }
+        return dp[amount] == Integer.MAX_VALUE ? -1 : dp[amount];
+    }
+
+    public static void main(String[] args) {
+        int[] coins = new int[]{5, 2, 1};
+        System.out.println(coinChange(coins, 0)); // 0
+        System.out.println(coinChange(coins, 5)); // 1
+        System.out.println(coinChange(coins, 10)); // 2
+        System.out.println(coinChange(coins, 11)); // 3
+        System.out.println(coinChange(coins, 12)); // 3
+    }
+}
+
+</code></pre>
+<hr>
+<h2 id="贪心算法">贪心算法</h2>
+<ul>
+<li>
+<p>对于贪心算法，基本上是看一下是否是极值问题，一般都是通过局部最优解，最后推导全局最优解。不过贪心算法的局部最优解没有后效性。</p>
+</li>
+<li>
+<p>首先需要<strong>确认整个问题的思路</strong>，就是如何通过局部解推导出全局最优解。</p>
+</li>
+<li>
+<p>其次是实现了，一般是在迭代中求出局部最优解；然后迭代根据之前的思路推导，实现推导出最优解。</p>
+</li>
+</ul>
+<h2 id="动态规划">动态规划</h2>
+<ul>
+<li>
+<p>对于动态规划来说一般也是极值问题，也涉及到最优子结构，但是区别在于，动态规划还涉及到重叠子问题（也就是子问题一般不是独立的）</p>
+</li>
+<li>
+<p>所谓独立是说，我算出这个子问题的解就到这，下一个子问题按照同样的算法去算，但是和前一个子问题的解无关联。不独立，像动态规划问题一般当前的子问题的解可能是基于之前的某个子问题的解。为什么会出现这个情况呢，这个和动态规划问题的问题本身有关，问题经过分解之后会发现存在诸多重复的计算，为了减少这些冗余的计算才出现了记忆化memorization和动态规划来优化思路。</p>
+</li>
+</ul>
+<h2 id="区别">区别</h2>
+<ul>
+<li>
+<p>贪心和动态规划都具有最优子结构性质，即全局的最优解包含子问题的最优解。</p>
+</li>
+<li>
+<p>区别在于动态规划是还有重叠子问题，而贪心算法不是。另外动态规划是自底向上的分解问题，贪心的思路也不太类似（有点自顶向下）。</p>
+</li>
+</ul>
+<h2 id="举一个耿耿于怀的例子">举一个耿耿于怀的例子</h2>
+<h3 id="问题">问题</h3>
+<p>322.Coin Change</p>
+<p>你有几种面值的硬币可以随便用，还有一个钱数，挑选最少的硬币组成这个钱数。</p>
+<h3 id="算法">算法</h3>
+<p>这个题目在我刚开始做题的时候，自然而然的就选择了贪心算法。比较natrually的想法就是先挑面值最大的，直到剩下的钱数不够一个面值最大的，再挑第二大的，依次循环直到组成或者组不成这个钱数。</p>
+<p>后面经过面试官提示发现有种case过不了，代码相应的也不知道怎么改。</p>
+<p>这里的问题出在哪里呢？</p>
+<p>重叠子问题。贪心的基础是不依赖重叠子问题的，如果子问题重叠，贪心也不能得出真正的极值（最优解）。这个题目出现了重叠的子问题（就是说按照贪心的思路走到最后非最优解，需要往前退一步再找。）</p>
+<p>这个题目我们现在用动态规划的思想去考虑。自底向上，几个方面：</p>
+<p>状态，就是根据结果，我们的状态dp[i]就是当钱数为i的时候需要的最少硬币数量；</p>
+<p>转移公式：<code>dp[i] = min(dp[i - coin[k]], dp[i]);</code>，选择有几种，即不同的coin的面值；</p>
+<p>初始化：当需要组成的钱为0的时候，不要硬币，所以也是<code>dp[0]=0</code>。</p>
+<h3 id="代码">代码</h3>
+<pre><code class="language-java">import java.util.Arrays;
+
+/**
+ * Created by szhang on 2023/3/22
+ */
+public class CoinChange {
+    public static int coinChange(int[] coins, int amount) {
+        if (coins == null || coins.length == 0) {
+            return -1;
+        }
+        int[] dp = new int[amount+1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
+        for (int i = 1; i &lt;= amount; i++) {
+            for (int coin : coins) {
+                if (i &gt;= coin) {
+                    dp[i] = Math.min(dp[i], dp[i-coin] + 1);
+                }
+            }
+        }
+        return dp[amount] == Integer.MAX_VALUE ? -1 : dp[amount];
+    }
+
+    public static void main(String[] args) {
+        int[] coins = new int[]{5, 2, 1};
+        System.out.println(coinChange(coins, 0)); // 0
+        System.out.println(coinChange(coins, 5)); // 1
+        System.out.println(coinChange(coins, 10)); // 2
+        System.out.println(coinChange(coins, 11)); // 3
+        System.out.println(coinChange(coins, 12)); // 3
+    }
+}
+
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#greedy-algorithm">Greedy Algorithm</a></li>
+<li><a href="#dynamic-programming">Dynamic programming</a></li>
+<li><a href="#differences">Differences</a></li>
+<li><a href="#give-a-gnawing-example">Give a gnawing example</a>
+<ul>
+<li><a href="#problem">Problem</a></li>
+<li><a href="#algorithm">Algorithm</a></li>
+<li><a href="#code">Code</a></li>
+</ul>
+</li>
+<li><a href="#%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95">贪心算法</a></li>
+<li><a href="#%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92">动态规划</a></li>
+<li><a href="#%E5%8C%BA%E5%88%AB">区别</a></li>
+<li><a href="#%E4%B8%BE%E4%B8%80%E4%B8%AA%E8%80%BF%E8%80%BF%E4%BA%8E%E6%80%80%E7%9A%84%E4%BE%8B%E5%AD%90">举一个耿耿于怀的例子</a>
+<ul>
+<li><a href="#%E9%97%AE%E9%A2%98">问题</a></li>
+<li><a href="#%E7%AE%97%E6%B3%95">算法</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/55-jump-game/">
+              <h3 class="post-title">
+                55. Jump Game
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

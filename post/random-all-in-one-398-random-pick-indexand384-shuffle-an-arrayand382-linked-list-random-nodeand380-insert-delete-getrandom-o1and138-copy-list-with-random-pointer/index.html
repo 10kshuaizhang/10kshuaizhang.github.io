@@ -1,0 +1,869 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Random All In One - 398. Random Pick Index&amp;384. Shuffle an Array&amp;382. Linked List Random Node&amp;380. Insert Delete GetRandom O(1)&amp;138. Copy List with Random Pointer | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Random All In One - 398. Random Pick Index&amp;384. Shuffle an Array&amp;382. Linked List Random Node&amp;380. Insert Delete GetRandom O(1)&amp;138. Copy List with Random Pointer | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="这篇文章会涉及到随机算法的Leetcode题目，包括在有限数据集中随机选取n个元素，在无限数据集中随机选取一个元素，在无限数据中随机选取多个元素等。涉及到蓄水池算法，洗牌算法等。
+题目1
+398. Random Pick Index
+Giv..." />
+    <meta name="keywords" content="Random,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Random All In One - 398. Random Pick Index&amp;384. Shuffle an Array&amp;382. Linked List Random Node&amp;380. Insert Delete GetRandom O(1)&amp;138. Copy List with Random Pointer
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-03
+              </span>
+              <span>
+                23 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/jPPMW-Om0/" class="post-tag">
+                  # Random
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <p>这篇文章会涉及到随机算法的Leetcode题目，包括在有限数据集中随机选取n个元素，在无限数据集中随机选取一个元素，在无限数据中随机选取多个元素等。涉及到蓄水池算法，洗牌算法等。</p>
+<h2 id="题目1">题目1</h2>
+<h3 id="398-random-pick-index">398. Random Pick Index</h3>
+<p>Given an integer array <code>nums</code> with possible <strong>duplicates</strong>, randomly output the index of a given <code>target</code> number. You can assume that the given target number must exist in the array.</p>
+<p>Implement the <code>Solution</code> class:</p>
+<ul>
+<li><code>Solution(int[] nums)</code> Initializes the object with the array <code>nums</code>.</li>
+<li><code>int pick(int target)</code> Picks a random index <code>i</code> from <code>nums</code> where <code>nums[i] == target</code>. If there are multiple valid i's, then each index should have an equal probability of returning.</li>
+</ul>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input
+[&quot;Solution&quot;, &quot;pick&quot;, &quot;pick&quot;, &quot;pick&quot;]
+[[[1, 2, 3, 3, 3]], [3], [1], [3]]
+Output
+[null, 4, 0, 2]
+
+Explanation
+Solution solution = new Solution([1, 2, 3, 3, 3]);
+solution.pick(3); // It should return either index 2, 3, or 4 randomly. Each index should have equal probability of returning.
+solution.pick(1); // It should return 0. Since in the array only nums[0] is equal to 1.
+solution.pick(3); // It should return either index 2, 3, or 4 randomly. Each index should have equal probability of returning.
+</code></pre>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 2 * 104</code></li>
+<li><code>-231 &lt;= nums[i] &lt;= 231 - 1</code></li>
+<li><code>target</code> is an integer from <code>nums</code>.</li>
+<li>At most <code>104</code> calls will be made to <code>pick</code>.</li>
+</ul>
+<h2 id="算法1-直接随机数">算法1-直接随机数</h2>
+<p>这个题目是希望我们在有限数据集中随机选取某一个target数值的索引index。因为存在重复的元素，所以index也就不止一个，题目希望随机选取。</p>
+<p>最开始考虑这种题目，我们想到的可能就是：在一个数据集中抽元素，抽中即可。所以有如下代码，我们获取到所有可能得索引，然后借助Java的random类在这些index中随机抽取一个即可。</p>
+<h2 id="代码1">代码1</h2>
+<pre><code class="language-java">class Solution {
+    Random rdm;
+    int[] nums;
+    
+
+    public Solution(int[] nums) {
+        rdm = new Random();
+        this.nums = nums;
+    }
+    
+    public int pick(int target) {
+        List&lt;Integer&gt; indexes = new ArrayList&lt;&gt;();
+        for (int i = 0; i &lt; nums.length; i++) {
+            if (nums[i] == target) {
+                indexes.add(i);
+            }
+        }
+        return indexes.get(rdm.nextInt(indexes.size()));
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(nums);
+ * int param_1 = obj.pick(target);
+ */
+</code></pre>
+<h2 id="题目2">题目2</h2>
+<h3 id="384-shuffle-an-array">384. Shuffle an Array</h3>
+<p>Given an integer array <code>nums</code>, design an algorithm to randomly shuffle the array. All permutations of the array should be <strong>equally likely</strong> as a result of the shuffling.</p>
+<p>Implement the <code>Solution</code> class:</p>
+<ul>
+<li><code>Solution(int[] nums)</code> Initializes the object with the integer array <code>nums</code>.</li>
+<li><code>int[] reset()</code> Resets the array to its original configuration and returns it.</li>
+<li><code>int[] shuffle()</code> Returns a random shuffling of the array.</li>
+</ul>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input
+[&quot;Solution&quot;, &quot;shuffle&quot;, &quot;reset&quot;, &quot;shuffle&quot;]
+[[[1, 2, 3]], [], [], []]
+Output
+[null, [3, 1, 2], [1, 2, 3], [1, 3, 2]]
+
+Explanation
+Solution solution = new Solution([1, 2, 3]);
+solution.shuffle();    // Shuffle the array [1,2,3] and return its result.
+                       // Any permutation of [1,2,3] must be equally likely to be returned.
+                       // Example: return [3, 1, 2]
+solution.reset();      // Resets the array back to its original configuration [1,2,3]. Return [1, 2, 3]
+solution.shuffle();    // Returns the random shuffling of array [1,2,3]. Example: return [1, 3, 2]
+</code></pre>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 50</code></li>
+<li><code>-106 &lt;= nums[i] &lt;= 106</code></li>
+<li>All the elements of <code>nums</code> are <strong>unique</strong>.</li>
+<li>At most <code>104</code> calls <strong>in total</strong> will be made to <code>reset</code> and <code>shuffle</code>.</li>
+</ul>
+<h2 id="算法2-洗牌算法">算法2-洗牌算法</h2>
+<p>这个题目看起来和随机不太关联，但是换个思路想，打乱一个数组==把一个数组的每个位置随机选一个原来数组元素放置。这个题目中就是k=nums.length。</p>
+<p>对于题目1，我们只需要随机选择一个或者一次，但是对于要求随机选取多个或者多次的题目，按照之前的选取方法，可能会出现一个元素被重复选中的情况。</p>
+<p>这时的算法可能会成为：当第一次选中时-&gt; ok; 被重复选中-&gt;再抽一次。假设总共有n个值，我们需要选取m个，这个算法的缺点在于如果m比较接近n的话，重复的几率就会很大，时间复杂度就会变高。</p>
+<p>然后我们会发现有一个**<u>洗牌算法。</u>**同样对于有限数据集，随机选取k个元素。</p>
+<p>算法如下：</p>
+<ol>
+<li>从给定数组data，范围为[0, n)，我们遍历data，当索引为i的时候，</li>
+<li>从后面所有元素[i+1, n)中随机选取一个数data[j]和当前元素交换即可。</li>
+</ol>
+<h2 id="代码2">代码2</h2>
+<pre><code class="language-java">class Solution {
+    int[] nums;
+    Random rdm = new Random();
+
+    public Solution(int[] nums) {
+        this.nums = nums;
+    }
+    
+    public int[] reset() {
+        return nums;
+    }
+    
+    public int[] shuffle() {
+        int[] res = Arrays.copyOf(nums, nums.length);
+        for (int i = 0; i &lt; nums.length; i++) {
+            int j = i + rdm.nextInt(nums.length - i);
+            swap(res, i, j);
+        }
+        return res;
+    }
+    
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(nums);
+ * int[] param_1 = obj.reset();
+ * int[] param_2 = obj.shuffle();
+ */
+</code></pre>
+<p>对于16行，如果我们想要获取[i, n)的随机数，那么可以通过获取[0, n-i) + i来获取。</p>
+<blockquote>
+<p><strong>公式</strong></p>
+<p>要取得 [a,b) 的随机整数，使用 (rand () % (b-a))+ a;</p>
+<p>要取得 [a,b] 的随机整数，使用 (rand () % (b-a+1))+ a;</p>
+<p>要取得 (a,b] 的随机整数，使用 (rand () % (b-a))+ a + 1;</p>
+<p>通用公式 a + rand () % n；其中的 a 是起始值，n 是整数的范围。</p>
+<p>要取得 a 到 b 之间的随机整数，另一种表示：a + (int) b * rand () / (RAND_MAX + 1)。</p>
+<p>要取得 0～1 之间的浮点数，可以使用 rand () /double (RAND_MAX)。</p>
+<p>对应上述题目，rand()%n就是Java中的rdm.nextInt()的结果。</p>
+</blockquote>
+<p><strong>分析洗牌算法正确性的准则：产生的结果必须有 <code>n!</code> 种可能</strong>。这个很好解释，因为一个长度为 <code>n</code> 的数组的全排列就有 <code>n!</code> 种，也就是说打乱结果总共有 <code>n!</code> 种。算法必须能够反映这个事实，才是正确的。</p>
+<p>有了这个原则再看代码应该就容易理解了：</p>
+<p>对于 <code>nums[0]</code>，我们把它随机换到了索引 <code>[0, n)</code> 上，共有 <code>n</code> 种可能性；</p>
+<p>对于 <code>nums[1]</code>，我们把它随机换到了索引 <code>[1, n)</code> 上，共有 <code>n - 1</code> 种可能性；</p>
+<p>对于 <code>nums[2]</code>，我们把它随机换到了索引 <code>[2, n)</code> 上，共有 <code>n - 2</code> 种可能性；</p>
+<p>以此类推，该算法可以生成 <code>n!</code> 种可能的结果，所以这个算法是正确的，能够保证随机性。</p>
+<h2 id="题目3">题目3</h2>
+<h3 id="398-random-pick-index-2">398. Random Pick Index</h3>
+<h2 id="算法3-蓄水池算法随机选取一个">算法3-蓄水池算法（随机选取一个）</h2>
+<p>如果题目的输入成为了数据集大小n是未知的，比如他是一个stream，持续有数据进来。我们希望选取1个随机元素。</p>
+<p>我们期望只将数据流<strong>遍历一遍</strong>就得到所选取的元素，并且得到的元素是随机的。要求就是每个元素被选取的概率是1/n。</p>
+<p>算法：以1/i的概率选择第i个元素。</p>
+<h3 id="数学推导">数学推导</h3>
+<p>每一个被选中的概率如下：第一个是当前元素被选的概率，因为我们只选一个，所以乘的是后面元素不被选择的概率。可得针对第i个元素，被选中的概率满足要求的1/n。</p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304021133917.png" alt="img" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304021154475.jpg" alt="IMG_1025" loading="lazy"></figure>
+<h2 id="代码3">代码3</h2>
+<pre><code class="language-java">class Solution {
+    Random rdm = new Random();
+    int[] nums;
+    
+
+    public Solution(int[] nums) {
+        this.nums = nums;
+    }
+    
+    public int pick(int target) {
+        int res = -1;
+        int count = 0;
+        for (int i = 0; i &lt; nums.length; i++) {
+            if (nums[i] != target) {
+                continue;
+            }
+            count++;
+            if (rdm.nextInt(count) == 0) { // here we only pick the first one
+                res = i;
+            }
+        }
+        return res;
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(nums);
+ * int param_1 = obj.pick(target);
+ */
+</code></pre>
+<h2 id="题目4">题目4</h2>
+<h2 id="算法4-蓄水池算法随机选取多个">算法4-蓄水池算法（随机选取多个）</h2>
+<p>要求随机选取m个元素。即要求每个元素的被选取的概率是m/n。</p>
+<p>算法：前m个元素放入蓄水池，到第k个时(k&gt;m)，按照m/k的概率选中当前元素，以均等的概率替换蓄水池中先前被选中的任一元素。</p>
+<h3 id="数学推导-2">数学推导</h3>
+<p>第m个元素被选中的概率为当前元素被选中的概率*（之后元素不被选中的概率 + 之后被选中但不替换的概率）最终得到p=m/n。</p>
+<figure data-type="image" tabindex="3"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304021154044.jpg" alt="IMG_1024" loading="lazy"></figure>
+<p>或者借助算法3的推导，区别在于后面的元素都乘了1/k。因为虽然每次更细选择的概率大了k倍，但是具体的第i个元素还是要乘1/k，回到上一个推导了。</p>
+<figure data-type="image" tabindex="4"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304021146749.png" alt="img" loading="lazy"></figure>
+<h2 id="代码4">代码4</h2>
+<pre><code class="language-java">import java.util.Random;
+
+public class ReserviorSampling {
+    public int[] reserviorSampling(int[] stream, int k) {
+        Random random = new Random();
+        int[] res = new int[k];
+        for (int i = 0; i &lt;= k; i++) {
+            res[i] = stream[i];
+        }
+
+        for (int i = k; i &lt; stream.length; i++) {
+            int rand = random.nextInt(i+1);
+            if (rand &lt; k) { //the probability of i &lt; k is k/i
+                res[rand] = stream[i];
+            }
+        }
+
+        return res;
+    }
+
+}
+</code></pre>
+<h2 id="题目5">题目5</h2>
+<h3 id="382-linked-list-random-node">382. Linked List Random Node</h3>
+<p>Given a singly linked list, return a random node's value from the linked list. Each node must have the <strong>same probability</strong> of being chosen.</p>
+<p>Implement the <code>Solution</code> class:</p>
+<ul>
+<li><code>Solution(ListNode head)</code> Initializes the object with the head of the singly-linked list <code>head</code>.</li>
+<li><code>int getRandom()</code> Chooses a node randomly from the list and returns its value. All the nodes of the list should be equally likely to be chosen.</li>
+</ul>
+<p><strong>Example 1:</strong></p>
+<figure data-type="image" tabindex="5"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304021306438.jpg" alt="img" loading="lazy"></figure>
+<pre><code>Input
+[&quot;Solution&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;]
+[[[1, 2, 3]], [], [], [], [], []]
+Output
+[null, 1, 3, 2, 2, 3]
+
+Explanation
+Solution solution = new Solution([1, 2, 3]);
+solution.getRandom(); // return 1
+solution.getRandom(); // return 3
+solution.getRandom(); // return 2
+solution.getRandom(); // return 2
+solution.getRandom(); // return 3
+// getRandom() should return either 1, 2, or 3 randomly. Each element should have equal probability of returning.
+</code></pre>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li>The number of nodes in the linked list will be in the range <code>[1, 104]</code>.</li>
+<li><code>-104 &lt;= Node.val &lt;= 104</code></li>
+<li>At most <code>104</code> calls will be made to <code>getRandom</code>.</li>
+</ul>
+<p><strong>Follow up:</strong></p>
+<ul>
+<li>What if the linked list is extremely large and its length is unknown to you?</li>
+<li>Could you solve this efficiently without using extra space?</li>
+</ul>
+<h2 id="算法5">算法5</h2>
+<p>和算法4同样的题目，只是数据结构使用链表。思路可以使用无限数据集选择一个元素的思路。满足Follow up的要求（不使用额外空间，链表很长且长度未知）。</p>
+<h2 id="代码5">代码5</h2>
+<pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    Random random = new Random();
+    ListNode head;
+
+    public Solution(ListNode head) {
+        this.head = head;
+    }
+    
+    public int getRandom() {
+        int res = -1;
+        int count = 0;
+        ListNode cur = head;
+        while (cur != null) {
+            count++;
+            if (random.nextInt(count) == 0) {
+                res = cur.val;
+            }
+            cur = cur.next;
+        }
+        return res;
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(head);
+ * int param_1 = obj.getRandom();
+ */
+</code></pre>
+<h2 id="题目6">题目6</h2>
+<h3 id="380-insert-delete-getrandom-o1">380. Insert Delete GetRandom O(1)</h3>
+<p>Implement the <code>RandomizedSet</code> class:</p>
+<ul>
+<li><code>RandomizedSet()</code> Initializes the <code>RandomizedSet</code> object.</li>
+<li><code>bool insert(int val)</code> Inserts an item <code>val</code> into the set if not present. Returns <code>true</code> if the item was not present, <code>false</code> otherwise.</li>
+<li><code>bool remove(int val)</code> Removes an item <code>val</code> from the set if present. Returns <code>true</code> if the item was present, <code>false</code> otherwise.</li>
+<li><code>int getRandom()</code> Returns a random element from the current set of elements (it's guaranteed that at least one element exists when this method is called). Each element must have the <strong>same probability</strong> of being returned.</li>
+</ul>
+<p>You must implement the functions of the class such that each function works in <strong>average</strong> <code>O(1)</code> time complexity.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input
+[&quot;RandomizedSet&quot;, &quot;insert&quot;, &quot;remove&quot;, &quot;insert&quot;, &quot;getRandom&quot;, &quot;remove&quot;, &quot;insert&quot;, &quot;getRandom&quot;]
+[[], [1], [2], [2], [], [1], [2], []]
+Output
+[null, true, false, true, 2, true, false, 2]
+
+Explanation
+RandomizedSet randomizedSet = new RandomizedSet();
+randomizedSet.insert(1); // Inserts 1 to the set. Returns true as 1 was inserted successfully.
+randomizedSet.remove(2); // Returns false as 2 does not exist in the set.
+randomizedSet.insert(2); // Inserts 2 to the set, returns true. Set now contains [1,2].
+randomizedSet.getRandom(); // getRandom() should return either 1 or 2 randomly.
+randomizedSet.remove(1); // Removes 1 from the set, returns true. Set now contains [2].
+randomizedSet.insert(2); // 2 was already in the set, so return false.
+randomizedSet.getRandom(); // Since 2 is the only number in the set, getRandom() will always return 2.
+</code></pre>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li><code>-231 &lt;= val &lt;= 231 - 1</code></li>
+<li>At most <code>2 * ``105</code> calls will be made to <code>insert</code>, <code>remove</code>, and <code>getRandom</code>.</li>
+<li>There will be <strong>at least one</strong> element in the data structure when <code>getRandom</code> is called.</li>
+</ul>
+<h2 id="算法6">算法6</h2>
+<p>这道题的关键点在于，所有的操作都需要是O(1)时间复杂度。且，geRandom还要返回一个随机元素。这道题和之前的题目其实没太大关系，主要是一个实现题目。</p>
+<p>对于第一个点，操作需要在常数时间复杂度实现，可以用Hashmap， hashset，但是由于他们的内部结构涉及到哈希函数，哈希之后也是通过链表存储的，且可能存在哈希冲突，所以没办法做到等概率实现getRandom在常数时间。所以必须使用数组。</p>
+<p>但是对于数组，插入和删除，必须要在尾部才可以满足常数时间的操作。所以对于删除，我们要将元素先换到尾部，再去做删除操作。交换元素涉及到元素的索引，为了满足常数时间找到元素的索引，我们还需要一个map存取每个元素的索引。</p>
+<h2 id="代码6">代码6</h2>
+<pre><code class="language-java">class RandomizedSet {
+    Map&lt;Integer, Integer&gt; map;
+    List&lt;Integer&gt; list;
+    Random random = new Random();
+
+    public RandomizedSet() {
+        map = new HashMap&lt;&gt;();
+        list = new ArrayList&lt;&gt;();
+    }
+    
+    public boolean insert(int val) {
+        if (map.containsKey(val)) {
+            return false;
+        }
+        list.add(val);
+        map.put(val, list.size() - 1);
+        return true;
+    }
+    
+    public boolean remove(int val) {
+        if (!map.containsKey(val)) {
+            return false;
+        }
+        int indexToRemove = map.remove(val);
+        int lastValue = list.remove(list.size() - 1);
+        if (indexToRemove != list.size()) { // when deleting the non-last element, you do swap
+            list.set(indexToRemove, lastValue);
+            map.put(lastValue, indexToRemove);
+        }
+        return true;
+    }
+    
+    public int getRandom() {
+        return list.get(random.nextInt(list.size()));
+    }
+}
+
+/**
+ * Your RandomizedSet object will be instantiated and called as such:
+ * RandomizedSet obj = new RandomizedSet();
+ * boolean param_1 = obj.insert(val);
+ * boolean param_2 = obj.remove(val);
+ * int param_3 = obj.getRandom();
+ */
+</code></pre>
+<h2 id="补充蒙特卡洛验证法">补充：蒙特卡洛验证法</h2>
+<ol>
+<li>往一个正方形里面随机打点，这个正方形里紧贴着一个圆，告诉你打点的总数和落在圆里的点的数量，让你计算圆周率。 当打的点足够多的时候，点的数量就可以近似代表图形的面积。结合面积公式，可以很容易通过正方形和圆中点的数量比值推出圆周率的。</li>
+<li>所以题目最终对于随机的验证，可能也是通过这种方法， 做大量的输入，然后记录每个输出的随机数出现的次数，大致是相同的，或者说近似相等，则这个随机算法是可行的。</li>
+</ol>
+<h2 id="问题8">问题8</h2>
+<h3 id="138-copy-list-with-random-pointer">138. Copy List with Random Pointer</h3>
+<p>A linked list of length <code>n</code> is given such that each node contains an additional random pointer, which could point to any node in the list, or <code>null</code>.</p>
+<p>Construct a <a href="https://en.wikipedia.org/wiki/Object_copying#Deep_copy"><strong>deep copy</strong></a> of the list. The deep copy should consist of exactly <code>n</code> <strong>brand new</strong> nodes, where each new node has its value set to the value of its corresponding original node. Both the <code>next</code> and <code>random</code> pointer of the new nodes should point to new nodes in the copied list such that the pointers in the original list and copied list represent the same list state. <strong>None of the pointers in the new list should point to nodes in the original list</strong>.</p>
+<p>For example, if there are two nodes <code>X</code> and <code>Y</code> in the original list, where <code>X.random --&gt; Y</code>, then for the corresponding two nodes <code>x</code> and <code>y</code> in the copied list, <code>x.random --&gt; y</code>.</p>
+<p>Return <em>the head of the copied linked list</em>.</p>
+<p>The linked list is represented in the input/output as a list of <code>n</code> nodes. Each node is represented as a pair of <code>[val, random_index]</code> where:</p>
+<ul>
+<li><code>val</code>: an integer representing <code>Node.val</code></li>
+<li><code>random_index</code>: the index of the node (range from <code>0</code> to <code>n-1</code>) that the <code>random</code> pointer points to, or <code>null</code> if it does not point to any node.</li>
+</ul>
+<p>Your code will <strong>only</strong> be given the <code>head</code> of the original linked list.</p>
+<p><strong>Example 1:</strong></p>
+<figure data-type="image" tabindex="6"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304021556884.png" alt="img" loading="lazy"></figure>
+<pre><code>Input: head = [[7,null],[13,0],[11,4],[10,2],[1,0]]
+Output: [[7,null],[13,0],[11,4],[10,2],[1,0]]
+</code></pre>
+<h2 id="算法8">算法8</h2>
+<p>这个题目是说，给一个链表，深复制它。这个链表特别的地方在于，不仅有一个next指针指向下一个元素，还有一个random指针指向链表中的其他元素，或者不指向元素（也就是null）。所以当复制的时候这个指针也要被复制。</p>
+<p>这个题目需要记录每个node的位置或者是新旧节点的对应情况，这样才可以在取得一个节点的时候看是否它有对应的新节点产生，有则找到，没有则帮他新建一个（深拷贝）。然后依次遍历原来的链表，进行复制。</p>
+<h2 id="代码8-1">代码8-1</h2>
+<pre><code class="language-java">/*
+// Definition for a Node.
+class Node {
+    int val;
+    Node next;
+    Node random;
+
+    public Node(int val) {
+        this.val = val;
+        this.next = null;
+        this.random = null;
+    }
+}
+*/
+
+class Solution {
+    Map&lt;Node, Node&gt; map = new HashMap&lt;&gt;();
+    public Node copyRandomList(Node head) {
+        
+        if (head == null) {
+            return head;
+        }
+        Node cur = head;
+        Node newNode = new Node(cur.val);
+        map.put(head, newNode);
+        
+        Node newCur = newNode;
+        
+        while (cur != null) {
+            newCur.next = getClonedNode(cur.next);
+            newCur.random = getClonedNode(cur.random);
+            cur = cur.next;
+            newCur = newCur.next;
+        }
+        return newNode;
+        
+    }
+    
+    private Node getClonedNode(Node node) {
+        if (node != null) {
+            if (map.containsKey(node)) {
+                return map.get(node);
+            } else {
+                Node newNode = new Node(node.val);
+                map.put(node, newNode);
+                return newNode;
+            }
+        }
+        return null;
+    }
+}
+</code></pre>
+<h2 id="算法8-2">算法8-2</h2>
+<p>上面的代码时间和空间复杂度都是O(n)，这个我们可以有一个算法让空间优化到O(1)。</p>
+<p>你想我们为了保存新旧节点的对应关系，我们使用了字典，有一个对应关系，但是对于链表来说它本身就有一个指针结构。</p>
+<p>这个方法比较取巧。利用链表本身的指针结构next，对于每一个节点在其后插入他的新节点，最后取新节点连成一个新的链表即可。</p>
+<figure data-type="image" tabindex="7"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304021640167.png" alt="img" loading="lazy"></figure>
+<p>思路有了，方向有了，代码就好写了，就是一些链表的插入删除。遍历每一个节点，对他新生成一个影子节点，然后插入在其后。生成影子节点之后，再次遍历，关联random节点。最后将影子节点拆出来。</p>
+<p>这个解法的点在于他更改了输入。对比前一个解法。</p>
+<h2 id="代码8-2">代码8-2</h2>
+<pre><code class="language-java">/*
+// Definition for a Node.
+class Node {
+    int val;
+    Node next;
+    Node random;
+
+    public Node(int val) {
+        this.val = val;
+        this.next = null;
+        this.random = null;
+    }
+}
+*/
+
+class Solution {
+    public Node copyRandomList(Node head) {
+        if (head == null) {
+            return head;
+        }
+        
+        // insert shadow node
+        Node cur = head;
+        while (cur != null) {
+            Node next = cur.next;
+            cur.next = new Node(cur.val);
+            cur.next.next = next;
+            cur = cur.next.next;
+        }
+        
+        // link random
+        cur = head;
+        while (cur != null) {
+            cur.next.random = cur.random != null ? cur.random.next : null;
+            cur = cur.next.next;
+        }
+        
+        // unwave linkedlist;
+        cur = head;
+        Node newCur = head.next;
+        Node newHead = head.next;
+        while (cur != null) {
+            cur.next = cur.next.next;
+            newCur.next = newCur.next != null ? newCur.next.next : null;
+            cur = cur.next;
+            newCur = newCur.next;
+        }
+        return newHead;
+    }
+}
+</code></pre>
+<h2 id="问题9">问题9</h2>
+<h3 id="528-random-pick-with-weight">528. Random Pick with Weight</h3>
+<p>给一组数字，实现一下randomPick，但是这组数字有权重的，所以选择的时候也要参考权重。</p>
+<h2 id="算法9">算法9</h2>
+<p>带权重、轮盘赌、彩票算法这些题目。原来让我们随机选择，那么每个被选中的概率就是1/n，现在有权重，要参考每个的权重。</p>
+<p>这种题目我也是看了参考答案。没想出来这种方法。算法其实就是对每个数字也就是他们自己的权重构建前缀和数组，然后以最大值为边界选取随机数，找到随机数出现在的区域，那个区域的右边界（前缀和的索引）即为返回的结果。</p>
+<p>为什么前缀和呢？这么一看就明了了。我们的随机取数字，就是相当于扔一个石头，落在哪个颜色就选哪个数字。不同的颜色有不同的长度（权重）。</p>
+<figure data-type="image" tabindex="8"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304031139087.jpeg" alt="img" loading="lazy"></figure>
+<p>构建了前缀和，我们就要找生成的随机数落在哪个颜色区间，取区间的边界值。这个题目就成了，给定一个数组，找target值的索引，如果没找到，返回距离他最近的大于他的值的index。最后index 因为是在前缀和数组，给0和预留了一位，所以要把最后的结果减一以对应原来的数组nums。</p>
+<h2 id="代码9">代码9</h2>
+<pre><code class="language-java">class Solution {
+    int[] nums;
+    int[] preSums;
+    Random random = new Random();
+
+    public Solution(int[] w) {
+        nums = w;
+        preSums = new int[w.length+1];
+        for (int i = 1; i &lt;= nums.length; i++) {
+            preSums[i] = preSums[i-1] + nums[i-1];
+        }
+    }
+    
+    public int pickIndex() {
+        int rand = random.nextInt(preSums[preSums.length - 1]) + 1;
+        int left = 0;
+        int right = preSums.length;
+        while (left &lt; right) {
+            int mid = left + (right - left) / 2;
+            if (rand &lt;= preSums[mid]) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left-1;
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(w);
+ * int param_1 = obj.pickIndex();
+ */
+</code></pre>
+<h2 id="参考">参考</h2>
+<ol>
+<li><a href="https://leetcode.cn/circle/article/6ymUZE/">随机数专题总结</a></li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E9%A2%98%E7%9B%AE1">题目1</a>
+<ul>
+<li><a href="#398-random-pick-index">398. Random Pick Index</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AE%97%E6%B3%951-%E7%9B%B4%E6%8E%A5%E9%9A%8F%E6%9C%BA%E6%95%B0">算法1-直接随机数</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%811">代码1</a></li>
+<li><a href="#%E9%A2%98%E7%9B%AE2">题目2</a>
+<ul>
+<li><a href="#384-shuffle-an-array">384. Shuffle an Array</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AE%97%E6%B3%952-%E6%B4%97%E7%89%8C%E7%AE%97%E6%B3%95">算法2-洗牌算法</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%812">代码2</a></li>
+<li><a href="#%E9%A2%98%E7%9B%AE3">题目3</a>
+<ul>
+<li><a href="#398-random-pick-index-2">398. Random Pick Index</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AE%97%E6%B3%953-%E8%93%84%E6%B0%B4%E6%B1%A0%E7%AE%97%E6%B3%95%E9%9A%8F%E6%9C%BA%E9%80%89%E5%8F%96%E4%B8%80%E4%B8%AA">算法3-蓄水池算法（随机选取一个）</a>
+<ul>
+<li><a href="#%E6%95%B0%E5%AD%A6%E6%8E%A8%E5%AF%BC">数学推导</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%A3%E7%A0%813">代码3</a></li>
+<li><a href="#%E9%A2%98%E7%9B%AE4">题目4</a></li>
+<li><a href="#%E7%AE%97%E6%B3%954-%E8%93%84%E6%B0%B4%E6%B1%A0%E7%AE%97%E6%B3%95%E9%9A%8F%E6%9C%BA%E9%80%89%E5%8F%96%E5%A4%9A%E4%B8%AA">算法4-蓄水池算法（随机选取多个）</a>
+<ul>
+<li><a href="#%E6%95%B0%E5%AD%A6%E6%8E%A8%E5%AF%BC-2">数学推导</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%A3%E7%A0%814">代码4</a></li>
+<li><a href="#%E9%A2%98%E7%9B%AE5">题目5</a>
+<ul>
+<li><a href="#382-linked-list-random-node">382. Linked List Random Node</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AE%97%E6%B3%955">算法5</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%815">代码5</a></li>
+<li><a href="#%E9%A2%98%E7%9B%AE6">题目6</a>
+<ul>
+<li><a href="#380-insert-delete-getrandom-o1">380. Insert Delete GetRandom O(1)</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AE%97%E6%B3%956">算法6</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%816">代码6</a></li>
+<li><a href="#%E8%A1%A5%E5%85%85%E8%92%99%E7%89%B9%E5%8D%A1%E6%B4%9B%E9%AA%8C%E8%AF%81%E6%B3%95">补充：蒙特卡洛验证法</a></li>
+<li><a href="#%E9%97%AE%E9%A2%988">问题8</a>
+<ul>
+<li><a href="#138-copy-list-with-random-pointer">138. Copy List with Random Pointer</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AE%97%E6%B3%958">算法8</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%818-1">代码8-1</a></li>
+<li><a href="#%E7%AE%97%E6%B3%958-2">算法8-2</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%818-2">代码8-2</a></li>
+<li><a href="#%E9%97%AE%E9%A2%989">问题9</a>
+<ul>
+<li><a href="#528-random-pick-with-weight">528. Random Pick with Weight</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AE%97%E6%B3%959">算法9</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%819">代码9</a></li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/212-word-search-ii/">
+              <h3 class="post-title">
+                212. Word Search II
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

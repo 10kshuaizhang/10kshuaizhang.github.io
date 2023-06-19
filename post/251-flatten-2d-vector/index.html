@@ -1,0 +1,433 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>251. Flatten 2D Vector | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="251. Flatten 2D Vector | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Question
+This question is about an array containing arrays of varying lengths, and implementing one of its next() method..." />
+    <meta name="keywords" content="Design,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              251. Flatten 2D Vector
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-03-13
+              </span>
+              <span>
+                9 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/gqDyHl5kO/" class="post-tag">
+                  # Design
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="question">Question</h2>
+<p>This question is about an array containing arrays of varying lengths, and implementing one of its <code>next()</code> methods and <code>hasNext()</code> methods. (For two-dimensional arrays, Java itself does not support these two methods)</p>
+<p>It is best to use Java's own Iterator implementation. (ps: this place is rather strange ha, after the topic why this place is rather strange).</p>
+<h2 id="algorithm">Algorithm</h2>
+<p>The first thing I thought was to iterate through the array and the small arrays in it, and just keep taking the numbers out. The first time, I took it for granted that the array was an array with all subarrays of equal length, so I was wrong the first time.</p>
+<p>The second time I tried to implement it, but I couldn't get it right. So I put down this topic for a day.</p>
+<p>This morning when I went to do this question again, referring to his topic said to use iterators to achieve a little, so I did as code 1 in the code, and quickly came out.</p>
+<blockquote>
+<p>This place with the iterator feels redundant, so and the standard answer says that this overall method of changing the input is not good, never change the input is best. And if we only take the data in front, then it is a waste of time to traverse the whole array and save it to the list or iter.</p>
+<p>After reading the discussion, it should be that the original input is an array list, but now it's changed to an array array. So the last sentence with Iterator to achieve this looks abrupt and strange.</p>
+</blockquote>
+<p>So how to optimize or a different way to take the implementation?</p>
+<p>In fact, it's still the same idea I started with on the first day and re-executed it, referring to the standard answer. <code>next()</code> is to keep taking values down, when an array is taken (that is, inner index reaches the length of the current sub-array <code>outer &lt; vector.length &amp;&amp; inner == vector[outer].length</code>), at this time you can let outer index go back one, and set inner to 0, and we'll traverse the new next subarray. The <code>hasNext()</code> method also needs to do some judging and forward work in order to exclude the empty subarrays until it encounters an array with a number or the outer index reaches the end.</p>
+<p>There are two small points of attention here, the first is that he used outer and inner, so than when I first wrote with m, n will be much clearer, reducing the burden of thinking, especially if you have to deal with the relationship between inside and outside when you have a meeting m, n is what. Another point is that this input has an empty array of inputs, and more than one may be consecutive, so there is a step in the checknext or hasNext operation is to skip the content of these no numbers, so this place will have a while loop. If I hadn't read the hint the second time I wrote it, I would have written if.</p>
+<h2 id="code-1">Code 1</h2>
+<pre><code class="language-java">class Vector2D {
+    Iterator iter;
+
+    public Vector2D(int[][] vec) {
+        List&lt;Integer&gt; list = new ArrayList&lt;&gt;();
+        for (int[] vals : vec) {
+            for (int val : vals) {
+                list.add(val);
+            }
+        }
+        iter = list.iterator();
+    }
+    
+    public int next() {
+        return (int) iter.next();
+    }
+    
+    public boolean hasNext() {
+        return iter.hasNext();
+    }
+}
+
+/*
+ * Your Vector2D object will be instantiated and called as such:
+ * Vector2D obj = new Vector2D(vec);
+ * int param_1 = obj.next();
+ * boolean param_2 = obj.hasNext();
+ */
+</code></pre>
+<p>Time complexity.</p>
+<ul>
+<li>constructor: O(N+V), N is the length of all elements, V is the outer index, i.e. the number of subarrays.</li>
+<li><code>next()</code> &amp; <code>hasNext()</code> 😮(1)</li>
+</ul>
+<p>Space complexity.</p>
+<ul>
+<li>Constructor: O(N)</li>
+</ul>
+<h2 id="code-2">Code 2</h2>
+<pre><code class="language-java">class Vector2D {
+    private int[][] vector;
+    int outer;
+    int inner;
+
+    public Vector2D(int[][] vec) {
+        vector = vec;
+        inner = 0;
+        outer = 0;
+    }
+    
+    public int next() {
+        if (hasNext()) {
+            while (outer &lt; vector.length &amp;&amp; inner == vector[outer].length) {
+                outer++;
+                inner = 0;
+            } // this function could be extracted to a common used function;
+            return vector[outer][inner++];
+        }   
+        return 501; // we could throw a NoSuchElementException() here;
+    }
+    
+    public boolean hasNext() {
+        while (outer &lt; vector.length &amp;&amp; inner == vector[outer].length) {
+            outer++;
+            inner = 0;
+        }
+        return outer ! = vector.length;
+    }
+}
+
+/**
+ * Your Vector2D object will be instantiated and called as such:
+ * Vector2D obj = new Vector2D(vec);
+ * int param_1 = obj.next();
+ * boolean param_2 = obj.hasNext();
+ */
+</code></pre>
+<p>Time complexity.</p>
+<ul>
+<li>constructor: O(1)</li>
+<li><code>next()</code> &amp; <code>hasNext()</code> 😮(1)</li>
+</ul>
+<p>Space complexity: O(1), we use a constant order of magnitude of extra space</p>
+<hr>
+<h2 id="题目">题目</h2>
+<p>这个题目是说，一个数组，里面包含长度不一的数组，自己实现他的一个<code>next()</code>方法和<code>hasNext()</code>方法。（对于二维数组，Java本身没有支持这两个方法）</p>
+<p>最好用Java自带的Iterator实现一下。（ps: 这个地方比较奇怪哈，后面讲题目这个地方为什么比较奇怪）。</p>
+<h2 id="解析">解析</h2>
+<p>我最开始的思路是通过遍历数组和其中的小数组，不断地将数字取出来即可。第一遍的时候竟然想当然的将数组当成了一个所有子数组都是长度相当的，所以第一遍就错了。</p>
+<p>第二遍的时候尝试去实现，却是搞不对。所以暂时就放下了一天这个题目。</p>
+<p>今天早上再去做这个题的时候，参照他题目中说用迭代器实现一下，所以就做了如代码1中的代码，很快就出来了。</p>
+<blockquote>
+<p>这个地方用迭代器感觉很多余，所以而且标准答案说这种整体的改变输入的方法不好，永远不要改变输入最好。而且如果是我们只取前面的数据，那遍历整个数组转存到list中或者iter中就是浪费时间。</p>
+<p>后面看了discussion，应该是原来的输入是数组列表，现在改成了数组数组。所以最后一句用Iterator实现这个看起来突兀且奇怪了。</p>
+</blockquote>
+<p>所以怎么优化或者是换一种方法取执行呢？</p>
+<p>其实还是我第一天最开始的思路，重新执行了一遍，参考了标准答案。<code>next()</code>就是不断往下取值，当一个数组取完之后（即inner index达到了当前子数组的长度<code>outer &lt; vector.length &amp;&amp; inner == vector[outer].length</code>），此时可以让outer index向后走一位，并将inner置为0，我们要遍历新的下一个子数组了。<code>hasNext()</code>方法同样为了排除空子数组，需要先做一些判断和前进的工作，直到遇到了有数字的数组或者outer index到达最后。</p>
+<p>这里有两个注意的小点，第一就是他用了outer和inner，这样比我最开始写的时候用m，n会清晰很多，减少了思考的负担，尤其是你有处理内外的关系的时候你还有会议m、n是什么。另外一点就是，这个输入的输入存在着空数组，而且不止一个还可能连续，所以在检查next或者hasNext的时候有一步操作就是要跳过这些没有数字的内容，所以这个地方会有一个while循环。我最第二次写的时候如果没看提示可能会写成if。</p>
+<h2 id="代码1">代码1</h2>
+<pre><code class="language-java">class Vector2D {
+    Iterator iter;
+
+    public Vector2D(int[][] vec) {
+        List&lt;Integer&gt; list = new ArrayList&lt;&gt;();
+        for (int[] vals : vec) {
+            for (int val : vals) {
+                list.add(val);
+            }
+        }
+        iter = list.iterator();
+    }
+    
+    public int next() {
+        return (int) iter.next();
+    }
+    
+    public boolean hasNext() {
+        return iter.hasNext();
+    }
+}
+
+/**
+ * Your Vector2D object will be instantiated and called as such:
+ * Vector2D obj = new Vector2D(vec);
+ * int param_1 = obj.next();
+ * boolean param_2 = obj.hasNext();
+ */
+</code></pre>
+<p>时间复杂度：</p>
+<ul>
+<li>构造函数：O(N+V), N是所有元素的长度，V是outer index，即子数组的数量。</li>
+<li><code>next()</code> &amp; <code>hasNext()</code> 😮(1)</li>
+</ul>
+<p>空间复杂度：</p>
+<ul>
+<li>构造函数： O(N)</li>
+</ul>
+<h2 id="代码2">代码2</h2>
+<pre><code class="language-java">class Vector2D {
+    private int[][] vector;
+    int outer;
+    int inner;
+
+    public Vector2D(int[][] vec) {
+        vector = vec;
+        inner = 0;
+        outer = 0;
+    }
+    
+    public int next() {
+        if (hasNext()) {
+            while (outer &lt; vector.length &amp;&amp; inner == vector[outer].length) {
+                outer++;
+                inner = 0;
+            } // this function could be extracted to a common used function;
+            return vector[outer][inner++];
+        }   
+        return 501; // we could throw a NoSuchElementException() here;
+    }
+    
+    public boolean hasNext() {
+        while (outer &lt; vector.length &amp;&amp; inner == vector[outer].length) {
+            outer++;
+            inner = 0;
+        }
+        return outer != vector.length;
+    }
+}
+
+/**
+ * Your Vector2D object will be instantiated and called as such:
+ * Vector2D obj = new Vector2D(vec);
+ * int param_1 = obj.next();
+ * boolean param_2 = obj.hasNext();
+ */
+</code></pre>
+<p>时间复杂度：</p>
+<ul>
+<li>构造函数：O(1)</li>
+<li><code>next()</code> &amp; <code>hasNext()</code> 😮(1)</li>
+</ul>
+<p>空间复杂度：O(1)，我们使用了常数量级的额外空间</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#question">Question</a></li>
+<li><a href="#algorithm">Algorithm</a></li>
+<li><a href="#code-1">Code 1</a></li>
+<li><a href="#code-2">Code 2</a></li>
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E8%A7%A3%E6%9E%90">解析</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%811">代码1</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%812">代码2</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/system-design-basic-5-the-framework-to-breakdown-system-design-questions/">
+              <h3 class="post-title">
+                System Design Basic 4 - The Framework to breakdown system design questions
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

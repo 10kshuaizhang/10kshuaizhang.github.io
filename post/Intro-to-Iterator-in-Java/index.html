@@ -1,0 +1,317 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Intro to Iterator in Java | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Intro to Iterator in Java | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="
+A iterator is a tool to iterate collections like ArrayList or HashSet. You could import it from java.util.
+The Iterator..." />
+    <meta name="keywords" content="Java" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Intro to Iterator in Java
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-21
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/YyW64XHFs/" class="post-tag">
+                  # Java
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <ol>
+<li>A iterator is a tool to iterate collections like ArrayList or HashSet. You could import it from <code>java.util</code>.</li>
+<li>The <code>Iterator</code> interface has four methods:</li>
+</ol>
+<pre><code class="language-java">public interface Iterator&lt;E&gt; {
+    E next();
+    boolean hasNext();
+    void remove();
+    defalt void forEachRemaining(Consumer&lt;? super E&gt; action);
+}
+</code></pre>
+<ol start="3">
+<li>
+<p>The <code>next()</code> will return next elemet in a collection. But it will throw an NoSuchElementException if you reach the end of a collection.</p>
+</li>
+<li>
+<p>You could use <code>hasNext</code>. This method will return true if there are more elements to visit.</p>
+</li>
+<li>
+<p><code>next()</code> and <code>hasNext()</code> can be used together to inspect each element in a collection.</p>
+<pre><code class="language-java">Collecton&lt;String&gt; c = ...;
+Iterator&lt;String&gt; iter = c.iterator();
+while (iter.hasNext()) {
+    String element = iter.next();
+	...do something with element...
+}
+</code></pre>
+<p>Java compiler will translate the for each loop into a loop with iterator</p>
+<pre><code class="language-java">for (String elements : element) {
+    ...do something with element... 
+}
+</code></pre>
+<p>The Collection interface extends the Iterator interface, so you can use for each loop with any collections in the std.</p>
+</li>
+<li>
+<p>You can call the <code>forEachRemaining</code> with Lambda expression as a susbstitution with loop.</p>
+<pre><code class="language-java">iterator.forEachRemaining(elem -&gt; ...do something with element...);
+</code></pre>
+<blockquote>
+<p>If you traverse an ArrayList, iterator will start from index 0, however, if you traverse through a HashSet, it will be iterate in a random order.</p>
+</blockquote>
+</li>
+<li>
+<p>Difference between iterators in the Java Collections library and iterators in other libraries(C++ etc.).</p>
+<p>Iterator in others library  can be look up via index.</p>
+<p>The only way for Java iterator to look up is to call next. You can think the Java iterator as <em>being between elements</em>.</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202210211846427.png" alt="image-20221019165839127" style="zoom:50%;" />
+</li>
+<li>
+<p>The <code>remove</code> mthod of the iterator interface removes the element that was return by the last call to <code>next</code>. (You need to see the element before you decide this is the one you want to remove.)</p>
+<pre><code class="language-java">Iterator&lt;String&gt; it = c.iterator();
+it.next(); // skip over the first element
+it.remove();
+</code></pre>
+<p>There is a <strong>dependency</strong> betweem the calls to <code>next</code> and <code>remove</code>.</p>
+<p>You can not do this:</p>
+<pre><code class="language-java">ic.remove();
+ic.remove(); // throw an IllegalStatementException
+</code></pre>
+<p>You need do this:</p>
+<pre><code class="language-java">ic.remove();
+ic.next();
+ic.remove();
+</code></pre>
+</li>
+<li>
+<p>Why use iterator or the difference between for (for each) and iterator?</p>
+<blockquote>
+<p>My general rule of thumb is: use the foreach loop, unless you really need capabilities of an Iterator. I would only use for loop with indices with arrays, when I need access to the index inside the loop. -- <a href="https://stackoverflow.com/questions/22267919/iterator-vs-for">Iterator vs for</a></p>
+</blockquote>
+</li>
+</ol>
+<p>Strength or use case: remove while iterating.</p>
+<p>Weakness: readbility and *<em>efficiency</em></p>
+<p>So use for each first if your want to iterate something. Use indexed for loop if you need indeces or loop an array. If you need to remove when iterating, you could use iterator.</p>
+<p><strong>An object should be in control of its own state</strong>. And one situation is that, if the add method has something else before the add in your self defined collection. And you could use iterator to only manipulate the collection.</p>
+<pre><code class="language-java">class MyClass
+{
+    private ArrayList&lt;Item&gt; myList;
+
+    public MyClass()
+    {
+        myList = new ArrayList();
+    }
+
+    public addItem( Item item )
+    {
+         item.doSomething(); // Lets say that this is very important before adding the item to the array.
+         myList.add( item );
+    }
+}
+</code></pre>
+<pre><code class="language-java">public ArrayList getList()
+{
+    return myList;
+}
+</code></pre>
+<p>Somebody could get the reference to myList through this method and add items to the array, <strong>without</strong> calling item.doSomething();</p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/Static-in-Java/">
+              <h3 class="post-title">
+                Static in Java
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

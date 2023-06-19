@@ -1,0 +1,617 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>设计模式之美-课程笔记3 | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="设计模式之美-课程笔记3 | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="理论五：接口vs抽象类的区别？如何用普通的类模拟抽象类和接口？
+什么是接口和抽象类？区别是什么？
+抽象类
+In Java, 看一个例子。Logger是一个记录日志的抽象类，FileLogger和MessageQueueLogger继承Log..." />
+    <meta name="keywords" content="OOD,Design Pattern" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              设计模式之美-课程笔记3
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-05-31
+              </span>
+              <span>
+                12 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/sSLhqMzY-/" class="post-tag">
+                  # OOD
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/d2JaGqwpzA/" class="post-tag">
+                  # Design Pattern
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="理论五接口vs抽象类的区别如何用普通的类模拟抽象类和接口">理论五：接口vs抽象类的区别？如何用普通的类模拟抽象类和接口？</h2>
+<h3 id="什么是接口和抽象类区别是什么">什么是接口和抽象类？区别是什么？</h3>
+<h4 id="抽象类">抽象类</h4>
+<p>In Java, 看一个例子。Logger是一个记录日志的抽象类，FileLogger和MessageQueueLogger继承Logger，分别实现两种不同的日志记录方式：记录到文件和记录到日志消息队列。他们都复用了弗雷中name，enabled，minPermittedLevel属性和log()方法，但是子类写日志的方式不一样所以他们又各自重写了doLog()方法。</p>
+<pre><code class="language-java">// 抽象类
+public abstract class Logger {
+  private String name;
+  private boolean enabled;
+  private Level minPermittedLevel;
+
+  public Logger(String name, boolean enabled, Level minPermittedLevel) {
+    this.name = name;
+    this.enabled = enabled;
+    this.minPermittedLevel = minPermittedLevel;
+  }
+  
+  public void log(Level level, String message) {
+    boolean loggable = enabled &amp;&amp; (minPermittedLevel.intValue() &lt;= level.intValue());
+    if (!loggable) return;
+    doLog(level, message);
+  }
+  
+  protected abstract void doLog(Level level, String message);
+}
+// 抽象类的子类：输出日志到文件
+public class FileLogger extends Logger {
+  private Writer fileWriter;
+
+  public FileLogger(String name, boolean enabled,
+    Level minPermittedLevel, String filepath) {
+    super(name, enabled, minPermittedLevel);
+    this.fileWriter = new FileWriter(filepath); 
+  }
+  
+  @Override
+  public void doLog(Level level, String mesage) {
+    // 格式化level和message,输出到日志文件
+    fileWriter.write(...);
+  }
+}
+// 抽象类的子类: 输出日志到消息中间件(比如kafka)
+public class MessageQueueLogger extends Logger {
+  private MessageQueueClient msgQueueClient;
+  
+  public MessageQueueLogger(String name, boolean enabled,
+    Level minPermittedLevel, MessageQueueClient msgQueueClient) {
+    super(name, enabled, minPermittedLevel);
+    this.msgQueueClient = msgQueueClient;
+  }
+  
+  @Override
+  protected void doLog(Level level, String mesage) {
+    // 格式化level和message,输出到消息中间件
+    msgQueueClient.send(...);
+  }
+}
+</code></pre>
+<p>抽象类的特点</p>
+<ul>
+<li>抽象类不允许被实例化，只能被继承。</li>
+<li>抽象类可以包含属性和方法，方法既可以包含实现，也可以不包含（抽象方法）</li>
+<li>子类继承抽象类，必须重写抽象类中的抽象方法。例子中就是Logger类的doLog()方法。</li>
+</ul>
+<h4 id="接口">接口</h4>
+<p>一个经典使用场景：FIlter</p>
+<pre><code class="language-java">// 接口
+public interface Filter {
+  void doFilter(RpcRequest req) throws RpcException;
+}
+// 接口实现类：鉴权过滤器
+public class AuthencationFilter implements Filter {
+  @Override
+  public void doFilter(RpcRequest req) throws RpcException {
+    //...鉴权逻辑..
+  }
+}
+// 接口实现类：限流过滤器
+public class RateLimitFilter implements Filter {
+  @Override
+  public void doFilter(RpcRequest req) throws RpcException {
+    //...限流逻辑...
+  }
+}
+// 过滤器使用Demo
+public class Application {
+  // filters.add(new AuthencationFilter());
+  // filters.add(new RateLimitFilter());
+  private List&lt;Filter&gt; filters = new ArrayList&lt;&gt;();
+  
+  public void handleRpcRequest(RpcRequest req) {
+    try {
+      for (Filter filter : filters) {
+        filter.doFilter(req);
+      }
+    } catch(RpcException e) {
+      // ...处理过滤结果...
+    }
+    // ...省略其他处理逻辑...
+  }
+}
+</code></pre>
+<p>这是一个比较典型的接口使用场景。我们通过Java中的interface定义了一个Filter接口，AuthenticaionFilter和RateLimitFilter是接口的两个实现类，分别实现了对RPC的请求及安全和限流的过滤功能。</p>
+<ul>
+<li>接口不能包含属性（成员变量）；</li>
+<li>接口只能声明方法，方法不能包含实现；</li>
+<li>类实现接口的时候，必须实现接口声明的所有方法。</li>
+</ul>
+<h4 id="区别">区别</h4>
+<p>从语法特性上来说，他们有一定的区别：抽象类中可以定义属性和方法的实现，而接口却不可。从设计上，抽象类与其子类是is-a的关系；而接口表示一种has-a的关系，表示<strong>具有某些功能。</strong>(也有人建议接口的关系是behave like)</p>
+<h4 id="解决的问题">解决的问题</h4>
+<ol>
+<li>
+<p>继承本身也可以实现代码的复用，为什么还需要抽象类呢？</p>
+</li>
+<li>
+<p>举例Logger抽象类</p>
+<pre><code class="language-java">// 父类：非抽象类，就是普通的类. 删除了log(),doLog()，新增了isLoggable().
+public class Logger {
+  private String name;
+  private boolean enabled;
+  private Level minPermittedLevel;
+
+  public Logger(String name, boolean enabled, Level minPermittedLevel) {
+    //...构造函数不变，代码省略...
+  }
+
+  protected boolean isLoggable() {
+    boolean loggable = enabled &amp;&amp; (minPermittedLevel.intValue() &lt;= level.intValue());
+    return loggable;
+  }
+}
+// 子类：输出日志到文件
+public class FileLogger extends Logger {
+  private Writer fileWriter;
+
+  public FileLogger(String name, boolean enabled,
+    Level minPermittedLevel, String filepath) {
+    //...构造函数不变，代码省略...
+  }
+  
+  public void log(Level level, String mesage) {
+    if (!isLoggable()) return;
+    // 格式化level和message,输出到日志文件
+    fileWriter.write(...);
+  }
+}
+// 子类: 输出日志到消息中间件(比如kafka)
+public class MessageQueueLogger extends Logger {
+  private MessageQueueClient msgQueueClient;
+  
+  public MessageQueueLogger(String name, boolean enabled,
+    Level minPermittedLevel, MessageQueueClient msgQueueClient) {
+    //...构造函数不变，代码省略...
+  }
+  
+  public void log(Level level, String mesage) {
+    if (!isLoggable()) return;
+    // 格式化level和message,输出到消息中间件
+    msgQueueClient.send(...);
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>代码复用达到了，但是没有多态了，大家都一样的方法和变量。那么我们在父类写一个空方法doLog()然后在子类重写他呢？</p>
+</li>
+<li>
+<p>可以，不如之前的抽象类优雅。</p>
+<ol>
+<li>空方法影响代码的可读性，如果没有注释，或者不了解子类Logger和父类的关系，就不太好知道这个空方法是在做什么；</li>
+<li>可能会忘记实现空方法，导致后续调用的时候产生不预期的结果。</li>
+<li>Logger可以被实例化，空方法也可以被调用，同样空方法被调用后也会产生不预期结果。（这个点可以通过设置私有构造函数解决）。</li>
+</ol>
+</li>
+<li>
+<p>接口侧重于解耦。调用者只需关注接口，不需了解实现。降低代码的耦合性。</p>
+</li>
+</ol>
+<h3 id="如何模拟抽象类和接口">如何模拟抽象类和接口？</h3>
+<ol>
+<li>
+<p>只要不定义成员变量，没有方法实现，使用接口的类必须实现所有方法，这样就可以称为接口。</p>
+<ol>
+<li>
+<p>在C++中，定义虚拟方法，不定义变量，也可实现接口。</p>
+</li>
+<li>
+<p>在普通类中，比如主动在方法中抛出异常，迫使实现（子类）类中重写。</p>
+<ol>
+<li>
+<p>包外部可能会实例化这个类-&gt; 使用protected关键字修饰</p>
+</li>
+<li>
+<p>包内部还是会实例化这个类-&gt; 参照Guava中@VisibleForTesting注解的做法，自定义一个注解，人为表明不可实例化。</p>
+<blockquote>
+<p><code>@VisibleForTesting</code>会将方法的private修饰符改成protected；</p>
+</blockquote>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="如何决定该使用哪个">如何决定该使用哪个？</h3>
+<p>就看你要实现的关系是is-a还是has-a。</p>
+<p>接口是自下向上，先设计接口（行为）再去考虑具体实现；抽象类是自顶向下，先设计父类的“形象”，再去继承实现。</p>
+<h2 id="理论六为什么基于接口而非实现编程有必要为每个类都定义接口吗">理论六：为什么基于接口而非实现编程？有必要为每个类都定义接口吗？</h2>
+<h3 id="如何解读原则中的接口">如何解读原则中的“接口”</h3>
+<ol>
+<li>不要局限于某个编程语言（例如不是专指Java中的<code>interface</code>）</li>
+<li>本质上是一组协议或者约定（服务端和客户端的接口，或通信协议中的接口，编程中的接口）</li>
+<li>区别于其它接口，<strong><u>编程中的接口可以理解为接口或者抽象类</u></strong>。</li>
+<li>接口与实现分离， 封装实现后，只暴露稳定接口。上游系统面向接口编程，不依赖不稳定的细节。当实现发生变化，依赖的代码几乎不需要改动，<u>降低了耦合，提升了扩展性。</u></li>
+<li>另一个表述方式是“基于抽象编程”。
+<ol>
+<li>软件开发中，需求不断变化或者迭代。</li>
+<li>越抽象，越顶层，能脱离某一具体实现，越可以提升灵活性，应对变化。</li>
+<li>好的代码，要适当考虑未来的变化以及应对。</li>
+</ol>
+</li>
+</ol>
+<h3 id="如何应用到实战中">如何应用到实战中</h3>
+<blockquote>
+<p>假设我们的系统中有很多涉及图片处理和存储的业务逻辑。图片经过处理之后被上传到阿里云上。为了代码复用，我们封装了图片存储相关的代码逻辑，提供了一个统一的 AliyunImageStore 类，供整个系统来使用。具体的代码实现如下所示：</p>
+</blockquote>
+<pre><code class="language-java">public class AliyunImageStore {
+  //...省略属性、构造函数等...
+  
+  public void createBucketIfNotExisting(String bucketName) {
+    // ...创建bucket代码逻辑...
+    // ...失败会抛出异常..
+  }
+  
+  public String generateAccessToken() {
+    // ...根据accesskey/secrectkey等生成access token
+  }
+  
+  public String uploadToAliyun(Image image, String bucketName, String accessToken) {
+    //...上传图片到阿里云...
+    //...返回图片存储在阿里云上的地址(url）...
+  }
+  
+  public Image downloadFromAliyun(String url, String accessToken) {
+    //...从阿里云下载图片...
+  }
+}
+
+// AliyunImageStore类的使用举例
+public class ImageProcessingJob {
+  private static final String BUCKET_NAME = &quot;ai_images_bucket&quot;;
+  //...省略其他无关代码...
+  
+  public void process() {
+    Image image = ...; //处理图片，并封装为Image对象
+    AliyunImageStore imageStore = new AliyunImageStore(/*省略参数*/);
+    imageStore.createBucketIfNotExisting(BUCKET_NAME);
+    String accessToken = imageStore.generateAccessToken();
+    imagestore.uploadToAliyun(image, BUCKET_NAME, accessToken);
+  }
+  
+}
+</code></pre>
+<ol>
+<li>
+<p>整个上传流程包含三个步骤：创建 bucket（你可以简单理解为存储目录）、生成 access token 访问凭证、携带 access token 上传图片到指定的 bucket 中。代码实现非常简单，类中的几个方法定义得都很干净，用起来也很清晰，乍看起来没有太大问题，完全能满足我们将图片存储在阿里云的业务需求。</p>
+</li>
+<li>
+<p>时过境迁，我们自建私有云，并将服务迁移到自己的云上。那我们的代码该如何修改？</p>
+<ol>
+<li>Option1: 我们新建一个<code>PrivateImageStore</code>类，全局替换<code>AliyunImageStore</code>类对象，然后还需要做一些其他的改动。例如我们要实现AliyunImageStore中所有的公有方法。
+<ol>
+<li>问题在于：1. 有的方法暴露了实现细节，比如uploadToAliyun() 和 downloadFromAliyun()。再照搬到新的类中显然已经不太合适。但是如果要修改方法名称，全局中所有使用到这两个方法的地方都要改。2. 存储流程可能私有云和公有云并不一致。例如私有因不需要access token，那其实不需要照抄generateAccessToken这个方法。那改到私有云，整个流程中用到这个方法的地方也都要调整。</li>
+</ol>
+</li>
+<li>如何解决这个问题？根本解决方法就是基于接口编程。
+<ol>
+<li>函数命名不要暴露实现细节。</li>
+<li>封装具体的实现细节。比如跟阿里云相关的特殊上传下载流程不应该暴露给调用者。对外只提供包含所有上传或者下载细节的方法以供调用者使用。</li>
+<li>为实现类提供统一抽象的接口。不依赖具体实现类。</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p>重构之后：</p>
+<pre><code class="language-java">public interface ImageStore {
+  String upload(Image image, String bucketName);
+  Image download(String url);
+}
+
+public class AliyunImageStore implements ImageStore {
+  //...省略属性、构造函数等...
+
+  public String upload(Image image, String bucketName) {
+    createBucketIfNotExisting(bucketName);
+    String accessToken = generateAccessToken();
+    //...上传图片到阿里云...
+    //...返回图片在阿里云上的地址(url)...
+  }
+
+  public Image download(String url) {
+    String accessToken = generateAccessToken();
+    //...从阿里云下载图片...
+  }
+
+  private void createBucketIfNotExisting(String bucketName) {
+    // ...创建bucket...
+    // ...失败会抛出异常..
+  }
+
+  private String generateAccessToken() {
+    // ...根据accesskey/secrectkey等生成access token
+  }
+}
+
+// 上传下载流程改变：私有云不需要支持access token
+public class PrivateImageStore implements ImageStore  {
+  public String upload(Image image, String bucketName) {
+    createBucketIfNotExisting(bucketName);
+    //...上传图片到私有云...
+    //...返回图片的url...
+  }
+
+  public Image download(String url) {
+    //...从私有云下载图片...
+  }
+
+  private void createBucketIfNotExisting(String bucketName) {
+    // ...创建bucket...
+    // ...失败会抛出异常..
+  }
+}
+
+// ImageStore的使用举例
+public class ImageProcessingJob {
+  private static final String BUCKET_NAME = &quot;ai_images_bucket&quot;;
+  //...省略其他无关代码...
+  
+  public void process() {
+    Image image = ...;//处理图片，并封装为Image对象
+    ImageStore imageStore = new PrivateImageStore(...);
+    imagestore.upload(image, BUCKET_NAME);
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>**<u>要避免一种思维：希望通过实现类来反推接口。这会导致接口不够抽象，依赖具体实现，这样的话基于接口的编程没有意义了。</u>**要辩证的看这个思路，不要一概照搬实现类中的方法。</p>
+</li>
+<li>
+<p>接口只定义应该做什么，不是怎么做。</p>
+</li>
+</ol>
+<h3 id="是否要为每个类定义接口">是否要为每个类定义接口</h3>
+<ol>
+<li>
+<p>尺度，不要过度设计，徒增复杂度和负担。</p>
+</li>
+<li>
+<p>从设计初衷来看：</p>
+<blockquote>
+<p>将接口和实现相分离，封装不稳定的实现，暴露稳定的接口。上游系统面向接口而非实现编程，不依赖不稳定的实现细节，这样当实现发生变化的时候，上游系统的代码基本上不需要做改动，以此来降低代码间的耦合性，提高代码的扩展性。</p>
+</blockquote>
+<p>如果一个功能只有一种实现方式，且为了也不会被替换，那就没必要设计接口。</p>
+</li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E7%90%86%E8%AE%BA%E4%BA%94%E6%8E%A5%E5%8F%A3vs%E6%8A%BD%E8%B1%A1%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB%E5%A6%82%E4%BD%95%E7%94%A8%E6%99%AE%E9%80%9A%E7%9A%84%E7%B1%BB%E6%A8%A1%E6%8B%9F%E6%8A%BD%E8%B1%A1%E7%B1%BB%E5%92%8C%E6%8E%A5%E5%8F%A3">理论五：接口vs抽象类的区别？如何用普通的类模拟抽象类和接口？</a>
+<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%8E%A5%E5%8F%A3%E5%92%8C%E6%8A%BD%E8%B1%A1%E7%B1%BB%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88">什么是接口和抽象类？区别是什么？</a>
+<ul>
+<li><a href="#%E6%8A%BD%E8%B1%A1%E7%B1%BB">抽象类</a></li>
+<li><a href="#%E6%8E%A5%E5%8F%A3">接口</a></li>
+<li><a href="#%E5%8C%BA%E5%88%AB">区别</a></li>
+<li><a href="#%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98">解决的问题</a></li>
+</ul>
+</li>
+<li><a href="#%E5%A6%82%E4%BD%95%E6%A8%A1%E6%8B%9F%E6%8A%BD%E8%B1%A1%E7%B1%BB%E5%92%8C%E6%8E%A5%E5%8F%A3">如何模拟抽象类和接口？</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E5%86%B3%E5%AE%9A%E8%AF%A5%E4%BD%BF%E7%94%A8%E5%93%AA%E4%B8%AA">如何决定该使用哪个？</a></li>
+</ul>
+</li>
+<li><a href="#%E7%90%86%E8%AE%BA%E5%85%AD%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9F%BA%E4%BA%8E%E6%8E%A5%E5%8F%A3%E8%80%8C%E9%9D%9E%E5%AE%9E%E7%8E%B0%E7%BC%96%E7%A8%8B%E6%9C%89%E5%BF%85%E8%A6%81%E4%B8%BA%E6%AF%8F%E4%B8%AA%E7%B1%BB%E9%83%BD%E5%AE%9A%E4%B9%89%E6%8E%A5%E5%8F%A3%E5%90%97">理论六：为什么基于接口而非实现编程？有必要为每个类都定义接口吗？</a>
+<ul>
+<li><a href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E8%AF%BB%E5%8E%9F%E5%88%99%E4%B8%AD%E7%9A%84%E6%8E%A5%E5%8F%A3">如何解读原则中的“接口”</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E5%BA%94%E7%94%A8%E5%88%B0%E5%AE%9E%E6%88%98%E4%B8%AD">如何应用到实战中</a></li>
+<li><a href="#%E6%98%AF%E5%90%A6%E8%A6%81%E4%B8%BA%E6%AF%8F%E4%B8%AA%E7%B1%BB%E5%AE%9A%E4%B9%89%E6%8E%A5%E5%8F%A3">是否要为每个类定义接口</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/341-flatten-nested-list-iterator/">
+              <h3 class="post-title">
+                341. Flatten Nested List Iterator
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

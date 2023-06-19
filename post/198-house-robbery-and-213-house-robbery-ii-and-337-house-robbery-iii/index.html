@@ -1,0 +1,589 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>198. House Robbery &amp; 213. House Robbery II &amp; 337. House Robbery III | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="198. House Robbery &amp; 213. House Robbery II &amp; 337. House Robbery III | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="问题1
+就是说有一排房子，每个里面都有一定价值的财物，有一个小偷要依次路过每个房子偷东西，但是不能两个房子连着偷不然就会触发报警。 那么在这种限制下，能够偷到的最大价值是多少。
+解析1
+这个题举个例子，从第一栋房子的话，小偷的选项就有偷或者..." />
+    <meta name="keywords" content="Dynamic Programming,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              198. House Robbery &amp; 213. House Robbery II &amp; 337. House Robbery III
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-02-18
+              </span>
+              <span>
+                18 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/8XHIFnHCE/" class="post-tag">
+                  # Dynamic Programming
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="问题1">问题1</h2>
+<p>就是说有一排房子，每个里面都有一定价值的财物，有一个小偷要依次路过每个房子偷东西，但是不能两个房子连着偷不然就会触发报警。 那么在这种限制下，能够偷到的最大价值是多少。</p>
+<h2 id="解析1">解析1</h2>
+<p>这个题举个例子，从第一栋房子的话，小偷的选项就有偷或者不偷，这个是随机的。但是对于下一栋房子，是有限制的，根据题意，不能连着偷。所以如果前面的偷了紧接着后面的这个就一定不可偷；如果前面的没有偷，那么后面紧跟的这个就没有限制，就可以选择偷或者不偷。依次往后的房子都遵循此规则。</p>
+<p>从描述中可以看出，本次的偷盗的收获结果就是根据之前的偷的结果，和本间房子里财物的价值决定的。这是具有子问题性质的。所以可以试着用动态规划来做。</p>
+<p>首先依据最终要求的结果定义<strong>状态</strong>，那就是最终的结果是<code>dp[n]</code>, n就是最后一个房子的index。另外我们并不能确定最后一栋房子是否被偷，所以我们可以再给状态做一个分类，<code>dp[i][0] &amp; dp[i][1]</code>, 第二个维度为0表示没被偷，第二个维度为1表示被偷了。最终在通过最后一栋房子后计算最后一个房子被偷与没被偷之后的最大值，即我们最终所求。</p>
+<p><strong>初始化</strong>，第一栋房子没被偷那么<code>dp[0][0] = 0</code>， 第一栋房子被偷，则<code>dp[0][1] = nums[0]</code>。</p>
+<p><strong>转移公式。</strong> 根据我们的定义，分没被偷和被偷两种情况来讨论。当前房子不偷，那么他的结果可以由之前房子没被偷或者被偷的结果来推导。<code>dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1]);</code>，当前房子被偷，那么此时小偷的获得最大的价值只能是根据前面的房子没被偷的情况来推导，<code>dp[i][1] = dp[i - 1][0]</code>。</p>
+<h2 id="代码1">代码1</h2>
+<pre><code class="language-java">class Solution {
+    public int rob(int[] nums) {
+        if (nums == null || nums.length == 0) return 0;
+        int dp[0][0] = 0;
+        int dp[0][1] = nums[0];
+        
+        for (int i = 1; i &lt; nums.length; i++) {
+            dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1]);
+            dp[i][1] = dp[i - 1][0]
+        }
+        
+        return Math.max(dp[i][0], dp[i][1]);
+    }
+}
+</code></pre>
+<h2 id="优化1">优化1</h2>
+<p>根据之前的代码，可以看出当次的状态结果只跟上次有关，所以我们只需要保留之前的一次的结果即可。所以小口诀就是：二维化一维，一维化固定。因为0和1表示的是偷盗状态只有两种，所以可以被我们直接展开。</p>
+<pre><code class="language-java">class Solution {
+    public int rob(int[] nums) {
+        if (nums == null || nums.length == 0) return 0;
+        int dp_0 = 0;
+        int dp_1 = nums[0];
+        
+        for (int i = 1; i &lt; nums.length; i++) {
+            int temp = dp_0;
+            dp_0 = Math.max(dp_0, dp_1);
+            dp_1 = temp + nums[i];
+        }
+        
+        return Math.max(dp_0, dp_1);
+    }
+}
+</code></pre>
+<hr>
+<h2 id="问题2">问题2</h2>
+<p>这个题说是有个环，所以我们需要考虑第一个和最后一个房子偷盗情况的制约。因为之前从第一个开始，他前面什么也没有，所以偷与不偷都是可选的，但是现在如果房子成环，那么如果第一个房子被偷的话，那么他前一个（就是最后一个）房子一定不可以被偷；如果他没被偷，他前面的房子就没限制。</p>
+<h2 id="解析2">解析2</h2>
+<p>这个题就是将偷第一个和不偷第一个房子分类讨论即可。不偷第一个房子，那么对于最后一个（即第一个的前一个）房子是没有限制的；但是偷了第一个，最后一个一定不可以偷，所以最后的结果就不能是偷与不偷的情况取最大值，而只能是不偷的情况的值。</p>
+<h2 id="代码2">代码2</h2>
+<p>House Rebbery一的代码分类即可。</p>
+<pre><code class="language-java">class Solution {
+    public int rob(int[] nums) {
+        if (nums == null || nums.length == 0) return 0;
+        // not steal first 
+        int res1 = 0;
+
+        int dp_0 = 0; // 不偷第一个的话，那么初始化的第一个结果就一定是0
+        int dp_1 = 0; // 不偷第一个的话，那么初始化的第一个结果就一定是0
+        
+        for (int i = 1; i &lt; nums.length; i++) {
+            int temp = dp_0;
+            dp_0 = Math.max(dp_0, dp_1);
+            dp_1 = temp + nums[i];
+        }
+        
+        res1 = Math.max(dp_0, dp_1);
+        
+         // steal first 
+        int res2 = 0;
+
+        dp_0 = nums[0]; // 偷第一个的话，那么初始化的偷完第一栋房子的结果就一定是1
+        dp_1 = nums[0]; // 偷第一个的话，那么初始化的偷完第一栋房子的结果就一定是1
+        
+        
+        for (int i = 1; i &lt; nums.length; i++) {
+            if (i == 1) {
+                continue;
+            }
+            int temp = dp_0;
+            dp_0 = Math.max(dp_0, dp_1);
+            dp_1 = temp + nums[i];
+        }
+        
+        res2 = dp_0;
+        
+        return Math.max(res1, res2);
+    }
+}
+</code></pre>
+<hr>
+<h2 id="问题3">问题3</h2>
+<p>还是这个问题，房子的分布从第一题的线段变成环到现在变成二叉树了。同样的限制不能连着偷。问能够偷到的最大价值是多少。</p>
+<h2 id="解析3">解析3</h2>
+<p>这个题思路和第一题是一样的。但是最后没有想出来代码怎么去构造。以下给出的是参考答案的构造方法，使用了一些递归的小技巧。此处可以看到二叉树后续遍历的影子。</p>
+<p>一般这种情况我们需要左边的结果和右边的结果作为后续步骤的一个变量，那么我们需要先遍历取求取结果后再对当前节点进行操作。同样的转移公式，结果是偷与不偷当前的节点的最大值。</p>
+<p>当前节点不偷，那么它的结果源于左孩子（偷或不偷的综合结果）和右孩子的结果（偷或不偷的综合结果）的和；当前的节点偷，那么它的结果就是左右孩子不偷的结果的和，加上当前节点的值。</p>
+<h2 id="代码3">代码3</h2>
+<pre><code class="language-java">/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int rob(TreeNode root) {
+        int[] res = helper(root);
+        return Math.max(res[0], res[1]);
+    }
+    
+    private int[] helper(TreeNode root) {
+        int[] res = new int[2];
+        if (root == null) {
+            return res;
+        }
+        int[] left = helper(root.left);
+        int[] right = helper(root.right);
+        
+        res[0] = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
+        res[1] = root.val + left[0] + right[0];
+        
+        return res;
+    } 
+}
+</code></pre>
+<h2 id="代码4">代码4</h2>
+<p>其实根据我之前的一些提交记录来看，还有一种思想类似但是写出来完全不一样的代码方式。</p>
+<pre><code class="language-java">/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int rob(TreeNode root) {
+        if (root == null) return 0;
+        int val = 0;
+        
+        // left grandsons' results
+        if (root.left != null) {
+            val += rob(root.left.left) + rob(root.left.right);
+        } 
+        // right grandsons' results
+        if (root.right != null) {
+            val += rob(root.right.left) + rob(root.right.right);
+        }
+        // choose from steal current node and not rob current node
+        return Math.max(val + root.val, rob(root.left) + rob(root.right));
+    } 
+}
+</code></pre>
+<p>这个写法很巧妙，利用递归隐藏了很多复杂的东西，按照题意把一个节点的当前的选择写出来即可。这道题的代码就是，我也是从偷与不偷当前节点的结果里面选。偷当前节点的话他的左孩子和右孩子（如果有的话）都不能偷，那就是左边的孙子偷与不偷的结果和右边的孙子偷与不偷的结果之和加上他当前的值；不偷就是他的左右孩子的结果之和。最后两种比较取最大值即可。妙啊。</p>
+<hr>
+<h2 id="question-1">Question 1</h2>
+<p>It means that there is a row of houses, each with a certain value of belongings inside, and a thief has to pass by each house in turn to steal something, but not two houses in a row or else the alarm will be triggered. So what is the maximum value that can be stolen under this restriction.</p>
+<h2 id="solution-1">Solution 1</h2>
+<p>This question is an example, from the first house, the thief's options are to steal or not to steal, this is random. But for the next house, there is a limit, according to the question, can not be stolen in a row. So if the front steal immediately after this one must not steal; if the front did not steal, then the immediately following this one has no restrictions, so you can choose to steal or not steal. This rule is followed by the next house in order.</p>
+<p>As you can see from the description, the result of the current theft is based on the result of the previous theft and the value of the belongings in the house. This is of sub-problem nature. So you can try to do it with dynamic programming.</p>
+<p>First define <strong>state</strong> based on the final required result, that is the final result is <code>dp[n]</code>, n is the index of the last house. in addition we are not sure whether the last house was stolen or not, so we can make another classification for the state, <code>dp[i][0] &amp; dp[i][1]</code>, the second dimension is 0 means it was not stolen, the second dimension is 1 indicates that it was stolen. Eventually after passing the last house the maximum value after the last house is stolen and not stolen is calculated, which is what we end up with.</p>
+<p><strong>Initialization</strong>, the first house is not stolen then <code>dp[0][0] = 0</code>, the first house is stolen then <code>dp[0][1] = nums[0]</code>.</p>
+<p>** Transfer formula. ** According to our definition, it is discussed in two cases: not stolen and stolen. The current house is not stolen, then his result can be deduced from the result of the previous house not stolen or stolen. <code>dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1]);</code>, the current house is stolen, then at this point the thief's get the maximum value can only be derived from the previous house not stolen, <code>dp[i][1] = dp[i - 1][0]</code>.</p>
+<h2 id="code-1">Code 1</h2>
+<pre><code class="language-java">class Solution {
+    public int rob(int[] nums) {
+        if (nums == null || nums.length == 0) return 0;
+        int dp[0][0] = 0;
+        int dp[0][1] = nums[0];
+        
+        for (int i = 1; i &lt; nums.length; i++) {
+            dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1]);
+            dp[i][1] = dp[i - 1][0]
+        }
+        
+        return Math.max(dp[i][0], dp[i][1]);
+    }
+}
+</code></pre>
+<h2 id="optimization-1">Optimization 1</h2>
+<p>According to the previous code, we can see that the current state result is only related to the last time, so we only need to keep the result of the previous one. So the little mnemonic is: two-dimensional to one-dimensional, one-dimensional to fixed. Because 0 and 1 indicate that there are only two kinds of theft states, so they can be expanded by us directly.</p>
+<pre><code class="language-java">class Solution {
+    public int rob(int[] nums) {
+        if (nums == null || nums.length == 0) return 0;
+        int dp_0 = 0;
+        int dp_1 = nums[0];
+        
+        for (int i = 1; i &lt; nums.length; i++) {
+            int temp = dp_0;
+            dp_0 = Math.max(dp_0, dp_1);
+            dp_1 = temp + nums[i];
+        }
+        
+        return Math.max(dp_0, dp_1);
+    }
+}
+</code></pre>
+<hr>
+<h2 id="problem-2">Problem 2</h2>
+<p>This question says that there is a ring, so we need to consider the constraints of the first and last house theft situation. Because before, starting with the first one, there was nothing in front of him, so stealing or not stealing was optional, but now if the houses are in a ring, then if the first house is stolen, then the house before him (which is the last one) must not be stolen; if he is not stolen, the house before him is not constrained.</p>
+<h2 id="solution-2">Solution 2</h2>
+<p>This question is to classify the discussion between stealing the first house and not stealing the first house. If you don't steal the first house, then there is no restriction on the last (i.e., the one before the first) house; but if you steal the first one, the last one must not be stolen, so the final result can't be the maximum value of the case of stealing or not stealing, but only the value of the case of not stealing.</p>
+<h2 id="code-2">Code 2</h2>
+<p>House Rebbery I code classification can be.</p>
+<pre><code class="language-java">class Solution {
+    public int rob(int[] nums) {
+        if (nums == null || nums.length == 0) return 0;
+        // not steal first 
+        int res1 = 0;
+
+        int dp_0 = 0; // not steal the first, then the first result of the initialization must be 0
+        int dp_1 = 0; // not steal first, then the first result of the initialization must be 0
+        
+        for (int i = 1; i &lt; nums.length; i++) {
+            int temp = dp_0;
+            dp_0 = Math.max(dp_0, dp_1);
+            dp_1 = temp + nums[i];
+        }
+        
+        res1 = Math.max(dp_0, dp_1);
+        
+         // steal first 
+        int res2 = 0;
+
+        dp_0 = nums[0]; // if you steal the first one, then the initialized result after stealing the first house must be 1
+        dp_1 = nums[0]; // If you steal the first one, then the initialized result of stealing the first house must be 1
+        
+        
+        for (int i = 1; i &lt; nums.length; i++) {
+            if (i == 1) {
+                continue;
+            }
+            int temp = dp_0;
+            dp_0 = Math.max(dp_0, dp_1);
+            dp_1 = temp + nums[i];
+        }
+        
+        res2 = dp_0;
+        
+        return Math.max(res1, res2);
+    }
+}
+</code></pre>
+<hr>
+<h2 id="problem-3">Problem 3</h2>
+<p>Still the same problem, the distribution of houses has changed from a line segment into a ring in the first problem to a binary tree now. The same restriction cannot be stolen in a row. Ask what is the maximum value that can be stolen.</p>
+<h2 id="solution-3">Solution 3</h2>
+<p>The idea of this question is the same as the first one. But in the end, I didn't figure out how to construct the code. The following is the construction method of the reference answer, using some recursive tricks. Here you can see the shadow of the subsequent traversal of the binary tree.</p>
+<p>Generally this situation we need the result on the left and the result on the right as a variable in the subsequent steps, then we need to traverse first to get the result and then operate on the current node. The same transfer formula, the result is the maximum value of the node that steals and does not steal the current node.</p>
+<p>The current node does not steal, then its result stems from the sum of the results of the left child (the combined result of steal or not steal) and the right child (the combined result of steal or not steal); the current node steals, then its result is the sum of the results of the left and right children not steal, plus the value of the current node.</p>
+<h2 id="code-3">Code 3</h2>
+<pre><code class="language-java">/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode() {}
+ * TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) {
+ * this.val = val;
+ * this.left = left;
+ * this.right = right;
+ * }
+ * }
+ */
+class Solution {
+    public int rob(TreeNode root) {
+        int[] res = helper(root);
+        return Math.max(res[0], res[1]);
+    }
+    
+    private int[] helper(TreeNode root) {
+        int[] res = new int[2];
+        if (root == null) {
+            return res;
+        }
+        int[] left = helper(root.left);
+        int[] right = helper(root.right);
+        
+        res[0] = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
+        res[1] = root.val + left[0] + right[0];
+        
+        return res;
+    } 
+}
+</code></pre>
+<h2 id="code-4">Code 4</h2>
+<p>Actually, based on some of my previous commits, there is another way of writing code that is similar in thought but completely different.</p>
+<pre><code class="language-java">/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode() {}
+ * TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) {
+ * this.val = val;
+ * this.left = left;
+ * this.right = right;
+ * }
+ * }
+ */
+class Solution {
+    public int rob(TreeNode root) {
+        if (root == null) return 0;
+        int val = 0;
+        
+        // left grandsons' results
+        if (root.left ! = null) {
+            val += rob(root.left.left) + rob(root.left.right);
+        } 
+        // right grandsons' results
+        if (root.right ! = null) {
+            val += rob(root.right.left) + rob(root.right.right);
+        }
+        // choose from steal current node and not rob current node
+        return Math.max(val + root.val, rob(root.left) + rob(root.right));
+    } 
+}
+</code></pre>
+<p>This is a clever way of writing, using recursion to hide a lot of complexity, just write out the current choice of a node as the question suggests. The code for this problem is that I also choose from the result of stealing or not stealing the current node. Steal the current node, his left child and right child (if any) can not steal, that is, the left grandson to steal and not steal the result and the right grandson to steal and not steal the result of the sum of his current value; not to steal is the sum of the results of his left and right children. The last two comparisons take the maximum value. Wonderful.</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E9%97%AE%E9%A2%981">问题1</a></li>
+<li><a href="#%E8%A7%A3%E6%9E%901">解析1</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%811">代码1</a></li>
+<li><a href="#%E4%BC%98%E5%8C%961">优化1</a></li>
+<li><a href="#%E9%97%AE%E9%A2%982">问题2</a></li>
+<li><a href="#%E8%A7%A3%E6%9E%902">解析2</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%812">代码2</a></li>
+<li><a href="#%E9%97%AE%E9%A2%983">问题3</a></li>
+<li><a href="#%E8%A7%A3%E6%9E%903">解析3</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%813">代码3</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%814">代码4</a></li>
+<li><a href="#question-1">Question 1</a></li>
+<li><a href="#solution-1">Solution 1</a></li>
+<li><a href="#code-1">Code 1</a></li>
+<li><a href="#optimization-1">Optimization 1</a></li>
+<li><a href="#problem-2">Problem 2</a></li>
+<li><a href="#solution-2">Solution 2</a></li>
+<li><a href="#code-2">Code 2</a></li>
+<li><a href="#problem-3">Problem 3</a></li>
+<li><a href="#solution-3">Solution 3</a></li>
+<li><a href="#code-3">Code 3</a></li>
+<li><a href="#code-4">Code 4</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/887-egg-drop/">
+              <h3 class="post-title">
+                887. Egg Drop
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

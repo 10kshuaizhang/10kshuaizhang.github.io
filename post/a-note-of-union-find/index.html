@@ -1,0 +1,543 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A Note of Union Find | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="A Note of Union Find | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Basic
+
+What is it
+
+A data structure that classify nodes to different sets -&gt; when adding and edge(two vertex) you fin..." />
+    <meta name="keywords" content="Union Find,Data Structure" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              A Note of Union Find
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-22
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/wWsAc9OyT/" class="post-tag">
+                  # Union Find
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/PAMWmLjBw/" class="post-tag">
+                  # Data Structure
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h3 id="basic">Basic</h3>
+<ol>
+<li>What is it</li>
+</ol>
+<p>A data structure that classify nodes to different sets -&gt; when adding and edge(two vertex) you find they are already in a set, it mean there is a cycle.</p>
+<p>Also called disjoint set.</p>
+<ol start="2">
+<li>Why use it</li>
+</ol>
+<p>Constant space and time complexity. The key of union find is the efficiency of <code>union()</code> and <code>find()</code></p>
+<p>The precedency of minimum spanning tree.</p>
+<ol start="3">
+<li>
+<p>The procedure of build such structure</p>
+<p>https://youtu.be/YKE4Vd1ysPI</p>
+<ol>
+<li>At first each node are not connect others</li>
+<li>If two nodes are connected, let one be the parent of the other ;</li>
+</ol>
+</li>
+</ol>
+<h3 id="implementation">Implementation</h3>
+<h4 id="basic-2">Basic</h4>
+<pre><code class="language-java">package Graph.unionfind;
+
+public interface IUnionFind {
+    int count(); // how many nodes
+    int union(int x, int y); // merge nodes;
+    int find(int x); // find the corresponded set;
+    boolean connected(int x, int y); // if two nodes connected;
+}
+
+</code></pre>
+<pre><code class="language-java">package Graph.unionfind;
+
+public class UnionFindImpl implements IUnionFind{
+    int count;
+    private int[] id;
+
+    public UnionFindImpl(int count) {
+        this.count = count;
+        id = new int[count];
+        for (int i = 0; i &lt; count; i++) {
+            id[i] = i;
+        }
+    }
+
+    @Override
+    public int count() {
+        return count;
+    }
+
+    @Override
+    public void union(int x, int y) {
+        int A = find(x);
+        int B = find(y);
+        if (A == B) {
+            return;
+        }
+        for (int i = 0; i &lt; count; i++) {
+            if (id[i] == A) {
+                id[i] = B;
+            }
+        }
+    }
+
+    @Override
+    public int find(int x) {
+        return id[x];
+    }
+
+    @Override
+    public boolean connected(int x, int y) {
+        return find(x) == find(y);
+    }
+}
+
+</code></pre>
+<h4 id="forest-tree-representation">Forest Tree  representation</h4>
+<h5 id="quick-union">Quick Union</h5>
+<p>Build a tree , connected nodes share same root.</p>
+<pre><code class="language-java">package Graph.unionfind;
+
+public class QuickUnion implements IUnionFind{
+    int count;
+    private int[] parent;
+
+    public QuickUnion(int count) {
+        this.count = count;
+        parent = new int[count];
+        for (int i = 0; i &lt; count; i++) {
+            parent[i] = i;
+        }
+    }
+
+    @Override
+    public int count() {
+        return count;
+    }
+
+    @Override
+    public void union(int x, int y) {
+        // build a tree
+        int xRoot = find(x);
+        int yRoot = find(y);
+        if (xRoot == yRoot) {
+            return;
+        }
+        parent[xRoot] = yRoot;
+    }
+
+    @Override
+    public int find(int x) {
+        // find the root;
+        while (x != parent[x]) {
+            x = parent[x];
+        }
+        return x;
+    }
+
+    @Override
+    public boolean connected(int x, int y) {
+        return find(x) == find(y);
+    }
+}
+
+</code></pre>
+<h4 id="balance-optimization">Balance Optimization</h4>
+<p>Sometimes, the tree may not balance very well and the traverse time become worst O(n) rather than O(logn).</p>
+<h5 id="quick-find-union-by-weight">Quick Find Union by Weight</h5>
+<pre><code class="language-java">package Graph.unionfind;
+
+public class QuickFindUnionByWeight implements IUnionFind{
+    int count;
+    private int[] parent;
+    private int[] size;
+
+    public QuickFindUnionByWeight(int count) {
+        this.count = count;
+        parent = new int[count];
+        for (int i = 0; i &lt; count; i++) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+    }
+
+    @Override
+    public int count() {
+        return count;
+    }
+
+    @Override
+    public void union(int x, int y) {
+        // light weight merge to heavy ones;
+        int xRoot = find(x);
+        int yRoot = find(y);
+        if (size[xRoot] &gt; size[yRoot]) {
+            parent[yRoot] = xRoot;
+            size[xRoot] += size[yRoot];
+        } else {
+            parent[xRoot] = yRoot;
+            size[yRoot] += size[xRoot];
+        }
+    }
+
+    @Override
+    public int find(int x) {
+        while (x != parent[x]) {
+            x = parent[x];
+        }
+        return x;
+    }
+
+    @Override
+    public boolean connected(int x, int y) {
+        return find(x) == find(y);
+    }
+}
+
+</code></pre>
+<h5 id="quick-find-union-by-rank">Quick Find Union by Rank</h5>
+<pre><code class="language-java">package Graph.unionfind;
+
+public class QuickFindUnionByRank implements IUnionFind{
+    int count;
+    private int[] parent;
+    private int[] rank;
+
+    public QuickFindUnionByRank(int count) {
+        this.count = count;
+        parent = new int[count];
+        for (int i = 0; i &lt; count; i++) {
+            parent[i] = i;
+            rank[i] = 1;
+        }
+    }
+
+    @Override
+    public int count() {
+        return count;
+    }
+
+    @Override
+    public void union(int x, int y) {
+        // lower rank merge to higher ones;
+        int xRoot = find(x);
+        int yRoot = find(y);
+        if (rank[xRoot] &gt; rank[yRoot]) {
+            parent[yRoot] = xRoot;
+        } else if (rank[xRoot] &lt; rank[yRoot]){
+            parent[xRoot] = yRoot;
+        } else {
+            parent[xRoot] = yRoot;
+            rank[yRoot]++;
+        }
+    }
+
+    @Override
+    public int find(int x) {
+        while (x != parent[x]) {
+            x = parent[x];
+        }
+        return x;
+    }
+
+    @Override
+    public boolean connected(int x, int y) {
+        return find(x) == find(y);
+    }
+}
+
+</code></pre>
+<h4 id="path-compression">Path Compression</h4>
+<p>Why we are doing this? Because we actually only care about what the root is  each tree. So we are thinking if we could compression the height of the tree and keep it a constant?</p>
+<p>Yes we can. There are two ways</p>
+<ol>
+<li>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304221135410.gif" alt="img" loading="lazy"></figure>
+</li>
+<li>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304221135493.jpeg" alt="img" loading="lazy"></figure>
+</li>
+</ol>
+<pre><code class="language-java">package Graph.unionfind;
+
+public class QuickFindPathCompression implements IUnionFind{
+    int count;
+    private int[] parent;
+
+    public QuickFindPathCompression(int count) {
+        this.count = count;
+        parent = new int[count];
+        for (int i = 0; i &lt; count; i++) {
+            parent[i] = i;
+        }
+    }
+
+    @Override
+    public int count() {
+        return count;
+    }
+
+    @Override
+    public void union(int x, int y) {
+        // quick union, pass
+    }
+
+    @Override
+    public int find(int x) { // pick one of find or find2
+        while (x != parent[x]) {
+            parent[x] = parent[parent[x]]; 
+            x = parent[x];
+        }
+        return x;
+    }
+
+    public int find2(int x) {
+        if (x != parent[x]) {
+            parent[x] = find2(parents[x]); // find the root recursively, more aggressive, make the root as father and all the other nodes, children
+        }
+        return parent[x];
+    }
+
+    @Override
+    public boolean connected(int x, int y) {
+        return find(x) == find(y);
+    }
+}
+</code></pre>
+<p>If you do the second path compression, you may notice balance does not matter anymore so if you use second path compression, you don't need do the balance by size in the union.</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#basic">Basic</a></li>
+<li><a href="#implementation">Implementation</a>
+<ul>
+<li><a href="#basic-2">Basic</a></li>
+<li><a href="#forest-tree-representation">Forest Tree  representation</a>
+<ul>
+<li><a href="#quick-union">Quick Union</a></li>
+</ul>
+</li>
+<li><a href="#balance-optimization">Balance Optimization</a>
+<ul>
+<li><a href="#quick-find-union-by-weight">Quick Find Union by Weight</a></li>
+<li><a href="#quick-find-union-by-rank">Quick Find Union by Rank</a></li>
+</ul>
+</li>
+<li><a href="#path-compression">Path Compression</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/269-alien-dictionary/">
+              <h3 class="post-title">
+                269. Alien Dictionary
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

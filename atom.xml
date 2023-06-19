@@ -1,0 +1,1670 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://10kshuaizhang.github.io</id>
+    <title>10K&apos;s</title>
+    <updated>2023-06-19T06:53:56.745Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://10kshuaizhang.github.io"/>
+    <link rel="self" href="https://10kshuaizhang.github.io/atom.xml"/>
+    <subtitle>Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.</subtitle>
+    <logo>https://10kshuaizhang.github.io/images/avatar.png</logo>
+    <icon>https://10kshuaizhang.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2023, 10K&apos;s</rights>
+    <entry>
+        <title type="html"><![CDATA[79. Word Search]]></title>
+        <id>https://10kshuaizhang.github.io/post/79-word-search/</id>
+        <link href="https://10kshuaizhang.github.io/post/79-word-search/">
+        </link>
+        <updated>2023-06-19T06:53:31.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="question">Question</h2>
+<p>Given an <code>m x n</code> grid of characters <code>board</code> and a string <code>word</code>, return <code>true</code> <em>if</em> <code>word</code> <em>exists in the grid</em>.</p>
+<p>The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once.</p>
+<p><strong>Example 1:</strong></p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306191449923.jpg" alt="img" loading="lazy"></figure>
+<pre><code>Input: board = [[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;E&quot;],[&quot;S&quot;,&quot;F&quot;,&quot;C&quot;,&quot;S&quot;],[&quot;A&quot;,&quot;D&quot;,&quot;E&quot;,&quot;E&quot;]], word = &quot;ABCCED&quot;
+Output: true
+</code></pre>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li><code>m == board.length</code></li>
+<li><code>n = board[i].length</code></li>
+<li><code>1 &lt;= m, n &lt;= 6</code></li>
+<li><code>1 &lt;= word.length &lt;= 15</code></li>
+<li><code>board</code> and <code>word</code> consists of only lowercase and uppercase English letters.</li>
+</ul>
+<h2 id="algorithm">Algorithm</h2>
+<p>A typical backtracking problem, (or so called flood fill), we traverse all the elements in the board and start from each of those element to check if we can get a valid string.</p>
+<p>The <code>helper(char[][] board, int i, int j, String word, int index)</code> helps us to do a DFS to check if starts from <code>board[i][j]</code>, can we find the the string <code>word.substring(i, word.length()-1)</code>.</p>
+<h2 id="code">Code</h2>
+<pre><code class="language-java">class Solution {
+    boolean[][] visited;
+    public boolean exist(char[][] board, String word) {
+        int m = board.length;
+        int n = board[0].length;
+        visited = new boolean[m][n];
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                if (helper(board, i, j, word, 0)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    private boolean helper(char[][] board, int i, int j, String word, int index) {
+        int m = board.length;
+        int n = board[0].length;
+        if (board[i][j] == word.charAt(index)) {
+            if (index == word.length() - 1) {
+                return true;
+            } else {
+                visited[i][j] = true;
+                if (i-1 &gt;= 0 &amp;&amp; !visited[i-1][j]) {
+                    if (helper(board, i-1, j, word, index+1)) {
+                        return true;
+                    }
+                }
+                if (i+1 &lt; m &amp;&amp; !visited[i+1][j]) {
+                    if (helper(board, i+1, j, word, index+1)) {
+                        return true;
+                    }
+                }
+                if (j-1 &gt;= 0 &amp;&amp; !visited[i][j-1]) {
+                   if (helper(board, i, j-1, word, index+1)) {
+                       return true;
+                   }
+                }
+                if (j+1 &lt; n &amp;&amp; !visited[i][j+1]) {
+                    if (helper(board, i, j+1, word, index+1)) {
+                        return true;
+                    }
+                }
+                visited[i][j] = false;
+            }
+        }
+        return false;
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[设计模式之美-课程笔记11-设计原则5-依赖反转]]></title>
+        <id>https://10kshuaizhang.github.io/post/she-ji-mo-shi-zhi-mei-ke-cheng-bi-ji-11-she-ji-yuan-ze-5-yi-lai-fan-zhuan/</id>
+        <link href="https://10kshuaizhang.github.io/post/she-ji-mo-shi-zhi-mei-ke-cheng-bi-ji-11-she-ji-yuan-ze-5-yi-lai-fan-zhuan/">
+        </link>
+        <updated>2023-06-19T05:57:23.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="理论五控制反转-依赖反转-依赖注入这三者有何区别和联系">理论五：控制反转、依赖反转、依赖注入，这三者有何区别和联系？</h2>
+<ul>
+<li>依赖反转指的是<u>谁跟谁</u>的<u>什么依赖</u>被反转了？<u>反转</u>二字又如何理解？</li>
+<li>控制反转和依赖注入是什么？说的是一回事吗？</li>
+<li>Spring中的IoC跟这些概念有什么关系？</li>
+</ul>
+<h3 id="控制反转ioc">控制反转（IOC)</h3>
+<pre><code class="language-java">public class UserServiceTest {
+  public static boolean doTest() {
+    // ... 
+  }
+  
+  public static void main(String[] args) {//这部分逻辑可以放到框架中
+    if (doTest()) {
+      System.out.println(&quot;Test succeed.&quot;);
+    } else {
+      System.out.println(&quot;Test failed.&quot;);
+    }
+  }
+}
+</code></pre>
+<p>上面的代码所有的流程都由程序员来控制，下面我们抽象出一个简单的框架：</p>
+<pre><code class="language-java">public abstract class TestCase {
+  public void run() {
+    if (doTest()) {
+      System.out.println(&quot;Test succeed.&quot;);
+    } else {
+      System.out.println(&quot;Test failed.&quot;);
+    }
+  }
+  
+  public abstract boolean doTest();
+}
+
+public class JunitApplication {
+  private static final List&lt;TestCase&gt; testCases = new ArrayList&lt;&gt;();
+  
+  public static void register(TestCase testCase) {
+    testCases.add(testCase);
+  }
+  
+  public static final void main(String[] args) {
+    for (TestCase case: testCases) {
+      case.run();
+    }
+  }
+</code></pre>
+<p>把这个简化版的测试框架引入到工程后，只需在框架预留的扩展点，也就是TestCase类中的doTest抽象函数中，填充具体的测试代码就可实现之前的功能了，完全不需要写负责执行流程的main函数了：</p>
+<pre><code class="language-java">public class UserServiceTest extends TestCase {
+  @Override
+  public boolean doTest() {
+    // ... 
+  }
+}
+
+// 注册操作还可以通过配置的方式来实现，不需要程序员显示调用register()
+JunitApplication.register(new UserServiceTest();
+</code></pre>
+<p>上述就是一个典型的控制反转的例子。</p>
+<ol>
+<li>框架提供了一个可扩展的代码骨架，用来组装对象、管理整个执行流程。程序员利用框架进行开发的时候，只需要往预留的扩展点上添加跟自己业务相关的代码，就可以利用框架来驱动整个流程的执行。</li>
+<li>这里的控制，指的是对程序执行流程的控制，而反转，指的是在没有使用框架之前，程序员自己控制整个程序的执行。在使用框架后，程序的执行流程可以通过框架控制。<u>流程的控制权从程序员反转到了框架。</u></li>
+<li>控制反转是一个指导思想，不是一种具体的实现技巧。</li>
+</ol>
+<h3 id="依赖注入di">依赖注入(DI)</h3>
+<ol>
+<li>
+<p>Dependency injection，是一种具体的编码技巧。</p>
+</li>
+<li>
+<p><strong><u>不通过new()的方式在类内部依赖类对象，而是将依赖的类对象在外部创建好之后，通过构造函数、函数参数等方式传递（注入）给类使用。</u></strong></p>
+</li>
+<li>
+<p>看一个例子吧：Notification 类负责消息推送，依赖 MessageSender 类实现推送商品促销、验证码等消息给用户。我们分别用依赖注入和非依赖注入两种方式来实现一下。</p>
+<pre><code class="language-java">// 非依赖注入实现方式
+public class Notification {
+  private MessageSender messageSender;
+  
+  public Notification() {
+    this.messageSender = new MessageSender(); //此处有点像hardcode
+  }
+  
+  public void sendMessage(String cellphone, String message) {
+    //...省略校验逻辑等...
+    this.messageSender.send(cellphone, message);
+  }
+}
+
+public class MessageSender {
+  public void send(String cellphone, String message) {
+    //....
+  }
+}
+// 使用Notification
+Notification notification = new Notification();
+</code></pre>
+<pre><code class="language-java">// 依赖注入的实现方式
+public class Notification {
+  private MessageSender messageSender;
+  
+  // 通过构造函数将messageSender传递进来
+  public Notification(MessageSender messageSender) {
+    this.messageSender = messageSender;
+  }
+  
+  public void sendMessage(String cellphone, String message) {
+    //...省略校验逻辑等...
+    this.messageSender.send(cellphone, message);
+  }
+}
+
+public class MessageSender {
+  public void send(String cellphone, String message) {
+    //....
+  }
+}
+
+//使用Notification
+MessageSender messageSender = new MessageSender();
+Notification notification = new Notification(messageSender);
+</code></pre>
+<p>通过依赖注入的方式将依赖的类传递进来，提高了代码的扩展性。</p>
+</li>
+<li>
+<p>上述代码还可以优化，messageSender可以被定义成接口：</p>
+<pre><code class="language-java">public class Notification {
+  private MessageSender messageSender;
+  
+  public Notification(MessageSender messageSender) {
+    this.messageSender = messageSender;
+  }
+  
+  public void sendMessage(String cellphone, String message) {
+    this.messageSender.send(cellphone, message);
+  }
+}
+
+public interface MessageSender {
+  void send(String cellphone, String message);
+}
+
+// 短信发送类
+public class SmsSender implements MessageSender {
+  @Override
+  public void send(String cellphone, String message) {
+    //....
+  }
+}
+
+// 站内信发送类
+public class InboxSender implements MessageSender {
+  @Override
+  public void send(String cellphone, String message) {
+    //....
+  }
+}
+
+//使用Notification
+MessageSender messageSender = new SmsSender();
+Notification notification = new Notification(messageSender);
+</code></pre>
+</li>
+</ol>
+<h3 id="依赖注入框架di-framework">依赖注入框架(DI Framework)</h3>
+<ol>
+<li>
+<p>在之前的依赖注入实现的MessageSender和Notification的例子中，虽然不需要在Notification中hard code MessageSender，但是程序员还是要在更上层去初始化和装配这个MessageSender对象：</p>
+<pre><code class="language-java">public class Demo {
+  public static final void main(String args[]) {
+    MessageSender sender = new SmsSender(); //创建对象
+    Notification notification = new Notification(sender);//依赖注入
+    notification.sendMessage(&quot;13918942177&quot;, &quot;短信验证码：2346&quot;);
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>随着代码量变大，对象会变得很多，框架可以帮我们做这个初始化和注入的事情。我们只需配置一下需要创建的类对象，以及类之间的关系。</p>
+</li>
+</ol>
+<h3 id="依赖反转原则dip">依赖反转原则（DIP)</h3>
+<ol>
+<li>Dependency Inversion Principle，DIP：High-level modules shouldn't depend on low-level modules. Both modules should depend on abstractions. In addition, abstractions shouldn't depend on details. Details depend on abstractions.</li>
+<li>高层模块不要依赖低层模块，高层模块和低层模块应该通过抽象互相依赖。除此之外，抽象不需要依赖具体实现细节，具体实现细节依赖抽象。</li>
+<li>高层模块和低层模块：就是调用链上调用者是高层，被调用者属于低层。平时高层依赖低层是没问题的，这个DIP还是指导框架设计的。</li>
+<li>举个Tomca这个Servlet容器的例子：Tomcat是运行Java Web的应用程序的容器，我们便洗的Web应用程序只需要部署在Tomcat容器下，便可以被Tomcat容器调用执行。<u>按照之前的划分原则，Tomcat 就是高层模块，我们编写的 Web 应用程序代码就是低层模块。Tomcat 和应用程序代码之间并没有直接的依赖关系，两者都依赖同一个“抽象”，也就是 Servlet 规范。Servlet 规范不依赖具体的 Tomcat 容器和应用程序的实现细节，而 Tomcat 容器和应用程序依赖 Servlet 规范。</u></li>
+</ol>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[设计模式之美-课程笔记10-设计原则4-接口隔离]]></title>
+        <id>https://10kshuaizhang.github.io/post/she-ji-mo-shi-zhi-mei-ke-cheng-bi-ji-10-she-ji-yuan-ze-4-jie-kou-ge-chi/</id>
+        <link href="https://10kshuaizhang.github.io/post/she-ji-mo-shi-zhi-mei-ke-cheng-bi-ji-10-she-ji-yuan-ze-4-jie-kou-ge-chi/">
+        </link>
+        <updated>2023-06-19T03:04:03.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="理论四接口隔离原则有哪三种应用原则中的接口该如何理解">理论四：接口隔离原则有哪三种应用？原则中的“接口”该如何理解？</h2>
+<h3 id="如何理解接口隔离原则">如何理解”接口隔离原则“</h3>
+<ol>
+<li>Interface Segregation Principle: ISP. Clients should not be force to depend upon interfaces that they not use. 客户端（调用者、使用者）应该被强迫依赖他不需要的接口。</li>
+<li>关键在于如何理解接口
+<ul>
+<li>一组API接口集合</li>
+<li>单个API接口或函数</li>
+<li>OOP中的接口概念</li>
+</ul>
+</li>
+</ol>
+<h3 id="把接口理解为一组api接口集合">把接口理解为一组API接口集合</h3>
+<ol>
+<li>
+<p>举个例子，微服务用户系统提供了一组跟用户相关的 API 给其他系统使用，比如：注册、登录、获取用户信息等。</p>
+<pre><code class="language-java">public interface UserService {
+  boolean register(String cellphone, String password);
+  boolean login(String cellphone, String password);
+  UserInfo getUserInfoById(long id);
+  UserInfo getUserInfoByCellphone(String cellphone);
+}
+
+public class UserServiceImpl implements UserService {
+  //...
+}
+</code></pre>
+</li>
+<li>
+<p>如果现在要实现删除用户的功能，我们可能会想到的是在接口中增加一个方法<code>deleteUserById</code>.</p>
+<ol>
+<li>
+<p>问题在于，删除用户的权限最好是后台管理系统执行。如果放进去UserService，那所有实现这个接口的类都可以使用这个接口。<u>不加限制的被其他业务系统调用，有可能导致误删用户。</u></p>
+</li>
+<li>
+<p>最好的设计是从架构层面，增加鉴权系统来限制接口的调用。但是目前没有支持的话，我们也可从代码层面去做。</p>
+</li>
+<li>
+<p>参照接口隔离原则，调用者不应该强迫依赖他不需要的接口。我们可以将删除接口单独放到另一个接口<code>RestrictedUserService</code>中，然后将这个Service只打包给后台管理系统使用：</p>
+<pre><code class="language-java">public interface UserService {
+  boolean register(String cellphone, String password);
+  boolean login(String cellphone, String password);
+  UserInfo getUserInfoById(long id);
+  UserInfo getUserInfoByCellphone(String cellphone);
+}
+
+public interface RestrictedUserService {
+  boolean deleteUserByCellphone(String cellphone);
+  boolean deleteUserById(long id);
+}
+
+public class UserServiceImpl implements UserService, RestrictedUserService {
+  // ...省略实现代码...
+}
+</code></pre>
+</li>
+</ol>
+</li>
+<li>
+<p>接口在这里被理解为一组接口集合。在设计微服务或者类库接口的时候，如果部分接口只被部分调用者使用，那我们就需要将这部分接口隔离出来，单独给对应的调用者使用，而不是强迫其他调用者也依赖这部分不会被用到的接口。</p>
+</li>
+</ol>
+<h3 id="把接口理解为单个api接口或函数">把接口理解为单个API接口或函数</h3>
+<ol>
+<li>
+<p>如果将接口理解为一个接口，或者函数。那我们这个原则的理解就是： 函数的设计要功能单一，不要讲多个不同的功能逻辑在一个函数中实现。</p>
+</li>
+<li>
+<p>看个例子：</p>
+<pre><code class="language-java">public class Statistics {
+  private Long max;
+  private Long min;
+  private Long average;
+  private Long sum;
+  private Long percentile99;
+  private Long percentile999;
+  //...省略constructor/getter/setter等方法...
+}
+
+public Statistics count(Collection&lt;Long&gt; dataSet) {
+  Statistics statistics = new Statistics();
+  //...省略计算逻辑...
+  return statistics;
+}
+</code></pre>
+<p>这个例子中，count做的事情不仅是count，还算了min max等，可以拆成更细的粒度。</p>
+<pre><code class="language-java">public Long max(Collection&lt;Long&gt; dataSet) { //... }
+public Long min(Collection&lt;Long&gt; dataSet) { //... } 
+public Long average(Colletion&lt;Long&gt; dataSet) { //... }
+// ...省略其他统计函数...
+</code></pre>
+</li>
+<li>
+<p>是否功能单一，还是要参照业务场景。</p>
+<p>如果在项目中，对每个统计需求，Statistics 定义的那几个统计信息都有涉及，那 count() 函数的设计就是合理的。相反，如果每个统计需求只涉及 Statistics 罗列的统计信息中一部分，比如，有的只需要用到 max、min、average 这三类统计信息，有的只需要用到 average、sum。而 count() 函数每次都会把所有的统计信息计算一遍，就会做很多无用功，势必影响代码的性能，特别是在需要统计的数据量很大的时候。所以，在这个应用场景下，count() 函数的设计就有点不合理了，我们应该按照第二种设计思路，将其拆分成粒度更细的多个统计函数。</p>
+</li>
+<li>
+<p>ISP和SRP有点区别的： SPR针对的是类和模块的设计，而ISP更侧重于接口的设计。它提供了一种判断接口是否职责单一的标准：通过调用者如何使用接口来间接的判定。（是否是部分使用）。</p>
+</li>
+</ol>
+<h3 id="把接口理解为oop中的接口">把接口理解为OOP中的接口</h3>
+<ol>
+<li>
+<p>举个例子：假设我们的项目中用到了三个外部系统：Redis、MySQL、Kafka。每个系统都对应一系列配置信息，比如地址、端口、访问超时时间等。为了在内存中存储这些配置信息，供项目中的其他模块来使用，我们分别设计实现了三个 Configuration 类：RedisConfig、MysqlConfig、KafkaConfig。具体的代码实现如下所示。这里只给出了 RedisConfig 的代码实现：</p>
+<pre><code class="language-java">public class RedisConfig {
+    private ConfigSource configSource; //配置中心（比如zookeeper）
+    private String address;
+    private int timeout;
+    private int maxTotal;
+    //省略其他配置: maxWaitMillis,maxIdle,minIdle...
+
+    public RedisConfig(ConfigSource configSource) {
+        this.configSource = configSource;
+    }
+
+    public String getAddress() {
+        return this.address;
+    }
+    //...省略其他get()、init()方法...
+
+    public void update() {
+      //从configSource加载配置到address/timeout/maxTotal...
+    }
+}
+
+public class KafkaConfig { //...省略... }
+public class MysqlConfig { //...省略... }
+</code></pre>
+</li>
+<li>
+<p>现在，我们有一个新的功能需求，希望支持 Redis 和 Kafka 配置信息的热更新。所谓“热更新（hot update）”就是，如果在配置中心中更改了配置信息，我们希望在不用重启系统的情况下，能将最新的配置信息加载到内存中（也就是 RedisConfig、KafkaConfig 类中）。但是，因为某些原因，我们并不希望对 MySQL 的配置信息进行热更新。</p>
+</li>
+<li>
+<p>为了实现这样一个功能需求，我们设计实现了一个 ScheduledUpdater 类，以固定时间频率（periodInSeconds）来调用 RedisConfig、KafkaConfig 的 update() 方法更新配置信息。具体的代码实现如下所示：</p>
+<pre><code class="language-java">public interface Updater {
+  void update();
+}
+
+public class RedisConfig implements Updater {
+  //...省略其他属性和方法...
+  @Override
+  public void update() { //... }
+}
+
+public class KafkaConfig implements Updater {
+  //...省略其他属性和方法...
+  @Override
+  public void update() { //... }
+}
+
+public class MysqlConfig { //...省略其他属性和方法... }
+
+public class ScheduledUpdater {
+    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();;
+    private long initialDelayInSeconds;
+    private long periodInSeconds;
+    private Updater updater;
+
+    public ScheduleUpdater(Updater updater, long initialDelayInSeconds, long periodInSeconds) {
+        this.updater = updater;
+        this.initialDelayInSeconds = initialDelayInSeconds;
+        this.periodInSeconds = periodInSeconds;
+    }
+
+    public void run() {
+        executor.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                updater.update();
+            }
+        }, this.initialDelayInSeconds, this.periodInSeconds, TimeUnit.SECONDS);
+    }
+}
+
+public class Application {
+  ConfigSource configSource = new ZookeeperConfigSource(/*省略参数*/);
+  public static final RedisConfig redisConfig = new RedisConfig(configSource);
+  public static final KafkaConfig kafkaConfig = new KakfaConfig(configSource);
+  public static final MySqlConfig mysqlConfig = new MysqlConfig(configSource);
+
+  public static void main(String[] args) {
+    ScheduledUpdater redisConfigUpdater = new ScheduledUpdater(redisConfig, 300, 300);
+    redisConfigUpdater.run();
+    
+    ScheduledUpdater kafkaConfigUpdater = new ScheduledUpdater(kafkaConfig, 60, 60);
+    kafkaConfigUpdater.run();
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>刚刚的热更新的需求我们已经搞定了。现在，我们又有了一个新的监控功能需求。通过命令行来查看 Zookeeper 中的配置信息是比较麻烦的。所以，我们希望能有一种更加方便的配置信息查看方式。我们可以在项目中开发一个内嵌的 SimpleHttpServer，输出项目的配置信息到一个固定的 HTTP 地址，比如：http://127.0.0.1:2389/config 。我们只需要在浏览器中输入这个地址，就可以显示出系统的配置信息。不过，出于某些原因，我们只想暴露 MySQL 和 Redis 的配置信息，不想暴露 Kafka 的配置信息。</p>
+</li>
+<li>
+<p>我们还需要对上面的代码做进一步改造:</p>
+<pre><code class="language-java">public interface Updater {
+  void update();
+}
+
+public interface Viewer {
+  String outputInPlainText();
+  Map&lt;String, String&gt; output();
+}
+
+public class RedisConfig implemets Updater, Viewer {
+  //...省略其他属性和方法...
+  @Override
+  public void update() { //... }
+  @Override
+  public String outputInPlainText() { //... }
+  @Override
+  public Map&lt;String, String&gt; output() { //...}
+}
+
+public class KafkaConfig implements Updater {
+  //...省略其他属性和方法...
+  @Override
+  public void update() { //... }
+}
+
+public class MysqlConfig implements Viewer {
+  //...省略其他属性和方法...
+  @Override
+  public String outputInPlainText() { //... }
+  @Override
+  public Map&lt;String, String&gt; output() { //...}
+}
+
+public class SimpleHttpServer {
+  private String host;
+  private int port;
+  private Map&lt;String, List&lt;Viewer&gt;&gt; viewers = new HashMap&lt;&gt;();
+  
+  public SimpleHttpServer(String host, int port) {//...}
+  
+  public void addViewers(String urlDirectory, Viewer viewer) {
+    if (!viewers.containsKey(urlDirectory)) {
+      viewers.put(urlDirectory, new ArrayList&lt;Viewer&gt;());
+    }
+    this.viewers.get(urlDirectory).add(viewer);
+  }
+  
+  public void run() { //... }
+}
+
+public class Application {
+    ConfigSource configSource = new ZookeeperConfigSource();
+    public static final RedisConfig redisConfig = new RedisConfig(configSource);
+    public static final KafkaConfig kafkaConfig = new KakfaConfig(configSource);
+    public static final MySqlConfig mysqlConfig = new MySqlConfig(configSource);
+    
+    public static void main(String[] args) {
+        ScheduledUpdater redisConfigUpdater =
+            new ScheduledUpdater(redisConfig, 300, 300);
+        redisConfigUpdater.run();
+        
+        ScheduledUpdater kafkaConfigUpdater =
+            new ScheduledUpdater(kafkaConfig, 60, 60);
+        redisConfigUpdater.run();
+        
+        SimpleHttpServer simpleHttpServer = new SimpleHttpServer(“127.0.0.1”, 2389);
+        simpleHttpServer.addViewer(&quot;/config&quot;, redisConfig);
+        simpleHttpServer.addViewer(&quot;/config&quot;, mysqlConfig);
+        simpleHttpServer.run();
+    }
+}
+</code></pre>
+</li>
+<li>
+<p>在viewer和updater这两个例子中，ScheduledUpdater只依赖Updater，不需要被强迫去依赖viewer。满足接口隔离原则。</p>
+</li>
+<li>
+<p>如果不遵循ISP，设计出来的代码可能是：一个大的config接口包含所有方法，所有实现他的类都必须实现所有方法：</p>
+<pre><code class="language-java">public interface Config {
+  void update();
+  String outputInPlainText();
+  Map&lt;String, String&gt; output();
+}
+
+public class RedisConfig implements Config {
+  //...需要实现Config的三个接口update/outputIn.../output
+}
+
+public class KafkaConfig implements Config {
+  //...需要实现Config的三个接口update/outputIn.../output
+}
+
+public class MysqlConfig implements Config {
+  //...需要实现Config的三个接口update/outputIn.../output
+}
+
+public class ScheduledUpdater {
+  //...省略其他属性和方法..
+  private Config config;
+
+  public ScheduleUpdater(Config config, long initialDelayInSeconds, long periodInSeconds) {
+      this.config = config;
+      //...
+  }
+  //...
+}
+
+public class SimpleHttpServer {
+  private String host;
+  private int port;
+  private Map&lt;String, List&lt;Config&gt;&gt; viewers = new HashMap&lt;&gt;();
+ 
+  public SimpleHttpServer(String host, int port) {//...}
+  
+  public void addViewer(String urlDirectory, Config config) {
+    if (!viewers.containsKey(urlDirectory)) {
+      viewers.put(urlDirectory, new ArrayList&lt;Config&gt;());
+    }
+    viewers.get(urlDirectory).add(config);
+  }
+  
+  public void run() { //... }
+}
+</code></pre>
+</li>
+<li>
+<p>也能实现，但是对比之前的设计，明显遵循了ISP的代码**<u>扩展性更好，更灵活。</u>**因为Updater和Viewer职责更单一，单一意味着通用、复用性好。比如我们又上了一个Metrics性能统计模块，并希望Metrics也通过SimpleHttpServer显示，此时他就可以使用Viewer接口:</p>
+<pre><code class="language-java">public class ApiMetrics implements Viewer {//...}
+public class DbMetrics implements Viewer {//...}
+
+public class Application {
+    ConfigSource configSource = new ZookeeperConfigSource();
+    public static final RedisConfig redisConfig = new RedisConfig(configSource);
+    public static final KafkaConfig kafkaConfig = new KakfaConfig(configSource);
+    public static final MySqlConfig mySqlConfig = new MySqlConfig(configSource);
+    public static final ApiMetrics apiMetrics = new ApiMetrics();
+    public static final DbMetrics dbMetrics = new DbMetrics();
+    
+    public static void main(String[] args) {
+        SimpleHttpServer simpleHttpServer = new SimpleHttpServer(“127.0.0.1”, 2389);
+        simpleHttpServer.addViewer(&quot;/config&quot;, redisConfig);
+        simpleHttpServer.addViewer(&quot;/config&quot;, mySqlConfig);
+        simpleHttpServer.addViewer(&quot;/metrics&quot;, apiMetrics);
+        simpleHttpServer.addViewer(&quot;/metrics&quot;, dbMetrics);
+        simpleHttpServer.run();
+    }
+}
+</code></pre>
+</li>
+<li>
+<p>第二种设计也有一些无用功，正如我前面说的， 必须要实现所有方法（尽管他不需要用）。</p>
+</li>
+</ol>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[设计模式之美-课程笔记7-设计原则3-里氏替换（LSP)]]></title>
+        <id>https://10kshuaizhang.github.io/post/she-ji-mo-shi-zhi-mei-ke-cheng-bi-ji-7-she-ji-yuan-ze-3-li-shi-ti-huan-lsp/</id>
+        <link href="https://10kshuaizhang.github.io/post/she-ji-mo-shi-zhi-mei-ke-cheng-bi-ji-7-she-ji-yuan-ze-3-li-shi-ti-huan-lsp/">
+        </link>
+        <updated>2023-06-18T05:21:16.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="理论三里式替换lsp跟多态有何区别哪些代码违背了lsp">理论三：里式替换（LSP）跟多态有何区别？哪些代码违背了LSP？</h2>
+<h3 id="如何理解里氏替换原则">如何理解里氏替换原则？</h3>
+<ol>
+<li>
+<p>LSP: Functions that use pointers of references to base classes must be able to use objects of derived classes without knowing it.</p>
+<ol>
+<li>这个原则来源于更早另一个哥们提出的 Liskov Substitution principle: If S is a subtype of T, then objects of type T may be replaced with objects of type S, without breaking program.</li>
+</ol>
+</li>
+<li>
+<p>子类对象能够替换程序中父类对象出现的地方，并且保证原来程序的逻辑行为不变及正确性不被破坏。（那子类重写父类的方法，替换后不就不行了？多态？）</p>
+</li>
+<li>
+<p>看个例子：父类 Transporter 使用 org.apache.http 库中的 HttpClient 类来传输网络数据。子类 SecurityTransporter 继承父类 Transporter，增加了额外的功能，支持传输 appId 和 appToken 安全认证信息。</p>
+<pre><code class="language-java">public class Transporter {
+  private HttpClient httpClient;
+  
+  public Transporter(HttpClient httpClient) {
+    this.httpClient = httpClient;
+  }
+
+  public Response sendRequest(Request request) {
+    // ...use httpClient to send request
+  }
+}
+
+public class SecurityTransporter extends Transporter {
+  private String appId;
+  private String appToken;
+
+  public SecurityTransporter(HttpClient httpClient, String appId, String appToken) {
+    super(httpClient);
+    this.appId = appId;
+    this.appToken = appToken;
+  }
+
+  @Override
+  public Response sendRequest(Request request) {
+    if (StringUtils.isNotBlank(appId) &amp;&amp; StringUtils.isNotBlank(appToken)) {
+      request.addPayload(&quot;app-id&quot;, appId);
+      request.addPayload(&quot;app-token&quot;, appToken);
+    }
+    return super.sendRequest(request);
+  }
+}
+
+public class Demo {    
+  public void demoFunction(Transporter transporter) {    
+    Reuqest request = new Request();
+    //...省略设置request中数据值的代码...
+    Response response = transporter.sendRequest(request);
+    //...省略其他逻辑...
+  }
+}
+
+// 里式替换原则
+Demo demo = new Demo();
+demo.demofunction(new SecurityTransporter(/*省略参数*/););
+</code></pre>
+</li>
+</ol>
+<p>​		上述代码看起来不过是利用了多态，正如我在第二点中的疑惑一样。 <strong><u>但是多态只是面向对象的一个特性		能力，但是我们在设计子类的时候，要遵循里氏替换原则。</u></strong></p>
+<ol start="4">
+<li>
+<p>如果我们在SecurityTranspoter中sendRequest没有设置我们会抛出异常。</p>
+<pre><code class="language-java">// 改造前：
+public class SecurityTransporter extends Transporter {
+  //...省略其他代码..
+  @Override
+  public Response sendRequest(Request request) {
+    if (StringUtils.isNotBlank(appId) &amp;&amp; StringUtils.isNotBlank(appToken)) {
+      request.addPayload(&quot;app-id&quot;, appId);
+      request.addPayload(&quot;app-token&quot;, appToken);
+    }
+    return super.sendRequest(request);
+  }
+}
+
+// 改造后：
+public class SecurityTransporter extends Transporter {
+  //...省略其他代码..
+  @Override
+  public Response sendRequest(Request request) {
+    if (StringUtils.isBlank(appId) || StringUtils.isBlank(appToken)) {
+      throw new NoAuthorizationRuntimeException(...);
+    }
+    request.addPayload(&quot;app-id&quot;, appId);
+    request.addPayload(&quot;app-token&quot;, appToken);
+    return super.sendRequest(request);
+  }
+}
+</code></pre>
+<p>此时就违背了里氏替换原则，子类是无法替换父类方法的。因为原来的父类方法本身就没有appId和token，必然会报异常。这个程序的逻辑有了变化。</p>
+</li>
+</ol>
+<h3 id="哪些代码明显违背了里氏替换原则">哪些代码明显违背了里氏替换原则</h3>
+<ol>
+<li>LSP有另外一个更落地的描述：Design by contract.</li>
+<li>子类在设计的时候，要遵循父类的行为约定。父类定义了函数的行为约定，那子类可以改变函数的内部实现逻辑，但不能改变函数原有的行为约定。这里的行为约定包括：函数声明要实现的功能；对输入、输出、异常的约定；甚至包括注释中所罗列的任何特殊说明。实际上，定义中父类和子类之间的关系，也可以替换成接口和实现类之间的关系。</li>
+</ol>
+<h4 id="1-子类违背父类要实现的功能">1. 子类违背父类要实现的功能</h4>
+<p>比如父类有一个方法是<code>sortOrdersByAmount()</code>，是按照金额从小到大来给订单排序的，儿子累充写这个函数后按照创建日期排序，那就是违背了LSP。</p>
+<h4 id="2-子类违背父类对输入-输出-异常的约定">2. 子类违背父类对输入、输出、异常的约定</h4>
+<p>父类某个函数运行出错返回null，数据为空返回空集合；子类中重载之后运行出错返回异常，获取不到数据返回null。这也是违背LSP。</p>
+<p>父类输入要求是整数，但是子类只允许正整数。对输入更加严格，也是违背了。</p>
+<p>在父类的函数约定种，只会抛出<code>ArgumentNullException</code>但是在子类中如果抛出其他异常的话也是违背LSP。</p>
+<h4 id="3-子类违背父类注释中的说明">3. 子类违背父类注释中的说明</h4>
+<p>父类中定义的 withdraw() 提现函数的注释是这么写的：“用户的提现金额不得超过账户余额……”，而子类重写 withdraw() 函数之后，针对 VIP 账号实现了透支提现的功能，也就是提现金额可以大于账户余额，那这个子类的设计也是不符合里式替换原则的。</p>
+<p>一个小方法：用子类的方法去跑父类的单测，没跑过的话可能说明有的子类违背了LSP。</p>
+<p>LSP是用来指导继承中子类如何实现。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[240. Search a 2D Matrix II]]></title>
+        <id>https://10kshuaizhang.github.io/post/240-search-a-2d-matrix-ii/</id>
+        <link href="https://10kshuaizhang.github.io/post/240-search-a-2d-matrix-ii/">
+        </link>
+        <updated>2023-06-18T02:46:37.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="question">Question</h2>
+<p>Write an efficient algorithm that searches for a value <code>target</code> in an <code>m x n</code> integer matrix <code>matrix</code>. This matrix has the following properties:</p>
+<ul>
+<li>Integers in each row are sorted in ascending from left to right.</li>
+<li>Integers in each column are sorted in ascending from top to bottom.</li>
+</ul>
+<p><strong>Example 1:</strong></p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306181044231.jpg" alt="img" style="zoom:50%;" />
+<p><strong>Constraints:</strong></p>
+<ul>
+<li><code>m == matrix.length</code></li>
+<li><code>n == matrix[i].length</code></li>
+<li><code>1 &lt;= n, m &lt;= 300</code></li>
+<li><code>-109 &lt;= matrix[i][j] &lt;= 109</code></li>
+<li>All the integers in each row are <strong>sorted</strong> in ascending order.</li>
+<li>All the integers in each column are <strong>sorted</strong> in ascending order.</li>
+<li><code>-109 &lt;= target &lt;= 109</code></li>
+</ul>
+<h2 id="algorithm">Algorithm</h2>
+<p>Same walk through as a question 378.Kth Smallest Element in a Sorted Matrix but much easier.</p>
+<p>You start from left bottom corner element, if it's larger than the target, you go up otherwise you go right.</p>
+<h2 id="code">Code</h2>
+<pre><code class="language-java">class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int i = m - 1, j = 0;
+        while (i &gt;= 0 &amp;&amp; j &lt; n) {
+            if (matrix[i][j] &gt; target) {
+                i--;
+            } else if (matrix[i][j] &lt; target) {
+                j++;
+            } else {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[设计模式之美-课程笔记8-设计原则2-开闭原则(OCP)]]></title>
+        <id>https://10kshuaizhang.github.io/post/she-ji-mo-shi-zhi-mei-ke-cheng-bi-ji-8-she-ji-yuan-ze-2-kai-bi-yuan-ze/</id>
+        <link href="https://10kshuaizhang.github.io/post/she-ji-mo-shi-zhi-mei-ke-cheng-bi-ji-8-she-ji-yuan-ze-2-kai-bi-yuan-ze/">
+        </link>
+        <updated>2023-06-18T02:06:24.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="理论二如何做到对扩展开放-修改关闭扩展和修改各指什么">理论二：如何做到“对扩展开放、修改关闭”？扩展和修改各指什么？</h2>
+<p>开闭原则比较难理解，因为关于扩展、修改的定义比较难定义。什么样算遵守，什么样算违背了开闭原则。</p>
+<p>这条原则是关于扩展性，而扩展性是衡量代码质量很重要的标准。23种经典设计模式中，大部分设计模式都是为了解决代码的扩展性问题存在的。</p>
+<h3 id="如何理解对扩展开放-修改关闭">如何理解“对扩展开放、修改关闭”？</h3>
+<ol>
+<li>
+<p>开闭原则的英文全称是Open Closed Principle，OCP。他的英文描述是software entities(modules, classes, functions, etc.) should be open for extension, but closed for modification. 软件实体（模块、类、方法）应该对扩展开放，对修改关闭。</p>
+<ol>
+<li>说得明白点就是：添加一个新的功能应该是在已有代码的基础上扩展代码（新增模块、类、方法），而非修改已有代码（修改模块、类、方法）。</li>
+</ol>
+</li>
+<li>
+<p>举个例子🌰</p>
+<ol>
+<li>
+<p>作者给了一段API接口监控告警的代码。其中AlterRule存储警告规则，可以自由设置。Notification 是告警通知类，支持邮件、短信、微信、手机等多种通知渠道。NotificationEmergencyLevel 表示通知的紧急程度，包括 SEVERE（严重）、URGENCY（紧急）、NORMAL（普通）、TRIVIAL（无关紧要），不同的紧急程度对应不同的发送渠道。</p>
+<pre><code class="language-java">public class Alert {
+  private AlertRule rule;
+  private Notification notification;
+
+  public Alert(AlertRule rule, Notification notification) {
+    this.rule = rule;
+    this.notification = notification;
+  }
+
+  public void check(String api, long requestCount, long errorCount, long durationOfSeconds) {
+    long tps = requestCount / durationOfSeconds;
+    if (tps &gt; rule.getMatchedRule(api).getMaxTps()) {
+      notification.notify(NotificationEmergencyLevel.URGENCY, &quot;...&quot;);
+    }
+    if (errorCount &gt; rule.getMatchedRule(api).getMaxErrorCount()) {
+      notification.notify(NotificationEmergencyLevel.SEVERE, &quot;...&quot;);
+    }
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>现在我们要增加一个功能，当每秒钟接口<u>超时请求个数超过最大阈值</u>，也要触发报警。修改点在于：</p>
+<ol>
+<li>check的入参要增加超时请求个数；</li>
+<li>check中新增相应的判断逻辑。</li>
+</ol>
+<pre><code class="language-java">public class Alert {
+  // ...省略AlertRule/Notification属性和构造函数...
+  
+  // 改动一：添加参数timeoutCount
+  public void check(String api, long requestCount, long errorCount, long timeoutCount, long durationOfSeconds) {
+    long tps = requestCount / durationOfSeconds;
+    if (tps &gt; rule.getMatchedRule(api).getMaxTps()) {
+      notification.notify(NotificationEmergencyLevel.URGENCY, &quot;...&quot;);
+    }
+    if (errorCount &gt; rule.getMatchedRule(api).getMaxErrorCount()) {
+      notification.notify(NotificationEmergencyLevel.SEVERE, &quot;...&quot;);
+    }
+    // 改动二：添加接口超时处理逻辑
+    long timeoutTps = timeoutCount / durationOfSeconds;
+    if (timeoutTps &gt; rule.getMatchedRule(api).getMaxTimeoutTps()) {
+      notification.notify(NotificationEmergencyLevel.URGENCY, &quot;...&quot;);
+    }
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>这样的设计和修改的问题在于<u>所有使用到这个方法的地方都要修改。所有的单测也需要相应的修改。</u></p>
+</li>
+<li>
+<p>这样的改动是基于“修改”来实现的。我们将遵循开闭原则，以易扩展的方式设计和实现修改。</p>
+</li>
+<li>
+<p>首先重构一下之前的Alert代码</p>
+<ol>
+<li>将check的多个入参等装成ApiStateInfo类；</li>
+<li>引入handler的概念，将if判断逻辑分散在各个handler中。</li>
+</ol>
+<pre><code class="language-java">public class Alert {
+  private List&lt;AlertHandler&gt; alertHandlers = new ArrayList&lt;&gt;();
+  
+  public void addAlertHandler(AlertHandler alertHandler) {
+    this.alertHandlers.add(alertHandler);
+  }
+
+  public void check(ApiStatInfo apiStatInfo) {
+    for (AlertHandler handler : alertHandlers) {
+      handler.check(apiStatInfo);
+    }
+  }
+}
+
+public class ApiStatInfo {//省略constructor/getter/setter方法
+  private String api;
+  private long requestCount;
+  private long errorCount;
+  private long durationOfSeconds;
+}
+
+public abstract class AlertHandler {
+  protected AlertRule rule;
+  protected Notification notification;
+  public AlertHandler(AlertRule rule, Notification notification) {
+    this.rule = rule;
+    this.notification = notification;
+  }
+  public abstract void check(ApiStatInfo apiStatInfo);
+}
+
+public class TpsAlertHandler extends AlertHandler {
+  public TpsAlertHandler(AlertRule rule, Notification notification) {
+    super(rule, notification);
+  }
+
+  @Override
+  public void check(ApiStatInfo apiStatInfo) {
+    long tps = apiStatInfo.getRequestCount()/ apiStatInfo.getDurationOfSeconds();
+    if (tps &gt; rule.getMatchedRule(apiStatInfo.getApi()).getMaxTps()) {
+      notification.notify(NotificationEmergencyLevel.URGENCY, &quot;...&quot;);
+    }
+  }
+}
+
+public class ErrorAlertHandler extends AlertHandler {
+  public ErrorAlertHandler(AlertRule rule, Notification notification){
+    super(rule, notification);
+  }
+
+  @Override
+  public void check(ApiStatInfo apiStatInfo) {
+    if (apiStatInfo.getErrorCount() &gt; rule.getMatchedRule(apiStatInfo.getApi()).getMaxErrorCount()) {
+      notification.notify(NotificationEmergencyLevel.SEVERE, &quot;...&quot;);
+    }
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>使用Alert。ApplicationContext 是一个单例类，负责 Alert 的创建、组装（alertRule 和 notification 的依赖注入）、初始化（添加 handlers）工作。单例相当于给Alert feature的调用提供一个抓手、入口。</p>
+<pre><code class="language-java">public class ApplicationContext {
+  private AlertRule alertRule;
+  private Notification notification;
+  private Alert alert;
+  
+  public void initializeBeans() {
+    alertRule = new AlertRule(/*.省略参数.*/); //省略一些初始化代码
+    notification = new Notification(/*.省略参数.*/); //省略一些初始化代码
+    alert = new Alert();
+    alert.addAlertHandler(new TpsAlertHandler(alertRule, notification));
+    alert.addAlertHandler(new ErrorAlertHandler(alertRule, notification));
+  }
+  public Alert getAlert() { return alert; }
+
+  // 饿汉式单例
+  private static final ApplicationContext instance = new ApplicationContext();
+  private ApplicationContext() {
+    initializeBeans();
+  }
+  public static ApplicationContext getInstance() {
+    return instance;
+  }
+}
+
+public class Demo {
+  public static void main(String[] args) {
+    ApiStatInfo apiStatInfo = new ApiStatInfo();
+    // ...省略设置apiStatInfo数据值的代码
+    ApplicationContext.getInstance().getAlert().check(apiStatInfo);
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>再进行之前说的改动，对于每秒钟接口超时请求个数超过某个最大阈值就告警。</p>
+<ol>
+<li>给ApiStatInfo类增加一个属性：超时请求个数timeOutCount;</li>
+<li>增加一个handler，在这个handler中的check方法实现这个告警规则；</li>
+<li>再initializebean（application context)的时候给单例的alter添加上这个handler。</li>
+<li>使用alter的时候，给check函数的入参apiStatInfo对象设置相应的timeOutCount值。</li>
+</ol>
+<p>这样基于扩展增加了新的handler，不需要改动原来的check逻辑，也只需要为新的handler增加单测，以前的不会失效。</p>
+<pre><code class="language-java">public class Alert { // 代码未改动... }
+public class ApiStatInfo {//省略constructor/getter/setter方法
+  private String api;
+  private long requestCount;
+  private long errorCount;
+  private long durationOfSeconds;
+  private long timeoutCount; // 改动一：添加新字段
+}
+public abstract class AlertHandler { //代码未改动... }
+public class TpsAlertHandler extends AlertHandler {//代码未改动...}
+public class ErrorAlertHandler extends AlertHandler {//代码未改动...}
+// 改动二：添加新的handler
+public class TimeoutAlertHandler extends AlertHandler {//省略代码...}
+
+public class ApplicationContext {
+  private AlertRule alertRule;
+  private Notification notification;
+  private Alert alert;
+  
+  public void initializeBeans() {
+    alertRule = new AlertRule(/*.省略参数.*/); //省略一些初始化代码
+    notification = new Notification(/*.省略参数.*/); //省略一些初始化代码
+    alert = new Alert();
+    alert.addAlertHandler(new TpsAlertHandler(alertRule, notification));
+    alert.addAlertHandler(new ErrorAlertHandler(alertRule, notification));
+    // 改动三：注册handler
+    alert.addAlertHandler(new TimeoutAlertHandler(alertRule, notification));
+  }
+  //...省略其他未改动代码...
+}
+
+public class Demo {
+  public static void main(String[] args) {
+    ApiStatInfo apiStatInfo = new ApiStatInfo();
+    // ...省略apiStatInfo的set字段代码
+    apiStatInfo.setTimeoutCount(289); // 改动四：设置tiemoutCount值
+    ApplicationContext.getInstance().getAlert().check(apiStatInfo);
+}
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="修改代码意味着违反开闭原则吗">修改代码意味着违反开闭原则吗</h3>
+<p>上述修改的1/3/4不都是在修改了原来的代码吗？让我们一个个分析：</p>
+<ol>
+<li>
+<p>往ApiStateInfo中增加新的属性timeOutCount</p>
+<ul>
+<li>
+<p>我们不仅增加了新的属性，还增加了getter、Setter。</p>
+</li>
+<li>
+<p>在”类“的粒度上我们是在修改类，增加了新的属性；但是在”方法“的粒度上，我们没有改变现有的其他方法，所以这个增加又可以是拓扩展</p>
+</li>
+<li>
+<p>我们不需要纠结（我认同，不需要纠结概念）他是修改还是扩展。回到这个原则的设计初衷就是**<u>没有破坏原有代码的运行，没有破坏单测。</u>**</p>
+</li>
+</ul>
+</li>
+<li>
+<p>改动3、4。虽然在各个层面都是修改，但是他们是不可避免的，<u>是可以接受的。</u></p>
+<ul>
+<li>
+<p>我们要认识到，添加一个新功能，不可能任何模块、类、方法的代码都不“修改”，这个是做不到的。类需要创建、组装、并且做一些初始化操作，才能构建成可运行的的程序，这部分代码的修改是在所难免的。我们要做的是尽量让修改操作更集中、更少、更上层，尽量让最核心、最复杂的那部分逻辑代码满足开闭原则。</p>
+<blockquote>
+<p>细枝末节因为java的语法和代码设计肯定需要增强和修改，但是原来的核心逻辑是没有动的，就是增加了一个handler处理新的逻辑。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="如何做到对扩展开放-修改关闭">如何做到”对扩展开放、修改关闭“</h3>
+<ol>
+<li>
+<p>我一开始确实想不到设计handler。笔者也说了慢慢积累经验。</p>
+</li>
+<li>
+<p><strong>时刻具备扩展意识，抽象意识，封装意识</strong></p>
+</li>
+<li>
+<p>在写代码的时候，要花时间多往后思考这段代码可能会有哪些需求变更、如何设计代码结构，事先留好扩展点，以便在未来需求变更时候不需要改动代码整体结构。做到最小代码设计改动情况下，新代码很灵活的插入到扩展点。</p>
+</li>
+<li>
+<p>在识别代码的可变部分和不可变部分后，我们要将可变部分封装起来，隔离变化，提供抽象化的不可变接口给上层使用。</p>
+</li>
+<li>
+<p>在众多设计原则，思想，模式中，最常用来提高代码扩展性的方法有：多态、依赖注入、基于接口而非实现编程，以及大部分设计模式（后面详细说）。</p>
+<ol>
+<li>
+<p>多态、依赖注入、基于接口而非实现编程都是同一个哲学（或者说思路），只是从不同角度阐述。</p>
+</li>
+<li>
+<p>来个例子：我们通过Kafka发送异步消息。我们在这个功能的开发中我们要学会将其抽象成一组跟具体消息队列无关的异步消息接口。以便我们在以后用RabbitMQ替换Kafka的时候很方便。</p>
+<pre><code class="language-java">// 这一部分体现了抽象意识
+public interface MessageQueue { //... }
+public class KafkaMessageQueue implements MessageQueue { //... }
+public class RocketMQMessageQueue implements MessageQueue {//...}
+
+public interface MessageFromatter { //... }
+public class JsonMessageFromatter implements MessageFromatter {//...}
+public class ProtoBufMessageFromatter implements MessageFromatter {//...}
+
+public class Demo {
+  private MessageQueue msgQueue; // 基于接口而非实现编程
+  public Demo(MessageQueue msgQueue) { // 依赖注入
+    this.msgQueue = msgQueue;
+  }
+  
+  // msgFormatter：多态、依赖注入
+  public void sendNotification(Notification notification, MessageFormatter msgFormatter) {
+    //...    
+  }
+}
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="如何在项目中灵活应用这个原则">如何在项目中灵活应用这个原则？</h3>
+<ol>
+<li><strong><u>如何识别扩展点</u></strong>：
+<ol>
+<li>如果是业务导向的系统，我们需要尽可能了解业务，能够知道当下未来可能需要支持的业务需求。</li>
+<li>如果是跟业务无关的偏底层的需求，比如框架组件类库等，你需要了解他们可能会如何被使用，打算添加什么功能，使用者未来可能会有什么需求？</li>
+</ol>
+</li>
+<li>不过还是要适度，避免过度设计。</li>
+<li>所以对于一些比较确定的、短期能可能扩展，或者需求改动对代码结构影响比较大的情况，或者是实现成本不高的扩展点，在写代码的时候可以是先做扩展性设计。</li>
+<li>但是对于不确定未来要支持的需求，扩展比较复杂的扩展点，可以等需求驱动再去做通过重构的方式来支持扩展。</li>
+<li>扩展可能会和可读性冲突。Alert代码在考虑过扩展性之后的重构设计和理解上都增加了一些难度。我们需要做一些权衡。</li>
+</ol>
+<p>我之前对于一些好代码的理解单纯是DRY，也就是不重复的代码。这个思路没错但是现在看来有点初阶或者是浅显了。之前一个需求就是对于多个Object增加一个新的unique id，然后要对他们的格式和唯一性做校验。最开始的设计和实现是在每个Object的manager的save方法中去实现了这个validator，其实每个validator的视线逻辑大概有80%相似，但是操作的Object不同，校验逻辑大概有一些细微的差别。</p>
+<p>后面就在一到两周后有了点时间，在做这个function的test的时候做了重构，这次重构是针对的重复代码，把这些validation的逻辑从每个Object的manager中抽离出来，做了一个validator类，其中只有一个静态的validation方法，针对传进来的参数类型确定使用不同的校验细节的增减，这样一下子将代码集中，变得更好维护，而且也减少了代码量，提升了可读性。</p>
+<p>但当时review代码的同事就提出了一个建议就是说如果考虑到整个代码的可扩展性，以后如果还要给其他的object增加这个unique id以及类似的校验逻辑，还是会回来改这个validator。这样其实是违反了OCP。</p>
+<p>我当时其实想到了将所有的东西放进去一个validator的”弊端“：集中了修改。但是考虑到这个需求以后可能对于我们现有的object已经足够，以后增加其他的object（未知）。</p>
+<p>经过他的介绍，再加上又看了这个文章，比较清晰的意识到问题所在。</p>
+<p>如果要对那个代码重构，使其更加具有可扩展性，我之前同事说的是：”splitting it into a base class along with a set of different subclasses“。我理解或者说现在可以想到的：</p>
+<ol>
+<li>做一个抽象类包含通用的部分；</li>
+<li>每个不同的object去继承这个类，针对自己的逻辑增加特定方法；</li>
+<li>然后再在使用的地方调用这些方法即可；</li>
+</ol>
+<p>这样在增加其他的object需要使用类似的同样可以继承通用的部分，然后依靠多态在自己的xxxObjectValidator类中去实现自己的逻辑。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[设计模式之美-课程笔记7-设计原则1-单一职责(SRP)]]></title>
+        <id>https://10kshuaizhang.github.io/post/she-ji-mo-shi-zhi-mei-ke-cheng-bi-ji-7-she-ji-yuan-ze-1-solid/</id>
+        <link href="https://10kshuaizhang.github.io/post/she-ji-mo-shi-zhi-mei-ke-cheng-bi-ji-7-she-ji-yuan-ze-1-solid/">
+        </link>
+        <updated>2023-06-16T03:56:24.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="理论一对于单一职责原则如何判定某个类的职责是否够单一">理论一：对于单一职责原则，如何判定某个类的职责是否够“单一”？</h2>
+<h3 id="如何理解单一职责原则srp">如何理解单一职责原则（SRP)</h3>
+<ol>
+<li>单一职责原则:Single responsibility Principle, SRP. A class or module should have a single responsibility. 一个类或模块只负责完成一个职责（或者功能）。关于模块和类有两种理解：
+<ol>
+<li>模块可以看做更抽象的类，类也可看成一个模块。</li>
+<li>模块可以看做更粗粒度的代码块，包含多个类。</li>
+</ol>
+</li>
+<li>解读就是不要设计大而全的类，要设计粒度小，功能单一的类。比如一个类既包含订单的操作，又包含用户的操作，他们（用户和订单）是不同的领域模型，我们应该将其拆分。</li>
+</ol>
+<h3 id="如何判断类的职责足够单一">如何判断类的职责足够单一</h3>
+<p>举个例子，比如我们要设计一个社交产品，其中UserInfo用来记录用户的信息，以下这个类是否满足单一职责原则：</p>
+<pre><code class="language-java">public class UserInfo {
+  private long userId;
+  private String username;
+  private String email;
+  private String telephone;
+  private long createTime;
+  private long lastLoginTime;
+  private String avatarUrl;
+  private String provinceOfAddress; // 省
+  private String cityOfAddress; // 市
+  private String regionOfAddress; // 区 
+  private String detailedAddress; // 详细地址
+  // ...省略其他属性和方法...
+}
+</code></pre>
+<blockquote>
+<p>反正我看着属性有点多，下面的省市区详细地址可以拆成另一个类。</p>
+</blockquote>
+<p>作者提供的两个观点：1是和我的一样，地址信息占比较高，可以继续拆分成独立的UserAddress类，UserInfo只保留地址以外的信息。2. 是所有的信息都是用户相关的，所以满足SRP。</p>
+<ol>
+<li><strong>结合实际的应用业务场景</strong>。如何地址信息只是单纯的用来展示的，和其他的属性一样，那么就可以保留在UserInfo中。但是如果业务在拓展，有了电商模块，用户的地址信息还会用在电商物流中，那么我们最好将其分离出来，独立成物流信息。</li>
+<li>如果业务继续发展，这个公司开发出来其他的一些应用，公司希望支持统一账号系统（一个账号可以登陆旗下所有app），那么我们还需要对UserInfo继续拆分，将身份认证的信息例如email， phone抽取成独立的的类。</li>
+<li>不同的应用场景、不同阶段的需求背景下，对一个类的单一职责判定是不同的。</li>
+<li>在实际开发中，<strong>我们可以先写一个粗粒度的类，满足业务需求。随着业务发展，如果粗粒度的类越来越庞大，代码越来越多，这个时候我们那就可以将这个类拆分成几个更细粒度的类。这就是所谓的持续重构。</strong></li>
+<li>为什么做拆分
+<ol>
+<li>类中的代码行数、函数或属性过多。影响代码的可读性可维护性。</li>
+<li>类依赖的其他类过多，或者依赖这个类的其他类过多，不符合高内聚、低耦合的设计思想。</li>
+<li>所有方法过多的，我们可以考虑是否可以将私有方法独立到新类中设置为公有方法，以供更多类使用提高代码复用。</li>
+<li>比较难起名字。这时候说明类的职责不是十分清晰。</li>
+<li>大量的方法都集中操作某几个属性，比如在UserInfo中一半的方法在操作address信息，那么就可以考虑将address相关的信息和方法拆分出来。</li>
+</ol>
+</li>
+<li>没有很具体的方法论和很定量说多少属性算多。如果要找一个标准，可以通过一个类是否已经让你感觉十分复杂和过多功能了来判断。</li>
+</ol>
+<h3 id="类的职责是否越单一越好">类的职责是否越单一越好？</h3>
+<p>看个例子：</p>
+<pre><code class="language-java">/**
+ * Protocol format: identifier-string;{gson string}
+ * For example: UEUEUE;{&quot;a&quot;:&quot;A&quot;,&quot;b&quot;:&quot;B&quot;}
+ */
+public class Serialization {
+  private static final String IDENTIFIER_STRING = &quot;UEUEUE;&quot;;
+  private Gson gson;
+  
+  public Serialization() {
+    this.gson = new Gson();
+  }
+  
+  public String serialize(Map&lt;String, String&gt; object) {
+    StringBuilder textBuilder = new StringBuilder();
+    textBuilder.append(IDENTIFIER_STRING);
+    textBuilder.append(gson.toJson(object));
+    return textBuilder.toString();
+  }
+  
+  public Map&lt;String, String&gt; deserialize(String text) {
+    if (!text.startsWith(IDENTIFIER_STRING)) {
+        return Collections.emptyMap();
+    }
+    String gsonStr = text.substring(IDENTIFIER_STRING.length());
+    return gson.fromJson(gsonStr, Map.class);
+  }
+}
+</code></pre>
+<p>如果我们想拆分这个类，让职责更单一，拆分出Serializer和Deserializer</p>
+<pre><code class="language-java">public class Serializer {
+  private static final String IDENTIFIER_STRING = &quot;UEUEUE;&quot;;
+  private Gson gson;
+  
+  public Serializer() {
+    this.gson = new Gson();
+  }
+  
+  public String serialize(Map&lt;String, String&gt; object) {
+    StringBuilder textBuilder = new StringBuilder();
+    textBuilder.append(IDENTIFIER_STRING);
+    textBuilder.append(gson.toJson(object));
+    return textBuilder.toString();
+  }
+}
+
+public class Deserializer {
+  private static final String IDENTIFIER_STRING = &quot;UEUEUE;&quot;;
+  private Gson gson;
+  
+  public Deserializer() {
+    this.gson = new Gson();
+  }
+  
+  public Map&lt;String, String&gt; deserialize(String text) {
+    if (!text.startsWith(IDENTIFIER_STRING)) {
+        return Collections.emptyMap();
+    }
+    String gsonStr = text.substring(IDENTIFIER_STRING.length());
+    return gson.fromJson(gsonStr, Map.class);
+  }
+}
+</code></pre>
+<p>拆分后功能更单一了，但是我们如果修改了协议的格式，数据标识从“UEUEUE”改为“DFDFDF”，或者序列化方式从 JSON 改为了 XML，那 Serializer 类和 Deserializer 类都需要做相应的修改，代码的内聚性显然没有原来 Serialization 高了</p>
+<p>或者我们只改了desirializer。忘记了serializer，那么就会导致序列化反序列化不匹配。这其实是可维护性变差了。</p>
+<p><strong>总体还是要从代码的可读性，可维护性和可扩展性去考虑。</strong></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[74. Search a 2D Matrix]]></title>
+        <id>https://10kshuaizhang.github.io/post/74-search-a-2d-matrix/</id>
+        <link href="https://10kshuaizhang.github.io/post/74-search-a-2d-matrix/">
+        </link>
+        <updated>2023-06-14T23:20:14.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="question">Question</h2>
+<p>You are given an <code>m x n</code> integer matrix <code>matrix</code> with the following two properties:</p>
+<ul>
+<li>Each row is sorted in non-decreasing order.</li>
+<li>The first integer of each row is greater than the last integer of the previous row.</li>
+</ul>
+<p>Given an integer <code>target</code>, return <code>true</code> <em>if</em> <code>target</code> <em>is in</em> <code>matrix</code> <em>or</em> <code>false</code> <em>otherwise</em>.</p>
+<p>You must write a solution in <code>O(log(m * n))</code> time complexity.</p>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li><code>m == matrix.length</code></li>
+<li><code>n == matrix[i].length</code></li>
+<li><code>1 &lt;= m, n &lt;= 100</code></li>
+<li><code>-10^4 &lt;= matrix[i][j], target &lt;= 10^4</code></li>
+</ul>
+<h2 id="algorithm">Algorithm</h2>
+<p>This is a typical binary search question. You have a strictly sorted array and you are asked to find the target. Now the array is segmented on a matrix, so you need to figure out how to map the 1D array index into a 2D array.</p>
+<p>So basically, say we have a index <code>mid</code> in 1-D array, in the question, the matrix is</p>
+<ul>
+<li>Each row is sorted in non-decreasing order.</li>
+<li>The first integer of each row is greater than the last integer of the previous row.</li>
+</ul>
+<p>So we could simply make</p>
+<pre><code>i = mid / n;
+j = mid % n;
+</code></pre>
+<p>Like this:</p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306150720359.png" alt="image-20230615071939948" loading="lazy"></figure>
+<h2 id="code">Code</h2>
+<pre><code class="language-java">class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int left = 0;
+        int right = m * n;
+        int mid, i, j;
+        while (left &lt; right) {
+            mid = left + (right - left) / 2;
+            i = mid / n;
+            j = mid % n;
+            if (target == matrix[i][j]) {
+                return true;
+            } else if (target &gt; matrix[i][j]) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        return false;
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[378. Kth Smallest Element in a Sorted Matrix]]></title>
+        <id>https://10kshuaizhang.github.io/post/378-kth-smallest-element-in-a-sorted-matrix/</id>
+        <link href="https://10kshuaizhang.github.io/post/378-kth-smallest-element-in-a-sorted-matrix/">
+        </link>
+        <updated>2023-06-13T23:34:01.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="question">Question</h2>
+<p>Given an <code>n x n</code> <code>matrix</code> where each of the rows and columns is sorted in ascending order, return <em>the</em> <code>kth</code> <em>smallest element in the matrix</em>.</p>
+<p>Note that it is the <code>kth</code> smallest element <strong>in the sorted order</strong>, not the <code>kth</code> <strong>distinct</strong> element.</p>
+<p>You must find a solution with a memory complexity better than <code>O(n2)</code>.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: matrix = [[1,5,9],[10,11,13],[12,13,15]], k = 8
+Output: 13
+Explanation: The elements in the matrix are [1,5,9,10,11,12,13,13,15], and the 8th smallest number is 13
+</code></pre>
+<h2 id="algorithm">Algorithm</h2>
+<p>See the below each explanation.</p>
+<h2 id="code">Code</h2>
+<h3 id="code1">Code1</h3>
+<p>I use a priority queue to store all the numbers and pop them according to the index.</p>
+<pre><code class="language-java">class Solution {
+    public int kthSmallest(int[][] matrix, int k) {
+        // 1. pq nlogn time, n space, not utilizing the sorted order in x and y;
+        PriorityQueue&lt;Integer&gt; pq = new PriorityQueue();
+        for (int i = 0; i &lt; matrix.length; i++) {
+            for (int j = 0; j &lt; matrix[0].length; j++) {
+                pq.offer(matrix[i][j]);
+            }
+        }
+        
+        while (k-- &gt; 1) {
+            pq.poll();
+        }
+        return pq.poll();
+        
+    }
+}
+</code></pre>
+<h3 id="code2">Code2</h3>
+<p>In my submission history and the answer provided by the leetcode, when they are using the priority queue, they also put the index info into the queue. I'm not fully understand this.</p>
+<pre><code class="language-java">class Solution {
+    public int kthSmallest(int[][] matrix, int k) {
+        //solution 1 qriorityqueue 
+        // space : O(n) time O(nlogn)
+        PriorityQueue&lt;Tuple&gt; pq = new PriorityQueue&lt;&gt;(matrix.length, (a, b) -&gt; (a.val - b.val));
+        for(int i = 0; i &lt; matrix.length; i++) {
+            pq.offer(new Tuple(0, i, matrix[0][i]));
+        }
+        for(int i = 0; i &lt; k - 1; i++) {
+            Tuple tuple = pq.poll();
+            if(tuple.x == matrix.length - 1) continue;
+            pq.offer(new Tuple(tuple.x + 1, tuple.y, matrix[tuple.x + 1][tuple.y]));
+        }
+        return pq.poll().val;
+    }
+    public class Tuple{
+        int x, y, val;
+        public Tuple(int x, int y, int val) {
+            this.x = x;
+            this.y = y;
+            this.val = val;
+        }
+    }
+}
+</code></pre>
+<h3 id="code3">Code3</h3>
+<p>I also notice that each row is sorted, though I have no idea how to use binary search to tackle the problem.  Thanks to the <a href="https://anj910.medium.com/leetcode-378-kth-smallest-element-in-a-sorted-matrix-%E4%B8%AD%E6%96%87-318d52f366af">blog</a>, who gives a clear walk through of the binary search process.</p>
+<p>If you go through this algorithm roughly, you will have a question: Overall the number is not sorted, how do they determine the mid number?</p>
+<p>Actually this algorithm doesn't really use the real number, it use the number count. Let walk through it.</p>
+<ol>
+<li>
+<p>We know the <code>matrix[0][0]</code> is the smallest number since in its right side and downside, all the numbers are larger, and thus <code>matrix[n-1][n-1]</code> is the largest in the matrix. So we are going to find the k-th largest number between them.</p>
+</li>
+<li>
+<p>Each loop we will get the mid number and find its rank in the matrix. If this rank is smaller than k, we know that the number is smaller than the k-th number, we shrink the range to <code>[start, mid]</code>; if the mid number rank is larger than k, which means the mid number is larger than the k-th number and we need to go to <code>[mid+1, end]</code> to find the number.</p>
+<ol>
+<li>
+<p>We use mid number, but the number may not be in the matrix. <strong>What we are looking for is the number count that is smaller/larger than that mid</strong>, and shrink the search range until we only have 1 number in the range.</p>
+</li>
+<li>
+<p>Let's go through an example, find the 21th smallest number.</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306080840934.png" alt="image-20230608084005803"  />
+<ol>
+<li>We search range<code>[1, 1000]</code>, mid number is 500, and we got 24 numbers smaller than 500, and the 21th we are looking for is smaller than 24, so we should shrink the search range in the first half, <code>[1, 500]</code>;</li>
+<li>Then we look for range <code>[1, 500]</code>, calculate mid number 250, and there are 24 number smaller than 250, which means 250 is the 24th smallest number; thus the range shrink to the <code>[1, 125]</code>;</li>
+<li>Then we look for range <code>[1, 125]</code>, calculate mid number 63, and there are 23 number smaller than 125, which means 125 is the 23rd smallest number; thus the range shrink to the <code>[1, 63]</code>;</li>
+<li>Then we look for range <code>[1, 63]</code>, calculate mid number 33, and there are 16 number smaller than 63, which means 63 is the 16th smallest number, which means our search range should become <code>[33, 63]</code>;</li>
+<li>Then we look for range <code>[33, 63]</code>, calculate mid number 48, and there are 22 number smaller than 48, which means 48 is the 22nd smallest number, which means our search range should become <code>[33, 48]</code>;</li>
+<li>Then we look for range <code>[33, 48]</code>, calculate mid number 40, and there are 21 number smaller than 40, which means 40 is the 21st smallest number, target rank! But we cannot confirm that 40 is in the matrix. So we continue narrow down the range to <code>[33, 40]</code>;</li>
+<li>Then we check range <code>[33, 40]</code>, mid number is 36 and it's rank is 18 so we know too much;</li>
+<li>Then we check range <code>[37, 40]</code>, mid number is 38 and it's rank is 18 so we know too much;</li>
+<li>Then we check range <code>[39, 40]</code>, mid number is 38 and it's rank is 19 so we know too much;</li>
+<li>Then we get range <code>[40, 40]</code>, return it.</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p>Now it becomes how do we count the number that are smaller than the mid number?</p>
+<ol>
+<li>
+<p>Maybe leetcode 240 is a good start for this question to search target number in a 2D-matrix.</p>
+</li>
+<li>
+<p>We start from left down corner and count how many numbers are smaller.</p>
+</li>
+<li>
+<p>Lets walk through an example: <u>find how many numbers are smaller than 20</u></p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306080855470.png" alt="image-20230608085555402" loading="lazy"></figure>
+<ol>
+<li>
+<p>We use <code>count</code> to store the number;</p>
+</li>
+<li>
+<p>We are starting from <code>matrix[4][0]</code> which is 19 and is smaller than 20, we know the numbers above it are larger, so the <code>count += 5</code>, which is 5 now. And to get closer to 20, we move the position rightward;</p>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306080900048.png" alt="image-20230608090033996" loading="lazy"></figure>
+</li>
+<li>
+<p>Now we have <code>matrix[4][1] &gt; 20</code>, so we go upwards for a smaller one; count = 5;</p>
+<figure data-type="image" tabindex="3"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306080902555.png" alt="image-20230608090239506" loading="lazy"></figure>
+</li>
+<li>
+<p>Now we have <code>matrix[3][1] &gt; 20</code>, so we go upwards for a smaller one; count = 5;</p>
+<figure data-type="image" tabindex="4"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306080903093.png" alt="image-20230608090316059" loading="lazy"></figure>
+</li>
+<li>
+<p>Now we have <code>matrix[2][1] &gt; 20</code>, so we go upwards for a smaller one;count = 5;</p>
+<figure data-type="image" tabindex="5"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306080903982.png" alt="image-20230608090355929" loading="lazy"></figure>
+</li>
+<li>
+<p>Now we have <code>matrix[1][1] &lt;= 20</code>, the number above it and in the left side are smaller than it, we came from right(larger side), so we go to right side to find a larger one(the final destination is the right above area); <code>count += 2</code>; count = 7;</p>
+<figure data-type="image" tabindex="6"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306080906099.png" alt="image-20230608090612039" loading="lazy"></figure>
+</li>
+<li>
+<p>Now we have <code>matrix[1][2] &gt; 20</code>, so we go upwards for a smaller one; count = 7;</p>
+<figure data-type="image" tabindex="7"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306080907923.png" alt="image-20230608090710868" loading="lazy"></figure>
+</li>
+<li>
+<p>Now we have <code>matrix[0][2] &lt;= 20</code>, the number above it and in the left side are smaller than it, we came from right(larger side), so we go to right side to check if there is a larger one(the final destination is the right above area); <code>count += 1</code>; count = 8;</p>
+<figure data-type="image" tabindex="8"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306080909183.png" alt="image-20230608090953136" loading="lazy"></figure>
+</li>
+<li>
+<p>Now we are at <code>matrix[0][3]&lt;=20</code>. So we need to check if there are larger number in the right above area; so we go right; <code>count += 1</code>; count = 9;</p>
+<figure data-type="image" tabindex="9"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306080912774.png" alt="image-20230608091229689" loading="lazy"></figure>
+</li>
+<li>
+<p>Now we are at <code>matrix[0][4] &gt; 20</code>. And we how nowhere to go (we are from left, and downside is even larger ones). count = 9.</p>
+<figure data-type="image" tabindex="10"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306080914357.png" alt="image-20230608091403309" loading="lazy"></figure>
+</li>
+<li>
+<p>Thus, all the smaller number are found, count = 9; red marked all the grids we counted.</p>
+<figure data-type="image" tabindex="11"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306080928288.png" alt="image-20230608092835223" loading="lazy"></figure>
+</li>
+<li>
+<p>The reason of each direction choose is that, for number 28, it's right upper area and left downside area are not guaranteed to be larger or smaller than it. So our count helper would go thought these areas to ensure we get all the qualified numbers.</p>
+<figure data-type="image" tabindex="12"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306080938116.png" alt="image-20230608093829028" loading="lazy"></figure>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<pre><code class="language-java">class Solution {
+    public int kthSmallest(int[][] matrix, int k) {
+        int start = matrix[0][0];
+        int end = matrix[matrix.length-1][matrix[0].length-1]+1;
+        while(start&lt;end) {
+            int mid = start+(end-start)/2;
+            int count = 0;
+            int j = matrix[0].length-1;
+            for(int i = 0;i&lt;matrix.length;i++) {
+                while(j&gt;=0 &amp;&amp; matrix[i][j] &gt; mid) j--;
+                count += (j+1);
+            }
+            
+            if(count &gt;= k) {
+                end = mid;
+            } else {
+                start = mid+1;
+            }
+        }
+        return start;
+    }
+}
+</code></pre>
+<p>Time complexity is O(n*log(max-min)).</p>
+<h2 id="code4my-code">Code4(My code)</h2>
+<pre><code class="language-java">class Solution {
+    public int kthSmallest(int[][] matrix, int k) {
+        int n = matrix.length;
+        int left = matrix[0][0];
+        int right = matrix[n-1][n-1];
+        while (left &lt; right) {
+            int mid = left + (right - left) / 2;
+            int count = helper(matrix, mid);
+            if (count &gt;= k) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+    private int helper(int[][] matrix, int num) {
+        int n = matrix.length;
+        int count = 0;
+        int i = n - 1;
+        int j = 0;
+        while (i &gt;= 0 &amp;&amp; j &lt; n) {
+            if (matrix[i][j] &lt;= num) {
+                count += (i+1);
+                j++;
+            } else {
+                i--;
+            }
+        }
+        return count;
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[329. Longest Increasing Path in a Matrix]]></title>
+        <id>https://10kshuaizhang.github.io/post/329-longest-increasing-path-in-a-matrix/</id>
+        <link href="https://10kshuaizhang.github.io/post/329-longest-increasing-path-in-a-matrix/">
+        </link>
+        <updated>2023-06-06T23:31:01.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="question">Question</h3>
+<p>Given an <code>m x n</code> integers <code>matrix</code>, return <em>the length of the longest increasing path in</em> <code>matrix</code>.</p>
+<p>From each cell, you can either move in four directions: left, right, up, or down. You <strong>may not</strong> move <strong>diagonally</strong> or move <strong>outside the boundary</strong> (i.e., wrap-around is not allowed).</p>
+<p><strong>Example 1:</strong></p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306060754252.jpg" alt="img" loading="lazy"></figure>
+<pre><code>Input: matrix = [[9,9,4],[6,6,8],[2,1,1]]
+Output: 4
+Explanation: The longest increasing path is [1, 2, 6, 9].
+</code></pre>
+<p><strong>Example 2:</strong></p>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306060754171.jpg" alt="img" loading="lazy"></figure>
+<pre><code>Input: matrix = [[3,4,5],[3,2,6],[2,2,1]]
+Output: 4
+Explanation: The longest increasing path is [3, 4, 5, 6]. Moving diagonally is not allowed.
+</code></pre>
+<p><strong>Example 3:</strong></p>
+<pre><code>Input: matrix = [[1]]
+Output: 1
+</code></pre>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li><code>m == matrix.length</code></li>
+<li><code>n == matrix[i].length</code></li>
+<li><code>1 &lt;= m, n &lt;= 200</code></li>
+<li><code>0 &lt;= matrix[i][j] &lt;= 231 - 1</code></li>
+</ul>
+<h2 id="algorithm">Algorithm</h2>
+<ol>
+<li>
+<p>Naive flood filled algorithm will case a time limit exceed. Code1</p>
+</li>
+<li>
+<p>If you think about the first solution, you may find when you traveling the matrix, some grid may be traversed repeatedly. So you may want utilize memorization to prune the unnecessary operations.</p>
+<p>In the code2, I made a huge optimized both in code and algorithm. In Algorithm, the code 1 worst case is <u>O(2^m * 2^n),</u> and space is O(mn), while the code2 is O(mn) for both time and space. Because in the second algorithm, each grid will be touched once and only once due to the memo. In the code1, each grid will be travelled to the end if it's worst case.</p>
+<p>In code, I use the direction array to avoid repetition in the code1. And the made the DFS itself return the desired value instead of introduce a new value carried with the function.</p>
+<p>The implementation would be we go through each node, and then check if their neighbors has a recalculated result, if yes, we simply get that one and add one step(or level); if not, we do a DFS to its neighbor. In the DFS, we keep updating the memo to get the result for each grid. If you are going next level, we add the result one step.</p>
+</li>
+<li>
+<p>There is another solution which utilize the dynamic programming. But before you dive into DP, since the grid has dependencies on its neighbors, so the elements you manipulate in DB should be sorted  first.</p>
+<p>Such dependency sorting is topological sort.</p>
+<p>Personally I think this is not that hard to implement but the more algorithm you involve in a solution, the higher chance you will get an error. So if you goal is to solve it, just use the algorithm2. That's enough.</p>
+</li>
+</ol>
+<h2 id="code1naive-dfstle">Code1(Naive DFS)(TLE)</h2>
+<pre><code class="language-java">class Solution {
+    int res;
+    public int longestIncreasingPath(int[][] matrix) {
+        res = 1;
+        for (int i = 0; i &lt; matrix.length; i++) {
+            for (int j = 0; j &lt; matrix[0].length; j++) {
+                dfs(matrix, i, j, 1);
+            }
+        }
+        return res;
+    }
+    
+    private void dfs(int[][] matrix, int i, int j, int level) {
+        if (i - 1 &gt;= 0) {
+            if (matrix[i-1][j] &gt; matrix[i][j]) {
+                dfs(matrix, i - 1, j, level + 1);
+            }
+        }
+        if (i + 1 &lt; matrix.length) {
+            if (matrix[i+1][j] &gt; matrix[i][j]) {
+                dfs(matrix, i + 1, j, level + 1);
+            }
+        }
+        if (j - 1 &gt;= 0) {
+            if (matrix[i][j-1] &gt; matrix[i][j]) {
+                dfs(matrix, i, j - 1, level + 1);
+            }
+        }
+        if (j + 1 &lt; matrix[0].length) {
+            if (matrix[i][j+1] &gt; matrix[i][j]) {
+                dfs(matrix, i, j + 1, level + 1);
+            }
+        }
+        
+        res = Math.max(res, level);
+    }
+}
+</code></pre>
+<h2 id="code2">Code2</h2>
+<pre><code class="language-java">class Solution {
+    int[][] memo;
+    int m, n;
+    private static final int[][] dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    public int longestIncreasingPath(int[][] matrix) {
+        int res = 1;
+        m = matrix.length;
+        n = matrix[0].length;
+        memo = new int[m][n];
+        
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                res = Math.max(res, dfs(matrix, memo, i, j));
+            }
+        }
+        return res;
+    }
+    
+    private int dfs(int[][] matrix, int[][] memo, int i, int j) {
+        if (memo[i][j] != 0) {
+            return memo[i][j];
+        }
+        for (int[] dir : dirs) {
+            int x = i + dir[0], y = j + dir[1];
+            if (x &gt;= 0 &amp;&amp; x &lt; m &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; n &amp;&amp; matrix[x][y] &gt; matrix[i][j]) {
+                memo[i][j] = Math.max(memo[i][j], dfs(matrix, memo, x, y));
+            }
+        }
+        return ++memo[i][j];
+        
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
+</feed>

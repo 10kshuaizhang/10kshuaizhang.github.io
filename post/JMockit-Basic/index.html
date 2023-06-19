@@ -1,0 +1,717 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JMockit Basic | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="JMockit Basic | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="1 What is JMockit
+Jmockit is a Java framework for mocking objects in tests.
+2 An Exapmle
+//A class you could say hello i..." />
+    <meta name="keywords" content="Test,Java" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              JMockit Basic
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-12
+              </span>
+              <span>
+                9 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/621rpTZ7Z/" class="post-tag">
+                  # Test
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/YyW64XHFs/" class="post-tag">
+                  # Java
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="1-what-is-jmockit">1 What is JMockit</h2>
+<p>Jmockit is a Java framework for mocking objects in tests.</p>
+<h2 id="2-an-exapmle">2 An Exapmle</h2>
+<pre><code class="language-java">//A class you could say hello in native language 
+public class HelloJMockit {
+    public String sayHello() {
+        Locale locale = Locale.getDefault();
+        if (locale.equals(Locale.CHINA)) {
+            // Say Chinese in China
+            return &quot;你好，JMockit!&quot;;
+        } else {
+            // Say English in other countries
+            return &quot;Hello，JMockit!&quot;;
+        }
+    }
+}
+
+
+public class HelloJMockitTest { 
+
+    @Test
+    public void testSayHelloAtChina() {
+        // Suppose we are in China
+        new Expectations(Locale.class) {
+            {
+                Locale.getDefault();
+                result = Locale.CHINA;
+            }
+        };
+ 
+        Assert.assertTrue(&quot;你好，JMockit!&quot;.equals((new HelloJMockit()).sayHello()));
+    }
+ 
+ 
+    @Test
+    public void testSayHelloAtUS() {
+        // Suppose we are in the US
+        new Expectations(Locale.class) {
+            {
+                Locale.getDefault();
+                result = Locale.US;
+            }
+        };
+ 
+        Assert.assertTrue(&quot;Hello，JMockit!&quot;.equals((new HelloJMockit()).sayHello()));
+    }
+}
+</code></pre>
+<p>Here is a example domostrate the workflow of JMockit. You will learn how to use those annotations, what is <code>Expectation</code> and so on.</p>
+<h2 id="3-basic">3 Basic</h2>
+<h3 id="1-configuration-dependencies">1. Configuration Dependencies</h3>
+<h3 id="2-code-structure">2. Code Structure</h3>
+<p>A normal test case contains test <strong>parameter</strong> and test <strong>method</strong> which consisted with <u>record, replay and verification.</u></p>
+<h4 id="1-attribute">1. Attribute</h4>
+<p>We can use annotations(<code>@Tested, Mocked, Injectable, Capturing</code>)on these parameters. We will have a detailed explanation on when to use them.</p>
+<h4 id="2-parameter">2.  Parameter</h4>
+<p>The parameter of test method.</p>
+<p>Junit doesn't allow parameter in test method except thoese with Jmockit annotations.</p>
+<p><strong>The difference between parameters and attributes is the scope. Parameter only applys to the method whereas attribute can be used accross the test class.</strong></p>
+<h4 id="3-record-replay-verification">3. Record-Replay-Verification</h4>
+<p>Record: Customized return when receiving some particular inputs.<br>
+Replay: replay the test logic/process.<br>
+Verification: verification after replay. E.g. times of a method has been called.</p>
+<pre><code class="language-java">public class ProgramConstructureTest {
+ 
+    // This is a test parameter
+    @Mocked
+    HelloJMockit helloJMockit;
+ 
+    @Test
+    public void test1() {
+        // Record
+        new Expectations() {
+            {
+                helloJMockit.sayHello();
+                // You are expecting &quot;hello,david&quot; rather than &quot;hello,JMockit&quot;
+                result = &quot;hello, david&quot;;
+            }
+        };
+        // Replay
+        String msg = helloJMockit.sayHello();
+        Assert.assertTrue(msg.equals(&quot;hello, david&quot;));
+        // Verification
+        new Verifications() {
+            {
+                helloJMockit.sayHello();
+ 
+                times = 1;
+            }
+        };
+    }
+ 
+    @Test
+    public void test2(@Mocked HelloJMockit helloJMockit /* This is a test parameter */) {
+        // Record
+        new Expectations() {
+            {
+                helloJMockit.sayHello();
+                // You are expecting &quot;hello,david&quot; rather than &quot;hello,JMockit&quot;
+                result = &quot;hello,david&quot;;
+            }
+        };
+        // Replay
+        String msg = helloJMockit.sayHello();
+        Assert.assertTrue(msg.equals(&quot;hello,david&quot;));
+        // Verification
+        new Verifications() {
+            {
+                helloJMockit.sayHello();
+                // verify helloJMockit.sayHello() had been called once
+                times = 1;
+            }
+        };
+    }
+}
+</code></pre>
+<h3 id="3-mocked">3. @Mocked</h3>
+<ol>
+<li>
+<p>When using the @Mocked annotation on a field, it will create mocked instances(with default value) of each and every new object of that particular class.</p>
+</li>
+<li>
+<p><strong>When our test has some dependent interfaces, we could use @Mocked on them and they will create an instance for them.</strong> For example, we are in a distributed system and there is a dependency on remote interface, we could use @Mocked to create an instance.</p>
+</li>
+<li>
+<p>Mocking a class</p>
+<pre><code class="language-java">public class MockedClassTest {
+    // JMockit will instatiate this locale
+    @Mocked
+    Locale locale;
+ 
+    // @Mocked on a class
+    @Test
+    public void testMockedClass() {
+        // Static methods will return null
+        Assert.assertTrue(Locale.getDefault() == null);
+        // Non static methods will return null
+        Assert.assertTrue(locale.getCountry() == null);
+        // So as well a new one defined by yourself
+        Locale chinaLocale = new Locale(&quot;zh&quot;, &quot;CN&quot;);
+        Assert.assertTrue(chinaLocale.getCountry() == null);
+    }
+  
+}
+</code></pre>
+</li>
+<li>
+<p>Mocking a interface/abstruct class</p>
+<pre><code class="language-java">public class MockedInterfaceTest {
+ 
+    @Mocked
+    HttpSession session;
+ 
+    // when @Mocked on interface
+    @Test
+    public void testMockedInterface() {
+        Assert.assertTrue(session.getId() == null);
+        Assert.assertTrue(session.getCreationTime() == 0L);
+        Assert.assertTrue(session.getServletContext() != null);
+        Assert.assertTrue(session.getServletContext().getContextPath() == null);
+    }
+}
+</code></pre>
+</li>
+</ol>
+<h3 id="4-tested-injectable">4. @Tested &amp; @Injectable</h3>
+<ol>
+<li>
+<p>With the <em>@Injectable</em> annotation, only one mocked instance will be created.</p>
+</li>
+<li>
+<p>@Tested means this is the class to be tested.</p>
+</li>
+<li>
+<p>When you need to manage dependencies of class to be tested, you could use these to annotations.</p>
+</li>
+<li>
+<p>different between injetable and mocked</p>
+<pre><code class="language-java">public class MockedAndInjectable {
+ 
+    @Test
+    public void testMocked(@Mocked Locale locale) {
+        // Static methods will return null(mocked)
+        Assert.assertTrue(Locale.getDefault() == null);
+        // Non static methods will return null(mocked)
+        Assert.assertTrue(locale.getCountry() == null);
+        // So as well a new one defined by yourself(mocked)
+        Locale chinaLocale = new Locale(&quot;zh&quot;, &quot;CN&quot;);
+        Assert.assertTrue(chinaLocale.getCountry() == null);
+    }
+ 
+    @Test
+    public void testInjectable(@Injectable Locale locale) {
+        // Static method will not be mocked
+        Assert.assertTrue(Locale.getDefault() != null);
+        // mocked but only apply to this 'locale'
+        Assert.assertTrue(locale.getCountry() == null);
+        // If you create new instance, it won't be affected
+        Locale chinaLocale = new Locale(&quot;zh&quot;, &quot;CN&quot;);
+        Assert.assertTrue(chinaLocale.getCountry().equals(&quot;CN&quot;));
+    }
+}
+
+</code></pre>
+</li>
+<li>
+<p>Use of Injectable and Tested</p>
+<pre><code class="language-java">public interface MailService {
+    public boolean sendMail(long userId, String content);
+}
+</code></pre>
+<pre><code class="language-java"> 
+public interface UserCheckService {
+    public boolean check(long userId);
+}
+</code></pre>
+<pre><code class="language-java">public class OrderService {
+
+    MailService mailService;
+    @Resource
+    UserCheckService userCheckService;
+ 
+    public OrderService(MailService mailService) {
+        this.mailService = mailService;
+    }
+ 
+    public boolean submitOrder(long buyerId, long itemId) {
+
+        if (!userCheckService.check(buyerId)) {
+            return false;
+        }
+        // order logic
+        ...
+            
+        if (!this.mailService.sendMail(buyerId, &quot;下单成功&quot;)) {
+            return false;
+        }
+        return true;
+    }
+}
+</code></pre>
+<p>If we want to test submitOrder but it depends on the MailService and UserCheckService and we don't want to connect to the mail server nad user authentication server.</p>
+<pre><code class="language-java">public class TestedAndInjectable {
+   //JMockit will initiate this parameter
+   @Tested
+   OrderService orderService;
+   long testUserId = 123456l;
+   long testItemId = 456789l;
+ 
+   @Test
+   public void testSubmitOrder(@Injectable MailService mailService, 
+     @Injectable UserCheckService userCheckService) {
+    new Expectations() {
+       {
+         mailService.sendMail(testUserId, anyString);
+         result = true;
+         userCheckService.check(testUserId);
+        result = true;
+       }
+    };
+    // JMockit instatiated mailService and injected to OrderService via attribute in orderSerice 
+    //JMockit instatiated userCheckService and injected to OrderService via attribute in orderSerice
+    Assert.assertTrue(orderService.submitOrder(testUserId, testItemId));
+    }
+}
+
+</code></pre>
+</li>
+</ol>
+<h3 id="5-capturing">5. @Capturing</h3>
+<p>The last annotation, <em>@Capturing</em> will behave like <em>@Mocked,</em> but will extend its reach to every subclass extending or implementing the annotated field's type.</p>
+<h3 id="6-expectation">6. Expectation</h3>
+<pre><code class="language-java">new Expectations() {
+    // this is an Expectations anonymous inner class
+    {
+        //method call
+        //result = ...
+        //other method call
+        //result = ...
+        // ...
+    }
+};
+ 
+// we can define another record before replay. 
+new Expectations() {
+      
+    {
+         //...
+    }
+};
+</code></pre>
+<ol>
+<li>
+<p>Use Mocked objects to record</p>
+<pre><code class="language-java">public class ExpectationsTest {
+    @Mocked
+    Calendar cal;
+ 
+    @Test
+    public void testRecordOutside() {
+        new Expectations() {
+            {
+                cal.get(Calendar.YEAR);
+                result = 2016；
+                cal.get(Calendar.HOUR_OF_DAY);
+                result = 7;
+            }
+        };
+        Assert.assertTrue(cal.get(Calendar.YEAR) == 2016);
+        Assert.assertTrue(cal.get(Calendar.HOUR_OF_DAY) == 7);
+        Assert.assertTrue(cal.get(Calendar.DAY_OF_MONTH) == 0);
+    }
+ 
+}
+</code></pre>
+</li>
+<li>
+<p>Build injection methods</p>
+<pre><code class="language-java">public class ExpectationsConstructorTest2 {
+ 
+    @Test
+    public void testRecordConstrutctor1() {
+        Calendar cal = Calendar.getInstance();
+        // Pass the class to be mock to as parameter, you could only mock part of the actions
+        new Expectations(Calendar.class) {
+            {
+                cal.get(Calendar.HOUR_OF_DAY);
+                result = 7;
+            }
+        };
+        Calendar now = Calendar.getInstance();
+        Assert.assertTrue(now.get(Calendar.HOUR_OF_DAY) == 7);
+        Assert.assertTrue(now.get(Calendar.DAY_OF_MONTH) == (new Date()).getDate());
+    }
+ 
+
+    @Test
+    public void testRecordConstrutctor2() {
+        Calendar cal = Calendar.getInstance();
+        // Pass the class to be mock to as parameter, you could only mock part of the actions and only apply to this object
+        new Expectations(cal) {
+            {
+                cal.get(Calendar.HOUR_OF_DAY);
+                result = 7;
+            }
+        };
+ 
+        Assert.assertTrue(cal.get(Calendar.HOUR_OF_DAY) == 7);
+
+        Assert.assertTrue(cal.get(Calendar.DAY_OF_MONTH) == (new Date()).getDate());
+ 
+        // now is another object and will not be mocked
+        Calendar now = Calendar.getInstance();
+        Assert.assertTrue(now.get(Calendar.HOUR_OF_DAY) == (new Date()).getHours());
+        Assert.assertTrue(now.get(Calendar.DAY_OF_MONTH) == (new Date()).getDate());
+    }
+}
+</code></pre>
+</li>
+</ol>
+<h3 id="7-mockup-mock">7. MockUp &amp; @Mock</h3>
+<pre><code class="language-java">public class MockUpTest {
+ 
+    @Test
+    public void testMockUp() {
+        // customize the get() in Calender.class
+        new MockUp&lt;Calendar&gt;(Calendar.class) {
+            @Mock
+            public int get(int unit) {
+                if (unit == Calendar.YEAR) {
+                    return 2017;
+                }
+                if (unit == Calendar.MONDAY) {
+                    return 12;
+                }
+                if (unit == Calendar.DAY_OF_MONTH) {
+                    return 25;
+                }
+                if (unit == Calendar.HOUR_OF_DAY) {
+                    return 7;
+                }
+                return 0;
+            }
+        };
+        Calendar cal = Calendar.getInstance(Locale.FRANCE);
+        Assert.assertTrue(cal.get(Calendar.YEAR) == 2017);
+        Assert.assertTrue(cal.get(Calendar.MONDAY) == 12);
+        Assert.assertTrue(cal.get(Calendar.DAY_OF_MONTH) == 25);
+        Assert.assertTrue(cal.get(Calendar.HOUR_OF_DAY) == 7);
+        // Other methods won't be mocked.
+        Assert.assertTrue((cal.getFirstDayOfWeek() == Calendar.MONDAY));
+ 
+    }
+}
+</code></pre>
+<ol>
+<li>
+<p>Limitation</p>
+<ol>
+<li>A class has many instatnces and you need to mock only one of them;</li>
+<li>Mock on class that dynamically generated by AOP;</li>
+<li>More codes.</li>
+</ol>
+</li>
+<li>
+<p>MockUp &amp; @Mock is suitable for mock some common methods and reduce new Exceptations.</p>
+</li>
+</ol>
+<h3 id="8-verifications">8. Verifications</h3>
+<ol>
+<li>Verificaltions are used to verify the times or order for paticular methods called.</li>
+</ol>
+<pre><code class="language-java">new Verifications() {
+    {
+        //method call
+        //times/minTimes/maxTimes 
+        // ... 
+        //another method call
+        //times/minTimes/maxTimes 
+    }
+};
+  
+// you can specify another verification after replay
+new Verifications() {
+       
+    {
+         //...
+    }
+};
+</code></pre>
+<pre><code class="language-java">public class VerificationTest {
+    @Test
+    public void testVerification() {
+        //record
+        Calendar cal = Calendar.getInstance();
+        new Expectations(Calendar.class) {
+            {
+                cal.get(Calendar.YEAR);
+                result = 2016;
+                cal.get(Calendar.HOUR_OF_DAY);
+                result = 7;
+            }
+        };
+        // replay
+        Calendar now = Calendar.getInstance();
+        Assert.assertTrue(now.get(Calendar.YEAR) == 2016);
+        Assert.assertTrue(now.get(Calendar.HOUR_OF_DAY) == 7);
+        // verify
+        new Verifications() {
+            {
+                Calendar.getInstance();
+                times = 1;
+                cal.get(anyInt);
+                times = 2;
+            }
+        };
+ 
+    }
+}
+</code></pre>
+<ol start="2">
+<li><strong>In daily we tends to use Assert to verify some results rather than caring about if a method has been called and so on. So in verification stage, we could use Assert to replace new Verifications.</strong></li>
+</ol>
+<h2 id="4-useful-links">4 Useful Links</h2>
+<p><a href="http://jmockit.cn/index.htm">JMockit中文网</a></p>
+<p><a href="https://www.baeldung.com/jmockit-101">JMockit 101</a></p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-what-is-jmockit">1 What is JMockit</a></li>
+<li><a href="#2-an-exapmle">2 An Exapmle</a></li>
+<li><a href="#3-basic">3 Basic</a>
+<ul>
+<li><a href="#1-configuration-dependencies">1. Configuration Dependencies</a></li>
+<li><a href="#2-code-structure">2. Code Structure</a>
+<ul>
+<li><a href="#1-attribute">1. Attribute</a></li>
+<li><a href="#2-parameter">2.  Parameter</a></li>
+<li><a href="#3-record-replay-verification">3. Record-Replay-Verification</a></li>
+</ul>
+</li>
+<li><a href="#3-mocked">3. @Mocked</a></li>
+<li><a href="#4-tested-injectable">4. @Tested &amp; @Injectable</a></li>
+<li><a href="#5-capturing">5. @Capturing</a></li>
+<li><a href="#6-expectation">6. Expectation</a></li>
+<li><a href="#7-mockup-mock">7. MockUp &amp; @Mock</a></li>
+<li><a href="#8-verifications">8. Verifications</a></li>
+</ul>
+</li>
+<li><a href="#4-useful-links">4 Useful Links</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/Mockito-Basic/">
+              <h3 class="post-title">
+                Mockito Basic
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

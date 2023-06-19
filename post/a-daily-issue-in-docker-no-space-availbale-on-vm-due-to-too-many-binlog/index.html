@@ -1,0 +1,291 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A Daily Issue in Docker-No Space Availbale on VM Due to too many binlog | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="A Daily Issue in Docker-No Space Availbale on VM Due to too many binlog | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="I have encountered this issue couple days ago and have no idea what happened. So I asked someone in my team and he told ..." />
+    <meta name="keywords" content="Troubleshooting,MySQL,Other" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              A Daily Issue in Docker-No Space Availbale on VM Due to too many binlog
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-14
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/_o9Pe_JLO/" class="post-tag">
+                  # Troubleshooting
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/UI4t87b8O/" class="post-tag">
+                  # MySQL
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/s6FeLetgn/" class="post-tag">
+                  # Other
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <p>I have encountered this issue couple days ago and have no idea what happened. So I asked someone in my team and he told me to resize the VM size of the image and then rebuild the database using our scripts.</p>
+<p>Today I was trying to query from MySQL for some data and the connection failed. So I went to the docker desktop to check the logs and found it told me that Disk 0.00 BD available.</p>
+<p>So this happened again, laster time I thought it may be due to too many data in my database so I did the db refresh and it worked. But this time only after 2 months or less, here it comes again and even I'm newbie to mysql and I know data should grow that fast though. So I tried to find out the root cause and solutions as well.</p>
+<p>At first I googled and the all the answers are showing that it's due to too many unused containers or volumes, so I tried the <code>docker prune</code> which only reclaim less than 1M space so I know this is not the case.(after all, I don't have many images build).</p>
+<p>Actually the previous step takes me too much time cause I was trying to figure out the docker command as well as how to clean the system internally(login into the image).</p>
+<p>Then I quitted and randomly click the docker desktop and trying find the size adjustment page while, I found the detailed info my MySQL volume, where there are huge amount of binary log, each of them with fixed size. So I turned to try to clean the binlog in the space and I found it worked!(Yeah)</p>
+<p>You could delete one by one on docker desktop or you go to the mysql and delete it.</p>
+<ol>
+<li>
+<p>First you access the image or the volume: <code>docker exec -it &lt;YOU_CONTAINER_ID&gt; /bin/sh</code></p>
+</li>
+<li>
+<p>Then login into MySQL; and check binary logs using <code>show binary logs;</code>:</p>
+</li>
+</ol>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304141430045.png" alt="image-20230414143043996" style="zoom:50%;" />
+<ol start="3">
+<li>
+<p>Delete them, I do this because I'm using mysql in my local for debugging. <strong>Do NOT do this if you are in PRODUCTION</strong>!</p>
+<ol>
+<li>
+<pre><code class="language-SQL"> PURGE MASTER LOGS BEFORE DATE_SUB(CURRENT_DATE, INTERVAL 10 DAY);  // delete data of 10 days ago
+</code></pre>
+</li>
+<li>
+<pre><code class="language-sql"> purge master logs before '2023-04-15 00:00:00'; // or some specific datetime
+</code></pre>
+</li>
+</ol>
+</li>
+<li>
+<p>And you could also check if <code>expire_logs_days</code> is too large in you mysql configuration file. For my docker it's in your mysql directory in the docker directory.<br>
+== updates 3 days later===</p>
+</li>
+</ol>
+<h4 id="why-there-are-some-many-binlogs-and-grows-so-fast">why there are some many binlogs and grows so fast?</h4>
+<p>The docker disk is almost full again!!! So I checked it's again the binlog. So I decide to check what the binlog contents is and see what my MySQL is keeping doing.</p>
+<p>So I checked a random binlog almost all logs are processing message. So I also go back to the tomcat console, there are continuous messages shown like:</p>
+<pre><code>Caused by: org.apache.activemq.transport.InactivityIOException: Cannot send, channel has already failed: tcp://localhost:61617
+</code></pre>
+<p>So I checked some stackeoverflow answers people said it's because the broker url is not right so the connection keeps failing.</p>
+<p>In the meanwhile, I'm working a new enhancement of our product feature, the job is also pended. At first I thought there are some bugs. However, after I took some on the messaging issue time in the middle of the day, I'm wondering if they are some issue. So I checked the log based one this job log tag and did find all the jobs are queued.</p>
+<p>I checked the docker, the image has a url and port while not consistent which the previous <code>tcp://localhost:61617</code>, so I did a full search in my repo and substitute all the broker url to this in configuration files.</p>
+<p>It works. All the message gone. And my pending jobs all processed. Perfect.</p>
+<p>====<br>
+Enjoy!</p>
+<p>Reference</p>
+<ol>
+<li><a href="https://blog.51cto.com/u_15761576/5674396"><strong>【Docker】MySQL binlog日志过大问题解决</strong></a></li>
+<li><a href="https://yangjinjie.github.io/notes/db/mysql/%E5%AE%89%E5%85%A8%E5%88%A0%E9%99%A4binlog.html">安全删除binlog日志</a></li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#why-there-are-some-many-binlogs-and-grows-so-fast">why there are some many binlogs and grows so fast?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/52-n-queens-ii-and-51-n-queens/">
+              <h3 class="post-title">
+                52. N-Queens II &amp; 51. N-Queens
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

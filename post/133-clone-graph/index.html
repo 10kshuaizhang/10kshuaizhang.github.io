@@ -1,0 +1,711 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>133. Clone Graph | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="133. Clone Graph | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="topic
+Given a graph with nodes as Nodes, deep copy it. That is, the structure of the copied graph and the value of each ..." />
+    <meta name="keywords" content="Depth First Search&Bread First Search,Graph,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              133. Clone Graph
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-05
+              </span>
+              <span>
+                10 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/SQ7QEvjYu/" class="post-tag">
+                  # Depth First Search&amp;Bread First Search
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/W_93vV191q/" class="post-tag">
+                  # Graph
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="topic">topic</h2>
+<p>Given a graph with nodes as Nodes, deep copy it. That is, the structure of the copied graph and the value of each node are the same as the original graph, but the nodes are all new nodes and do not refer to any original nodes.</p>
+<h2 id="algorithm">algorithm</h2>
+<p>This topic involves the entire graph, and the idea is to copy each node while maintaining their relative relationship (neighbors) during the traversal process. The graph can be traversed using DFS or BFS algorithms.</p>
+<h2 id="code">code</h2>
+<pre><code class="language-java">/*
+// Definition for a Node.
+class Node {
+     public int val;
+     public List&lt;Node&gt; neighbors;
+     public Node() {
+         val = 0;
+         neighbors = new ArrayList&lt;Node&gt;();
+     }
+     public Node(int _val) {
+         val = _val;
+         neighbors = new ArrayList&lt;Node&gt;();
+     }
+     public Node(int _val, ArrayList&lt;Node&gt; _neighbors) {
+         val = _val;
+         neighbors = _neighbors;
+     }
+}
+*/
+
+class Solution {
+     public Node cloneGraph(Node node) {
+         if (node == null) return null;
+         Map&lt;Node, Node&gt; map = new HashMap&lt;&gt;();
+         Node newNode = new Node(node. val);
+         map. put(node, newNode);
+         Stack&lt;Node&gt; stack = new Stack();
+         stack. push(node);
+         while (!stack. isEmpty()) {
+             Node cur = stack. pop();
+             Node newCur = map. get(cur);
+             for (Node neighbor : cur. neighbors) {
+                 if (!map. containsKey(neighbor)) {
+                     map.put(neighbor, new Node(neighbor.val));
+                     stack.push(neighbor);
+                 }
+                 newCur.neighbors.add(map.get(neighbor));
+             }
+            
+         }
+         return newNode;
+     }
+}
+</code></pre>
+<h2 id="implementation-of-recursion-and-iteration-of-dfs-and-bfs">Implementation of recursion and iteration of DFS and BFS</h2>
+<h3 id="dfs">DFS</h3>
+<h4 id="graphnode-represents-the-graph">GraphNode represents the graph</h4>
+<h5 id="recursion">recursion</h5>
+<pre><code class="language-java">package graph;
+
+import java.util.HashSet;
+
+
+public class RecursionGraphDFS {
+     public static void dfs(GraphNode node) {
+         dfs(node, new HashSet&lt;GraphNode&gt;());
+     }
+
+     private static void dfs(GraphNode node, HashSet visited) {
+         System.out.println(node.val);
+         visited. add(node);
+         for (GraphNode neighbor : node. neighbors) {
+             if (!visited. contains(neighbor)) {
+                 dfs(neighbor, visited);
+             }
+         }
+     }
+
+     public static void main(String[] args) {
+         GraphNode root = constructGraph();
+         dfs(root); // 0, 1, 2, 4, 3, 5
+     }
+
+     private static GraphNode constructGraph() {
+         GraphNode node0 = new GraphNode(0);
+         GraphNode node1 = new GraphNode(1);
+         GraphNode node2 = new GraphNode(2);
+         GraphNode node3 = new GraphNode(3);
+         GraphNode node4 = new GraphNode(4);
+         GraphNode node5 = new GraphNode(5);
+         node0.neighbors.add(node1);
+         node0.neighbors.add(node3);
+         node0.neighbors.add(node5);
+
+         node1.neighbors.add(node0);
+         node1.neighbors.add(node2);
+         node1.neighbors.add(node4);
+
+         node2.neighbors.add(node1);
+         node2.neighbors.add(node4);
+
+         node3.neighbors.add(node0);
+         node3.neighbors.add(node4);
+
+         node4.neighbors.add(node1);
+         node4.neighbors.add(node3);
+         node4.neighbors.add(node2);
+
+         node5.neighbors.add(node0);
+         return node0;
+     }
+}
+</code></pre>
+<h5 id="iteration">iteration</h5>
+<pre><code class="language-java">package graph;
+
+import java.util.HashSet;
+import java.util.Stack;
+
+
+public class IterationGraphDFS {
+     public static void dfs(GraphNode node) {
+         HashSet&lt;GraphNode&gt; visited = new HashSet&lt;&gt;();
+         Stack&lt;GraphNode&gt; stack = new Stack&lt;&gt;();
+         visited. add(node);
+         stack. add(node);
+         while (!stack. isEmpty()) {
+             GraphNode cur = stack. pop();
+             System.out.println(cur.val);
+             for (GraphNode neighbor : cur. neighbors) {
+                 if (!visited. contains(neighbor)) {
+                     visited. add(neighbor);
+                     stack.push(neighbor);
+                 }
+             }
+         }
+     }
+
+
+     public static void main(String[] args) {
+         GraphNode root = constructGraph();
+         dfs(root); // 0, 5, 3, 4, 2, 1
+     }
+
+     private static GraphNode constructGraph() {
+         GraphNode node0 = new GraphNode(0);
+         GraphNode node1 = new GraphNode(1);
+         GraphNode node2 = new GraphNode(2);
+         GraphNode node3 = new GraphNode(3);
+         GraphNode node4 = new GraphNode(4);
+         GraphNode node5 = new GraphNode(5);
+         node0.neighbors.add(node1);
+         node0.neighbors.add(node3);
+         node0.neighbors.add(node5);
+
+         node1.neighbors.add(node0);
+         node1.neighbors.add(node2);
+         node1.neighbors.add(node4);
+
+         node2.neighbors.add(node1);
+         node2.neighbors.add(node4);
+
+         node3.neighbors.add(node0);
+         node3.neighbors.add(node4);
+
+         node4.neighbors.add(node1);
+         node4.neighbors.add(node3);
+         node4.neighbors.add(node2);
+
+         node5.neighbors.add(node0);
+         return node0;
+     }
+}
+
+</code></pre>
+<h4 id="matrix-representation-graph-adjacency-matrix">Matrix representation graph (adjacency matrix)</h4>
+<h5 id="recursion-2">recursion</h5>
+<pre><code class="language-java">package Graph;
+
+
+public class RecursionMatrixDFS {
+
+    public static void main(String[] args) {
+        int[][] matrix = constructMatrix();
+        dfs(matrix); // 0, 1, 2, 4, 3, 5
+    }
+
+    private static void dfs(int[][] matrix, int[] visited, int vertex) {
+        System.out.println(vertex);
+        visited[vertex] = 1;
+        for (int j = 0; j &lt; matrix.length; j++) {
+            if (matrix[vertex][j] == 1) {
+                if (visited[j] == 0) {
+                    dfs(matrix, visited, j);
+                }
+            }
+        }
+    }
+
+    private static void dfs(int[][] matrix) {
+        int[] visited = new int[matrix.length];
+        for (int i = 0; i &lt; matrix.length; i++) {
+            if (visited[i] == 0) {
+                dfs(matrix, visited, i);
+            }
+        }
+    }
+
+    private static int[][] constructMatrix() {
+        int[][] matrix = new int[6][6];
+        matrix[0] = new int[]{0, 1, 0, 1, 0, 1};
+        matrix[1] = new int[]{1, 0, 1, 0, 1, 0};
+        matrix[2] = new int[]{0, 1, 0, 0, 1, 0};
+        matrix[3] = new int[]{1, 0, 0, 0, 1, 0};
+        matrix[4] = new int[]{0, 1, 1, 1, 0, 0};
+        matrix[5] = new int[]{1, 0, 0, 0, 0, 0};
+        return  matrix;
+    }
+}
+</code></pre>
+<h5 id="iteration-2">Iteration</h5>
+<pre><code class="language-java">package Graph;
+
+import java.util.Stack;
+
+
+public class IterationMatrixDFS {
+
+    public static void main(String[] args) {
+        int[][] matrix = constructMatrix();
+        dfs(matrix); // 0, 5, 3, 4, 2, 1
+    }
+
+    private static void dfs(int[][] matrix) {
+        int[] visited = new int[matrix.length];
+        Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();
+        for (int i = 0; i &lt; matrix.length; i++) {
+            if (visited[i] == 0) {
+                visited[i] = 1;
+                stack.push(i);
+                while (!stack.isEmpty()) {
+                    int vertex = stack.pop();
+                    System.out.println(vertex);
+                    for (int j = 0; j &lt; matrix.length; j++) {
+                        if (matrix[vertex][j] == 1) {
+                            if (visited[j] == 0) {
+                                stack.push(j);
+                                visited[j] = 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static int[][] constructMatrix() {
+        int[][] matrix = new int[6][6];
+        matrix[0] = new int[]{0, 1, 0, 1, 0, 1};
+        matrix[1] = new int[]{1, 0, 1, 0, 1, 0};
+        matrix[2] = new int[]{0, 1, 0, 0, 1, 0};
+        matrix[3] = new int[]{1, 0, 0, 0, 1, 0};
+        matrix[4] = new int[]{0, 1, 1, 1, 0, 0};
+        matrix[5] = new int[]{1, 0, 0, 0, 0, 0};
+        return  matrix;
+    }
+}
+
+</code></pre>
+<h3 id="bfs">BFS</h3>
+<h4 id="graphnode-represents-the-graph-2">GraphNode represents the graph</h4>
+<h5 id="iteration-3">Iteration</h5>
+<pre><code class="language-java">package Graph;
+
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class IterationGraphBFS {
+
+    public static void bfs(GraphNode root) {
+        HashSet&lt;GraphNode&gt; visited = new HashSet&lt;&gt;();
+        Queue&lt;GraphNode&gt; queue = new LinkedList&lt;&gt;();
+        visited.add(root);
+        queue.add(root);
+        int level = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            System.out.println(&quot;level:&quot; + String.valueOf(level++));
+            for (int i = 0; i &lt; size; i++) {
+                GraphNode node = queue.poll();
+                System.out.println(node.val);
+                for (GraphNode neighbor : node.neighbors) {
+                    if (!visited.contains(neighbor)) {
+                        queue.offer(neighbor);
+                        visited.add(neighbor);
+                    }
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        GraphNode root = constructGraph();
+        bfs(root); //0, 1, 3, 5, 2, 4
+    }
+
+    private static GraphNode constructGraph() {
+        GraphNode node0 = new GraphNode(0);
+        GraphNode node1 = new GraphNode(1);
+        GraphNode node2 = new GraphNode(2);
+        GraphNode node3 = new GraphNode(3);
+        GraphNode node4 = new GraphNode(4);
+        GraphNode node5 = new GraphNode(5);
+        node0.neighbors.add(node1);
+        node0.neighbors.add(node3);
+        node0.neighbors.add(node5);
+
+        node1.neighbors.add(node0);
+        node1.neighbors.add(node2);
+        node1.neighbors.add(node4);
+
+        node2.neighbors.add(node1);
+        node2.neighbors.add(node4);
+
+        node3.neighbors.add(node0);
+        node3.neighbors.add(node4);
+
+        node4.neighbors.add(node1);
+        node4.neighbors.add(node3);
+        node4.neighbors.add(node2);
+
+        node5.neighbors.add(node0);
+        return node0;
+    }
+}
+</code></pre>
+<h4 id="matrix-representation-graph-adjacency-matrix-2">Matrix representation graph (adjacency matrix)</h4>
+<h5 id="iteration-4">Iteration</h5>
+<pre><code class="language-java">package Graph;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+
+public class IterationMatrixBFS {
+    public static void main(String[] args) {
+        int[][] matrix = constructMatrix();
+        bfs(matrix); //0, 1, 3, 5, 2, 4
+    }
+
+    private static void bfs(int[][] matrix) {
+        int[] visited = new int[matrix.length];
+        Queue&lt;Integer&gt; queue = new LinkedList&lt;&gt;();
+        int level = 0;
+        for (int i = 0; i &lt; matrix.length; i++) {
+            if (visited[i] == 0) {
+                visited[i] = 1;
+                queue.offer(i);
+                while (!queue.isEmpty()) {
+                    int size = queue.size();
+                    System.out.println(&quot;level:&quot; + String.valueOf(level++));
+                    for (int x = 0; x &lt; size; x++) {
+                        int vertex = queue.poll();
+                        System.out.println(vertex);
+                        for (int j = 0; j &lt; matrix[vertex].length; j++) {
+                            if (matrix[vertex][j] == 1) {
+                                if (visited[j] == 0) {
+                                    visited[j] = 1;
+                                    queue.offer(j);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static int[][] constructMatrix() {
+        int[][] matrix = new int[6][6];
+        matrix[0] = new int[]{0, 1, 0, 1, 0, 1};
+        matrix[1] = new int[]{1, 0, 1, 0, 1, 0};
+        matrix[2] = new int[]{0, 1, 0, 0, 1, 0};
+        matrix[3] = new int[]{1, 0, 0, 0, 1, 0};
+        matrix[4] = new int[]{0, 1, 1, 1, 0, 0};
+        matrix[5] = new int[]{1, 0, 0, 0, 0, 0};
+        return  matrix;
+    }
+}
+</code></pre>
+<hr>
+<h2 id="题目">题目</h2>
+<p>给一个以节点为Node的图，deep copy它。即复制出来的图的结构以及每个节点的数值和原图一样，但是节点都是新节点，不引用原来任何的节点。</p>
+<h2 id="算法">算法</h2>
+<p>这个题目涉及到整个图，思路是在遍历过程中，对每一个节点进行复制，同时维护他们的相对关系（邻居）。使用DFS或者BFS算法都可以遍历图。</p>
+<h2 id="代码">代码</h2>
+<pre><code class="language-java">/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List&lt;Node&gt; neighbors;
+    public Node() {
+        val = 0;
+        neighbors = new ArrayList&lt;Node&gt;();
+    }
+    public Node(int _val) {
+        val = _val;
+        neighbors = new ArrayList&lt;Node&gt;();
+    }
+    public Node(int _val, ArrayList&lt;Node&gt; _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+}
+*/
+
+class Solution {
+    public Node cloneGraph(Node node) {
+        if (node == null) return null;
+        Map&lt;Node, Node&gt; map = new HashMap&lt;&gt;();
+        Node newNode = new Node(node.val);
+        map.put(node, newNode);
+        Stack&lt;Node&gt; stack = new Stack();
+        stack.push(node);
+        while (!stack.isEmpty()) {
+            Node cur = stack.pop();
+            Node newCur = map.get(cur);
+            for (Node neighbor : cur.neighbors) {
+                if (!map.containsKey(neighbor)) {
+                    map.put(neighbor, new Node(neighbor.val));
+                    stack.push(neighbor);
+                }
+                newCur.neighbors.add(map.get(neighbor));
+            }
+            
+        }
+        return newNode;
+    }
+}
+</code></pre>
+<h2 id="dfs和bfs的递归和迭代的实现">DFS和BFS的递归和迭代的实现</h2>
+<p>参考上文英文版本</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#topic">topic</a></li>
+<li><a href="#algorithm">algorithm</a></li>
+<li><a href="#code">code</a></li>
+<li><a href="#implementation-of-recursion-and-iteration-of-dfs-and-bfs">Implementation of recursion and iteration of DFS and BFS</a>
+<ul>
+<li><a href="#dfs">DFS</a>
+<ul>
+<li><a href="#graphnode-represents-the-graph">GraphNode represents the graph</a>
+<ul>
+<li><a href="#recursion">recursion</a></li>
+<li><a href="#iteration">iteration</a></li>
+</ul>
+</li>
+<li><a href="#matrix-representation-graph-adjacency-matrix">Matrix representation graph (adjacency matrix)</a>
+<ul>
+<li><a href="#recursion-2">recursion</a></li>
+<li><a href="#iteration-2">Iteration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#bfs">BFS</a>
+<ul>
+<li><a href="#graphnode-represents-the-graph-2">GraphNode represents the graph</a>
+<ul>
+<li><a href="#iteration-3">Iteration</a></li>
+</ul>
+</li>
+<li><a href="#matrix-representation-graph-adjacency-matrix-2">Matrix representation graph (adjacency matrix)</a>
+<ul>
+<li><a href="#iteration-4">Iteration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E7%AE%97%E6%B3%95">算法</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+<li><a href="#dfs%E5%92%8Cbfs%E7%9A%84%E9%80%92%E5%BD%92%E5%92%8C%E8%BF%AD%E4%BB%A3%E7%9A%84%E5%AE%9E%E7%8E%B0">DFS和BFS的递归和迭代的实现</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/system-design-case-study-4-design-a-unique-id-generator-in-distributed-system/">
+              <h3 class="post-title">
+                System Design Case Study 4 - Design A Unique ID Generator In Distributed System
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,433 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>353. Design Snake Game | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="353. Design Snake Game | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Question
+Design the initialization board for the snake game, where the food appears, and the move function. The move fun..." />
+    <meta name="keywords" content="Design,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              353. Design Snake Game
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-03-19
+              </span>
+              <span>
+                7 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/gqDyHl5kO/" class="post-tag">
+                  # Design
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="question">Question</h2>
+<p>Design the initialization board for the snake game, where the food appears, and the move function. The move function needs to determine if it is losing or scoring after each move and return the score, or -1 (if it is losing).</p>
+<h2 id="algorithm">Algorithm</h2>
+<p>This topic started with the idea of how to save the whole snake, using an array list, and then ran through the case and found that each step he took was actually removing the tail and adding a new head.</p>
+<p>The key point is to choose the right data structure. Because we want to do the increase and decrease operations in the head and tail, deque seems to be a good choice.</p>
+<p>There are actually three cases for each step.</p>
+<ol>
+<li>
+<p>normally go to the next step, in this case there are also two cases</p>
+<ol>
+<li>did not eat the food (score), corresponding to the head to add a new point, the tail ** do not need to ** remove a point</li>
+<li>eat food, corresponding to the head to add a new point, the tail to remove a point</li>
+</ol>
+</li>
+<li>
+<p>hitting the wall, corresponding to the new head of yes the index is beyond the range of m*n.</p>
+</li>
+<li>
+<p>hit his body, corresponding to the new head or the next location to go, which exists at a point on the body of the gluttonous snake.</p>
+<blockquote>
+<p>There is a small pitfall in this place, also I am not familiar enough with deque, then do the judgment, deque's contains does not determine whether an array exists in it, which is the reason I finally implemented a myContains method.</p>
+</blockquote>
+</li>
+</ol>
+<p>But I ended up with more than enough space in this code, and I'm not quite sure why ...... so I'm posting this answer on leetcode to see if others can give some input.</p>
+<h2 id="code">code</h2>
+<pre><code class="language-java">class SnakeGame {
+    int[][] board;
+    Deque&lt;int[]&gt; snake;
+    // score is queue.size - 1;
+    Queue&lt;int[]&gt; queue;
+
+    public SnakeGame(int width, int height, int[][] food) {
+        board = new int[width][height];
+        snake = new LinkedList&lt;&gt;();
+        snake.offer(new int[]{0, 0});
+        queue = new LinkedList&lt;&gt;();
+
+        for (int[] fo : food) {
+            queue.offer(fo);
+        }
+    }
+    
+    public int move(String direction) {
+        int[] head = snake.peek();
+    
+        switch (direction) {
+            case &quot;R&quot;:
+                return validNext(head, new int[]{head[0], head[1] + 1});
+            case &quot;L&quot;:
+                return validNext(head, new int[]{head[0], head[1] - 1});
+            case &quot;U&quot;:
+                return validNext(head, new int[]{head[0] - 1, head[1]});
+            case &quot;D&quot;:
+                return validNext(head, new int[]{head[0] + 1, head[1]});
+        }        
+        return -1;
+    }
+    
+    private int validNext(int[] head, int[] nextHead) {
+        int m = board.length;
+        int n = board[0].length;
+        
+        if (nextHead[0] &lt; n &amp;&amp; nextHead[0] &gt;= 0 &amp;&amp; nextHead[1] &gt;= 0 &amp;&amp; nextHead[1] &lt; m) { // not hit wall
+            int[] food;
+            if (!queue.isEmpty()) { // there are food to show
+                food = queue.peek();
+            } else {
+                food = new int[]{-1, -1};
+            }
+            if (nextHead[0] ! = food[0] || nextHead[1] ! = food[1]) { // no food on next step
+                    snake.pollLast(); // remove tail
+                } else {
+                    queue.poll();
+                }
+            if (snake.size() &lt; 4 || !myContains(snake, nextHead)) { // not hit body
+                snake.offerFirst(nextHead);
+                return snake.size() - 1;
+            }
+        } 
+        return -1; // hit the wall or hit the body
+    }
+    
+    private boolean myContains(Deque&lt;int[]&gt; snake, int[] nextHead) {
+        for (int[] body : snake) {
+            if (nextHead[0] == body[0] &amp;&amp; nextHead[1] == body[1]) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+/**
+ * Your SnakeGame object will be instantiated and called as such:
+ * SnakeGame obj = new SnakeGame(width, height, food);
+ * int param_1 = obj.move(direction);
+ */
+</code></pre>
+<hr>
+<h2 id="问题">问题</h2>
+<p>设计贪吃蛇游戏的初始化棋盘，出现食物的地方，以及move函数，move函数需要判断每次走一步之后是否是输掉或者是得分，返回分数，或者-1（如果输了）。</p>
+<h2 id="算法">算法</h2>
+<p>这个题目一开始想的是如何去保存整个贪吃蛇，用一个数组list，然后跑了一遍case发现，他每走一步其实就是去掉尾巴，新增一个头部。</p>
+<p>关键点在于，选择合适的数据结构。因为我们要在头尾做增减操作，deque似乎是个不错的选择。</p>
+<p>每走一步其实有三种情况：</p>
+<ol>
+<li>
+<p>正常的走到了下一步，这种情况下也有两个情况</p>
+<ol>
+<li>没吃到食物（分数），对应头部新增一个点，尾巴<strong>不需要</strong>去掉一点，</li>
+<li>吃到食物，对应头部新增一个点，尾巴去掉一点</li>
+</ol>
+</li>
+<li>
+<p>撞墙，对应是的新的头部的index超出了m*n的范围；</p>
+</li>
+<li>
+<p>撞到自己的身体，对应新的头部或者说下一个要走的位置，存在于贪吃蛇的身体上的某个点。</p>
+<blockquote>
+<p>这个地方有个小坑，也是自己不够熟悉deque，再做判断的时候，deque的contains并不能判断一个数组是否存在其中，这也是我最后实现了一个myContains方法的原因。</p>
+</blockquote>
+</li>
+</ol>
+<p>不过最终我这个代码空间超过了，我不太清楚为啥……所以我post这个答案在leetcode上看其他人是否可以给些意见。</p>
+<h2 id="代码">代码</h2>
+<pre><code class="language-java">class SnakeGame {
+    int[][] board;
+    Deque&lt;int[]&gt; snake;
+    // score is queue.size - 1;
+    Queue&lt;int[]&gt; queue;
+
+    public SnakeGame(int width, int height, int[][] food) {
+        board = new int[width][height];
+        snake = new LinkedList&lt;&gt;();
+        snake.offer(new int[]{0, 0});
+        queue = new LinkedList&lt;&gt;();
+
+        for (int[] fo : food) {
+            queue.offer(fo);
+        }
+    }
+    
+    public int move(String direction) {
+        int[] head = snake.peek();
+    
+        switch (direction) {
+            case &quot;R&quot;:
+                return validNext(head, new int[]{head[0], head[1] + 1});
+            case &quot;L&quot;:
+                return validNext(head, new int[]{head[0], head[1] - 1});
+            case &quot;U&quot;:
+                return validNext(head, new int[]{head[0] - 1, head[1]});
+            case &quot;D&quot;:
+                return validNext(head, new int[]{head[0] + 1, head[1]});
+        }        
+        return -1;
+    }
+    
+    private int validNext(int[] head, int[] nextHead) {
+        int m = board.length;
+        int n = board[0].length;
+        
+        if (nextHead[0] &lt; n &amp;&amp; nextHead[0] &gt;= 0 &amp;&amp; nextHead[1] &gt;= 0 &amp;&amp; nextHead[1] &lt; m) { //  not hit wall
+            int[] food;
+            if (!queue.isEmpty()) { // there are food to show
+                food = queue.peek();
+            } else {
+                food = new int[]{-1, -1};
+            }
+            if (nextHead[0] != food[0] || nextHead[1] != food[1]) { // no food on next step
+                    snake.pollLast(); // remove tail
+                } else {
+                    queue.poll();
+                }
+            if (snake.size() &lt; 4 || !myContains(snake, nextHead)) { // not hit body
+                snake.offerFirst(nextHead);
+                return snake.size() - 1;
+            }
+        } 
+        return -1; // hit wall or hit body
+    }
+    
+    private boolean myContains(Deque&lt;int[]&gt; snake, int[] nextHead) {
+        for (int[] body : snake) {
+            if (nextHead[0] == body[0] &amp;&amp; nextHead[1] == body[1]) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+/**
+ * Your SnakeGame object will be instantiated and called as such:
+ * SnakeGame obj = new SnakeGame(width, height, food);
+ * int param_1 = obj.move(direction);
+ */
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#question">Question</a></li>
+<li><a href="#algorithm">Algorithm</a></li>
+<li><a href="#code">code</a></li>
+<li><a href="#%E9%97%AE%E9%A2%98">问题</a></li>
+<li><a href="#%E7%AE%97%E6%B3%95">算法</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/system-design-case-study-1-design-a-rate-limiter/">
+              <h3 class="post-title">
+                System Design Case Study - 1 Design A Rate Limiter
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

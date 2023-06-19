@@ -1,0 +1,553 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>362. Design Hit Counter | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="362. Design Hit Counter | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Question
+Design a hit counter that calls hit every time a message comes in and passes in the timestamp; when getCounter ..." />
+    <meta name="keywords" content="Design,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              362. Design Hit Counter
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-03-09
+              </span>
+              <span>
+                12 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/gqDyHl5kO/" class="post-tag">
+                  # Design
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="question">Question</h2>
+<p>Design a hit counter that calls hit every time a message comes in and passes in the timestamp; when getCounter is called and the timestamp is passed in, it counts the number of hits within the timestamp -300s.</p>
+<blockquote>
+<p>Implement the <code>HitCounter</code> class:</p>
+<ul>
+<li><code>HitCounter()</code> Initializes the object of the hit counter system.</li>
+<li><code>void hit(int timestamp)</code> Records a hit that happened at <code>timestamp</code> (<strong>in seconds</strong>). Several hits may happen at the same <code>timestamp</code>.</li>
+<li><code>int getHits(int timestamp)</code> Returns the number of hits in the past 5 minutes from <code>timestamp</code> (i.e., the past <code>300</code> seconds).</li>
+</ul>
+</blockquote>
+<p>Example</p>
+<pre><code>Input
+[&quot;HitCounter&quot;, &quot;hit&quot;, &quot;hit&quot;, &quot;hit&quot;, &quot;getHits&quot;, &quot;hit&quot;, &quot;getHits&quot;, &quot;getHits&quot;]
+[[], [1], [2], [3], [4], [300], [300], [301]]
+Output
+[null, null, null, null, null, 3, null, 4, 3]
+
+Explanation
+HitCounter hitCounter = new HitCounter();
+hitCounter.hit(1); // hit at timestamp 1.
+hitCounter.hit(2); // hit at timestamp 2.
+hitCounter.hit(3); // hit at timestamp 3.
+hitCounter.getHits(4); // get hits at timestamp 4, return 3.
+hitCounter.hit(300); // hit at timestamp 300.
+hitCounter.getHits(300); // get hits at timestamp 300, return 4.
+hitCounter.getHits(301); // get hits at timestamp 301, return 3.
+</code></pre>
+<h2 id="algorithm">Algorithm</h2>
+<p>This topic sees the number of waist acid getHit with the previous 300s, then you need to record the timestamp of each hit when it comes in, at first I wanted to use Map to do the record, then I thought about it again, what is the key? It does not seem to be used. So it says that you should only need to store the timestamp.</p>
+<p>This question is also the old to be abandoned, only to retain records within 300s, then it is FIFO. with queue can be.</p>
+<p>The key point of the implementation process is that when a hit is put in, when taking the number of hits, traversing from the head of the queue, do not meet the conditions of the discard can be (assuming that the topic does not discuss too much whether these outdated data is still needed, you can confirm with the questioner). Until the data is within the current timestamp of -300s.</p>
+<h2 id="code-1">Code 1</h2>
+<pre><code class="language-java">class HitCounter {
+    Queue&lt;Integer&gt; queue;
+
+    public HitCounter() {
+        this.queue = new LinkedList&lt;&gt;();
+    }
+    
+    public void hit(int timestamp) {
+        queue.add(timestamp);
+    }
+    
+    public int getHits(int timestamp) {
+        while (!queue.isEmpty() &amp;&amp; queue.peek() &lt;= timestamp - 300) {
+            queue.poll();
+        }
+        return queue.size();
+    }
+}
+
+/**
+ * Your HitCounter object will be instantiated and called as such:
+ * HitCounter obj = new HitCounter();
+ * obj.hit(timestamp);
+ * int param_2 = obj.getHits(timestamp);
+ */
+</code></pre>
+<h2 id="follow-up">Follow up</h2>
+<p>The follow up of this topic is that there is a point in time (timestamp) where more than one hit comes at the same time. can your code support scaling.</p>
+<p>The above code 1 is supported. But the official solution gives a way to use deque to store a pair, saving each timestamp and the number of hits for that timestamp.</p>
+<p>With deque is that he can support the offer and poll at the end of the queue; but I did not use it in the process of implementation; I think queue is still enough.</p>
+<p>In addition to store the number of hit timestamp this is really an optimization. Previously, it was to store one for each hit, but now if there are n hits at the same time, under that timestamp, it doesn't need to be O(n), but only O(1).</p>
+<h2 id="code-2">Code 2</h2>
+<h3 id="based-on-follow-up-my-implementation">Based on Follow up my implementation</h3>
+<pre><code class="language-java">class HitCounter {
+    Deque&lt;int[]&gt; queue;
+
+    public HitCounter() {
+        this.queue = new LinkedList&lt;&gt;();
+    }
+    
+    public void hit(int timestamp) {
+        if (!queue.isEmpty() &amp;&amp; queue.peekLast()[0] == timestamp) {
+            int[] pair = queue.pollLast();
+            queue.offerLast(new int[]{pair[0], pair[1] + 1});
+        } else {
+            queue.offerLast(new int[]{timestamp, 1});
+        }
+        // queue.add(timestamp);
+    }
+    
+    public int getHits(int timestamp) {
+        while (!queue.isEmpty() &amp;&amp; queue.peekFirst()[0] &lt;= timestamp - 300) {
+            queue.pollFirst();
+        }
+        int sum = 0;
+        for (int[] pair : queue) {
+            sum += pair[1];
+        }
+        return sum;
+    }
+}
+
+/**
+ * Your HitCounter object will be instantiated and called as such:
+ * HitCounter obj = new HitCounter();
+ * obj.hit(timestamp);
+ * int param_2 = obj.getHits(timestamp);
+ */
+</code></pre>
+<h3 id="official-solution">Official Solution</h3>
+<pre><code class="language-java">class HitCounter {
+
+    private int total;
+    private Deque&lt;Pair&lt;Integer, Integer&gt;&gt; hits; 
+
+    /* Initialize your data structure here. */
+    public HitCounter() {
+        // Initialize total to 0
+        this.total = 0;
+        this.hits = new LinkedList&lt;Pair&lt;Integer, Integer&gt;&gt;();
+    }
+    
+    /* Record a hit.
+        @param timestamp - The current timestamp (in seconds granularity). */
+    public void hit(int timestamp) {
+        if (this.hits.isEmpty() || this.hits.getLast().getKey() ! = timestamp) {
+            // Insert the new timestamp with count = 1
+            this.hits.add(new Pair&lt;Integer, Integer&gt;(timestamp, 1));
+        } else {
+            // Update the count of latest timestamp by incrementing the count by 1
+
+            // Obtain the current count of the latest timestamp 
+            int prevCount = this.bits.getLast().getValue();
+            // Remove the last pair of (timestamp, count) from the deque
+            this.hits.removeLast();
+            // Insert a new pair of (timestamp, updated count) in the deque
+            this.bits.add(new Pair&lt;Integer, Integer&gt;(timestamp, prevCount + 1));
+        }
+        // Increment total
+        this.total++;
+    }
+    
+    /* Return the number of hits in the past 5 minutes.
+        @param timestamp - The current timestamp (in seconds granularity). */
+    public int getHits(int timestamp) {
+        while (!this.hits.isEmpty()) {
+            int diff = timestamp - this.bits.getFirst().getKey();
+            if (diff &gt;= 300) {
+                // Decrement total by the count of the oldest timestamp
+                this.total -= this.bits.getFirst().getValue();
+                this.bits.removeFirst();
+            }
+            else break;
+        }
+        return this.total;
+    }
+}
+</code></pre>
+<p>But another point I can learn is that I used a loop to calculate the count at the end, while the official answer used a total to update it at each add and remove, and returned it directly at the end.</p>
+<h2 id="the-other-difference-is-that-the-official-answer-uses-an-object-to-store-the-timestamp-and-his-quantity-information-so-that-the-access-looks-clearer-i-used-a-simple-array">The other difference is that the official answer uses an object to store the timestamp and his quantity information, so that the access looks clearer; I used a simple array.</h2>
+<h2 id="问题">问题</h2>
+<p>设计一个hit counter，每次有消息来的时候就会调用hit并传入时间戳；当调用getCounter并传入时间戳，计数时间戳-300s之内的hit数量。</p>
+<blockquote>
+<p>Implement the <code>HitCounter</code> class:</p>
+<ul>
+<li><code>HitCounter()</code> Initializes the object of the hit counter system.</li>
+<li><code>void hit(int timestamp)</code> Records a hit that happened at <code>timestamp</code> (<strong>in seconds</strong>). Several hits may happen at the same <code>timestamp</code>.</li>
+<li><code>int getHits(int timestamp)</code> Returns the number of hits in the past 5 minutes from <code>timestamp</code> (i.e., the past <code>300</code> seconds).</li>
+</ul>
+</blockquote>
+<p>例子</p>
+<pre><code>Input
+[&quot;HitCounter&quot;, &quot;hit&quot;, &quot;hit&quot;, &quot;hit&quot;, &quot;getHits&quot;, &quot;hit&quot;, &quot;getHits&quot;, &quot;getHits&quot;]
+[[], [1], [2], [3], [4], [300], [300], [301]]
+Output
+[null, null, null, null, 3, null, 4, 3]
+
+Explanation
+HitCounter hitCounter = new HitCounter();
+hitCounter.hit(1);       // hit at timestamp 1.
+hitCounter.hit(2);       // hit at timestamp 2.
+hitCounter.hit(3);       // hit at timestamp 3.
+hitCounter.getHits(4);   // get hits at timestamp 4, return 3.
+hitCounter.hit(300);     // hit at timestamp 300.
+hitCounter.getHits(300); // get hits at timestamp 300, return 4.
+hitCounter.getHits(301); // get hits at timestamp 301, return 3.
+</code></pre>
+<h2 id="算法">算法</h2>
+<p>这个题目看到要算getHit与之前300s内的数量，那么需要记录每个hit进来时的时间戳，一开始想用Map做记录，然后又转念一想，key是什么？似乎用不到。所以就说应该是只需要存时间戳即可。</p>
+<p>这个题也是老的要被抛弃，只保留300s内的记录，那么就是FIFO。用queue即可。</p>
+<p>实现过程的关键点在于，当一个hit来的时候就放进去，当取这个hit数量的时候，从队头遍历，不满足条件的抛弃即可（假设这个题目没有过多讨论这些过时的数据是否还需要，可以跟出题人确认）。直到数据在当前时间戳-300s范围内。</p>
+<h2 id="代码1">代码1</h2>
+<pre><code class="language-java">class HitCounter {
+    Queue&lt;Integer&gt; queue;
+
+    public HitCounter() {
+        this.queue = new LinkedList&lt;&gt;();
+    }
+    
+    public void hit(int timestamp) {
+        queue.add(timestamp);
+    }
+    
+    public int getHits(int timestamp) {
+        while (!queue.isEmpty() &amp;&amp; queue.peek() &lt;= timestamp - 300) {
+            queue.poll();
+        }
+        return queue.size();
+    }
+}
+
+/**
+ * Your HitCounter object will be instantiated and called as such:
+ * HitCounter obj = new HitCounter();
+ * obj.hit(timestamp);
+ * int param_2 = obj.getHits(timestamp);
+ */
+</code></pre>
+<h2 id="follow-up-2">Follow up</h2>
+<p>这个题目的Follow up是说，存在一个时间点（时间戳）同时来了多个hit。你的代码是否可以支持scaling。</p>
+<p>上面的代码1是支持的。但是官方的solution给了一个方式说使用deque来存储一个pair，保存每个时间戳以及那个时间戳hit的数量即可。</p>
+<p>用deque是说他可以支持队头队尾的offer和poll；但是我在实现的过程中并没有用到；我觉得queue依然够用；</p>
+<p>另外存时间戳的hit数量这确实是一个优化。之前是每次hit都要存一个，现在如果同一时间hit了n个，在那个时间戳下，不需要O(n)，只需要O(1)。</p>
+<h2 id="代码2">代码2</h2>
+<h3 id="基于follow-up我的实现">基于Follow up我的实现</h3>
+<pre><code class="language-java">class HitCounter {
+    Deque&lt;int[]&gt; queue;
+
+    public HitCounter() {
+        this.queue = new LinkedList&lt;&gt;();
+    }
+    
+    public void hit(int timestamp) {
+        if (!queue.isEmpty() &amp;&amp; queue.peekLast()[0] == timestamp) {
+            int[] pair = queue.pollLast();
+            queue.offerLast(new int[]{pair[0], pair[1] + 1});
+        } else {
+            queue.offerLast(new int[]{timestamp, 1});
+        }
+        // queue.add(timestamp);
+    }
+    
+    public int getHits(int timestamp) {
+        while (!queue.isEmpty() &amp;&amp; queue.peekFirst()[0] &lt;= timestamp - 300) {
+            queue.pollFirst();
+        }
+        int sum = 0;
+        for (int[] pair : queue) {
+            sum += pair[1];
+        }
+        return sum;
+    }
+}
+
+/**
+ * Your HitCounter object will be instantiated and called as such:
+ * HitCounter obj = new HitCounter();
+ * obj.hit(timestamp);
+ * int param_2 = obj.getHits(timestamp);
+ */
+</code></pre>
+<h3 id="official-solution-2">Official Solution</h3>
+<pre><code class="language-java">class HitCounter {
+
+    private int total;
+    private Deque&lt;Pair&lt;Integer, Integer&gt;&gt; hits; 
+
+    /** Initialize your data structure here. */
+    public HitCounter() {
+        // Initialize total to 0
+        this.total = 0;
+        this.hits = new LinkedList&lt;Pair&lt;Integer, Integer&gt;&gt;();
+    }
+    
+    /** Record a hit.
+        @param timestamp - The current timestamp (in seconds granularity). */
+    public void hit(int timestamp) {
+        if (this.hits.isEmpty() || this.hits.getLast().getKey() != timestamp) {
+            // Insert the new timestamp with count = 1
+            this.hits.add(new Pair&lt;Integer, Integer&gt;(timestamp, 1));
+        } else {
+            // Update the count of latest timestamp by incrementing the count by 1
+
+            // Obtain the current count of the latest timestamp 
+            int prevCount = this.hits.getLast().getValue();
+            // Remove the last pair of (timestamp, count) from the deque
+            this.hits.removeLast();
+            // Insert a new pair of (timestamp, updated count) in the deque
+            this.hits.add(new Pair&lt;Integer, Integer&gt;(timestamp, prevCount + 1));
+        }
+        // Increment total
+        this.total++;
+    }
+    
+    /** Return the number of hits in the past 5 minutes.
+        @param timestamp - The current timestamp (in seconds granularity). */
+    public int getHits(int timestamp) {
+        while (!this.hits.isEmpty()) {
+            int diff = timestamp - this.hits.getFirst().getKey();
+            if (diff &gt;= 300) {
+                // Decrement total by the count of the oldest timestamp
+                this.total -= this.hits.getFirst().getValue();
+                this.hits.removeFirst();
+            }
+            else break;
+        }
+        return this.total;
+    }
+}
+</code></pre>
+<p>不过我还有一个可以学习的点是，我最后用了一个循环去计算了count，而官方解答多利用了一个total在每次add和remove的时候就做了更新，最后直接返回。</p>
+<p>另外区别就是，官方答案用了一个object来存时间戳和他的数量信息，这样存取都看起来更清晰；我用的是一个简单的数组。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#question">Question</a></li>
+<li><a href="#algorithm">Algorithm</a></li>
+<li><a href="#code-1">Code 1</a></li>
+<li><a href="#follow-up">Follow up</a></li>
+<li><a href="#code-2">Code 2</a>
+<ul>
+<li><a href="#based-on-follow-up-my-implementation">Based on Follow up my implementation</a></li>
+<li><a href="#official-solution">Official Solution</a></li>
+</ul>
+</li>
+<li><a href="#the-other-difference-is-that-the-official-answer-uses-an-object-to-store-the-timestamp-and-his-quantity-information-so-that-the-access-looks-clearer-i-used-a-simple-array">The other difference is that the official answer uses an object to store the timestamp and his quantity information, so that the access looks clearer; I used a simple array.</a></li>
+<li><a href="#%E9%97%AE%E9%A2%98">问题</a></li>
+<li><a href="#%E7%AE%97%E6%B3%95">算法</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%811">代码1</a></li>
+<li><a href="#follow-up-2">Follow up</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%812">代码2</a>
+<ul>
+<li><a href="#%E5%9F%BA%E4%BA%8Efollow-up%E6%88%91%E7%9A%84%E5%AE%9E%E7%8E%B0">基于Follow up我的实现</a></li>
+<li><a href="#official-solution-2">Official Solution</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/system-design-basic-3-estimation/">
+              <h3 class="post-title">
+                System Design Basic 3 - Estimation
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

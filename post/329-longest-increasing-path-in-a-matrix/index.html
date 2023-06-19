@@ -1,0 +1,357 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>329. Longest Increasing Path in a Matrix | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="329. Longest Increasing Path in a Matrix | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Question
+Given an m x n integers matrix, return the length of the longest increasing path in matrix.
+From each cell, you..." />
+    <meta name="keywords" content="Memorization,Matrix,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              329. Longest Increasing Path in a Matrix
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-06-07
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/9v3qk6N62/" class="post-tag">
+                  # Memorization
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/mSicWA2Zb/" class="post-tag">
+                  # Matrix
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h3 id="question">Question</h3>
+<p>Given an <code>m x n</code> integers <code>matrix</code>, return <em>the length of the longest increasing path in</em> <code>matrix</code>.</p>
+<p>From each cell, you can either move in four directions: left, right, up, or down. You <strong>may not</strong> move <strong>diagonally</strong> or move <strong>outside the boundary</strong> (i.e., wrap-around is not allowed).</p>
+<p><strong>Example 1:</strong></p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306060754252.jpg" alt="img" loading="lazy"></figure>
+<pre><code>Input: matrix = [[9,9,4],[6,6,8],[2,1,1]]
+Output: 4
+Explanation: The longest increasing path is [1, 2, 6, 9].
+</code></pre>
+<p><strong>Example 2:</strong></p>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306060754171.jpg" alt="img" loading="lazy"></figure>
+<pre><code>Input: matrix = [[3,4,5],[3,2,6],[2,2,1]]
+Output: 4
+Explanation: The longest increasing path is [3, 4, 5, 6]. Moving diagonally is not allowed.
+</code></pre>
+<p><strong>Example 3:</strong></p>
+<pre><code>Input: matrix = [[1]]
+Output: 1
+</code></pre>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li><code>m == matrix.length</code></li>
+<li><code>n == matrix[i].length</code></li>
+<li><code>1 &lt;= m, n &lt;= 200</code></li>
+<li><code>0 &lt;= matrix[i][j] &lt;= 231 - 1</code></li>
+</ul>
+<h2 id="algorithm">Algorithm</h2>
+<ol>
+<li>
+<p>Naive flood filled algorithm will case a time limit exceed. Code1</p>
+</li>
+<li>
+<p>If you think about the first solution, you may find when you traveling the matrix, some grid may be traversed repeatedly. So you may want utilize memorization to prune the unnecessary operations.</p>
+<p>In the code2, I made a huge optimized both in code and algorithm. In Algorithm, the code 1 worst case is <u>O(2^m * 2^n),</u> and space is O(mn), while the code2 is O(mn) for both time and space. Because in the second algorithm, each grid will be touched once and only once due to the memo. In the code1, each grid will be travelled to the end if it's worst case.</p>
+<p>In code, I use the direction array to avoid repetition in the code1. And the made the DFS itself return the desired value instead of introduce a new value carried with the function.</p>
+<p>The implementation would be we go through each node, and then check if their neighbors has a recalculated result, if yes, we simply get that one and add one step(or level); if not, we do a DFS to its neighbor. In the DFS, we keep updating the memo to get the result for each grid. If you are going next level, we add the result one step.</p>
+</li>
+<li>
+<p>There is another solution which utilize the dynamic programming. But before you dive into DP, since the grid has dependencies on its neighbors, so the elements you manipulate in DB should be sorted  first.</p>
+<p>Such dependency sorting is topological sort.</p>
+<p>Personally I think this is not that hard to implement but the more algorithm you involve in a solution, the higher chance you will get an error. So if you goal is to solve it, just use the algorithm2. That's enough.</p>
+</li>
+</ol>
+<h2 id="code1naive-dfstle">Code1(Naive DFS)(TLE)</h2>
+<pre><code class="language-java">class Solution {
+    int res;
+    public int longestIncreasingPath(int[][] matrix) {
+        res = 1;
+        for (int i = 0; i &lt; matrix.length; i++) {
+            for (int j = 0; j &lt; matrix[0].length; j++) {
+                dfs(matrix, i, j, 1);
+            }
+        }
+        return res;
+    }
+    
+    private void dfs(int[][] matrix, int i, int j, int level) {
+        if (i - 1 &gt;= 0) {
+            if (matrix[i-1][j] &gt; matrix[i][j]) {
+                dfs(matrix, i - 1, j, level + 1);
+            }
+        }
+        if (i + 1 &lt; matrix.length) {
+            if (matrix[i+1][j] &gt; matrix[i][j]) {
+                dfs(matrix, i + 1, j, level + 1);
+            }
+        }
+        if (j - 1 &gt;= 0) {
+            if (matrix[i][j-1] &gt; matrix[i][j]) {
+                dfs(matrix, i, j - 1, level + 1);
+            }
+        }
+        if (j + 1 &lt; matrix[0].length) {
+            if (matrix[i][j+1] &gt; matrix[i][j]) {
+                dfs(matrix, i, j + 1, level + 1);
+            }
+        }
+        
+        res = Math.max(res, level);
+    }
+}
+</code></pre>
+<h2 id="code2">Code2</h2>
+<pre><code class="language-java">class Solution {
+    int[][] memo;
+    int m, n;
+    private static final int[][] dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    public int longestIncreasingPath(int[][] matrix) {
+        int res = 1;
+        m = matrix.length;
+        n = matrix[0].length;
+        memo = new int[m][n];
+        
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                res = Math.max(res, dfs(matrix, memo, i, j));
+            }
+        }
+        return res;
+    }
+    
+    private int dfs(int[][] matrix, int[][] memo, int i, int j) {
+        if (memo[i][j] != 0) {
+            return memo[i][j];
+        }
+        for (int[] dir : dirs) {
+            int x = i + dir[0], y = j + dir[1];
+            if (x &gt;= 0 &amp;&amp; x &lt; m &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; n &amp;&amp; matrix[x][y] &gt; matrix[i][j]) {
+                memo[i][j] = Math.max(memo[i][j], dfs(matrix, memo, x, y));
+            }
+        }
+        return ++memo[i][j];
+        
+    }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#question">Question</a></li>
+</ul>
+</li>
+<li><a href="#algorithm">Algorithm</a></li>
+<li><a href="#code1naive-dfstle">Code1(Naive DFS)(TLE)</a></li>
+<li><a href="#code2">Code2</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/311-sparse-matrix-multiplication/">
+              <h3 class="post-title">
+                311. Sparse Matrix Multiplication
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

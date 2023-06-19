@@ -1,0 +1,285 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Google Code Review Practice | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Google Code Review Practice | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Currently I'm working on a big project refactor and we are doing code review in a daily basis.  To be honest, I hope the..." />
+    <meta name="keywords" content="Other" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Google Code Review Practice
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-09-21
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/s6FeLetgn/" class="post-tag">
+                  # Other
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <p>Currently I'm working on a big project refactor and we are doing code review in a daily basis.  To be honest, I hope there is a standard tells me how to do this including: what you should do when post your change, and even how do you perform a code review to others.</p>
+<p>Thankfully I got this Google instruction on Google. I will share some thing I learned from these article series.</p>
+<h4 id="termnology">Termnology</h4>
+<ul>
+<li><strong>CL</strong>: Stands for &quot;change list&quot;, which mean self-contained change that has been submitted to versio control or which is undergoing code review. Some organizations also call this a &quot;change&quot;, &quot;patch&quot; or &quot;pull request(PR)&quot;.</li>
+<li><strong>LGTM</strong>: Stands for &quot;Looks Good To Me&quot;. It is what a code reviewer says when approving a CL.</li>
+</ul>
+<h4 id="what-do-code-reviews-look-for">What Do Code Reviews Look For?</h4>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209210938608.svg" alt="code_review_pyramid" loading="lazy"></figure>
+<h5 id="picking-the-best-reviewers">Picking the Best Reviewers</h5>
+<p>Google suggests we should find someone that could respond in a reasonable period of time.</p>
+<p>The best person is owner of the code. I thinks you can get the name from git blame. If they are not availabe, at leart CC them on you change.</p>
+<p>I usually invite the code owner, my mentor(a senior engineer), sometimes my manager and another engineer(usually a senior or principal engineer).</p>
+<h5 id="in-person-reviewsand-pair-programming">In-Person Reviews(and Pair Programming)</h5>
+<p>I never did a pair programming though.</p>
+<p>I like in-person code review which enable reviewee to share the whole idea of design or details of a particular code. This would help me to explain my code more clearly to reviewers. On the other hand, reviews has a better understanding on codes and you will discuss in the flash once there is a question.</p>
+<h4 id="the-cl-authors-guide">The CL Author's Guide</h4>
+<h5 id="writing-good-cl-descriptions">Writing Good CL Descriptions</h5>
+<ul>
+<li>First line use imperative sentence to summarize what you have done in this change.</li>
+<li>Followed by a blank line and a description, inclduing what problem you are trying to solve, what approach you are using, possible shortcomings and optional background infomation.</li>
+</ul>
+<h5 id="small-cls">Small CLs</h5>
+<ul>
+<li>Small means this CL only address <strong>one thing</strong>.</li>
+<li>Should include test code.</li>
+</ul>
+<h5 id="how-to-handle-reviewers-comments">How to Handle Reviewers Comments</h5>
+<ul>
+<li>Don't take it personally. Focus on the code part and that's you main task.</li>
+<li>Fix the code. Try to clarify first if reviewers express consusion.</li>
+<li>Think Collaboratively. No matter you will change your code or not, communicate with reviews about the solution.</li>
+</ul>
+<h4 id="how-to-do-a-code-review">How To Do A Code Review</h4>
+<p>(For this part I will take time to quick go through the Googe guide and share some ideas once I've done some CRs.)</p>
+<h4 id="useful-links">Useful Links:</h4>
+<p><a href="https://google.github.io/eng-practices/review/">Google Engine Practice</a></p>
+<p><a href="https://www.morling.dev/blog/the-code-review-pyramid/">The Code Review Pyramid</a></p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#termnology">Termnology</a></li>
+<li><a href="#what-do-code-reviews-look-for">What Do Code Reviews Look For?</a>
+<ul>
+<li><a href="#picking-the-best-reviewers">Picking the Best Reviewers</a></li>
+<li><a href="#in-person-reviewsand-pair-programming">In-Person Reviews(and Pair Programming)</a></li>
+</ul>
+</li>
+<li><a href="#the-cl-authors-guide">The CL Author's Guide</a>
+<ul>
+<li><a href="#writing-good-cl-descriptions">Writing Good CL Descriptions</a></li>
+<li><a href="#small-cls">Small CLs</a></li>
+<li><a href="#how-to-handle-reviewers-comments">How to Handle Reviewers Comments</a></li>
+</ul>
+</li>
+<li><a href="#how-to-do-a-code-review">How To Do A Code Review</a></li>
+<li><a href="#useful-links">Useful Links:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/墨问西东的一次聚会/">
+              <h3 class="post-title">
+                墨问西东的一次聚会
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

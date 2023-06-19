@@ -1,0 +1,385 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A Quick Note of Segment Tree | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="A Quick Note of Segment Tree | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="
+
+What is segment tree
+
+A binary tree where each node represents a segment of an original array.
+The node stores the inf..." />
+    <meta name="keywords" content="Tree,Data Structure" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              A Quick Note of Segment Tree
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-03-20
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/J4nuEydwD/" class="post-tag">
+                  # Tree
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/PAMWmLjBw/" class="post-tag">
+                  # Data Structure
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <ol>
+<li>
+<p>What is segment tree</p>
+<ul>
+<li>A binary tree where each node represents a segment of an original array.</li>
+<li>The node stores the information of the subarray like sum ,minimum, max...</li>
+<li>The root represents the entire array, and each child node represents half of its parent.</li>
+</ul>
+</li>
+<li>
+<p>Why segment tree</p>
+<ul>
+<li>
+<p>A data structure for efficiently process <strong><u>range</u></strong> queries.</p>
+</li>
+<li>
+<p>Minimum, maximum, rangeSum of an subarray of a list or array in a logarithmic time.</p>
+</li>
+<li>
+<p>It can support rangeSum in logarithmic time; while updating subarray element very fast.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Implementation and comments</p>
+<pre><code class="language-java">import static org.junit.Assert.assertEquals;
+
+
+public class SegmentTree {
+    int[] nums;
+    int[] tree;
+    int n;
+
+    public SegmentTree(int[] arr) {
+        n = arr.length;
+        tree = new int[4*n];
+        nums = arr;
+        buildTree(0, 0, n - 1);
+    }
+
+
+    /**
+     *
+     * @param treeIndex The index of node in tree we are building.
+     * @param start The startIndex of elements in nums/arr represented by current node.
+     * @param end The endIndex of elements in nums/arr represented by current node.
+     */
+    private void buildTree(int treeIndex, int start, int end) {
+        if (start == end) { // leaf node;
+            tree[treeIndex] = nums[start];
+        } else {
+            int mid = start + (end - start) / 2;
+            buildTree(2*treeIndex+1, start, mid);
+            buildTree(2*treeIndex+2, mid+1, end);
+            tree[treeIndex] = tree[2*treeIndex+1] + tree[2*treeIndex+2];
+        }
+    }
+
+
+    /**
+     *
+     * @param queryStart The range start we are going to query.
+     * @param queryEnd The range end we are going to query.
+     * @return
+     */
+    public int rangeSum(int queryStart, int queryEnd) {
+        return rangeSum(0, 0, n-1, queryStart, queryEnd);
+    }
+
+
+    /**
+     *
+     * @param treeIndex The index of the tree node we are currently querying.
+     * @param queryStart The range start we are going to query.
+     * @param queryEnd The range end we are going to query.
+     * @param start The startIndex of elements in nums/arr represented by current node.
+     * @param end The endIndex of elements in nums/arr represented by current node.
+     * @return
+     */
+    private int rangeSum(int treeIndex, int start, int end, int queryStart, int queryEnd) {
+        if (start &gt; queryEnd || end &lt; queryStart) { // index out of range
+            return 0; // default value;
+        } else if (start &gt;= queryStart &amp;&amp; end &lt;= queryEnd) {
+            return tree[treeIndex];
+        } else {
+            int mid = start + (end - start) / 2;
+        if (queryEnd &lt;= mid) {
+            return rangeSum(2*treeIndex+1, start, mid, queryStart, queryEnd);
+        } else if (queryStart &gt; mid) {
+            return rangeSum(2*treeIndex+2, mid+1, end, queryStart, queryEnd);
+        } else {
+            int leftSum = rangeSum(2 * treeIndex + 1, start, mid, queryStart, queryEnd);
+            int rightSum = rangeSum(2 * treeIndex + 2, mid + 1, end, queryStart, queryEnd);
+            return leftSum + rightSum;
+        }
+    }
+
+
+    /**
+     *
+     * @param arrPos The index of element in nums/arr that we are going to update.
+     * @param newVal The new value of the element we are going to update.
+     */
+    public void update(int arrPos, int newVal) {
+        update(0, 0, n-1, arrPos, newVal);
+    }
+
+
+    /**
+     *
+     * @param treeIndex The index of the tree node we are going to update value.
+     * @param start The startIndex of elements in nums/arr represented by current node.
+     * @param end The endIndex of elements in nums/arr represented by current node.
+     * @param arrPos The index of element in nums/arr that we are going to update.
+     * @param newVal The new value of the element we are going to update.
+     */
+    private void update(int treeIndex, int start, int end, int arrPos, int newVal) {
+        if (start == end) { // leaf node;
+            tree[treeIndex] = newVal;
+        } else {
+            int mid = start + (end - start) / 2;
+            if (arrPos &lt;= mid) {
+                update(2*treeIndex+1, start, mid, arrPos, newVal);
+            } else {
+                update(2*treeIndex+2, mid+1, end, arrPos, newVal);
+            }
+            tree[treeIndex] = tree[2*treeIndex+1] + tree[2*treeIndex+2];
+        }
+    }
+
+    
+    public static void main(String[] args) {
+        int[] arr = {1, 3, 5, 7, 9, 11};
+        SegmentTree segmentTree = new SegmentTree(arr);
+
+        // Test rangeSum
+        assertEquals(1, segmentTree.rangeSum(0, 0));
+        assertEquals(3, segmentTree.rangeSum(1, 1));
+        assertEquals(36, segmentTree.rangeSum(0, 5));
+        assertEquals(32, segmentTree.rangeSum(2, 5));
+
+        // Test update
+        segmentTree.update(3, 8);
+        assertEquals(33, segmentTree.rangeSum(2, 5));
+
+        segmentTree.update(0, 2);
+        assertEquals(38, segmentTree.rangeSum(0, 5));
+    }
+}
+</code></pre>
+</li>
+<li>
+<p>Lazy</p>
+</li>
+</ol>
+<ul>
+<li>For the operations we mark(with the addition) the nodes first instead of executing the updating immediately. The execution of updating happens when querying.</li>
+<li>This lazy operation or thoughts is because of sometimes we do the range updates and all most all the nodes needs to be updated and the time becomes almost O(n)</li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/353-design-snake-game/">
+              <h3 class="post-title">
+                353. Design Snake Game
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

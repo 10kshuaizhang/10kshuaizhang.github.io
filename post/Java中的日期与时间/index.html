@@ -1,0 +1,727 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Java中的日期与时间 | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Java中的日期与时间 | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="根据廖雪峰老师的教程，梳理了Java中日期时间类的常见用法
+
+1. 基本概念
+日期是一个离散的概念，即非连续的。
+时间有两个概念，一种不带日期如12:34:44，另一种是带日期的：2020-1-1 20:21:59。不带日期的时间不能确定唯..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Java中的日期与时间
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-07-21
+              </span>
+              <span>
+                17 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <p>根据廖雪峰老师的教程，梳理了Java中日期时间类的常见用法</p>
+<!--more -->
+<h2 id="1-基本概念">1. 基本概念</h2>
+<p>日期是一个离散的概念，即非连续的。</p>
+<p>时间有两个概念，一种不带日期如<code>12:34:44</code>，另一种是带日期的：<code>2020-1-1 20:21:59</code>。不带日期的时间不能确定唯一时刻。</p>
+<h3 id="本地时间">本地时间</h3>
+<p>当我们说现在是22:00的时候，我们说的是我所在地区（时区）的时间，而地球上其他地方的时间在同一时刻可能是不同的。</p>
+<h3 id="时区">时区</h3>
+<p>为了唯一表示一个时间，我们需要给时间加上时区。</p>
+<p>一种是GMT一种是UTC。例如<code>GMT+08:00</code>或者<code>UTC+08:00</code>表示东八区。他们可以认为基本是等价的。UTC使用更精确的原子钟计时，每隔几年会有一个<a href="https://zh.wikipedia.org/wiki/%E9%97%B0%E7%A7%92">闰秒</a>。在写代码的时候可以忽略。</p>
+<p>另一种是缩写，例如CST表示<code>China Standard Time</code>, 但是也可以表示<code>Central Standard Time USA</code>, 因此我们应该尽量避免使用缩写带来的混淆。</p>
+<p>最后一种以洲/城市表示。例如，<code>Asia/Shanghai</code>表示上海所在地的时区。城市不是任意的，是由国际标准组织规定的。</p>
+<h3 id="夏令时">夏令时</h3>
+<p>夏天开始的时候，将时间往后拨一小时，夏天结束的时候再往前拨一小时。美国现在就在使用这种方法。具体的原因主要是和生产生活有关，详细缘由可以见<a href="https://zh.m.wikipedia.org/zh-hans/%E5%A4%8F%E6%97%B6%E5%88%B6">WIKI</a>。</p>
+<blockquote>
+<p>计算夏令时请使用标准库提供的相关类，不要试图自己计算夏令时。</p>
+</blockquote>
+<h3 id="本地化">本地化</h3>
+<p>在计算机中，通常使用<code>Locale</code>表示一个国家或地区的日期、时间、数字、货币等格式。<code>Locale</code>由<code>语言_国家</code>的字母缩写构成，例如，<code>zh_CN</code>表示中文+中国，<code>en_US</code>表示英文+美国。语言使用小写，国家使用大写。</p>
+<p>对于日期来说，不同的Locale，例如，中国和美国的表示方式如下：</p>
+<ul>
+<li>zh_CN：2016-11-30</li>
+<li>en_US：11/30/2016</li>
+</ul>
+<h2 id="2-旧api">2. 旧API</h2>
+<h3 id="javautildate">java.util.Date</h3>
+<p>区别于java.sql.Date（它是用来存数据库的数据类型）</p>
+<ol>
+<li>基本用法</li>
+</ol>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        // 获取当前时间:
+        Date date = new Date();
+        System.out.println(date.getYear() + 1900); // 必须加上1900
+        System.out.println(date.getMonth() + 1); // 0~11，必须加上1
+        System.out.println(date.getDate()); // 1~31，不能加1
+        // 转换为String:
+        System.out.println(date.toString());
+        // 转换为GMT时区:
+        System.out.println(date.toGMTString());
+        // 转换为本地时区: 不同的地区可能会有不同的结果
+        System.out.println(date.toLocaleString());
+    }
+}
+</code></pre>
+<p>如果想要对输出日期的结果进行格式化，可以使用<code>SimpleDateFormat</code>。</p>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        // 获取当前时间:
+        Date date = new Date();
+        var sdf = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;);
+        System.out.println(sdf.format(date));
+    }
+}
+</code></pre>
+<p>更多的格式可以从<a href="https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/text/SimpleDateFormat.html">JDK文档</a>查看。</p>
+<p>Date的问题在于不能转换时区，他总是以当前计算机的默认时区输出，也比较难对日期进行加减操作。</p>
+<h3 id="calendar">Calendar</h3>
+<p>它和Date的主要的区别在于它可以做一些简单的日期和时间的运算。</p>
+<p>基本用法：</p>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        // 获取当前时间:
+        Calendar c = Calendar.getInstance();
+        int y = c.get(Calendar.YEAR);
+        int m = 1 + c.get(Calendar.MONTH);
+        int d = c.get(Calendar.DAY_OF_MONTH);
+        int w = c.get(Calendar.DAY_OF_WEEK);
+        int hh = c.get(Calendar.HOUR_OF_DAY);
+        int mm = c.get(Calendar.MINUTE);
+        int ss = c.get(Calendar.SECOND);
+        int ms = c.get(Calendar.MILLISECOND);
+        System.out.println(y + &quot;-&quot; + m + &quot;-&quot; + d + &quot; &quot; + w + &quot; &quot; + hh + &quot;:&quot; + mm + &quot;:&quot; + ss + &quot;.&quot; + ms);
+    }
+}
+</code></pre>
+<p>Calendar只有一种获取方法， Calendar.getInstance()， 而且包含有当前时刻，如果想要设置特定时间，需要先清除。</p>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        // 当前时间:
+        Calendar c = Calendar.getInstance();
+        // 清除所有:
+        c.clear();
+        // 设置2019年:
+        c.set(Calendar.YEAR, 2019);
+        // 设置9月:注意8表示9月:
+        c.set(Calendar.MONTH, 8);
+        // 设置2日:
+        c.set(Calendar.DATE, 2);
+        // 设置时间:
+        c.set(Calendar.HOUR_OF_DAY, 21);
+        c.set(Calendar.MINUTE, 22);
+        c.set(Calendar.SECOND, 23);
+        System.out.println(new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;).format(c.getTime()));
+        // 2019-09-02 21:22:23
+    }
+}
+</code></pre>
+<p>利用Calendar.getTime()可以将得到一个Date对象，进而用SimpleDateFormat格式化。</p>
+<h3 id="timezone">Timezone</h3>
+<p>和前两者相比，Timezone提供了时区转换。</p>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        TimeZone tzDefault = TimeZone.getDefault(); // 当前时区
+        TimeZone tzGMT9 = TimeZone.getTimeZone(&quot;GMT+09:00&quot;); // GMT+9:00时区
+        TimeZone tzNY = TimeZone.getTimeZone(&quot;America/New_York&quot;); // 纽约时区
+        System.out.println(tzDefault.getID()); // Asia/Shanghai
+        System.out.println(tzGMT9.getID()); // GMT+09:00
+        System.out.println(tzNY.getID()); // America/New_York
+    }
+}
+</code></pre>
+<p>时区的唯一标识符是字符串的ID，可以用<code>TimeZone.getAvailableIDs()</code>获取所有可用的时区ID。</p>
+<p>利用<code>Calendar</code>进行时区转换的步骤是：</p>
+<ol>
+<li>清除所有字段；</li>
+<li>设定指定时区；</li>
+<li>设定日期和时间；</li>
+<li>创建<code>SimpleDateFormat</code>并设定目标时区；</li>
+<li>格式化获取的<code>Date</code>对象（注意<code>Date</code>对象无时区信息，时区信息存储在<code>SimpleDateFormat</code>中）。</li>
+</ol>
+<p>因此，本质上时区转换只能通过<code>SimpleDateFormat</code>在显示的时候完成。</p>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        // 当前时间:
+        Calendar c = Calendar.getInstance();
+        // 清除所有:
+        c.clear();
+        // 设置为北京时区:
+        c.setTimeZone(TimeZone.getTimeZone(&quot;Asia/Shanghai&quot;));
+        // 设置年月日时分秒:
+        c.set(2019, 10 /* 11月 */, 20, 8, 15, 0);
+        // 显示时间:
+        var sdf = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;);
+        sdf.setTimeZone(TimeZone.getTimeZone(&quot;America/New_York&quot;));
+        System.out.println(sdf.format(c.getTime()));
+        // 2019-11-19 19:15:00
+    }
+}
+</code></pre>
+<p>Calender也可以对日期简单加减</p>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        // 当前时间:
+        Calendar c = Calendar.getInstance();
+        // 清除所有:
+        c.clear();
+        // 设置年月日时分秒:
+        c.set(2019, 10 /* 11月 */, 20, 8, 15, 0);
+        // 加5天并减去2小时:
+        c.add(Calendar.DAY_OF_MONTH, 5);
+        c.add(Calendar.HOUR_OF_DAY, -2);
+        // 显示时间:
+        var sdf = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;);
+        Date d = c.getTime();
+        System.out.println(sdf.format(d));
+        // 2019-11-25 6:15:00
+    }
+}
+</code></pre>
+<h2 id="3-新api-javatime包">3. 新API java.time包</h2>
+<p>从Java8开始， java.time提供了新的日期和时间的API</p>
+<ul>
+<li>本地日期和时间：LocalDateTime，LocalDate，LocalTime</li>
+<li>带时区的日期和时间：ZonedDateTime</li>
+<li>时刻：Instant</li>
+<li>时区：ZoneId，ZoneOffSet</li>
+<li>时间间隔：Duration</li>
+</ul>
+<p>以及一套用于取代SimpleDateFormat的格式化类型DateTimeFormatter。</p>
+<p>新API严格区分了时刻、本地日期、本地时间和带时区的日期时间，并且，对日期和时间进行运算更加方便。</p>
+<p>此外还修正了常量设计：</p>
+<ul>
+<li>Month的范围用1~12表示1月到12月；</li>
+<li>Week的范围用1~7表示周一到周日。</li>
+</ul>
+<p>最后，新的API类型几乎都是不变类型，可以放心使用。</p>
+<h3 id="localdatetime">LocalDateTime</h3>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        LocalDate d = LocalDate.now(); // 当前日期
+        LocalTime t = LocalTime.now(); // 当前时间
+        LocalDateTime dt = LocalDateTime.now(); // 当前日期和时间
+        System.out.println(d); // 严格按照ISO 8601格式打印
+        System.out.println(t); // 严格按照ISO 8601格式打印
+        System.out.println(dt); // 严格按照ISO 8601格式打印
+    }
+}
+</code></pre>
+<p>本地日期和时间通过now()获取到的总是以当前默认时区返回的，和旧API不同，<code>LocalDateTime</code>、<code>LocalDate</code>和<code>LocalTime</code>默认严格按照<a href="https://www.iso.org/iso-8601-date-and-time-format.html">ISO 8601</a>规定的日期和时间格式进行打印。</p>
+<p>上述代码其实有一个小问题，在获取3个类型的时候，由于执行一行代码总会消耗一点时间，因此，3个类型的日期和时间很可能对不上（时间的毫秒数基本上不同）。为了保证获取到同一时刻的日期和时间，可以改写如下：</p>
+<pre><code>LocalDateTime dt = LocalDateTime.now(); // 当前日期和时间
+LocalDate d = dt.toLocalDate(); // 转换到当前日期
+LocalTime t = dt.toLocalTime(); // 转换到当前时间
+</code></pre>
+<p>反过来，通过指定的日期和时间创建<code>LocalDateTime</code>可以通过<code>of()</code>方法：</p>
+<pre><code>// 指定日期和时间:
+LocalDate d2 = LocalDate.of(2019, 11, 30); // 2019-11-30, 注意11=11月
+LocalTime t2 = LocalTime.of(15, 16, 17); // 15:16:17
+LocalDateTime dt2 = LocalDateTime.of(2019, 11, 30, 15, 16, 17);
+LocalDateTime dt3 = LocalDateTime.of(d2, t2);
+</code></pre>
+<p>因为严格按照ISO 8601的格式，因此，将字符串转换为<code>LocalDateTime</code>就可以传入标准格式：</p>
+<pre><code>LocalDateTime dt = LocalDateTime.parse(&quot;2019-11-19T15:16:17&quot;);
+LocalDate d = LocalDate.parse(&quot;2019-11-19&quot;);
+LocalTime t = LocalTime.parse(&quot;15:16:17&quot;);
+</code></pre>
+<p>注意ISO 8601规定的日期和时间分隔符是<code>T</code>。标准格式如下：</p>
+<ul>
+<li>日期：yyyy-MM-dd</li>
+<li>时间：HH:mm:ss</li>
+<li>带毫秒的时间：HH:mm:ss.SSS</li>
+<li>日期和时间：yyyy-MM-dd'T'HH:mm:ss</li>
+<li>带毫秒的日期和时间：yyyy-MM-dd'T'HH:mm:ss.SSS</li>
+</ul>
+<h4 id="datetimeformatter">DateTimeFormatter</h4>
+<p>如果要自定义输出的格式，或者要把一个非ISO 8601格式的字符串解析成<code>LocalDateTime</code>，可以使用新的<code>DateTimeFormatter</code></p>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        // 自定义格式化:
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(&quot;yyyy/MM/dd HH:mm:ss&quot;);
+        System.out.println(dtf.format(LocalDateTime.now()));
+
+        // 用自定义格式解析:
+        LocalDateTime dt2 = LocalDateTime.parse(&quot;2019/11/30 15:16:17&quot;, dtf);
+        System.out.println(dt2);
+    }
+}
+</code></pre>
+<p>LocalDateTime提供了对日期和时间进行加减的链式调用</p>
+<pre><code class="language-java">public class Main {
+  public static void main(String[] args) {
+    LocalDateTime dt = LocalDateTime.of(2022, 07, 21, 21, 30, 00);
+// dt ==&gt; 2022-07-21T21:30
+		LocalDateTime dt2 = dt.plusDays(5).minusHours(3);
+// dt2 ==&gt; 2022-07-26T18:30
+		dt2.minusMonths(1)
+// $38 ==&gt; 2022-06-26T18:30
+  }
+}
+</code></pre>
+<p>注意到月份加减会自动调整日期，例如从<code>2019-10-31</code>减去1个月得到的结果是<code>2019-09-30</code>，因为9月没有31日。</p>
+<p>对日期和时间进行调整则使用<code>withXxx()</code>方法，例如：<code>withHour(15)</code>会把<code>10:11:12</code>变为<code>15:11:12</code>：</p>
+<ul>
+<li>调整年：withYear()</li>
+<li>调整月：withMonth()</li>
+<li>调整日：withDayOfMonth()</li>
+<li>调整时：withHour()</li>
+<li>调整分：withMinute()</li>
+<li>调整秒：withSecond()</li>
+</ul>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        LocalDateTime dt = LocalDateTime.of(2019, 10, 26, 20, 30, 59);
+        System.out.println(dt);
+        // 日期变为31日:
+        LocalDateTime dt2 = dt.withDayOfMonth(31);
+        System.out.println(dt2); // 2019-10-31T20:30:59
+        // 月份变为9:
+        LocalDateTime dt3 = dt2.withMonth(9);
+        System.out.println(dt3); // 2019-09-30T20:30:59
+    }
+}
+</code></pre>
+<p><code>LocalDateTime</code>还有一个通用的<code>with()</code>方法允许我们做更复杂的运算。</p>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        // 本月第一天0:00时刻:
+        LocalDateTime firstDay = LocalDate.now().withDayOfMonth(1).atStartOfDay();
+        System.out.println(firstDay);
+
+        // 本月最后1天:
+        LocalDate lastDay = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
+        System.out.println(lastDay);
+
+        // 下月第1天:
+        LocalDate nextMonthFirstDay = LocalDate.now().with(TemporalAdjusters.firstDayOfNextMonth());
+        System.out.println(nextMonthFirstDay);
+
+        // 本月第1个周一:
+        LocalDate firstWeekday = LocalDate.now().with(TemporalAdjusters.firstInMonth(DayOfWeek.MONDAY));
+        System.out.println(firstWeekday);
+    }
+}
+</code></pre>
+<p>要判断两个<code>LocalDateTime</code>的先后，可以使用<code>isBefore()</code>、<code>isAfter()</code>方法，对于<code>LocalDate</code>和<code>LocalTime</code>类似</p>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime target = LocalDateTime.of(2019, 11, 19, 8, 15, 0);
+        System.out.println(now.isBefore(target));
+        System.out.println(LocalDate.now().isBefore(LocalDate.of(2019, 11, 19)));
+        System.out.println(LocalTime.now().isAfter(LocalTime.parse(&quot;08:15:00&quot;)));
+    }
+}
+</code></pre>
+<p><code>LocalDateTime</code>无法与时间戳进行转换，因为<code>LocalDateTime</code>没有时区，无法确定某一时刻。</p>
+<p><code>ZonedDateTime</code>相当于<code>LocalDateTime</code>加时区的组合，它具有时区，可以与<code>long</code>表示的时间戳进行转换。</p>
+<h4 id="duration-和-period">Duration 和 Period</h4>
+<p><code>Duration</code>表示两个时刻之间的时间间隔。另一个类似的<code>Period</code>表示两个日期之间的天数</p>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        LocalDateTime start = LocalDateTime.of(2019, 11, 19, 8, 15, 0);
+        LocalDateTime end = LocalDateTime.of(2020, 1, 9, 19, 25, 30);
+        Duration d = Duration.between(start, end);
+        System.out.println(d); // PT1235H10M30S
+
+        Period p = LocalDate.of(2019, 11, 19).until(LocalDate.of(2020, 1, 9));
+        System.out.println(p); // P1M21D
+    }
+}
+
+</code></pre>
+<p><code>Duration</code>和<code>Period</code>的表示方法也符合ISO 8601的格式，它以<code>P...T...</code>的形式表示，<code>P...T</code>之间表示日期间隔，<code>T</code>后面表示时间间隔。如果是<code>PT...</code>的格式表示仅有时间间隔。利用<code>ofXxx()</code>或者<code>parse()</code>方法也可以直接创建<code>Duration</code>：</p>
+<pre><code class="language-java">Duration d1 = Duration.ofHours(10); // 10 hours
+Duration d2 = Duration.parse(&quot;P1DT2H3M&quot;); // 1 day, 2 hours, 3 minutes
+</code></pre>
+<h3 id="3-zonedatetime">3. ZoneDateTime</h3>
+<p>要创建一个<code>ZonedDateTime</code>对象，有以下几种方法，一种是通过<code>now()</code>方法返回当前时间</p>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        ZonedDateTime zbj = ZonedDateTime.now(); // 默认时区
+        ZonedDateTime zny = ZonedDateTime.now(ZoneId.of(&quot;America/New_York&quot;)); // 用指定时区获取当前时间
+        System.out.println(zbj);
+        System.out.println(zny);
+    }
+}
+// 这两种方法获得的是同一时刻（有误差，语句执行时间）
+</code></pre>
+<p>另一种方式是通过给一个<code>LocalDateTime</code>附加一个<code>ZoneId</code>，就可以变成<code>ZonedDateTime</code></p>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        LocalDateTime ldt = LocalDateTime.of(2019, 9, 15, 15, 16, 17);
+        ZonedDateTime zbj = ldt.atZone(ZoneId.systemDefault());
+        ZonedDateTime zny = ldt.atZone(ZoneId.of(&quot;America/New_York&quot;));
+        System.out.println(zbj);
+        System.out.println(zny);
+    }
+}
+//这种方法获取到的是看似一样的时间，但是时区不同所以是不同的时刻
+</code></pre>
+<h4 id="时区转换">时区转换</h4>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        // 以中国时区获取当前时间:
+        ZonedDateTime zbj = ZonedDateTime.now(ZoneId.of(&quot;Asia/Shanghai&quot;));
+        // 转换为纽约时间:
+        ZonedDateTime zny = zbj.withZoneSameInstant(ZoneId.of(&quot;America/New_York&quot;));
+        System.out.println(zbj);
+        System.out.println(zny);
+    }
+}
+
+</code></pre>
+<blockquote>
+<p>涉及到时区时，千万不要自己计算时差，否则难以正确处理夏令时。</p>
+</blockquote>
+<h3 id="4-datetimeformatter">4. DateTimeFormatter</h3>
+<p>不变，线程安全</p>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        ZonedDateTime zdt = ZonedDateTime.now();
+        var formatter = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd'T'HH:mm ZZZZ&quot;);
+        System.out.println(formatter.format(zdt));
+
+        var zhFormatter = DateTimeFormatter.ofPattern(&quot;yyyy MMM dd EE HH:mm&quot;, Locale.CHINA);
+        System.out.println(zhFormatter.format(zdt));
+
+        var usFormatter = DateTimeFormatter.ofPattern(&quot;E, MMMM/dd/yyyy HH:mm&quot;, Locale.US);
+        System.out.println(usFormatter.format(zdt));
+    }
+}
+</code></pre>
+<h3 id="5-instant">5. Instant</h3>
+<p><code>Instant.now()</code>获取当前时间戳，效果和<code>System.currentTimeMillis()</code>类似,它可以和<code>ZonedDateTime</code>以及<code>long</code>互相转换</p>
+<img src="/Users/shuaizhang/Library/Application Support/typora-user-images/image-20220721214039903.png" alt="image-20220721214039903" style="zoom:50%;" />
+<h2 id="4-最佳实践">4. 最佳实践</h2>
+<h4 id="旧转新api可以将date或者calendar转为instant再转为新的zoneddatetime">旧转新API，可以将Date或者Calendar转为Instant，再转为新的ZonedDatetime</h4>
+<pre><code class="language-java">// Date -&gt; Instant:
+Instant ins1 = new Date().toInstant();
+
+// Calendar -&gt; Instant -&gt; ZonedDateTime:
+Calendar calendar = Calendar.getInstance();
+Instant ins2 = calendar.toInstant();
+ZonedDateTime zdt = ins2.atZone(calendar.getTimeZone().toZoneId());
+</code></pre>
+<h4 id="新转旧只能借助long">新转旧，只能借助long</h4>
+<pre><code class="language-java">// ZonedDateTime -&gt; long:
+ZonedDateTime zdt = ZonedDateTime.now();
+long ts = zdt.toEpochSecond() * 1000;
+
+// long -&gt; Date:
+Date date = new Date(ts);
+
+// long -&gt; Calendar:
+Calendar calendar = Calendar.getInstance();
+calendar.clear();
+calendar.setTimeZone(TimeZone.getTimeZone(zdt.getZone().getId()));
+calendar.setTimeInMillis(zdt.toEpochSecond() * 1000);
+</code></pre>
+<h4 id="在数据存日期和时间">在数据存日期和时间</h4>
+<p>除了旧式的<code>java.util.Date</code>，我们还可以找到另一个<code>java.sql.Date</code>，它继承自<code>java.util.Date</code>，但会自动忽略所有时间相关信息。这个奇葩的设计原因要追溯到数据库的日期与时间类型。</p>
+<p>在数据库中，也存在几种日期和时间类型：</p>
+<ul>
+<li><code>DATETIME</code>：表示日期和时间；</li>
+<li><code>DATE</code>：仅表示日期；</li>
+<li><code>TIME</code>：仅表示时间；</li>
+<li><code>TIMESTAMP</code>：和<code>DATETIME</code>类似，但是数据库会在创建或者更新记录的时候同时修改<code>TIMESTAMP</code></li>
+</ul>
+<p>在使用Java程序操作数据库时，我们需要把数据库类型与Java类型映射起来。下表是数据库类型与Java新旧API的映射关系：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">数据库</th>
+<th style="text-align:left">对应Java类（旧）</th>
+<th style="text-align:left">对应Java类（新）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">DATETIME</td>
+<td style="text-align:left">java.util.Date</td>
+<td style="text-align:left">LocalDateTime</td>
+</tr>
+<tr>
+<td style="text-align:left">DATE</td>
+<td style="text-align:left">java.sql.Date</td>
+<td style="text-align:left">LocalDate</td>
+</tr>
+<tr>
+<td style="text-align:left">TIME</td>
+<td style="text-align:left">java.sql.Time</td>
+<td style="text-align:left">LocalTime</td>
+</tr>
+<tr>
+<td style="text-align:left">TIMESTAMP</td>
+<td style="text-align:left">java.sql.Timestamp</td>
+<td style="text-align:left">LocalDateTime</td>
+</tr>
+</tbody>
+</table>
+<p>在数据库中，我们需要存储的最常用的是时刻（<code>Instant</code>），因为有了时刻信息，就可以根据用户自己选择的时区，显示出正确的本地时间。所以，<strong><u>最好的方法是直接用长整数<code>long</code>表示</u></strong>，在数据库中存储为<code>BIGINT</code>类型。</p>
+<p>一个例子</p>
+<pre><code class="language-java">import java.time.*;
+import java.time.format.*;
+import java.util.Locale;
+
+
+public class Main {
+    public static void main(String[] args) {
+        long ts = 1574208900000L;
+        System.out.println(timestampToString(ts, Locale.CHINA, &quot;Asia/Shanghai&quot;));
+        System.out.println(timestampToString(ts, Locale.US, &quot;America/New_York&quot;));
+    }
+
+    static String timestampToString(long epochMilli, Locale lo, String zoneId) {
+        Instant ins = Instant.ofEpochMilli(epochMilli);
+        DateTimeFormatter f = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT);
+        return f.withLocale(lo).format(ZonedDateTime.ofInstant(ins, ZoneId.of(zoneId)));
+    }
+}
+</code></pre>
+<p>感谢廖雪峰老师，原文：[Java教程：日期与时间-廖雪峰的官方网站](</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5">1. 基本概念</a>
+<ul>
+<li><a href="#%E6%9C%AC%E5%9C%B0%E6%97%B6%E9%97%B4">本地时间</a></li>
+<li><a href="#%E6%97%B6%E5%8C%BA">时区</a></li>
+<li><a href="#%E5%A4%8F%E4%BB%A4%E6%97%B6">夏令时</a></li>
+<li><a href="#%E6%9C%AC%E5%9C%B0%E5%8C%96">本地化</a></li>
+</ul>
+</li>
+<li><a href="#2-%E6%97%A7api">2. 旧API</a>
+<ul>
+<li><a href="#javautildate">java.util.Date</a></li>
+<li><a href="#calendar">Calendar</a></li>
+<li><a href="#timezone">Timezone</a></li>
+</ul>
+</li>
+<li><a href="#3-%E6%96%B0api-javatime%E5%8C%85">3. 新API java.time包</a>
+<ul>
+<li><a href="#localdatetime">LocalDateTime</a>
+<ul>
+<li><a href="#datetimeformatter">DateTimeFormatter</a></li>
+<li><a href="#duration-%E5%92%8C-period">Duration 和 Period</a></li>
+</ul>
+</li>
+<li><a href="#3-zonedatetime">3. ZoneDateTime</a>
+<ul>
+<li><a href="#%E6%97%B6%E5%8C%BA%E8%BD%AC%E6%8D%A2">时区转换</a></li>
+</ul>
+</li>
+<li><a href="#4-datetimeformatter">4. DateTimeFormatter</a></li>
+<li><a href="#5-instant">5. Instant</a></li>
+</ul>
+</li>
+<li><a href="#4-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5">4. 最佳实践</a><br>
+*
+<ul>
+<li><a href="#%E6%97%A7%E8%BD%AC%E6%96%B0api%E5%8F%AF%E4%BB%A5%E5%B0%86date%E6%88%96%E8%80%85calendar%E8%BD%AC%E4%B8%BAinstant%E5%86%8D%E8%BD%AC%E4%B8%BA%E6%96%B0%E7%9A%84zoneddatetime">旧转新API，可以将Date或者Calendar转为Instant，再转为新的ZonedDatetime</a></li>
+<li><a href="#%E6%96%B0%E8%BD%AC%E6%97%A7%E5%8F%AA%E8%83%BD%E5%80%9F%E5%8A%A9long">新转旧，只能借助long</a></li>
+<li><a href="#%E5%9C%A8%E6%95%B0%E6%8D%AE%E5%AD%98%E6%97%A5%E6%9C%9F%E5%92%8C%E6%97%B6%E9%97%B4">在数据存日期和时间</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/如何做性能测试/">
+              <h3 class="post-title">
+                如何做性能测试
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

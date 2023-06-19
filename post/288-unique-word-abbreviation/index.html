@@ -1,0 +1,411 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>288. Unique Word Abbreviation | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="288. Unique Word Abbreviation | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Question
+The problem is that given an array of characters, the title says to construct a dictionary of them, and the con..." />
+    <meta name="keywords" content="Design,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              288. Unique Word Abbreviation
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-03-14
+              </span>
+              <span>
+                8 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/gqDyHl5kO/" class="post-tag">
+                  # Design
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="question">Question</h2>
+<p>The problem is that given an array of characters, the title says to construct a dictionary of them, and the construction rule is &quot;abbreviation&quot;. An abbreviation is the length of the middle of the first and last letter plus its middle string (excluding the first and last letter), for example <code>international</code> is abbreviated to <code>i18n</code>. The abbreviation of a string of length 2 is itself.</p>
+<p>There are quite a few pitfalls in this topic. For example, the string of length 1 is not mentioned, here you can check with the questioner, I was practicing on my own, so I assumed that he is also itself (and the final result is true).</p>
+<p>The other is to implement his <code>isUnique</code> method. The rule is two, one of which is satisfied, either he is not in the key of this dictionary (i.e. new field) or it is a field that already appears and both key and value already exist in the dictionary.</p>
+<h2 id="algorithm">Algorithm</h2>
+<p>The topic has been given to let use a dictionary, in Java you can initially try to use a hashmap.</p>
+<p>I started with the idea of <code>Map&lt;String, List&lt;String&gt;&gt; map;</code>, list all the words that match his key abbreviation.</p>
+<p>If purely to do the problem, you can write code 2, space and time are prompted, because his processing is to meet the duplicate key directly to the abbreviation of the key set to unavailable (value is empty), so that the subsequent in the judgment of the time can also be relatively simple to use.</p>
+<blockquote>
+<p>I think in the actual application, including the meaning of the question, a dictionary is required to save the key value information, but isUnique function in order to calculate the convenience of the data will already exist directly to the empty string, I think it is a bit strange, I think this topic is also a reason for the low score.</p>
+</blockquote>
+<p>However, in my own code 1, I fell into a misunderstanding for a while, and did not use the charAt method but used substring when taking the characters, and needed to think about the startIndex and endIndex, while charAt is simpler, and the time complexity of charAt is O(1) compared to the other one is O(n).</p>
+<h2 id="code-1">Code 1</h2>
+<pre><code class="language-java">class ValidWordAbbr {
+    Map&lt;String, List&lt;String&gt;&gt; map;
+
+    public ValidWordAbbr(String[] dictionary) {
+        map = new HashMap&lt;&gt;();
+        for (String word : dictionary) {
+            String abbr = getAbbr(word);
+            if (!map.containsKey(abbr)) {
+                map.put(abbr, new ArrayList&lt;&gt;());
+            }
+            if (!map.get(abbr).contains(word)) {
+                map.get(abbr).add(word);
+            }
+            
+        }
+    }
+    
+    private String getAbbr(String word) {
+        if (word == null || word.length() == 0) return &quot;&quot;;
+        if (word.length() &lt;= 2) return word;
+        return word.substring(0, 1) + String.valueOf(word.length() - 2) + word.substring(word.length() - 1, word.length());
+    }
+    
+    public boolean isUnique(String word) {
+        String abbr = getAbbr(word);
+        for (List&lt;String&gt; words : map.values()) {
+            if (words.contains(word) &amp;&amp; words.size() == 1) {
+                return true;
+            }
+        }
+        return !map.containsKey(abbr);
+    }
+}
+
+/**
+ * Your ValidWordAbbr object will be instantiated and called as such:
+ * ValidWordAbbr obj = new ValidWordAbbr(dictionary);
+ * boolean param_1 = obj.isUnique(word);
+ */
+</code></pre>
+<h2 id="code-2">Code 2</h2>
+<pre><code class="language-java">class ValidWordAbbr {
+    HashMap&lt;String, String&gt; map;
+
+    public ValidWordAbbr(String[] dictionary) {
+        map = new HashMap&lt;&gt;();
+        for (String s : dictionary) {
+            if (!map.containsKey(getKey(s))) {
+                map.put(getKey(s), s);
+            } else {
+                if (!map.get(getKey(s)).equals(s)) {
+                    map.put(getKey(s), &quot;&quot;);
+                }
+            }
+        }
+    }
+    
+    public boolean isUnique(String word) {
+        return !map.containsKey(getKey(word)) || map.get(getKey(word)).equals(word);
+    }
+    
+    private String getKey(String s) {
+        if (s.length() &lt;= 2) return s;
+        String length = s.length() - 2 + &quot;&quot;;
+        return s.charAt(0) + length + s.charAt(s.length() - 1);
+    }
+}
+
+/**
+ * Your ValidWordAbbr object will be instantiated and called as such:
+ * ValidWordAbbr obj = new ValidWordAbbr(dictionary);
+ * boolean param_1 = obj.isUnique(word);
+ */
+</code></pre>
+<hr>
+<h2 id="问题">问题</h2>
+<p>这个问题是题目说给定一个字符数组，将他们构造一个字典，构造规则是“缩写”。缩写就是取首尾字母中间加他的中间字符串（除去首尾字母）的长度，例如<code>international</code>被缩写为<code>i18n</code>。长度为2的字符串缩写就是他本身。</p>
+<p>这个题目有挺多的陷阱。比如长度为1的字符串没提，这里可以和出题人确认，我是自己练习，所以假定了他也是它本身（最后结果也确实如此）。</p>
+<p>另外就是实现他的<code>isUnique</code>方法。这个规则是两个，满足一个就可以，要么是他不在这个字典的key中（即新字段）；要么是已经出现过的字段并且key 和value都已经存在于字典。</p>
+<h2 id="算法">算法</h2>
+<p>这个题目已经给了让用dictionary，在Java中可以初步尝试使用hashmap。</p>
+<p>我一开始想的是<code>Map&lt;String, List&lt;String&gt;&gt; map;</code>，list存所有符合他的key这个缩写的word。最后也实现了，但是挺慢的。</p>
+<p>如果纯为了做题，就可以写出代码2，空间和时间上都有所提示，因为他的处理是遇到重复的key直接就将这个缩写的key置为了不可用（value为空），这样后续在判断的时候也可以比较简单的利用。</p>
+<blockquote>
+<p>这个题还是要看出题人的意图，我觉得在实际的应用中，包括题意，一个字典是需要保存key value信息的，但是isUnique函数为了计算方便直接将已经存在得数据置为空字符串，个人觉得有点奇怪，估计也是这个题目被打低分的一个原因。</p>
+</blockquote>
+<p>不过在我自己的代码1中，一时竟然陷入了一个误区，在取字符的时候没有用charAt方法而是用了substring，还需要额外想一下startIndex 和endIndex,而charAt就简单一些，而且charAt的时间复杂度是O(1)对比另外一个是O(n)。</p>
+<h2 id="代码1">代码1</h2>
+<pre><code class="language-java">class ValidWordAbbr {
+    Map&lt;String, List&lt;String&gt;&gt; map;
+
+    public ValidWordAbbr(String[] dictionary) {
+        map = new HashMap&lt;&gt;();
+        for (String word : dictionary) {
+            String abbr = getAbbr(word);
+            if (!map.containsKey(abbr)) {
+                map.put(abbr, new ArrayList&lt;&gt;());
+            }
+            if (!map.get(abbr).contains(word)) {
+                map.get(abbr).add(word);
+            }
+            
+        }
+    }
+    
+    private String getAbbr(String word) {
+        if (word == null || word.length() == 0) return &quot;&quot;;
+        if (word.length() &lt;= 2) return word;
+        return word.substring(0, 1) + String.valueOf(word.length() - 2) + word.substring(word.length() - 1, word.length());
+    }
+    
+    public boolean isUnique(String word) {
+        String abbr = getAbbr(word);
+        for (List&lt;String&gt; words : map.values()) {
+            if (words.contains(word) &amp;&amp; words.size() == 1) {
+                return true;
+            }
+        }
+        return !map.containsKey(abbr);
+    }
+}
+
+/**
+ * Your ValidWordAbbr object will be instantiated and called as such:
+ * ValidWordAbbr obj = new ValidWordAbbr(dictionary);
+ * boolean param_1 = obj.isUnique(word);
+ */
+</code></pre>
+<h2 id="代码2">代码2</h2>
+<pre><code class="language-java">class ValidWordAbbr {
+    HashMap&lt;String, String&gt; map;
+
+    public ValidWordAbbr(String[] dictionary) {
+        map = new HashMap&lt;&gt;();
+        for (String s : dictionary) {
+            if (!map.containsKey(getKey(s))) {
+                map.put(getKey(s), s);
+            } else {
+                if (!map.get(getKey(s)).equals(s)) {
+                    map.put(getKey(s), &quot;&quot;);
+                }
+            }
+        }
+    }
+    
+    public boolean isUnique(String word) {
+        return !map.containsKey(getKey(word)) || map.get(getKey(word)).equals(word);
+    }
+    
+    private String getKey(String s) {
+        if (s.length() &lt;= 2) return s;
+        String length = s.length() - 2 + &quot;&quot;;
+        return s.charAt(0) + length + s.charAt(s.length() - 1);
+    }
+}
+
+/**
+ * Your ValidWordAbbr object will be instantiated and called as such:
+ * ValidWordAbbr obj = new ValidWordAbbr(dictionary);
+ * boolean param_1 = obj.isUnique(word);
+ */
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#question">Question</a></li>
+<li><a href="#algorithm">Algorithm</a></li>
+<li><a href="#code-1">Code 1</a></li>
+<li><a href="#code-2">Code 2</a></li>
+<li><a href="#%E9%97%AE%E9%A2%98">问题</a></li>
+<li><a href="#%E7%AE%97%E6%B3%95">算法</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%811">代码1</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%812">代码2</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/251-flatten-2d-vector/">
+              <h3 class="post-title">
+                251. Flatten 2D Vector
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

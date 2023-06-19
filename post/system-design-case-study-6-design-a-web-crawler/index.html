@@ -1,0 +1,479 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>System Design Case Study 6 - Design A Web Crawler | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="System Design Case Study 6 - Design A Web Crawler | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="
+A crawler is used for many purpose:
+
+Search engine index
+Web archiving: collect information from the web to preserve da..." />
+    <meta name="keywords" content="System Design" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              System Design Case Study 6 - Design A Web Crawler
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-10
+              </span>
+              <span>
+                7 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/h_IFyWw8r/" class="post-tag">
+                  # System Design
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <ol>
+<li>A crawler is used for many purpose:
+<ul>
+<li>Search engine index</li>
+<li>Web archiving: collect information from the web to preserve data for future use;</li>
+<li>Web mining: Discover useful knowledge from the internet.</li>
+<li>Web monitoring: monitor copyright and trademark infringements over the internet.</li>
+</ul>
+</li>
+</ol>
+<h3 id="1-understand-the-requirementsproblem-and-establish-design-scope">1. Understand the requirements/problem and establish design scope</h3>
+<ol>
+<li>What is the crawler used for(or what content is it crawling from the internet)? -&gt; search engine index</li>
+<li><font color=Red>how many pages -&gt; 1 billion</font></li>
+<li><font color=Red>What contents are included? -&gt; html only</font></li>
+<li>Single server or distributed?</li>
+<li>How long would be the service run? -&gt; 5 years</li>
+<li><font color=Red>how to handle duplicates contents from page? -&gt; ignore</font></li>
+<li>What is the data volume of scraping? This depends the storage size.</li>
+<li>Public service or private /internal use?  Can tolerate some availability?</li>
+<li>Handle The anti-crawler service</li>
+</ol>
+<p><font color=Red> 10.  The function should be simple: </font></p>
+<p>​		<font color=Red>Give a set of urls, download all the webpages addressed by the url</font></p>
+<p>​		<font color=Red>Extract urls from the web pages</font></p>
+<p>​		<font color=Red>Add new URLs to the lists of urls to be downloaded, repeat 1,2,3</font></p>
+<p><font color=Red>11. Besides funcationalities, these characteristics are also need to be considered: </font></p>
+<p><font color=Red>Scalability: The web is large, should utilize <strong>paralization</strong></font></p>
+<p><font color=Red>Robustness. Handle edges cases: bad HTML, unresponsive servers, crashes , malicious links, etc.</font></p>
+<p><font color=Red><strong>Politness</strong>: should not make too many requests to a site,</font></p>
+<p><font color=Red><strong>Extensibility</strong>: if we want to support new content, we do not need to redesign the whole system. Minimal the change</font></p>
+<h5 id="back-of-the-envelope-estimation">Back of the envelope estimation</h5>
+<ol>
+<li>1 billion page are downloaded every month
+<ol>
+<li>So the QPS would be = 1 billion / 30 days/24h/3600s ~= 386 query/sec</li>
+</ol>
+</li>
+<li>Assume each page is 500K.
+<ol>
+<li>The storage would be 1 billion*500KB = 5*10^11 KB = 5*10^8 MB=5*10^5 GB=500 TB</li>
+</ol>
+</li>
+<li><font color=Red>The data is stored 5 years, it would require 500TB * 12 months * 5 years = 30 PB</font></li>
+</ol>
+<h3 id="2-propose-high-level-design-and-get-buy-in">2. Propose high level design and get buy in</h3>
+<ol>
+<li>We have a initial url list to craw</li>
+<li>The server send requests to the urls sites</li>
+<li>Validate valid html contest , The server parse the response and added new urls to the list to be requested; saver save the contents to database,
+<ol>
+<li>The urls list was saved to a in memory cache like Redis as a List(queue)</li>
+</ol>
+</li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304081355277.png" alt="image-20230408135504116" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304081357654.png" alt="image-20230408135740594" loading="lazy"></figure>
+<ol>
+<li>seed urls
+<ol>
+<li>How to choose ? A school content-&gt; index page</li>
+<li>Entire web -&gt; by country or by topic</li>
+</ol>
+</li>
+<li><font color=red>URL frontier : The component that stores the urls to be downloaded</font></li>
+<li>URL Downloader</li>
+<li><font color=red>DNS resolver</font>? Why we need to resolve to DNS?</li>
+<li>Parser</li>
+<li><font color=red>Content seen? -&gt; to illuminate the repeat content</font></li>
+<li>Content storage</li>
+<li><font color=red>URL extractor</font>(maybe could combine with parser)</li>
+<li><font color=red>URL filter</font>: filter out certain content types, error links...</li>
+<li><font color=red>URL seen</font></li>
+<li>URL storage</li>
+</ol>
+<p><font color=red></font></p>
+<h3 id="3-design-deep-dive">3. Design deep dive</h3>
+<p>we will discuss the most important building components and techniques in depth:</p>
+<ul>
+<li>Depth-first search (DFS) vs Breadth-first search (BFS)</li>
+<li>URL frontier</li>
+<li>HTML Downloader</li>
+<li>Robustness</li>
+<li>Extensibility</li>
+<li>Detect and avoid problematic content</li>
+</ul>
+<h4 id="dfs-vs-bfs">DFS vs BFS</h4>
+<ol>
+<li>
+<p>DFS is not good because the depth may be very deep</p>
+</li>
+<li>
+<p>BFS is commonly used and implemented by queue.</p>
+</li>
+<li>
+<p>The problem is that the url we get using BFS, most of them are from same host, which will cause &quot;impoliteness&quot;(request same host multiple time in short period of time)</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304081423019.svg" alt="Figure 5" style="zoom:50%;" />
+</li>
+<li>
+<p>Another problem is that, normal BFS doesn't take priority into account when traveling. (Some pages are more important)</p>
+</li>
+</ol>
+<h4 id="url-frontier">URL frontier</h4>
+<p>The frontier (a data structure to save the urls to be downloaded) can help address the politeness problem, priority problem and freshness.</p>
+<h5 id="politeness">Politeness</h5>
+<ol>
+<li>By adding a delay between to download tasks.</li>
+<li>By implement a mapping from hostname to a download thread. Each thread has a separate FIFO queue and only download URLs from that queue.</li>
+</ol>
+<figure data-type="image" tabindex="3"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304081430508.svg" alt="Figure 6" loading="lazy"></figure>
+<ul>
+<li>Queue router: It ensures that each queue (b1, b2, … bn) only contains URLs from the same host.</li>
+<li>Mapping table: It maps each host to a queue.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"><strong>Host</strong></th>
+<th style="text-align:left"><strong>Queue</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">wikipedia.com</td>
+<td style="text-align:left">b1</td>
+</tr>
+<tr>
+<td style="text-align:left">apple.com</td>
+<td style="text-align:left">b2</td>
+</tr>
+<tr>
+<td style="text-align:left">...</td>
+<td style="text-align:left">...</td>
+</tr>
+<tr>
+<td style="text-align:left">nike.com</td>
+<td style="text-align:left">bn</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>FIFO queues b1, b2 to bn: Each queue contains URLs from the same host.</li>
+<li>Queue selector: Each worker thread is mapped to a FIFO queue, and it only downloads URLs from that queue. The queue selection logic is done by the Queue selector.</li>
+<li>Worker thread 1 to N. A worker thread downloads web pages one by one from the same host. A delay can be added between two download tasks.</li>
+</ul>
+<h5 id="priority">Priority</h5>
+<ol>
+<li>Web paged can be prioritized by traffic, update frequency, etc.</li>
+</ol>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304081435776.svg" alt="Figure 8" style="zoom:80%;" />
+<h5 id="freshness">freshness</h5>
+<ol>
+<li>Web pages are being added, updated and deleted. Re-crawl to keep our data refresh.</li>
+<li>Executed by strategy
+<ol>
+<li>Update frequency</li>
+<li>Important pages</li>
+</ol>
+</li>
+</ol>
+<h5 id="storage-from-url-frontier">Storage from URL frontier</h5>
+<ol>
+<li>In real world there could be millions of frontiers, keep things in memory is not feasable</li>
+<li>The majority are stored on disk, to reduce the cost, maintain a buffer in memory and periodically write to disk.</li>
+</ol>
+<h4 id="html-downloader">HTML downloader</h4>
+<ol>
+<li>Robots.txt, called Robots Exclusion Protocol, is a standard used by websites to communicate with crawlers. It specifies what pages crawlers are allowed to download. Before attempting to crawl a web site, a crawler should check its corresponding robots.txt first and follow its rules.</li>
+<li>Download from host first to avoid repeat download</li>
+</ol>
+<h5 id="performance-optimization">Performance optimization</h5>
+<ol>
+<li>
+<p>Distributed crawl</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304081442260.svg" alt="Figure 9" style="zoom:50%;" />
+</li>
+<li>
+<p>Cache DNS resolver</p>
+<ul>
+<li>This may be a bottleneck due to the synchronous nature of many DNS interface.</li>
+<li>We keep a mapping cache and updated it using a cron job.</li>
+</ul>
+</li>
+<li>
+<p>Locality</p>
+<p>Distribute crawl servers geographically. When crawl servers are closer to website hosts, crawlers experience faster download time.</p>
+</li>
+<li>
+<p>Short timeout</p>
+<p>Some web servers respond slowly or may not respond at all. To avoid long wait time, a maximal wait time is specified.</p>
+</li>
+</ol>
+<h4 id="robustness">Robustness</h4>
+<ol>
+<li>Consistent hashing to keep distribute the load to different downloaders.</li>
+<li>Save crawl states and data: To guard against failures, crawl states and data are written to a storage system. A disrupted crawl can be restarted easily by loading saved states and data.</li>
+<li>Exception handling</li>
+</ol>
+<h4 id="extensibility">Extensibility</h4>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304081447914.png" alt="image-20230408144722839" style="zoom:80%;" />
+<h4 id="detect-and-avoid-problematic-content">Detect and avoid problematic content</h4>
+<ol>
+<li>Redundant content : use hash or checksums</li>
+<li>Spider traps: A spider trap is a web page that causes a crawler in an infinite loop.
+<ol>
+<li>Define max length -&gt; not very good</li>
+<li>Manually identify unusual long urls</li>
+</ol>
+</li>
+<li>Data noise : no value data</li>
+</ol>
+<h3 id="4-wrap-up">4. Wrap up</h3>
+<ol>
+<li><strong>Server-side rendering</strong>: Numerous websites use scripts like JavaScript, AJAX, etc to generate links on the fly. If we download and parse web pages directly, we will not be able to retrieve dynamically generated links. To solve this problem, we perform server-side rendering (also called <strong>dynamic rendering</strong>) first before parsing a page.</li>
+<li>Filter out unwanted pages</li>
+<li>Database replication and sharding</li>
+<li>...</li>
+</ol>
+<figure data-type="image" tabindex="4"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304151705876.png" alt="" loading="lazy"></figure>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1-understand-the-requirementsproblem-and-establish-design-scope">1. Understand the requirements/problem and establish design scope</a><br>
+*
+<ul>
+<li><a href="#back-of-the-envelope-estimation">Back of the envelope estimation</a></li>
+</ul>
+</li>
+<li><a href="#2-propose-high-level-design-and-get-buy-in">2. Propose high level design and get buy in</a></li>
+<li><a href="#3-design-deep-dive">3. Design deep dive</a>
+<ul>
+<li><a href="#dfs-vs-bfs">DFS vs BFS</a></li>
+<li><a href="#url-frontier">URL frontier</a>
+<ul>
+<li><a href="#politeness">Politeness</a></li>
+<li><a href="#priority">Priority</a></li>
+<li><a href="#freshness">freshness</a></li>
+<li><a href="#storage-from-url-frontier">Storage from URL frontier</a></li>
+</ul>
+</li>
+<li><a href="#html-downloader">HTML downloader</a>
+<ul>
+<li><a href="#performance-optimization">Performance optimization</a></li>
+</ul>
+</li>
+<li><a href="#robustness">Robustness</a></li>
+<li><a href="#extensibility">Extensibility</a></li>
+<li><a href="#detect-and-avoid-problematic-content">Detect and avoid problematic content</a></li>
+</ul>
+</li>
+<li><a href="#4-wrap-up">4. Wrap up</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/339-nested-list-weight-sum-and-364nested-list-weight-sum-ii/">
+              <h3 class="post-title">
+                339. Nested List Weight Sum &amp; 364.Nested List Weight Sum II
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

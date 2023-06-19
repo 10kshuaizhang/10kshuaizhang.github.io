@@ -1,0 +1,369 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>System Design Case Study 4 - Design A Unique ID Generator In Distributed System | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="System Design Case Study 4 - Design A Unique ID Generator In Distributed System | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Firstly, you may come up with the traditional database auto increment id generator, however, there are two challenges, o..." />
+    <meta name="keywords" content="System Design" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              System Design Case Study 4 - Design A Unique ID Generator In Distributed System
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-04
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/h_IFyWw8r/" class="post-tag">
+                  # System Design
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <p>Firstly, you may come up with the traditional database auto increment id generator, however, there are two challenges, one is single server is no big enough, the other one is generating unique ids across database in a distributed system with minimal delay is challenging.</p>
+<h3 id="step1-understand-the-requirement-and-establish-design-scope">Step1 Understand the requirement and establish design scope</h3>
+<ol>
+<li>What is the characteristics of the IDs? - IDs must be unique and sortable.</li>
+<li>For each new record, does ID increment by 1? - The ID increase by time nut not necessary by 1.</li>
+<li>Do IDs only contains number values? - Yes.</li>
+<li>What is the length requirement? - 64-bit</li>
+<li>What's the scale of the system? The system should be able to generate 10000 IDs per second.</li>
+</ol>
+<h3 id="step2-propose-high-level-design-and-get-buy-in">Step2 Propose high level design and get buy in</h3>
+<p>There are many options could be considered:</p>
+<ul>
+<li>Multi-master replication</li>
+<li>UUID - Universally unique identifier</li>
+<li>Ticket server</li>
+<li>Twitter snowflake approach</li>
+</ul>
+<h4 id="multi-master-replication">Multi-master replication</h4>
+<ol>
+<li>It utilizes the database auto-increment, but instead increment 1, it increases k where k is the number of database.</li>
+<li>Pros: This solves some scale problems because IDs can scale with the increase of number of database server.</li>
+<li>Cons:
+<ul>
+<li>Cannot scale well in multi-datacenter(same issue with single server. Sync up number with minimal delay)</li>
+<li>Do not scale well when adding or removing database server(k changes and how to handle the incrementer in all other database servers?)</li>
+<li>IDs do not go up with time across multiple servers.</li>
+</ul>
+</li>
+</ol>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304040754582.png" alt="image-20230404075459527" style="zoom:50%;" />
+<h4 id="uuid">UUID</h4>
+<ol>
+<li>
+<p>UUID is a 128-bit number used to identify information in computer system. And it has a low probability of collision.</p>
+</li>
+<li>
+<p>Here is an example of UUID: <em>09c93e62-50b4-468d-bf8a-c07e1040bfb2</em></p>
+</li>
+<li>
+<p>The system with UUID would look like:</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304040802577.png" alt="image-20230404080248530" style="zoom:50%;" />
+</li>
+<li>
+<p>Pros:</p>
+<ol>
+<li>Scale well because you do not need to coordinate across servers. Each server will be responsible for ID generation</li>
+</ol>
+</li>
+<li>
+<p>Cons:</p>
+<ol>
+<li>Not numeric IDs</li>
+<li>Not increased with time and sortable.</li>
+<li>Not 64 bit.</li>
+</ol>
+</li>
+</ol>
+<h4 id="ticket-master">Ticket Master</h4>
+<ol>
+<li>
+<p>It uses a single database server(centralized) to do the ID incrementation</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304040806887.png" alt="image-20230404080617845" style="zoom:50%;" />
+</li>
+<li>
+<p>Pros:</p>
+<ul>
+<li>Easy to scale and do not have sync issue.(actually works well on small-medium size applications.)</li>
+<li>Numeric IDs.</li>
+</ul>
+</li>
+<li>
+<p>Cons:</p>
+<ul>
+<li>Not good when single point failure, If Ticket server is down. (And if you want to mitigate this, you introduce multi-ticket server, this will cause another synchronization problem between them)</li>
+<li>Not scale well when scale up since too many web server is communicating with ticket server and put pressure on it.</li>
+</ul>
+</li>
+</ol>
+<h4 id="twitter-snowflake-approach">Twitter snowflake approach</h4>
+<ol>
+<li>
+<p>Instead of generating an ID directly, we divide an ID into different sections. Figure 5 shows the layout of a 64-bit ID.</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304040812145.png" alt="image-20230404081215099" style="zoom:67%;" />
+</li>
+<li>
+<p>Each section:</p>
+<ol>
+<li>Sign bit. 1 bit. It will always be 0. This is reserved for future use. Can potentially distinguish signed and unsigned numbers.</li>
+<li>Timestamp. 41 bits. Milliseconds since epoch or custom epoch.</li>
+<li>Datacenter ID: 5 bits. Which gives us 2^5=32 data centers.</li>
+<li>Machine ID:5 bits. Which gives us 2^5=32 machines per datacenter.</li>
+<li>Sequence number: 12 bits. For every ID generated, the sequence number incremented by 1. This number is set to 0 every millisecond.</li>
+</ol>
+</li>
+</ol>
+<h3 id="step3-design-deep-dive">Step3 Design Deep Dive</h3>
+<ol>
+<li>
+<p>Datacenter IDs and machines IDs tends to be fixed at first, every change of them requires carefully review.</p>
+</li>
+<li>
+<p>Timestamp and sequence number is generated when app is running.</p>
+</li>
+<li>
+<p>ID is sortable by time as timestamp goes up.</p>
+ <img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202304040820583.svg" alt="Figure 7" style="zoom:67%;" />
+</li>
+<li>
+<p>This timestamp gives us 2^41 ~= 69 years. After 69 years, we need a new epoch time or adopt other techniques.</p>
+</li>
+<li>
+<p>Sequence number has 12 bits which gives up 2 ^ 12=4096, so in theory, each machine can be allow to generate 4096 IDs per millisecond.</p>
+</li>
+</ol>
+<h3 id="step4-wrap-up">Step4 Wrap up</h3>
+<p>We discuss several option for unique ID generation.</p>
+<p>There are some extra questions if time allowed:</p>
+<ul>
+<li>
+<p>Clock synchronization. In our design, we assume all servers have the same clock. When running in multiple cores this might not be true.</p>
+<ul>
+<li>To mitigate this issue, Network Time protocol is the most popular solution.</li>
+</ul>
+</li>
+<li>
+<p>Section length tuning.</p>
+</li>
+<li>
+<p>Highly availability. The ID generation is mission-critical so it should be highly available.</p>
+</li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#step1-understand-the-requirement-and-establish-design-scope">Step1 Understand the requirement and establish design scope</a></li>
+<li><a href="#step2-propose-high-level-design-and-get-buy-in">Step2 Propose high level design and get buy in</a>
+<ul>
+<li><a href="#multi-master-replication">Multi-master replication</a></li>
+<li><a href="#uuid">UUID</a></li>
+<li><a href="#ticket-master">Ticket Master</a></li>
+<li><a href="#twitter-snowflake-approach">Twitter snowflake approach</a></li>
+</ul>
+</li>
+<li><a href="#step3-design-deep-dive">Step3 Design Deep Dive</a></li>
+<li><a href="#step4-wrap-up">Step4 Wrap up</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/random-all-in-one-398-random-pick-indexand384-shuffle-an-arrayand382-linked-list-random-nodeand380-insert-delete-getrandom-o1and138-copy-list-with-random-pointer/">
+              <h3 class="post-title">
+                Random All In One - 398. Random Pick Index&amp;384. Shuffle an Array&amp;382. Linked List Random Node&amp;380. Insert Delete GetRandom O(1)&amp;138. Copy List with Random Pointer
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

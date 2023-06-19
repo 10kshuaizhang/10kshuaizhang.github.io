@@ -1,0 +1,469 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>10. Regular Expression Matching | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="10. Regular Expression Matching | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="问题
+问题是说，我们有一个东西正则表达式（不知道什么是正则表达式不重要），他有一个pattern，可以匹配字符串。匹配的规则就是
+
+小写字母代表它本身
+. 代表任意字符
+* 代表他前面的字符可以匹配0次或者1次或者多次
+
+举例来说就是我们有..." />
+    <meta name="keywords" content="Dynamic Programming,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              10. Regular Expression Matching
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-02-15
+              </span>
+              <span>
+                11 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/8XHIFnHCE/" class="post-tag">
+                  # Dynamic Programming
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="问题">问题</h2>
+<p>问题是说，我们有一个东西正则表达式（不知道什么是正则表达式不重要），他有一个pattern，可以匹配字符串。匹配的规则就是</p>
+<ol>
+<li>小写字母代表它本身</li>
+<li>. 代表任意字符</li>
+<li>* 代表他前面的字符可以匹配0次或者1次或者多次</li>
+</ol>
+<p>举例来说就是我们有一个pattern <code>a*</code>, 我们可以匹配<code>a</code>, <code>aa</code>,<code>aaaa</code>,或者是空字符串。</p>
+<p>给出一个字符串s，和一个pattern p，判断s是否可以匹配p。</p>
+<h2 id="解析">解析</h2>
+<p>我会尽力还原每一步是如何想到的，将他们联系起来。</p>
+<p>对于aaa是否匹配a*匹配问题，我们的思路一般是（可能我们有时候都不会注意到这个路径）：</p>
+<ul>
+<li>
+<p>首先看s中的第一个a是否匹配p中的第一个，不匹配则停止，匹配则继续看下一个字符;</p>
+</li>
+<li>
+<p>s的第二个字符a是否匹配p的第二个字符，对于p的第二个字符出现了*，我们需要回看p的第一个字符发现是a，那么<strong>基于前面的结果</strong>（s中的第一个a匹配p中的第一个a），而且当前第二步中，p中*的前一个字符是a，s的当前字符是a，也可以匹配；所以继续匹配</p>
+</li>
+<li>
+<p>s中的第三个a同第二部的匹配思路</p>
+</li>
+<li>
+<p>最终结束匹配。</p>
+</li>
+</ul>
+<p>不知看到这里给予前面的结果一步步构建最终结果，是否可以联想到动态规划的<strong>最优子结构</strong>。如果可以想到，我们就按照动态规划的思路去构建代码了：</p>
+<ul>
+<li>
+<p>首先是看<strong>状态定义</strong>，根据结果长度为len(s)的字符是否匹配长度为len(p)，我们定义<code>dp[m][n]</code>。</p>
+</li>
+<li>
+<p>然后转移公式：</p>
+<ul>
+<li>这里一开始我直接就按照最难的包含.和*的开始推导。根据题解的思路提示，可以<strong>先去思考没有星号的情况</strong>，就是只包含小写字母和点号。这个时候的话其实匹配的规则就很明朗，就是对应的字符匹配上，或者对应位置是一个点，那么也算匹配，就继续往下匹配即可，反之则结束。</li>
+<li>然后继续考虑加上星号的情况：
+<ul>
+<li>如果遇到星号的话，存在几种情况：
+<ul>
+<li>s中的字符和星号之前的字符不相等</li>
+<li>s中的字符和星号之前的字符相等</li>
+<li>星号之前的字符是.(也可以视为与当前s中的字符和星号之前的点相等)</li>
+</ul>
+</li>
+<li>对于以上几种情况
+<ul>
+<li>第一种，相当于当前的某个字符串c*匹配不上s中当前字符，此时我们<code>dp[i][j] </code>的结果需要基于<code>dp[i][j-2]</code>的结果（此处可以理解为j中这个字符以及星号没用了，匹配了0个字符）</li>
+<li>第二种以及第三种，可能匹配0次，或者一次，也可能匹配多次。匹配0次的话<code>dp[i][j] = dp[i - 1][j - 2]</code>, 匹配一次的话<code>dp[i][j] = dp[i - 1][j - 2]</code>,相当于说p中当前的字符匹配上了s中的*和他前一个字符（总共两个字符），所以是j - 2同第一种。匹配多次的话，我们可以考虑当前的结果是基于上一次的结果（aaa匹配a*基于aa匹配a*的基础），<code>dp[i][j] = dp[i - 1][j]</code>,</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>然后初始化。</p>
+<ul>
+<li>
+<p>j和i都为0的时候，两个空字符串一定匹配，所以<code>dp[0][0] = true;</code>;</p>
+</li>
+<li>
+<p>当p的长度为0时候肯定除了上述的情况（空字符串），其他的都匹配不上，为默认值false；</p>
+</li>
+<li>
+<p>当s的长度为0的时候，能够匹配的pattern应该长得像<code>a*a*b*c*...</code>，所以当s长度为0，当前i位置, i - 1是星号，i的结果取决于i - 2的结果：</p>
+<pre><code class="language-java">for (int i = 2; i &lt; n + 1; i++) {
+    if (p.charAt(j - 1) == '*' &amp;&amp; dp[0][j - 2]) {
+        dp[0][i] = true;
+    }
+}
+</code></pre>
+<p>可以确定一些偶数位。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="代码">代码</h2>
+<pre><code class="language-java">class Solution {
+    public boolean isMatch(String s, String p) {
+        if (s == null || p == null) return false;
+        int m = s.length();
+        int n = p.length();
+        
+        boolean[][] dp = new boolean[m + 1][n + 1];
+        
+        dp[0][0] = true;
+        
+        // initialization
+        for (int i = 2; i &lt; n + 1; i += 2) {
+            if (p.charAt(i - 1) == '*' &amp;&amp; dp[0][i - 2]) {
+                dp[0][i] = true;
+            }
+        }
+        
+        for (int i = 1; i &lt; m + 1; i++) {
+            for (int j = 1; j &lt; n + 1; j++) {
+                if (s.charAt(i - 1) == p.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else if (p.charAt(j - 1) == '.') {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else if (p.charAt(j - 1) == '*') {
+                    if (p.charAt(j - 2) != '.' &amp;&amp; s.charAt(i - 1) != p.charAt(j - 2)) {
+                        dp[i][j] = dp[i][j - 2];
+                    } else {
+                        dp[i][j] = dp[i][j - 2] || dp[i - 1][j] || dp[i - 1][j - 2];
+                    }
+                }
+            }
+        }
+        return dp[m][n];
+    }
+}
+</code></pre>
+<ol start="10">
+<li>Regular Expression Matching</li>
+</ol>
+<h2 id="problem">Problem</h2>
+<p>The problem is that we have a thing regular expression (it doesn't matter if you don't know what a regular expression is), and he has a pattern that matches strings. The rules for matching are</p>
+<ol>
+<li>lowercase letters for itself</li>
+<li>. represents any character</li>
+<li>* means that the character in front of him can match 0 times or 1 time or more</li>
+</ol>
+<p>For example, if we have a pattern <code>a*</code>, we can match <code>a</code>, <code>aa</code>, <code>aaaa</code>, or the empty string.</p>
+<p>Given a string s, and a pattern p, determine if s can match p.</p>
+<h2 id="parsing">Parsing</h2>
+<p>I'll try to restore how each step came to mind and connect them.</p>
+<p>For the question of whether aaa matches a * match, the general idea is (and we probably don't even notice the path sometimes).</p>
+<ul>
+<li>
+<p>First see if the first a in s matches the first in p. Stop if it doesn't match, and move on to the next character;</p>
+</li>
+<li>
+<p>whether the second character a of s matches the second character of p. For the second character of p appears *, we need to look back at the first character of p found to be a, then ** based on the previous result ** (the first a in s matches the first a in p), and the current second step, the previous character of * in p is a, the current character of s is a, can also match; so continue to match</p>
+</li>
+<li>
+<p>the third a in s is the same as the second part of the matching idea</p>
+</li>
+<li>
+<p>finally end matching.</p>
+</li>
+</ul>
+<p>I don't know if it is possible to associate the <strong>optimal sub-structure</strong> of dynamic programming by seeing the step-by-step construction of the final result given here to the previous result. If it can be thought of, we follow the idea of dynamic programming to build the code: *</p>
+<ul>
+<li>
+<p>First is to see <strong>state definition</strong>, according to the result length of len(s) whether the character matches the length of len(p), we define <code>dp[m][n]</code>.</p>
+</li>
+<li>
+<p>Then the transfer formula.</p>
+<ul>
+<li>Here at the beginning I will directly follow the most difficult ones containing . and *'s to start the derivation. According to the idea of the problem solution hint, you can ** first go to think about the case without asterisks **, that is, containing only lowercase letters and dotted signs. This time, the rules of matching are very clear, that is, the corresponding characters match, or the corresponding position is a dot, then it is also considered a match, and continue to match down, and vice versa is the end.</li>
+<li>Then consider the case of asterisks.
+<ul>
+<li>If an asterisk is encountered, there are several cases.
+<ul>
+<li>The character in s and the character before the asterisk are not equal</li>
+<li>The character in s and the character before the asterisk are equal</li>
+<li>The character before the asterisk is . (can also be considered equal to the character in the current s and the dot before the asterisk)</li>
+</ul>
+</li>
+<li>For the above cases
+<ul>
+<li>The first one, which is equivalent to some current string c * does not match the current character in s. At this time, our <code>dp[i][j] </code> result needs to be based on the result of <code>dp[i][j-2]</code> (here it can be understood that this character in j and the asterisk are useless and match 0 characters)</li>
+<li>The second and the third one may match 0 times, or once, or many times. If we match 0 times, <code>dp[i][j] = dp[i - 1][j - 2]</code>, if we match once, <code>dp[i][j] = dp[i - 1][j - 2]</code>, which means that the current character in p matches the * in s and his previous character (two characters in total), so it is j - 2 with the first one. Matching multiple times, we can consider that the current result is based on the previous result (aaa match a* based on aa match a*), <code>dp[i][j] = dp[i - 1][j]</code>,</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>then initialize.</p>
+<ul>
+<li>
+<p>When both j and i are 0, the two empty strings must match, so <code>dp[0][0] = true;</code>;</p>
+</li>
+<li>
+<p>when the length of p is 0 must not match except in the above case (empty string), for the default value of false.</p>
+</li>
+<li>
+<p>When the length of s is 0, the pattern that can be matched should look like <code>a*a*b*c*... </code>, so when the length of s is 0, the current position i, i - 1 is an asterisk and the result of i depends on the result of i - 2.</p>
+<pre><code class="language-java">for (int i = 2; i &lt; n + 1; i++) {
+    if (p.charAt(j - 1) == '*' &amp;&amp; dp[0][j - 2]) {
+        dp[0][i] = true;
+    }
+}
+</code></pre>
+<p>Some even digits can be determined.</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="code">Code</h2>
+<pre><code class="language-java">class Solution {
+    public boolean isMatch(String s, String p) {
+        if (s == null || p == null) return false;
+        int m = s.length();
+        int n = p.length();
+        
+        boolean[][] dp = new boolean[m + 1][n + 1];
+        
+        dp[0][0] = true;
+        
+        // initialization
+        for (int i = 2; i &lt; n + 1; i += 2) {
+            if (p.charAt(i - 1) == '*' &amp;&amp; dp[0][i - 2]) {
+                dp[0][i] = true;
+            }
+        }
+        
+        for (int i = 1; i &lt; m + 1; i++) {
+            for (int j = 1; j &lt; n + 1; j++) {
+                if (s.charAt(i - 1) == p.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else if (p.charAt(j - 1) == '.') {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else if (p.charAt(j - 1) == '*') {
+                    if (p.charAt(j - 2) ! = '.' &amp;&amp; s.charAt(i - 1) ! = p.charAt(j - 2)) {
+                        dp[i][j] = dp[i][j - 2];
+                    } else {
+                        dp[i][j] = dp[i][j - 2] || dp[i - 1][j] || dp[i - 1][j - 2];
+                    }
+                }
+            }
+        }
+        return dp[m][n];
+    }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E9%97%AE%E9%A2%98">问题</a></li>
+<li><a href="#%E8%A7%A3%E6%9E%90">解析</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+<li><a href="#problem">Problem</a></li>
+<li><a href="#parsing">Parsing</a></li>
+<li><a href="#code">Code</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/a-new-way-to-thinking/">
+              <h3 class="post-title">
+                A New Way to Thinking
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

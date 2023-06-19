@@ -1,0 +1,388 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>84. Largest Rectangle in Histogram | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="84. Largest Rectangle in Histogram | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Question
+给定一个柱状图每个柱子的高度，每个柱子宽度为1，求这个图中最大矩形的面积。
+
+Algorithm1
+这个题目挺值得盘一盘的。我一开始没做出来，看记录也只提交过一次，但是他是栈类型题目中最难的一种，也比较典型。
+首先不考虑使..." />
+    <meta name="keywords" content="Stack,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              84. Largest Rectangle in Histogram
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-05-25
+              </span>
+              <span>
+                7 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/ZerykMID8/" class="post-tag">
+                  # Stack
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="question">Question</h2>
+<p>给定一个柱状图每个柱子的高度，每个柱子宽度为1，求这个图中最大矩形的面积。</p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202305240739440.jpg" alt="img" style="zoom:75%;" />
+<h2 id="algorithm1">Algorithm1</h2>
+<p>这个题目挺值得盘一盘的。我一开始没做出来，看记录也只提交过一次，但是他是栈类型题目中最难的一种，也比较典型。</p>
+<p>首先不考虑使用栈，这个题目先应该想到暴力解法。即双重遍历所有的柱子作为边界，然后再找他们之间的最矮柱子，以最矮柱子的高度为矩形的高，边界截取到的宽度为宽，求面积即为 <u>可以组成</u>的矩形的最大面积。</p>
+<h2 id="code1">Code1</h2>
+<pre><code class="language-java">class Solution {
+    public int largestRectangleArea(int[] heights) {
+        int res = Integer.MIN_VALUE;
+        for (int i = 0; i &lt; heights.length; i++) {
+            for (int j = i; j &lt; heights.length; j++) {
+                int minHeight = Integer.MAX_VALUE;
+                for (int k = i; k &lt;= j; k++) {
+                    minHeight = Math.min(heights[k], minHeight);
+                }
+                res = Math.max(res, (j - i + 1) * minHeight);
+            }
+            
+        }
+        return res;
+    }
+}
+</code></pre>
+<p>不过这个解答的时间复杂度太高了，会造成TLE问题，通不过。</p>
+<h2 id="algorithm2">Algorithm2</h2>
+<p>暴力解法中，我们对每个区间，找出他们之间最小的高度以及组成的最大矩形，遍历了所有的可能性；这个解法中我们反向去思考，对每个柱子以他为高，找到他能组成的面积最大矩形。</p>
+<p>所以以当前柱子为高，他就是那个矩形中最<strong>矮</strong>的。所以我们找左右边界的话，其实是找左右第一个比他矮的柱子。</p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202305250914403.jpg" alt="img" style="zoom: 75%;" />
+<p>对每个柱子找出这样一组左右边界，最后遍历求最大面积即可。</p>
+<p>如何找左右边界，分开来看，看左边（右边同理）：</p>
+<pre><code class="language-java">leftLessMin[0] = -1;//第一个柱子前边没有柱子，所以赋值为 -1，便于计算面积              
+for (int i = 1; i &lt; heights.length; i++) {              
+    int p = i - 1;
+    //p 一直减少，找到第一个比当前高度小的柱子就停止
+    while (p &gt;= 0 &amp;&amp; height[p] &gt;= height[i]) {
+        p--;
+    }
+    leftLessMin[i] = p;              
+}
+</code></pre>
+<p><strong><u>关键点来了！</u></strong></p>
+<p>这个代码的时间复杂度是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><msup><mi>n</mi><mn>2</mn></msup><mo>)</mo></mrow><annotation encoding="application/x-tex">O(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>。但是其实可以优化。</p>
+<p><u>当前柱子i比上一个柱子矮的时候</u>，我们对每个柱子找他的左边界（即那个边界对应位置的柱子是第一个比当前柱子矮的），都是通过index不断减一。但是我们已经找到了上一个前面一个柱子的左边界，我们可以调到上个柱子的左边界对应的柱子高度进行比较。因为<strong>从上一个柱子左边界之后的柱子一定比当前柱子高</strong>（因为从上一个柱子左边界之后的柱子比上一个柱子要高，上一个柱子比当前柱子高（当前柱子比上一个柱子矮））。</p>
+<p>当前柱子i比上一个柱子高的时候，直接就是上一个柱子为左边界。</p>
+<p>所以中间那些<code>p--</code>的检查都可以直接跳过。这个也是下个算法中能够使用栈的核心点.</p>
+<blockquote>
+<p>我们之前已经求出了上一个柱子的 leftLessMin[ i - 1]，也就是第一个比上个柱子小的柱子，所以其实我们可以直接跳到 leftLessMin[ i - 1] 比较。因为从 leftLessMin[ i - 1] + 1到 i - 1 的柱子一定是比当前柱子 i 高的，所以可以跳过。</p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202305250927005.jpg" alt="img" style="zoom:75%;" />
+</blockquote>
+<p>时间也优化到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>n</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>时间。</p>
+<pre><code class="language-java">int[] leftLessMin = new int[heights.length];
+leftLessMin[0] = -1;
+for (int i = 1; i &lt; heights.length; i++) {
+    int l = i - 1;
+    //当前柱子更小一些，进行左移
+    while (l &gt;= 0 &amp;&amp; heights[l] &gt;= heights[i]) { 
+        l = leftLessMin[l];
+    }
+    leftLessMin[i] = l;
+}
+
+</code></pre>
+<h2 id="code2">Code2</h2>
+<pre><code class="language-java">class Solution {
+    public int largestRectangleArea(int[] heights) {
+        int[] leftLessMin = new int[heights.length];
+        leftLessMin[0] = -1;
+        int[] rightLessMin = new int[heights.length];
+        rightLessMin[heights.length - 1] = heights.length;
+        for (int i = 1; i &lt; heights.length; i++) {
+            int left = i - 1;
+            while (left &gt;= 0 &amp;&amp; heights[left] &gt;= heights[i]) {
+                left = leftLessMin[left];
+            }
+            leftLessMin[i] = left;
+        }
+        
+        for (int i = heights.length - 1; i &gt;= 0; i--) {
+            int right = i + 1;
+            while (right &lt; heights.length &amp;&amp; heights[right] &gt;= heights[i]) {
+                right = rightLessMin[right];
+            }
+            rightLessMin[i] = right;
+        }
+        
+        int res = Integer.MIN_VALUE;
+        for (int i = 0; i &lt; heights.length; i++) {
+            res = Math.max(res, heights[i] * (rightLessMin[i] - leftLessMin[i] - 1));
+        }
+        return res;
+    }
+}
+</code></pre>
+<h2 id="algorithm3">Algorithm3</h2>
+<p>这个算法其实中心思想和算法2类似，但是使用了栈这个数据结构。</p>
+<p>遍历每个柱子，然后分下边几种情况。</p>
+<ul>
+<li>如果当前栈空，或者当前柱子大于栈顶柱子的高度，就将当前柱子的下标入栈</li>
+<li>当前柱子的高度小于栈顶柱子的高度。那么就把栈顶柱子出栈，当做当前要求面积的柱子。右边第一个小于当前柱子的下标就是当前在遍历的柱子，左边第一个小于当前柱子的下标就是当前新的栈顶。</li>
+</ul>
+<p>遍历完成后，如果栈没有空。就依次出栈，出栈元素当做要求面积的柱子，然后依次计算矩形区域面积。()</p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202305251001333.jpg" alt="img" style="zoom:50%;" />
+<h2 id="code3">Code3</h2>
+<pre><code class="language-java">public int largestRectangleArea(int[] heights) {
+    int maxArea = 0;
+    Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();
+    int p = 0;
+    while (p &lt; heights.length) {
+        //栈空入栈
+        if (stack.isEmpty()) {
+            stack.push(p);
+            p++;
+        } else {
+            int top = stack.peek();
+            //当前高度大于栈顶，入栈
+            if (heights[p] &gt;= heights[top]) {
+                stack.push(p);
+                p++;
+            } else {
+                //保存栈顶高度
+                int height = heights[stack.pop()];
+                //左边第一个小于当前柱子的下标
+                int leftLessMin = stack.isEmpty() ? -1 : stack.peek();
+                //右边第一个小于当前柱子的下标
+                int RightLessMin = p;
+                //计算面积
+                int area = (RightLessMin - leftLessMin - 1) * height;
+                maxArea = Math.max(area, maxArea);
+            }
+        }
+    }
+    while (!stack.isEmpty()) {
+        //保存栈顶高度
+        int height = heights[stack.pop()];
+        //左边第一个小于当前柱子的下标
+        int leftLessMin = stack.isEmpty() ? -1 : stack.peek();
+        //右边没有小于当前高度的柱子，所以赋值为数组的长度便于计算
+        int RightLessMin = heights.length;
+        int area = (RightLessMin - leftLessMin - 1) * height;
+        maxArea = Math.max(area, maxArea);
+    }
+    return maxArea;
+}
+
+</code></pre>
+<p><s>对于栈中剩余元素，因为此时栈中剩下所有的元素是依次增加的，所以后面的元素都是更高的， 所以在pop前面越来越小的元素，左边界就是peek，右边界可以一直设为heights数组的长度。</s></p>
+<hr>
+<p>其实这个题目还有借助快排思想的做法，但是我更喜欢栈的这个思路，相对我觉得简单点。就不在这写那种解法了。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#question">Question</a></li>
+<li><a href="#algorithm1">Algorithm1</a></li>
+<li><a href="#code1">Code1</a></li>
+<li><a href="#algorithm2">Algorithm2</a></li>
+<li><a href="#code2">Code2</a></li>
+<li><a href="#algorithm3">Algorithm3</a></li>
+<li><a href="#code3">Code3</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/she-ji-mo-shi-zhi-mei-ke-cheng-bi-ji-2/">
+              <h3 class="post-title">
+                设计模式之美-课程笔记2
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

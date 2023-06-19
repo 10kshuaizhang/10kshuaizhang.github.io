@@ -1,0 +1,317 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>46. Subsets &amp; 90 Subsets II | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="46. Subsets &amp; 90 Subsets II | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="Question1
+This question gives us an array and let us output all its subsets.
+Algorithm1
+We could utilize backtracking si..." />
+    <meta name="keywords" content="Backtracking,LeetCode" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              46. Subsets &amp; 90 Subsets II
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-15
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/KQ57awumk/" class="post-tag">
+                  # Backtracking
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/4zkg5-iEk/" class="post-tag">
+                  # LeetCode
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="question1">Question1</h2>
+<p>This question gives us an array and let us output all its subsets.</p>
+<h2 id="algorithm1">Algorithm1</h2>
+<p>We could utilize backtracking since we need to traverse all the elements and put them in and out of to get the results.</p>
+<h2 id="code1">Code1</h2>
+<pre><code class="language-java">class Solution {
+    public List&lt;List&lt;Integer&gt;&gt; subsets(int[] nums) {
+        List&lt;List&lt;Integer&gt;&gt; res = new ArrayList&lt;&gt;();
+        if (nums == null || nums.length == 0) {
+            return res;
+        }
+        helper(res, nums, new ArrayList&lt;&gt;(), 0);
+        return res;
+    }
+    
+    private void helper(List&lt;List&lt;Integer&gt;&gt; res, int[] nums, List&lt;Integer&gt; list, int start) {
+        res.add(new ArrayList&lt;&gt;(list));
+        for(int i = start; i &lt; nums.length; i++) {
+            list.add(nums[i]);
+            helper(res, nums, list, i);
+            list.remove(list.size() - 1);
+        }
+    }
+}
+</code></pre>
+<h2 id="question2">Question2</h2>
+<p>This question is a follow up of previous one, where we have no duplicate elements. Now we are having duplicate number and the result list need to exclude same result.</p>
+<h2 id="algorithm2">Algorithm2</h2>
+<p>Same thought, use backtracking but do more prune here.  There are two ways to exclude the duplicates before this, you need to sort the input array:</p>
+<ul>
+<li>Each time you put a list into result list, you check if there is duplicates and put the distinct ones to keep uniqueness. If you do not do sort, <code>[2, 1, 2]</code> will have <code>[2, 1]</code> and <code>[1, 2]</code> and we couldn't filter out those duplicate out.</li>
+<li>Instead of putting the duplicates into list and check when putting into result list, we do this on iteration elements. Because we have sort out all the elements, duplicates will stay together, and we only need to check if <code>nums[i] == nums[i - 1]</code> thus to avoid duplication.  This is more effective that the method1.</li>
+</ul>
+<h2 id="code2">Code2</h2>
+<pre><code class="language-java">class Solution {
+    public List&lt;List&lt;Integer&gt;&gt; subsetsWithDup(int[] nums) {
+        List&lt;List&lt;Integer&gt;&gt; res = new ArrayList&lt;&gt;();
+        if (nums == null || nums.length == 0) {
+            return res;
+        }
+        Arrays.sort(nums);
+        helper(res, nums, new ArrayList&lt;&gt;(), 0);
+        return res;
+    }
+    
+    private void helper(List&lt;List&lt;Integer&gt;&gt; res, int[] nums, List&lt;Integer&gt; list, int start) {
+        if (!res.contains(list)) {
+            res.add(new ArrayList&lt;&gt;(list));
+        }
+        
+        for (int i = start; i &lt; nums.length; i++) {
+            list.add(nums[i]);
+            helper(res, nums, list, i+1);
+            list.remove(list.size() - 1);
+        }
+        
+    }
+}
+</code></pre>
+<h2 id="code3">Code3</h2>
+<pre><code class="language-java">class Solution {
+    public List&lt;List&lt;Integer&gt;&gt; subsetsWithDup(int[] nums) {
+        List&lt;List&lt;Integer&gt;&gt; res = new ArrayList&lt;&gt;();
+        if (nums == null || nums.length == 0) return res;
+        Arrays.sort(nums);
+        helper(res, new ArrayList&lt;&gt;(), nums, 0);
+        return res;
+    }
+    
+    private void helper(List&lt;List&lt;Integer&gt;&gt; res, List&lt;Integer&gt; list, int[] nums, int index) {
+        res.add(new ArrayList&lt;&gt;(list));
+        for (int i = index; i &lt; nums.length; i++) {
+            if (i != index &amp;&amp; nums[i] == nums[i - 1]) continue;
+            list.add(nums[i]);
+            helper(res, list, nums, i + 1);
+            list.remove(list.size() - 1);
+        }
+    }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#question1">Question1</a></li>
+<li><a href="#algorithm1">Algorithm1</a></li>
+<li><a href="#code1">Code1</a></li>
+<li><a href="#question2">Question2</a></li>
+<li><a href="#algorithm2">Algorithm2</a></li>
+<li><a href="#code2">Code2</a></li>
+<li><a href="#code3">Code3</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/46-permutations/">
+              <h3 class="post-title">
+                46. Permutations
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

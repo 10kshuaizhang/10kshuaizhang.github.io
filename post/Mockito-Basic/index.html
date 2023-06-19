@@ -1,0 +1,536 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mockito Basic | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Mockito Basic | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="1 Background
+I started using Mockito for couple of months since I started my career as a backend developer. While I coul..." />
+    <meta name="keywords" content="Test,Java" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Mockito Basic
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-04
+              </span>
+              <span>
+                8 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/621rpTZ7Z/" class="post-tag">
+                  # Test
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/YyW64XHFs/" class="post-tag">
+                  # Java
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="1-background">1 Background</h2>
+<p>I started using Mockito for couple of months since I started my career as a backend developer. While I could write some tests, they are mostly originated from others and modified to meet my needs.</p>
+<p>I wish I could take some time to go over the official site or docs to have a basic conceps of this test framework. It's Chinese National Day Holiday so I have plenty to time do the learning.</p>
+<h2 id="2-mockito">2 Mockito</h2>
+<ol>
+<li>
+<p>Whats Is Mockito?</p>
+ <img src="https://github.com/mockito/mockito.github.io/raw/master/img/logo%402x.png" alt="Mockito" style="zoom:33%;" />
+<p>It's a mocking framework.(I just wondering why it's describe as a testing framework, maybe it only focus on mocking and doesn't support test engine.)</p>
+<p>Mocking is something that creating objects <strong><u>simulating</u></strong> real objects.</p>
+<p>The difference between <strong>mocking</strong> and <strong>stubbing</strong> is that:</p>
+<p>​	Mocking is similar to a stub, but with <em>verification</em> added in. <strong>The purpose of a mock is to make assertions about how your system under test interacted with the dependency</strong>.</p>
+<p>​	Stubbing is a <strong>replacement of dependencies</strong>. You do not have to deal with pendency directly.  <strong>The purpose of a stub is to get your system under test into a specific state</strong></p>
+</li>
+<li>
+<p>Features And Motivatiosn</p>
+<blockquote>
+<p>Mockito offers simpler and more intuitive approach: you ask questions about interactions <em>after</em> execution</p>
+<p>Mockito offers simpler and more intuitive approach: you ask questions about interactions <em>after</em> execution</p>
+<p>Mockito has very slim API, almost no time is needed to start mocking. There is only one kind of mock, there is only one way of creating mocks. Just remember that stubbing goes before execution, verifications of interactions go afterwards. You'll soon notice how natural is that kind of mocking when TDD-ing java code.</p>
+</blockquote>
+</li>
+<li>
+<p>Basic functions</p>
+<p>Here we just show a quick demo for verify something:</p>
+<pre><code class="language-java">//Let's import Mockito statically so that the code looks clearer
+ import static org.mockito.Mockito.*;
+
+ //mock creation
+ List mockedList = mock(List.class);
+
+ //using mock object
+ mockedList.add(&quot;one&quot;);
+ mockedList.clear();
+
+ //verification
+ verify(mockedList).add(&quot;one&quot;);
+ verify(mockedList).clear();
+</code></pre>
+<p>Stubbing:</p>
+<pre><code class="language-java">//You can mock concrete classes, not just interfaces
+ LinkedList mockedList = mock(LinkedList.class);
+
+ //stubbing
+ when(mockedList.get(0)).thenReturn(&quot;first&quot;);
+ when(mockedList.get(1)).thenThrow(new RuntimeException());
+
+ //following prints &quot;first&quot;
+ System.out.println(mockedList.get(0));
+
+ //following throws runtime exception
+ System.out.println(mockedList.get(1));
+
+ //following prints &quot;null&quot; because get(999) was not stubbed
+ System.out.println(mockedList.get(999));
+
+ //Although it is possible to verify a stubbed invocation, usually it's just redundant
+ //If your code cares what get(0) returns, then something else breaks (often even before verify() gets executed).
+ //If your code doesn't care what get(0) returns, then it should not be stubbed.
+ verify(mockedList).get(0);
+</code></pre>
+<ol start="0">
+<li>
+<p>If we want to enable the use of annotations with Mockito tests, we need do this:</p>
+<p><strong>Annotate the JUnit test with a MockitoJUnitRunner</strong>:</p>
+<pre><code class="language-java">@RunWith(MockitoJUnitRunner.class)
+public class MockitoAnnotationTest {
+    ...
+}
+</code></pre>
+<p>or <strong>enable Mockito annotations programmatically</strong> by invoking <em>MockitoAnnotations.openMocks()</em>:</p>
+<pre><code class="language-java">@Before
+public void init() {
+    MockitoAnnotations.openMocks(this);
+}
+</code></pre>
+</li>
+<li>
+<p><strong>mock()/@mock</strong>: Creates a mock with some non-standard settings.</p>
+<p>@mock can subsctitute mock() to create and inject mocked instances.</p>
+<pre><code class="language-java">@Test
+public void whenNotUseMockAnnotation_thenCorrect() {
+    List mockList = Mockito.mock(ArrayList.class);
+    
+    mockList.add(&quot;one&quot;);
+    Mockito.verify(mockList).add(&quot;one&quot;);
+    assertEquals(0, mockList.size());
+
+    Mockito.when(mockList.size()).thenReturn(100);
+    assertEquals(100, mockList.size());
+}
+</code></pre>
+<pre><code class="language-java">@Mock
+List&lt;String&gt; mockedList;
+
+@Test
+public void whenUseMockAnnotation_thenMockIsInjected() {
+    mockedList.add(&quot;one&quot;);
+    Mockito.verify(mockedList).add(&quot;one&quot;);
+    assertEquals(0, mockedList.size());
+
+    Mockito.when(mockedList.size()).thenReturn(100);
+    assertEquals(100, mockedList.size());
+}
+</code></pre>
+</li>
+<li>
+<p><strong>spy()/@spy()</strong>： Creates a spy of the real object. The spy calls <strong>real</strong> methods unless they are stubbed.</p>
+<pre><code class="language-java">@Spy
+List&lt;String&gt; spiedList = new ArrayList&lt;String&gt;();
+
+@Test
+public void whenUseSpyAnnotation_thenSpyIsInjectedCorrectly() {
+    spiedList.add(&quot;one&quot;);
+    spiedList.add(&quot;two&quot;);
+
+    Mockito.verify(spiedList).add(&quot;one&quot;);
+    Mockito.verify(spiedList).add(&quot;two&quot;);
+
+    assertEquals(2, spiedList.size());
+
+    Mockito.doReturn(100).when(spiedList).size();
+    assertEquals(100, spiedList.size());
+}
+</code></pre>
+</li>
+<li>
+<p>@captor：<em>ArgumentCaptor</em> allows us to capture an argument passed to a method to inspect it. This <strong>is especially useful when we can't access the argument outside of the method we'd like to test.</strong></p>
+<pre><code class="language-java">@Mock
+List mockedList;
+
+@Captor 
+ArgumentCaptor argCaptor;
+
+@Test
+public void whenUseCaptorAnnotation_thenTheSam() {
+    mockedList.add(&quot;one&quot;);
+    Mockito.verify(mockedList).add(argCaptor.capture());
+
+    assertEquals(&quot;one&quot;, argCaptor.getValue());
+}
+</code></pre>
+</li>
+<li>
+<p>@injectMcok:   creates an instance of the class and injects the mocks that are created with the <code>@Mock</code> (or <code>@Spy</code>) annotations into this instance.</p>
+<pre><code class="language-java">class Game {
+
+    private Player player;
+
+    public Game(Player player) {
+        this.player = player;
+    }
+
+    public String attack() {
+        return &quot;Player attack with: &quot; + player.getWeapon();
+    }
+
+}
+
+class Player {
+
+    private String weapon;
+
+    public Player(String weapon) {
+        this.weapon = weapon;
+    }
+
+    String getWeapon() {
+        return weapon;
+    }
+}
+</code></pre>
+<pre><code class="language-java">@RunWith(MockitoJUnitRunner.class)
+class GameTest {
+
+    @Mock
+    Player player;
+
+    @InjectMocks
+    Game game;
+
+    @Test
+    public void attackWithSwordTest() throws Exception {
+        Mockito.when(player.getWeapon()).thenReturn(&quot;Sword&quot;);
+
+        assertEquals(&quot;Player attack with: Sword&quot;, game.attack());
+    }
+
+}
+</code></pre>
+<p>Mockito will mock a Player class and it's behaviour using <code>when</code> and <code>thenReturn</code> method. Lastly, using <code>@InjectMocks</code> Mockito will put that <code>Player</code> into <code>Game</code>.</p>
+<p>Notice that you don't even have to create a <code>new Game</code> object. Mockito will inject it for you.</p>
+<p>Here is a example for inject in a spy:</p>
+<pre><code class="language-java">@RunWith(MockitoJUnitRunner.class)
+public class GameTest {
+
+  @Mock Player player;
+
+  @Spy List&lt;String&gt; enemies = new ArrayList&lt;&gt;();
+
+  @InjectMocks Game game;
+
+  @Test public void attackWithSwordTest() throws Exception {
+    Mockito.when(player.getWeapon()).thenReturn(&quot;Sword&quot;);
+
+    enemies.add(&quot;Dragon&quot;);
+    enemies.add(&quot;Orc&quot;);
+
+    assertEquals(2, game.numberOfEnemies());
+
+    assertEquals(&quot;Player attack with: Sword&quot;, game.attack());
+  }
+}
+
+class Game {
+
+  private Player player;
+
+  private List&lt;String&gt; opponents;
+
+  public Game(Player player, List&lt;String&gt; opponents) {
+    this.player = player;
+    this.opponents = opponents;
+  }
+
+  public int numberOfEnemies() {
+    return opponents.size();
+  }
+
+  // ...
+</code></pre>
+</li>
+<li>
+<p>verify()</p>
+<pre><code class="language-java">List&lt;String&gt; mockedList = mock(MyList.class);
+mockedList.size();
+verify(mockedList).size();
+</code></pre>
+</li>
+<li>
+<p><strong>configure behavior</strong>： When/then</p>
+<pre><code class="language-java">public class MyList extends AbstractList&lt;String&gt; {
+
+    @Override
+    public String get(final int index) {
+        return null;
+    }
+    @Override
+    public int size() {
+        return 1;
+    }
+}
+</code></pre>
+<pre><code class="language-java">MyList listMock = Mockito.mock(MyList.class);
+when(listMock.add(anyString())).thenReturn(false);
+
+boolean added = listMock.add(randomAlphabetic(6));
+assertThat(added).isFalse();
+</code></pre>
+<p>or configure return behavior for mock in an alternative way:</p>
+<pre><code class="language-java">MyList listMock = Mockito.mock(MyList.class);
+doReturn(false).when(listMock).add(anyString());
+
+boolean added = listMock.add(randomAlphabetic(6));
+assertThat(added).isFalse();
+</code></pre>
+</li>
+<li>
+<p>Exception throwing</p>
+<p>First, if our method return type is not <em>void</em>, we can use <em>when().thenThrow()</em>:</p>
+<pre><code class="language-java">@Test(expected = NullPointerException.class)
+public void whenConfigNonVoidRetunMethodToThrowEx_thenExIsThrown() {
+    MyDictionary dictMock = mock(MyDictionary.class);
+    when(dictMock.getMeaning(anyString()))
+      .thenThrow(NullPointerException.class);
+
+    dictMock.getMeaning(&quot;word&quot;);
+}
+</code></pre>
+<p>Notice that we configured the <em>getMeaning()</em> method — which returns a value of type <em>String</em> — to throw a <em>NullPointerException</em> when called.</p>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="3-summary">3 Summary</h2>
+<p>Here I thought it would take days to finish the learning, however, it only takes about 2 hours for me to quickly go through the docs. There are many things I don't know or understand and I only write something here that may be useful for my current job. I belive this artical may be modified as my experience accumulating. More practices will be reflected.</p>
+<h2 id="4-useful-links">4 Useful Links</h2>
+<ol>
+<li>
+<p><a href="https://stackoverflow.com/questions/2665812/what-is-mocking">What is Mocking</a></p>
+</li>
+<li>
+<p><a href="https://stackoverflow.com/questions/346372/whats-the-difference-between-faking-mocking-and-stubbing">What's the difference between faking, mocking, and stubbing?</a></p>
+</li>
+<li>
+<p><a href="https://site.mockito.org/">Mockito</a></p>
+</li>
+<li>
+<p><a href="https://www.baeldung.com/mockito-annotations">Mockito Tutorial</a></p>
+</li>
+<li>
+<p><a href="https://www.baeldung.com/mockito-verify">verify cookbook</a></p>
+</li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-background">1 Background</a></li>
+<li><a href="#2-mockito">2 Mockito</a></li>
+<li><a href="#3-summary">3 Summary</a></li>
+<li><a href="#4-useful-links">4 Useful Links</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/Google-Code-Review-Practice/">
+              <h3 class="post-title">
+                Google Code Review Practice
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

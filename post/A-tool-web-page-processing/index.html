@@ -1,0 +1,287 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A tool - web page processing | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="A tool - web page processing | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="背景
+起因是某个刷题网站上有一份前四百题的分类顺序表，结果发现Chrome和Safari的插件都不能生成PDF文档完美的提取并显示这个列表。查看源代码发现好像符合一些规律，所以就想着用python自己写个小工具整理一下。
+具体实现
+基本分三..." />
+    <meta name="keywords" content="Other,Python" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              A tool - web page processing
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-08-07
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/s6FeLetgn/" class="post-tag">
+                  # Other
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/ZmcA_dWc6J/" class="post-tag">
+                  # Python
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="背景">背景</h2>
+<p>起因是某个刷题网站上有一份前四百题的分类顺序表，结果发现Chrome和Safari的插件都不能生成PDF文档完美的提取并显示这个列表。查看源代码发现好像符合一些规律，所以就想着用python自己写个小工具整理一下。</p>
+<h2 id="具体实现">具体实现</h2>
+<p>基本分三步，1. 获取源码， 2. 文本处理， 3. 获取结果。 一步步说一下。</p>
+<p><strong>Step1</strong> 获取源码<br>
+可以选择用小爬虫爬取这个网页的源码，在爬取的时候就可以做一些过滤操作，获取相应的标签。因为我这个就很少量，本着省时省力的原则，我只接选择去原网页查看源代码。</p>
+<p><strong>Step2</strong> 文本处理<br>
+主要是对获取到的文本进一步处理，找到自己需要的信息并且观察。</p>
+<pre><code class="language-html">&lt;tr&gt;
+    &lt;td&gt;380&lt;/td&gt;
+    &lt;td&gt;&lt;a href=&quot;https://leetcode.com/problems/insert-delete-getrandom-o1/&quot;
+           target=&quot;_blank&quot; class=&quot;text-link&quot;&gt;Insert Delete GetRandom O(1)&lt;/a&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;a href=&quot;/login&quot; class=&quot;text-link&quot;&gt;视频讲解&lt;/a&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+</code></pre>
+<p>观察过后发现其实都是这个模式，所以上手！<a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">beautiful soup</a>了解一下。<br>
+使用了beautiful soup的节点操作工具。这里涉及到DOM的知识（其实不懂也没事，只需要知道一个HTML页面是一个类似树形结构的文本组织）。<br>
+找到<code>&lt;tr&gt;</code>标签然后使用get_text()函数获取到他内部的文本。</p>
+<p><strong>Step3</strong> 获取结果<br>
+我只需要得到最后的列表即可，因为我要放在Markdown文件里给他加上一个Todo List标签，所以做了小小的处理。</p>
+<p>最后记录一下源代码，因为篇幅有限，网页源代码将近一万行了，所以只截取几行代表直观感受一下。</p>
+<pre><code class="language-python">from bs4 import BeautifulSoup
+
+
+html_doc = &quot;&quot;&quot;
+&lt;tr&gt;
+    &lt;td&gt;78&lt;/td&gt;
+    &lt;td&gt;&lt;a href=&quot;https://leetcode.com/problems/subsets/description/&quot;
+           target=&quot;_blank&quot; class=&quot;text-link&quot;&gt;Subsets&lt;/a&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;a href=&quot;/login&quot; class=&quot;text-link&quot;&gt;视频讲解&lt;/a&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+    &lt;td&gt;79&lt;/td&gt;
+    &lt;td&gt;&lt;a href=&quot;https://leetcode.com/problems/word-search/description/&quot;
+           target=&quot;_blank&quot; class=&quot;text-link&quot;&gt;Word Search&lt;/a&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;a href=&quot;/login&quot; class=&quot;text-link&quot;&gt;视频讲解&lt;/a&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+    &lt;td&gt;80&lt;/td&gt;
+    &lt;td&gt;&lt;a href=&quot;https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/description/&quot;
+           target=&quot;_blank&quot; class=&quot;text-link&quot;&gt;Remove Duplicates from Sorted Array II&lt;/a&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;a href=&quot;/login&quot; class=&quot;text-link&quot;&gt;视频讲解&lt;/a&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&quot;&quot;&quot;
+
+soup = BeautifulSoup(html_doc, 'html.parser') // parse source code of web page
+for tr in soup.find_all('tr'): // find_all the tr label
+    text = tr.get_text()
+    l = text.split('\n') // split by new line 
+    new_s = &quot;- [ ] &quot; + l[1] + &quot; &quot; + l[2] + &quot; &quot; + l[4] // get what I want,  
+    if (l[1][0] &gt; '0' and l[1][0] &lt; '9'): // filtering some invalid result
+        print(new_s)
+</code></pre>
+<p>我得到的结果：</p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209112015562.png" alt="1" style="zoom:50%;" />
+<p>复制进去markdown编辑器：</p>
+<img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202209112015569.png" alt="2" style="zoom: 33%;" />
+<h2 id="后记">后记</h2>
+<p>多动手来增加自己思考的机会和写代码的能力把。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E8%83%8C%E6%99%AF">背景</a></li>
+<li><a href="#%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0">具体实现</a></li>
+<li><a href="#%E5%90%8E%E8%AE%B0">后记</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

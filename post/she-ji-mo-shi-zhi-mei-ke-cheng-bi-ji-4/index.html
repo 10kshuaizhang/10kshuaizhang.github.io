@@ -1,0 +1,418 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>设计模式之美-课程笔记4 | 10K&#39;s</title>
+<link rel="shortcut icon" href="https://10kshuaizhang.github.io/favicon.ico?v=1687157630552">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://10kshuaizhang.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="设计模式之美-课程笔记4 | 10K&#39;s - Atom Feed" href="https://10kshuaizhang.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6PETZ11Z8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6PETZ11Z8');
+</script>
+
+
+    <meta name="description" content="理论七：为何说要多用组合少用继承？如何决定该用组合还是继承？
+为什么不推荐使用继承
+
+
+继承虽然可以解决代码的复用问题，但是继承层次过深，过复杂也会影响到代码的可维护性。
+
+
+举个例子
+
+
+假设我们要设计一个关于鸟的类。我们将“鸟类”这样一..." />
+    <meta name="keywords" content="OOD,Design Pattern" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://10kshuaizhang.github.io">
+  <img class="avatar" src="https://10kshuaizhang.github.io/images/avatar.png?v=1687157630552" alt="">
+  </a>
+  <h1 class="site-title">
+    10K&#39;s
+  </h1>
+  <p class="site-description">
+    Shortcuts are the farthest path, so you must write and think honestly, which is the basic requirement for progress.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          Archive
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          About
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="/post/books" class="menu">
+          Books
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/10kshuaizhang" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/jason278642682" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              设计模式之美-课程笔记4
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-06-02
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+                <a href="https://10kshuaizhang.github.io/tag/sSLhqMzY-/" class="post-tag">
+                  # OOD
+                </a>
+              
+                <a href="https://10kshuaizhang.github.io/tag/d2JaGqwpzA/" class="post-tag">
+                  # Design Pattern
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="理论七为何说要多用组合少用继承如何决定该用组合还是继承">理论七：为何说要多用组合少用继承？如何决定该用组合还是继承？</h2>
+<h3 id="为什么不推荐使用继承">为什么不推荐使用继承</h3>
+<ol>
+<li>
+<p>继承虽然可以解决代码的复用问题，但是继承层次过深，过复杂也会影响到代码的可维护性。</p>
+</li>
+<li>
+<p>举个例子</p>
+<ul>
+<li>
+<p>假设我们要设计一个关于鸟的类。我们将“鸟类”这样一个抽象的事物概念，定义为一个抽象类 AbstractBird。所有更细分的鸟，比如麻雀、鸽子、乌鸦等，都继承这个抽象类。</p>
+</li>
+<li>
+<p>大部分鸟都会飞，那我们可不可以在 AbstractBird 抽象类中，定义一个 fly() 方法呢？答案是否定的。</p>
+</li>
+<li>
+<p>尽管大部分鸟都会飞，但也有特例，比如鸵鸟就不会飞。鸵鸟继承具有 fly() 方法的父类，那鸵鸟就具有“飞”这样的行为，这显然不符合我们对现实世界中事物的认识。当然，你可能会说，我在鸵鸟这个子类中重写（override）fly() 方法，让它抛出 UnSupportedMethodException 呢？</p>
+</li>
+<li>
+<p>能解决问题，不够好。还是有一些鸟不会飞，首先可能都需要给他们重写fly方法，<u>增加编码工作量；另外也违背了之后要讲的最小只是原则，暴露不该暴露的接口给外部，增加了类使用过程中被误用的概率。</u></p>
+</li>
+</ul>
+</li>
+<li>
+<p>有人会建议，针对抽象鸟类再写两个子类，分会飞和不会飞。那如果还关注鸟会不会叫呢？这时候就要再定义四个抽象类基于上面的两个会飞不会飞的抽象类:</p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306021109375.jpg" alt="img" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/10kshuaizhang/note-images/main/202306021109713.jpg" alt="img" loading="lazy"></figure>
+<blockquote>
+<p>这一看就只适用比较局限的场景</p>
+</blockquote>
+</li>
+<li>
+<p>更多的feature会导致类继承关系越来越深，代码可读性变差，要搞清楚哪个类有哪些方法属性，必须阅读父类、爷爷类的代码。。。另一方面也破坏了类的封装特性，父类的视线暴露给子类，子类的实现依赖父类的实现。（在实现会飞会叫的鸟类，需要从会飞的鸟类去继承，严重耦合）。父类代码修改，影响子类逻辑（这句话实在针对继承吧 == ）</p>
+</li>
+</ol>
+<h3 id="组合的优势">组合的优势</h3>
+<ol>
+<li>
+<p>组合，接口和委托三个手段可以解决上述问题。</p>
+</li>
+<li>
+<p>接口表示具有某种行为特性。针对“会飞”这样一个行为特性，我们可以定义一个 Flyable 接口，只让会飞的鸟去实现这个接口。对于会叫、会下蛋这些行为特性，我们可以类似地定义 Tweetable 接口、EggLayable 接口。我们将这个设计思路翻译成 Java 代码的话，就是下面这个样子</p>
+<pre><code class="language-java">public interface Flyable {
+  void fly();
+}
+public interface Tweetable {
+  void tweet();
+}
+public interface EggLayable {
+  void layEgg();
+}
+public class Ostrich implements Tweetable, EggLayable {//鸵鸟
+  //... 省略其他属性和方法...
+  @Override
+  public void tweet() { //... }
+  @Override
+  public void layEgg() { //... }
+}
+public class Sparrow impelents Flyable, Tweetable, EggLayable {//麻雀
+  //... 省略其他属性和方法...
+  @Override
+  public void fly() { //... }
+  @Override
+  public void tweet() { //... }
+  @Override
+  public void layEgg() { //... }
+}
+</code></pre>
+</li>
+<li>
+<p>但是接口没有实现，所以实现类都需要把所有的方法实现一遍。</p>
+</li>
+<li>
+<p>组合和委托。</p>
+<pre><code class="language-java">public interface Flyable {
+  void fly()；
+}
+public class FlyAbility implements Flyable {
+  @Override
+  public void fly() { //... }
+}
+//省略Tweetable/TweetAbility/EggLayable/EggLayAbility
+
+public class Ostrich implements Tweetable, EggLayable {//鸵鸟
+  private TweetAbility tweetAbility = new TweetAbility(); //组合
+  private EggLayAbility eggLayAbility = new EggLayAbility(); //组合
+  //... 省略其他属性和方法...
+  @Override
+  public void tweet() {
+    tweetAbility.tweet(); // 委托
+  }
+  @Override
+  public void layEgg() {
+    eggLayAbility.layEgg(); // 委托
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>我的理解就是：我有一个类，现在不使用继承了（因为有一些弊端），所以现在使用接口+代理+组合来完成它的功能。</p>
+<ol>
+<li>接口定义他的行为动作，或者上文讲得准则，可以实现类中一个对象的行为；又避免了过度耦合</li>
+<li>我再拿一个代理类实现同样的接口，当前类可以实例化这个代理类并且调用。这个过程可以让更多的其他类不需要实现，只需要调用代理类的实现方法即可，提升了代码复用，减少了编程量。</li>
+<li>组合就是说的是代理类和实际类一起用？or多个接口组合在一起。</li>
+</ol>
+</li>
+</ol>
+<h3 id="如何判断用继承还是组合">如何判断用继承还是组合</h3>
+<h4 id="基于继承关系的复杂度和层级">基于继承关系的复杂度和层级</h4>
+<ol>
+<li>继承改写成组合意味着更细粒度的拆分，定义更多的类和接口，意味着更复杂和更多维护成本。这是一个trade off</li>
+<li>类之间的继承结构稳定，层级也比较浅，仍然可以选择继承。反之组合可能更好。</li>
+<li>此外一些设计模式也会使用继承或组合。</li>
+</ol>
+<h4 id="基于实际业务意义和对象关系">基于实际业务意义和对象关系</h4>
+<ol>
+<li>
+<p>利用继承特性，我们把相同的属性和方法，抽取出来，定义到父类中。子类复用父类中的属性和方法，达到代码复用的目的。</p>
+</li>
+<li>
+<p>但是，有的时候从业务含义上，A 类和 B 类并不一定具有继承关系。比如，Crawler 类和 PageAnalyzer 类，它们都用到了 URL 拼接和分割的功能，但并不具有继承关系（既不是父子关系，也不是兄弟关系）。</p>
+</li>
+<li>
+<p>仅仅为了代码复用，生硬地抽象出一个父类出来，会影响到代码的可读性。如果不熟悉背后设计思路的同事，发现 Crawler 类和 PageAnalyzer 类继承同一个父类，而父类中定义的却只是 URL 相关的操作，会觉得这个代码写得莫名其妙，理解不了。这个时候，使用组合就更加合理、更加灵活。</p>
+<pre><code class="language-java">public class Url {
+  //...省略属性和方法
+}
+
+public class Crawler {
+  private Url url; // 组合
+  public Crawler() {
+    this.url = new Url();
+  }
+  //...
+}
+
+public class PageAnalyzer {
+  private Url url; // 组合
+  public PageAnalyzer() {
+    this.url = new Url();
+  }
+  //..
+}
+</code></pre>
+</li>
+<li>
+<p>有些场景我们必须使用继承，比如你不能改变一个函数(demoFunction)的入参类型(FeignClien)，而入参又非接口，为了支持多态，只能采用继承来实现。比如下面这样一段代码，其中 FeignClient 是一个外部类，我们没有权限去修改这部分代码，但是我们希望能重写这个类在运行时执行的 encode() 函数。这个时候，我们只能采用继承来实现了。</p>
+<pre><code class="language-java">public class FeignClient { // Feign Client框架代码
+  //...省略其他代码...
+  public void encode(String url) { //... }
+}
+
+public void demofunction(FeignClient feignClient) {
+  //...
+  feignClient.encode(url);
+  //...
+}
+
+public class CustomizedFeignClient extends FeignClient {
+  @Override
+  public void encode(String url) { //...重写encode的实现...}
+}
+
+// 调用
+FeignClient client = new CustomizedFeignClient();
+demofunction(client);
+</code></pre>
+</li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E7%90%86%E8%AE%BA%E4%B8%83%E4%B8%BA%E4%BD%95%E8%AF%B4%E8%A6%81%E5%A4%9A%E7%94%A8%E7%BB%84%E5%90%88%E5%B0%91%E7%94%A8%E7%BB%A7%E6%89%BF%E5%A6%82%E4%BD%95%E5%86%B3%E5%AE%9A%E8%AF%A5%E7%94%A8%E7%BB%84%E5%90%88%E8%BF%98%E6%98%AF%E7%BB%A7%E6%89%BF">理论七：为何说要多用组合少用继承？如何决定该用组合还是继承？</a>
+<ul>
+<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E6%8E%A8%E8%8D%90%E4%BD%BF%E7%94%A8%E7%BB%A7%E6%89%BF">为什么不推荐使用继承</a></li>
+<li><a href="#%E7%BB%84%E5%90%88%E7%9A%84%E4%BC%98%E5%8A%BF">组合的优势</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E7%94%A8%E7%BB%A7%E6%89%BF%E8%BF%98%E6%98%AF%E7%BB%84%E5%90%88">如何判断用继承还是组合</a>
+<ul>
+<li><a href="#%E5%9F%BA%E4%BA%8E%E7%BB%A7%E6%89%BF%E5%85%B3%E7%B3%BB%E7%9A%84%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%92%8C%E5%B1%82%E7%BA%A7">基于继承关系的复杂度和层级</a></li>
+<li><a href="#%E5%9F%BA%E4%BA%8E%E5%AE%9E%E9%99%85%E4%B8%9A%E5%8A%A1%E6%84%8F%E4%B9%89%E5%92%8C%E5%AF%B9%E8%B1%A1%E5%85%B3%E7%B3%BB">基于实际业务意义和对象关系</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://10kshuaizhang.github.io/post/54-spiral-matrix/">
+              <h3 class="post-title">
+                54. Spiral Matrix
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '3f6a89270d2a0e51772d',
+    clientSecret: '58f2d7ec868483233a31553fa6235f2efd1df763',
+    repo: '10kshuaizhang.github.io',
+    owner: '10kshuaizhang',
+    admin: ['10kshuaizhang'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  
+  <a class="rss" href="https://10kshuaizhang.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
